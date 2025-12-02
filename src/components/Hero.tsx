@@ -22,7 +22,7 @@ const Hero = () => {
             <img 
               src={logo} 
               alt="Freedom Interventions" 
-              className="h-[10.5rem] md:h-[14rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg" 
+              className="h-[7rem] md:h-[9rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg" 
             />
           </div>
 
