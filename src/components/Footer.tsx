@@ -39,9 +39,9 @@ const Footer = () => {
                 <Phone className="w-4 h-4" />
                 <span>(503) 836-2136</span>
               </a>
-              <a href="mailto:help@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="w-4 h-4" />
-                <span>help@freedominterventions.com</span>
+                <span>matt@freedominterventions.com</span>
               </a>
             </div>
           </div>
