@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 const features = [
-  "Licensed and certified intervention professionals",
+  "Certified Intervention Professionals (CIP)",
   "Compassionate, judgment-free approach",
   "Customized intervention strategies",
   "Coordination with treatment facilities",
