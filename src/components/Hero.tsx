@@ -60,13 +60,13 @@ const Hero = () => {
             style={{ animationDelay: "0.5s" }}
           >
             <div className="text-center">
-              <p className="text-2xl md:text-3xl font-serif font-semibold text-foreground">500+</p>
+              <p className="text-2xl md:text-3xl font-serif font-semibold text-foreground">1000+</p>
               <p className="text-sm text-muted-foreground">Families Helped</p>
             </div>
             <div className="w-px h-12 bg-border hidden sm:block" />
             <div className="text-center">
-              <p className="text-2xl md:text-3xl font-serif font-semibold text-foreground">95%</p>
-              <p className="text-sm text-muted-foreground">Success Rate</p>
+              <p className="text-2xl md:text-3xl font-serif font-semibold text-foreground">20+</p>
+              <p className="text-sm text-muted-foreground">Years of Service</p>
             </div>
             <div className="w-px h-12 bg-border hidden sm:block" />
             <div className="text-center">
