@@ -10,11 +10,6 @@ const CTA = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-background/10 rounded-full text-sm font-medium text-primary-foreground">
-            <Phone className="w-4 h-4" />
-            <span>Free Consultation</span>
-          </div>
-          
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-primary-foreground leading-tight">
             Take the First Step
             <span className="block">Toward Recovery</span>
