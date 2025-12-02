@@ -45,7 +45,7 @@ const About = () => {
                 At Freedom Interventions, we understand that watching a loved one struggle with addiction is one of life's greatest challenges. Our mission is to guide families through this difficult time with expertise, compassion, and unwavering support.
               </p>
               <p>
-                Our team of experienced intervention specialists has helped hundreds of families take the first steps toward recovery and healing.
+                We have helped over 1000 families in the course of over twenty years take the first steps towards recovery and healing.
               </p>
             </div>
             
