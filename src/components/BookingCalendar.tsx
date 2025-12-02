@@ -6,25 +6,29 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard, Lock } from "lucide-react";
+import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard, Lock, Phone, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { SquareCardForm } from "./SquareCardForm";
 
 const SESSION_PRICE = 15000; // $150.00 in cents
 
-// Square credentials - Application ID is public (like a client ID)
+// Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
 const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
 
-export const CoachingBooking = () => {
+type BookingType = 'consultation' | 'coaching';
+type Step = 'type' | 'date' | 'time' | 'details' | 'payment' | 'confirmation';
+
+export const BookingCalendar = () => {
+  const [bookingType, setBookingType] = useState<BookingType | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<"date" | "time" | "details" | "payment">("date");
+  const [step, setStep] = useState<Step>("type");
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
   const [cardReady, setCardReady] = useState(false);
-  const [cardToken, setCardToken] = useState<string | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   const fetchAvailableSlots = async (date: Date) => {
     setLoading(true);
@@ -43,6 +47,11 @@ export const CoachingBooking = () => {
     }
   };
 
+  const handleTypeSelect = (type: BookingType) => {
+    setBookingType(type);
+    setStep("date");
+  };
+
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     setSelectedTime("");
@@ -57,19 +66,58 @@ export const CoachingBooking = () => {
     setStep("details");
   };
 
-  const handleDetailsSubmit = (e: React.FormEvent) => {
+  const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerInfo.name || !customerInfo.email) {
       toast.error("Please fill in all required fields");
       return;
     }
-    setCardReady(false);
-    setCardToken(null);
-    setStep("payment");
+
+    if (bookingType === 'consultation') {
+      // Free consultation - book directly
+      await bookFreeConsultation();
+    } else {
+      // Paid coaching - go to payment
+      setCardReady(false);
+      setStep("payment");
+    }
+  };
+
+  const bookFreeConsultation = async () => {
+    if (!selectedDate || !selectedTime) return;
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert({
+          booking_type: 'consultation',
+          customer_name: customerInfo.name,
+          customer_email: customerInfo.email,
+          customer_phone: customerInfo.phone || null,
+          booking_date: format(selectedDate, 'yyyy-MM-dd'),
+          booking_time: selectedTime,
+          duration_minutes: 30,
+          status: 'confirmed'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setBookingId(data.id);
+      setStep("confirmation");
+      toast.success("Consultation booked successfully!");
+    } catch (error: any) {
+      console.error('Booking error:', error);
+      toast.error("Failed to book consultation. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleTokenize = useCallback((token: string) => {
-    setCardToken(token);
+    // Token received from Square
   }, []);
 
   const handleCardError = useCallback((error: string) => {
@@ -82,8 +130,7 @@ export const CoachingBooking = () => {
 
   const processPayment = async () => {
     if (!selectedDate || !selectedTime) return;
-    
-    // Tokenize the card first
+
     const tokenizeFn = (window as any).__squareTokenize;
     if (!tokenizeFn) {
       toast.error("Payment form not ready. Please wait.");
@@ -95,7 +142,7 @@ export const CoachingBooking = () => {
       const token = await tokenizeFn();
       if (!token) {
         setLoading(false);
-        return; // Error already shown by tokenize function
+        return;
       }
 
       const { data, error } = await supabase.functions.invoke('square-booking', {
@@ -112,19 +159,46 @@ export const CoachingBooking = () => {
 
       if (error) throw error;
 
-      toast.success("Booking confirmed! Check your email for details.");
-      // Reset form
-      setStep("date");
-      setSelectedDate(undefined);
-      setSelectedTime("");
-      setCustomerInfo({ name: "", email: "", phone: "" });
-      setCardToken(null);
+      // Save booking to database
+      const { data: bookingData, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          booking_type: 'coaching',
+          customer_name: customerInfo.name,
+          customer_email: customerInfo.email,
+          customer_phone: customerInfo.phone || null,
+          booking_date: format(selectedDate, 'yyyy-MM-dd'),
+          booking_time: selectedTime,
+          duration_minutes: 60,
+          status: 'confirmed',
+          payment_id: data.payment?.id,
+          amount_cents: SESSION_PRICE
+        })
+        .select()
+        .single();
+
+      if (bookingError) {
+        console.error('Booking save error:', bookingError);
+      }
+
+      setBookingId(bookingData?.id || null);
+      setStep("confirmation");
+      toast.success("Booking confirmed!");
     } catch (error: any) {
       console.error('Payment error:', error);
       toast.error(error.message || "Payment failed. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setStep("type");
+    setBookingType(null);
+    setSelectedDate(undefined);
+    setSelectedTime("");
+    setCustomerInfo({ name: "", email: "", phone: "" });
+    setBookingId(null);
   };
 
   const formatTime = (time: string) => {
@@ -135,20 +209,38 @@ export const CoachingBooking = () => {
     return `${displayHour}:00 ${ampm}`;
   };
 
+  const getStepTitle = () => {
+    switch (step) {
+      case 'type': return 'Choose Session Type';
+      case 'date': return 'Select a Date';
+      case 'time': return 'Choose a Time';
+      case 'details': return 'Your Information';
+      case 'payment': return 'Payment';
+      case 'confirmation': return 'Booking Confirmed!';
+    }
+  };
+
+  const getStepDescription = () => {
+    switch (step) {
+      case 'type': return 'Select the type of session you\'d like to book';
+      case 'date': return `Pick a date for your ${bookingType === 'consultation' ? 'free consultation' : 'coaching session'}`;
+      case 'time': return selectedDate ? `Available times for ${format(selectedDate, 'MMMM d, yyyy')}` : '';
+      case 'details': return 'Enter your contact details';
+      case 'payment': return 'Complete your payment securely';
+      case 'confirmation': return 'Your appointment has been scheduled';
+    }
+  };
+
   return (
-    <section id="coaching" className="py-20 bg-muted/30">
+    <section id="booking" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Book a Coaching Session
+            Schedule an Appointment
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            One-on-one guidance to help you navigate the recovery journey. Each session is 1 hour.
+            Book a free consultation or a paid coaching session to get the support you need.
           </p>
-          <div className="flex items-center justify-center gap-2 mt-4 text-primary">
-            <DollarSign className="w-5 h-5" />
-            <span className="text-xl font-semibold">$150 per session</span>
-          </div>
         </div>
 
         <div className="max-w-4xl mx-auto">
@@ -156,31 +248,63 @@ export const CoachingBooking = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CalendarIcon className="w-5 h-5 text-primary" />
-                {step === "date" && "Select a Date"}
-                {step === "time" && "Choose a Time"}
-                {step === "details" && "Your Information"}
-                {step === "payment" && "Confirm & Pay"}
+                {getStepTitle()}
               </CardTitle>
-              <CardDescription>
-                {step === "date" && "Pick a date for your coaching session"}
-                {step === "time" && selectedDate && `Available times for ${format(selectedDate, 'MMMM d, yyyy')}`}
-                {step === "details" && "Enter your contact details"}
-                {step === "payment" && "Review and complete your booking"}
-              </CardDescription>
+              <CardDescription>{getStepDescription()}</CardDescription>
             </CardHeader>
             <CardContent>
-              {step === "date" && (
-                <div className="flex justify-center">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={handleDateSelect}
-                    disabled={(date) => date < new Date()}
-                    className="rounded-md border"
-                  />
+              {/* Step: Choose Type */}
+              {step === "type" && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  <button
+                    onClick={() => handleTypeSelect('consultation')}
+                    className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <Phone className="w-6 h-6 text-primary" />
+                      <span className="text-lg font-semibold">Free Consultation</span>
+                    </div>
+                    <p className="text-muted-foreground text-sm mb-3">
+                      A 30-minute call to discuss your situation and how we can help.
+                    </p>
+                    <div className="text-2xl font-bold text-primary">Free</div>
+                  </button>
+
+                  <button
+                    onClick={() => handleTypeSelect('coaching')}
+                    className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <DollarSign className="w-6 h-6 text-primary" />
+                      <span className="text-lg font-semibold">Coaching Session</span>
+                    </div>
+                    <p className="text-muted-foreground text-sm mb-3">
+                      A 1-hour one-on-one session for personalized guidance and support.
+                    </p>
+                    <div className="text-2xl font-bold text-primary">$150</div>
+                  </button>
                 </div>
               )}
 
+              {/* Step: Select Date */}
+              {step === "date" && (
+                <div>
+                  <div className="flex justify-center">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={handleDateSelect}
+                      disabled={(date) => date < new Date()}
+                      className="rounded-md border"
+                    />
+                  </div>
+                  <Button variant="ghost" onClick={() => setStep("type")} className="mt-4">
+                    ← Back
+                  </Button>
+                </div>
+              )}
+
+              {/* Step: Select Time */}
               {step === "time" && (
                 <div>
                   {loading ? (
@@ -202,16 +326,13 @@ export const CoachingBooking = () => {
                   ) : (
                     <p className="text-center text-muted-foreground">No available times for this date</p>
                   )}
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => setStep("date")} 
-                    className="mt-4"
-                  >
-                    ← Back to calendar
+                  <Button variant="ghost" onClick={() => setStep("date")} className="mt-4">
+                    ← Back
                   </Button>
                 </div>
               )}
 
+              {/* Step: Customer Details */}
               {step === "details" && (
                 <form onSubmit={handleDetailsSubmit} className="space-y-4 max-w-md mx-auto">
                   <div className="space-y-2">
@@ -240,40 +361,44 @@ export const CoachingBooking = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone (optional)</Label>
+                    <Label htmlFor="phone" className="flex items-center gap-2">
+                      <Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}
+                    </Label>
                     <Input
                       id="phone"
                       type="tel"
                       value={customerInfo.phone}
                       onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
                       placeholder="(555) 123-4567"
+                      required={bookingType === 'consultation'}
                     />
                   </div>
                   <div className="flex gap-2 pt-4">
                     <Button type="button" variant="ghost" onClick={() => setStep("time")}>
                       ← Back
                     </Button>
-                    <Button type="submit" className="flex-1">
-                      Continue to Payment
+                    <Button type="submit" disabled={loading} className="flex-1">
+                      {loading ? "Booking..." : bookingType === 'consultation' ? 'Book Consultation' : 'Continue to Payment'}
                     </Button>
                   </div>
                 </form>
               )}
 
+              {/* Step: Payment (coaching only) */}
               {step === "payment" && selectedDate && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
+                    <p><strong>Session:</strong> Coaching (1 hour)</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
-                    <p><strong>Duration:</strong> 1 hour</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
                     <div className="border-t pt-2 mt-2">
                       <p className="text-lg font-bold">Total: $150.00</p>
                     </div>
                   </div>
-                  
+
                   <SquareCardForm
                     applicationId={SQUARE_APPLICATION_ID}
                     locationId={SQUARE_LOCATION_ID}
@@ -291,8 +416,8 @@ export const CoachingBooking = () => {
                     <Button variant="ghost" onClick={() => setStep("details")}>
                       ← Back
                     </Button>
-                    <Button 
-                      onClick={processPayment} 
+                    <Button
+                      onClick={processPayment}
                       disabled={loading || !cardReady}
                       className="flex-1 flex items-center gap-2"
                     >
@@ -300,6 +425,40 @@ export const CoachingBooking = () => {
                       {loading ? "Processing..." : "Pay $150.00"}
                     </Button>
                   </div>
+                </div>
+              )}
+
+              {/* Step: Confirmation */}
+              {step === "confirmation" && selectedDate && (
+                <div className="max-w-md mx-auto text-center space-y-6">
+                  <div className="flex justify-center">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">
+                      {bookingType === 'consultation' ? 'Consultation Booked!' : 'Payment Successful!'}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      We've sent a confirmation email to {customerInfo.email}
+                    </p>
+                  </div>
+
+                  <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
+                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (30 min)' : 'Coaching Session (1 hour)'}</p>
+                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
+                    <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground">
+                    We'll contact you at {customerInfo.phone || customerInfo.email} to confirm the details.
+                  </p>
+
+                  <Button onClick={resetForm} variant="outline" className="w-full">
+                    Book Another Appointment
+                  </Button>
                 </div>
               )}
             </CardContent>

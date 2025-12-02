@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import About from "@/components/About";
-import { CoachingBooking } from "@/components/CoachingBooking";
+import { BookingCalendar } from "@/components/BookingCalendar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
@@ -14,7 +14,7 @@ const Index = () => {
         <Hero />
         <Services />
         <About />
-        <CoachingBooking />
+        <BookingCalendar />
         <CTA />
       </main>
       <Footer />
