@@ -25,14 +25,16 @@ const CTA = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              variant="secondary" 
-              size="xl" 
-              className="bg-background text-primary hover:bg-background/90"
-            >
-              <Phone className="w-5 h-5" />
-              Call Now: (888) 555-0123
-            </Button>
+            <a href="tel:+15038362136">
+              <Button 
+                variant="secondary" 
+                size="xl" 
+                className="bg-background text-primary hover:bg-background/90"
+              >
+                <Phone className="w-5 h-5" />
+                Call Now: (503) 836-2136
+              </Button>
+            </a>
             <Button 
               variant="outline" 
               size="xl"

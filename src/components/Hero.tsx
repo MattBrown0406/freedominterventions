@@ -57,10 +57,12 @@ const Hero = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <Button variant="hero" size="xl">
-              <Phone className="w-5 h-5" />
-              Free Consultation
-            </Button>
+            <a href="tel:+15038362136">
+              <Button variant="hero" size="xl">
+                <Phone className="w-5 h-5" />
+                Free Consultation
+              </Button>
+            </a>
             <Button variant="hero-outline" size="xl">
               Learn More
               <ArrowRight className="w-5 h-5" />
