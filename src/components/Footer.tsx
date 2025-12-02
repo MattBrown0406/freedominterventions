@@ -7,7 +7,7 @@ const Footer = () => {
     services: [
       { name: "Family Intervention", href: "/family-intervention", isRoute: true },
       { name: "Crisis Support", href: "/crisis-support", isRoute: true },
-      { name: "Treatment Planning", href: "#services" },
+      { name: "Treatment Planning", href: "/treatment-planning", isRoute: true },
       { name: "Aftercare Guidance", href: "#services" },
     ],
     company: [

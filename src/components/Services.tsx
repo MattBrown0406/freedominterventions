@@ -18,6 +18,7 @@ const services = [
     icon: BookOpen,
     title: "Treatment Planning",
     description: "We help identify the right treatment program and coordinate admissions to ensure a smooth transition to care.",
+    link: "/treatment-planning",
   },
   {
     icon: HeartHandshake,
