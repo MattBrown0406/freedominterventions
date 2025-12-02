@@ -14,7 +14,9 @@ const Index = () => {
         <Hero />
         <Services />
         <About />
-        <BookingCalendar />
+        <div id="booking">
+          <BookingCalendar />
+        </div>
         <CTA />
       </main>
       <Footer />
