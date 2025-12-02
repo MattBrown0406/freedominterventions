@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Reschedule from "./pages/Reschedule";
 import Interventionist from "./pages/Interventionist";
 import FamilyIntervention from "./pages/FamilyIntervention";
+import CrisisSupport from "./pages/CrisisSupport";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
           <Route path="/family-intervention" element={<FamilyIntervention />} />
+          <Route path="/crisis-support" element={<CrisisSupport />} />
           <Route path="/reschedule" element={<Reschedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
