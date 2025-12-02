@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,6 +11,9 @@ const SQUARE_ACCESS_TOKEN = Deno.env.get('SQUARE_ACCESS_TOKEN');
 const SQUARE_LOCATION_ID = Deno.env.get('SQUARE_LOCATION_ID');
 const SQUARE_BASE_URL = 'https://connect.squareup.com/v2';
 
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -19,12 +23,104 @@ serve(async (req) => {
     const { action, ...params } = await req.json();
     console.log(`Square booking action: ${action}`, params);
 
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
     switch (action) {
       case 'get-available-slots': {
         const { date } = params;
-        // Generate available time slots for the given date (9 AM - 7 PM)
         const slots = generateTimeSlots(date);
         return new Response(JSON.stringify({ slots }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'lookup-booking': {
+        const { bookingId, email } = params;
+        
+        if (!bookingId || !email) {
+          throw new Error('Booking ID and email are required');
+        }
+
+        const { data: booking, error } = await supabase
+          .from('bookings')
+          .select('id, booking_type, booking_date, booking_time, customer_name, customer_email, status')
+          .eq('id', bookingId)
+          .eq('customer_email', email.toLowerCase())
+          .eq('status', 'confirmed')
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error looking up booking:', error);
+          throw new Error('Failed to lookup booking');
+        }
+
+        return new Response(JSON.stringify({ booking }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'reschedule-booking': {
+        const { bookingId, email, newDate, newTime } = params;
+        
+        if (!bookingId || !email || !newDate || !newTime) {
+          throw new Error('Missing required fields for rescheduling');
+        }
+
+        // First verify the booking exists and email matches
+        const { data: existingBooking, error: lookupError } = await supabase
+          .from('bookings')
+          .select('id, customer_email, customer_name, booking_type')
+          .eq('id', bookingId)
+          .eq('customer_email', email.toLowerCase())
+          .eq('status', 'confirmed')
+          .maybeSingle();
+
+        if (lookupError || !existingBooking) {
+          console.error('Booking not found or email mismatch:', lookupError);
+          throw new Error('Booking not found or email does not match');
+        }
+
+        // Update the booking
+        const { data: updatedBooking, error: updateError } = await supabase
+          .from('bookings')
+          .update({
+            booking_date: newDate,
+            booking_time: newTime,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', bookingId)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error('Error updating booking:', updateError);
+          throw new Error('Failed to reschedule booking');
+        }
+
+        console.log('Booking rescheduled successfully:', updatedBooking);
+
+        // Send reschedule confirmation email
+        try {
+          await supabase.functions.invoke('send-booking-confirmation', {
+            body: {
+              bookingId: updatedBooking.id,
+              customerName: existingBooking.customer_name,
+              customerEmail: email,
+              bookingType: existingBooking.booking_type,
+              bookingDate: newDate,
+              bookingTime: newTime,
+              isReschedule: true
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send reschedule confirmation email:', emailError);
+          // Don't fail the reschedule if email fails
+        }
+
+        return new Response(JSON.stringify({ 
+          success: true, 
+          booking: updatedBooking 
+        }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
@@ -32,7 +128,6 @@ serve(async (req) => {
       case 'create-payment': {
         const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime } = params;
         
-        // Create payment with Square
         const paymentResponse = await fetch(`${SQUARE_BASE_URL}/payments`, {
           method: 'POST',
           headers: {
@@ -44,7 +139,7 @@ serve(async (req) => {
             source_id: sourceId,
             idempotency_key: crypto.randomUUID(),
             amount_money: {
-              amount: amount, // in cents
+              amount: amount,
               currency: 'USD',
             },
             location_id: SQUARE_LOCATION_ID,
@@ -90,12 +185,7 @@ serve(async (req) => {
 function generateTimeSlots(dateStr: string): string[] {
   const slots: string[] = [];
   const date = new Date(dateStr);
-  const dayOfWeek = date.getDay();
   
-  // Skip weekends if needed (currently allowing all days)
-  // if (dayOfWeek === 0 || dayOfWeek === 6) return slots;
-  
-  // Generate hourly slots from 9 AM to 7 PM
   for (let hour = 9; hour < 19; hour++) {
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
     slots.push(timeStr);
