@@ -4,7 +4,7 @@ const services = [
   {
     icon: Users,
     title: "Family Intervention",
-    description: "We guide families through the intervention process with compassion, helping loved ones take the first step toward recovery.",
+    description: "We guide families through the intervention process with compassion, helping loved ones take the first step toward recovery by defining and implementing important boundaries.",
   },
   {
     icon: Heart,
