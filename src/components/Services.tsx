@@ -19,7 +19,7 @@ const services = [
   {
     icon: HeartHandshake,
     title: "Aftercare Guidance",
-    description: "Recovery doesn't end at treatment. We provide ongoing support and resources for lasting sobriety.",
+    description: "Recovery doesn't end at treatment. We work with the treatment provider to identify and implement post-treatment resources and services for lasting sobriety.",
   },
 ];
 
