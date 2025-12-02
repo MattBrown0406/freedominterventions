@@ -5,6 +5,21 @@ import { MapPin, Globe, Phone } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
 
 const Interventionist = () => {
+  const calculateYearsSober = () => {
+    const sobrietyDate = new Date(2003, 3, 6); // April 6, 2003
+    const today = new Date();
+    let years = today.getFullYear() - sobrietyDate.getFullYear();
+    
+    // Check if we haven't reached April 6th yet this year
+    const thisYearAnniversary = new Date(today.getFullYear(), 3, 6);
+    if (today < thisYearAnniversary) {
+      years--;
+    }
+    return years;
+  };
+
+  const yearsSober = calculateYearsSober();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -74,7 +89,7 @@ const Interventionist = () => {
                   </p>
 
                   <p>
-                    For the past 22 years, I've helped families support their loved ones toward sobriety. I firmly believe recovery is possible with the right approach. If you're ready to help your loved one find lasting freedom, reach out for a consultation. We'll review your situation and map out practical next steps together.
+                    For the past {yearsSober} years, I've helped families support their loved ones toward sobriety. I firmly believe recovery is possible with the right approach. If you're ready to help your loved one find lasting freedom, reach out for a consultation. We'll review your situation and map out practical next steps together.
                   </p>
 
                   <div className="bg-accent/50 border border-border rounded-xl p-6 mt-8">
