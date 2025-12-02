@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,10 +6,15 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard } from "lucide-react";
+import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard, Lock } from "lucide-react";
 import { format } from "date-fns";
+import { SquareCardForm } from "./SquareCardForm";
 
 const SESSION_PRICE = 15000; // $150.00 in cents
+
+// Square credentials - Application ID is public (like a client ID)
+const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
+const SQUARE_LOCATION_ID = 'LFQ4T7BNM8EQA'; // Update this with your actual location ID
 
 export const CoachingBooking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -18,6 +23,8 @@ export const CoachingBooking = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"date" | "time" | "details" | "payment">("date");
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
+  const [cardReady, setCardReady] = useState(false);
+  const [cardToken, setCardToken] = useState<string | null>(null);
 
   const fetchAvailableSlots = async (date: Date) => {
     setLoading(true);
@@ -56,19 +63,45 @@ export const CoachingBooking = () => {
       toast.error("Please fill in all required fields");
       return;
     }
+    setCardReady(false);
+    setCardToken(null);
     setStep("payment");
   };
+
+  const handleTokenize = useCallback((token: string) => {
+    setCardToken(token);
+  }, []);
+
+  const handleCardError = useCallback((error: string) => {
+    toast.error(error);
+  }, []);
+
+  const handleCardReady = useCallback(() => {
+    setCardReady(true);
+  }, []);
 
   const processPayment = async () => {
     if (!selectedDate || !selectedTime) return;
     
+    // Tokenize the card first
+    const tokenizeFn = (window as any).__squareTokenize;
+    if (!tokenizeFn) {
+      toast.error("Payment form not ready. Please wait.");
+      return;
+    }
+
     setLoading(true);
     try {
-      // For now, using a test nonce. In production, integrate Square Web Payments SDK
+      const token = await tokenizeFn();
+      if (!token) {
+        setLoading(false);
+        return; // Error already shown by tokenize function
+      }
+
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-payment',
-          sourceId: 'cnon:card-nonce-ok', // Test nonce - replace with real card nonce from Square Web Payments SDK
+          sourceId: token,
           amount: SESSION_PRICE,
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
@@ -85,6 +118,7 @@ export const CoachingBooking = () => {
       setSelectedDate(undefined);
       setSelectedTime("");
       setCustomerInfo({ name: "", email: "", phone: "" });
+      setCardToken(null);
     } catch (error: any) {
       console.error('Payment error:', error);
       toast.error(error.message || "Payment failed. Please try again.");
@@ -240,10 +274,17 @@ export const CoachingBooking = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
-                    <p className="text-sm text-amber-800">
-                      <strong>Note:</strong> This is a demo. In production, you'll enter your card details securely via Square.
-                    </p>
+                  <SquareCardForm
+                    applicationId={SQUARE_APPLICATION_ID}
+                    locationId={SQUARE_LOCATION_ID}
+                    onTokenize={handleTokenize}
+                    onError={handleCardError}
+                    onReady={handleCardReady}
+                  />
+
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Lock className="w-4 h-4" />
+                    <span>Your payment is secured by Square</span>
                   </div>
 
                   <div className="flex gap-2">
@@ -252,7 +293,7 @@ export const CoachingBooking = () => {
                     </Button>
                     <Button 
                       onClick={processPayment} 
-                      disabled={loading}
+                      disabled={loading || !cardReady}
                       className="flex-1 flex items-center gap-2"
                     >
                       <CreditCard className="w-4 h-4" />
