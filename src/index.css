@@ -4,56 +4,56 @@
 
 @layer base {
   :root {
-    /* Warm & Organic Color Palette */
-    --background: 40 33% 96%;
-    --foreground: 25 30% 15%;
+    /* Freedom Interventions Color Palette */
+    --background: 210 20% 98%;
+    --foreground: 220 30% 15%;
 
-    --card: 40 30% 98%;
-    --card-foreground: 25 30% 15%;
+    --card: 210 25% 99%;
+    --card-foreground: 220 30% 15%;
 
-    --popover: 40 30% 98%;
-    --popover-foreground: 25 30% 15%;
+    --popover: 210 25% 99%;
+    --popover-foreground: 220 30% 15%;
 
-    /* Terracotta Primary */
-    --primary: 16 60% 52%;
-    --primary-foreground: 40 30% 98%;
+    /* Royal Blue Primary */
+    --primary: 220 75% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Sage Green Secondary */
-    --secondary: 140 25% 75%;
-    --secondary-foreground: 25 30% 15%;
+    /* Gold/Tan Secondary */
+    --secondary: 42 35% 85%;
+    --secondary-foreground: 220 30% 20%;
 
-    /* Warm Cream Muted */
-    --muted: 40 25% 90%;
-    --muted-foreground: 25 15% 45%;
+    /* Light Blue-Gray Muted */
+    --muted: 210 25% 92%;
+    --muted-foreground: 220 15% 45%;
 
-    /* Deep Forest Accent */
-    --accent: 145 35% 35%;
-    --accent-foreground: 40 30% 98%;
+    /* Gold Accent */
+    --accent: 42 45% 50%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 35 20% 85%;
-    --input: 35 20% 85%;
-    --ring: 16 60% 52%;
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 220 75% 45%;
 
-    --radius: 1rem;
+    --radius: 0.5rem;
 
     /* Custom tokens */
-    --warm-cream: 40 35% 94%;
-    --terracotta-light: 16 55% 65%;
-    --sage-light: 140 20% 85%;
-    --forest-deep: 145 40% 25%;
-    --brown-rich: 25 35% 25%;
+    --royal-blue: 220 75% 45%;
+    --royal-blue-light: 220 65% 60%;
+    --royal-blue-dark: 220 80% 35%;
+    --gold: 42 55% 55%;
+    --gold-light: 42 45% 75%;
+    --bronze: 35 40% 45%;
 
     /* Gradients */
-    --gradient-warm: linear-gradient(135deg, hsl(40 35% 94%) 0%, hsl(35 30% 90%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(40 33% 96%) 0%, hsl(35 25% 92%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(16 60% 52%) 0%, hsl(25 55% 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210 20% 98%) 0%, hsl(210 25% 95%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(220 75% 45%) 0%, hsl(220 80% 35%) 100%);
 
     /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(25 30% 15% / 0.08);
-    --shadow-elevated: 0 8px 30px -8px hsl(25 30% 15% / 0.12);
+    --shadow-soft: 0 4px 20px -4px hsl(220 30% 15% / 0.08);
+    --shadow-elevated: 0 8px 30px -8px hsl(220 30% 15% / 0.12);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -66,33 +66,33 @@
   }
 
   .dark {
-    --background: 25 25% 10%;
-    --foreground: 40 30% 95%;
+    --background: 220 25% 10%;
+    --foreground: 210 25% 95%;
 
-    --card: 25 20% 14%;
-    --card-foreground: 40 30% 95%;
+    --card: 220 20% 14%;
+    --card-foreground: 210 25% 95%;
 
-    --popover: 25 20% 14%;
-    --popover-foreground: 40 30% 95%;
+    --popover: 220 20% 14%;
+    --popover-foreground: 210 25% 95%;
 
-    --primary: 16 55% 58%;
-    --primary-foreground: 25 25% 10%;
+    --primary: 220 70% 55%;
+    --primary-foreground: 220 25% 10%;
 
-    --secondary: 140 20% 25%;
-    --secondary-foreground: 40 30% 95%;
+    --secondary: 42 30% 25%;
+    --secondary-foreground: 42 40% 85%;
 
-    --muted: 25 15% 20%;
-    --muted-foreground: 35 15% 60%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 210 15% 60%;
 
-    --accent: 145 30% 45%;
-    --accent-foreground: 25 25% 10%;
+    --accent: 42 50% 55%;
+    --accent-foreground: 220 25% 10%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 25 15% 22%;
-    --input: 25 15% 22%;
-    --ring: 16 55% 58%;
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
+    --ring: 220 70% 55%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

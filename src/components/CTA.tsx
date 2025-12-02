@@ -1,63 +1,49 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail } from "lucide-react";
-import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { Phone, Clock } from "lucide-react";
 
 const CTA = () => {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      toast({
-        title: "Welcome to our community!",
-        description: "You'll receive our latest updates and exclusive offers.",
-      });
-      setEmail("");
-    }
-  };
-
   return (
-    <section id="contact" className="py-20 md:py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-primary/5" />
-      <div className="absolute top-10 left-10 w-64 h-64 bg-secondary/30 organic-blob opacity-50" />
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-primary/10 organic-blob-2 opacity-40" />
+    <section id="contact" className="py-20 md:py-32 relative overflow-hidden bg-primary">
+      {/* Background decorative elements */}
+      <div className="absolute top-10 left-10 w-64 h-64 bg-background/5 organic-blob opacity-50" />
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-background/5 organic-blob-2 opacity-40" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          <span className="text-primary font-medium text-sm uppercase tracking-wider">
-            Join Our Community
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
-            Start Your Natural 
-            <span className="text-primary"> Living Journey</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-background/10 rounded-full text-sm font-medium text-primary-foreground">
+            <Clock className="w-4 h-4" />
+            <span>Available 24/7</span>
+          </div>
+          
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-primary-foreground leading-tight">
+            Take the First Step
+            <span className="block">Toward Recovery</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Subscribe to receive exclusive offers, wellness tips, and be the first to know about new product launches.
+          
+          <p className="text-primary-foreground/80 text-lg max-w-xl mx-auto">
+            Don't wait another day. Our compassionate team is ready to help your family find hope and healing. Confidential consultations are always free.
           </p>
 
-          {/* Email Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <div className="relative flex-1">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full h-14 pl-12 pr-4 rounded-full border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                required
-              />
-            </div>
-            <Button variant="hero" size="xl" type="submit">
-              Subscribe
-              <ArrowRight className="w-5 h-5" />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              variant="secondary" 
+              size="xl" 
+              className="bg-background text-primary hover:bg-background/90"
+            >
+              <Phone className="w-5 h-5" />
+              Call Now: (888) 555-0123
             </Button>
-          </form>
+            <Button 
+              variant="outline" 
+              size="xl"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+            >
+              Request a Callback
+            </Button>
+          </div>
 
-          <p className="text-sm text-muted-foreground">
-            No spam, ever. Unsubscribe anytime.
+          <p className="text-sm text-primary-foreground/60">
+            All calls are confidential. Insurance may cover treatment costs.
           </p>
         </div>
       </div>

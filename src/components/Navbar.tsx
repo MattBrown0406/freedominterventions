@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import logo from "@/assets/logo.jpeg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,11 +18,8 @@ const Navbar = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-full organic-blob" />
-            <span className="font-serif text-xl md:text-2xl font-semibold text-foreground">
-              Bloom & Flourish
-            </span>
+          <a href="#" className="flex items-center gap-3">
+            <img src={logo} alt="Freedom Interventions" className="h-12 md:h-14 w-auto" />
           </a>
 
           {/* Desktop Navigation */}
@@ -30,13 +28,13 @@ const Navbar = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
+                className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium"
               >
                 {link.name}
               </a>
             ))}
             <Button variant="hero" size="default">
-              Get Started
+              Get Help Now
             </Button>
           </div>
 
@@ -58,14 +56,14 @@ const Navbar = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium py-2"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
                 </a>
               ))}
               <Button variant="hero" size="default" className="mt-2">
-                Get Started
+                Get Help Now
               </Button>
             </div>
           </div>

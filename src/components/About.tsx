@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
+
+const features = [
+  "Licensed and certified intervention professionals",
+  "Compassionate, judgment-free approach",
+  "Customized intervention strategies",
+  "Coordination with treatment facilities",
+];
 
 const About = () => {
   return (
@@ -9,53 +16,51 @@ const About = () => {
           {/* Image */}
           <div className="relative order-2 lg:order-1">
             <div className="relative">
-              {/* Main image */}
-              <div className="relative z-10 rounded-2xl overflow-hidden">
+              {/* Main image placeholder with gradient */}
+              <div className="relative z-10 rounded-2xl overflow-hidden aspect-[4/5] bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 flex items-center justify-center">
                 <img
                   src="/about-organic.jpg"
-                  alt="Artisan carefully crafting organic products in a bright workshop"
-                  className="w-full aspect-[4/5] object-cover"
+                  alt="Supportive intervention session"
+                  className="w-full h-full object-cover"
                 />
               </div>
               
               {/* Decorative elements */}
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-secondary/50 organic-blob -z-10" />
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/20 organic-blob-2 -z-10" />
+              <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/10 organic-blob-2 -z-10" />
             </div>
           </div>
 
           {/* Content */}
           <div className="order-1 lg:order-2 space-y-6">
-            <span className="text-primary font-medium text-sm uppercase tracking-wider">
-              Our Story
+            <span className="text-accent font-medium text-sm uppercase tracking-wider">
+              About Freedom Interventions
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
-              Rooted in Nature, 
-              <span className="block">Grown with Purpose</span>
+              Breaking the Chains of
+              <span className="block text-primary">Addiction Together</span>
             </h2>
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
               <p>
-                What started as a small passion project in our kitchen has blossomed into a movement for conscious living. We believe that what you put on your body should be as pure as what you put in it.
+                At Freedom Interventions, we understand that watching a loved one struggle with addiction is one of life's greatest challenges. Our mission is to guide families through this difficult time with expertise, compassion, and unwavering support.
               </p>
               <p>
-                Every product we create tells a story—of farmers who nurture their land, artisans who pour their hearts into their craft, and a community that values authenticity over artifice.
+                Our team of experienced intervention specialists has helped hundreds of families take the first steps toward recovery and healing.
               </p>
             </div>
             
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-6 py-6">
-              <div>
-                <p className="text-3xl md:text-4xl font-serif font-semibold text-primary">8+</p>
-                <p className="text-muted-foreground mt-1">Years of Excellence</p>
-              </div>
-              <div>
-                <p className="text-3xl md:text-4xl font-serif font-semibold text-primary">50+</p>
-                <p className="text-muted-foreground mt-1">Unique Products</p>
-              </div>
-            </div>
+            {/* Features */}
+            <ul className="space-y-3 py-4">
+              {features.map((feature) => (
+                <li key={feature} className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground">{feature}</span>
+                </li>
+              ))}
+            </ul>
 
             <Button variant="outline" size="lg">
-              Discover Our Journey
+              Learn More About Us
               <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
