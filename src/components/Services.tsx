@@ -9,7 +9,7 @@ const services = [
   {
     icon: Heart,
     title: "Crisis Support",
-    description: "24/7 crisis support ensures you're never alone. Our team is ready to help when you need us most.",
+    description: "Crisis support ensures you're never alone. Our team is ready to help when you need us most.",
   },
   {
     icon: BookOpen,
