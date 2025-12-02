@@ -21,7 +21,7 @@ const CTA = () => {
           </h2>
           
           <p className="text-primary-foreground/80 text-lg max-w-xl mx-auto">
-            Don't wait another day. Our compassionate team is ready to help your family find hope and healing. Confidential consultations are always free.
+            Don't wait another day. We are ready to help your family find hope and healing. Confidential consultations are always free.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
