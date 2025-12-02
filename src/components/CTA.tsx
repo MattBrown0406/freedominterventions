@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Phone, Clock } from "lucide-react";
+import { Phone } from "lucide-react";
 
 const CTA = () => {
   return (
@@ -11,8 +11,8 @@ const CTA = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-background/10 rounded-full text-sm font-medium text-primary-foreground">
-            <Clock className="w-4 h-4" />
-            <span>Available 24/7</span>
+            <Phone className="w-4 h-4" />
+            <span>Free Consultation</span>
           </div>
           
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-primary-foreground leading-tight">
