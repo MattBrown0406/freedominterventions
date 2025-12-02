@@ -29,7 +29,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2 space-y-4">
             <a href="#" className="flex items-center gap-2">
-              <img src={logo} alt="Freedom Interventions" className="h-[5.25rem] w-auto" />
+              <img src={logo} alt="Freedom Interventions" className="h-[10.5rem] w-auto" />
             </a>
             <p className="text-muted-foreground max-w-xs">
               Guiding families toward hope and recovery with compassionate, professional intervention services.
