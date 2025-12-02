@@ -30,7 +30,16 @@ const Interventionist = () => {
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 w-full max-w-xs">
-                  <a href="/#booking">
+                  <a 
+                    href="/#booking"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = '/#booking';
+                      setTimeout(() => {
+                        document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }}
+                  >
                     <Button variant="hero" size="lg" className="w-full">
                       Schedule a Consultation
                     </Button>
