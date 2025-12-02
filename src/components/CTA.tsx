@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
+import CallbackRequestDialog from "./CallbackRequestDialog";
 
 const CTA = () => {
   return (
@@ -30,13 +31,15 @@ const CTA = () => {
                 Call Now: (503) 836-2136
               </Button>
             </a>
-            <Button 
-              variant="outline" 
-              size="xl"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              Request a Callback
-            </Button>
+            <CallbackRequestDialog>
+              <Button 
+                variant="outline" 
+                size="xl"
+                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+              >
+                Request a Callback
+              </Button>
+            </CallbackRequestDialog>
           </div>
 
           <p className="text-sm text-primary-foreground/60">
