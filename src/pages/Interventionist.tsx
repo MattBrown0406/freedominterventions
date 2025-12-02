@@ -58,6 +58,7 @@ const Interventionist = () => {
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
                   Meet Your Interventionist
                 </h1>
+                <p className="text-2xl md:text-3xl font-serif text-primary">Matt Brown</p>
                 
                 <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
                   Professional Interventionist Since 2004
