@@ -3,14 +3,26 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Users, Shield, Heart, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import familyBanner from "@/assets/family-intervention-banner.jpg";
 
 const FamilyIntervention = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="pt-20 md:pt-24">
+      
+      {/* Banner Image */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
+        <img 
+          src={familyBanner} 
+          alt="Family holding hands in unity" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
+      <main>
         {/* Hero Section */}
-        <section className="py-16 md:py-24 bg-card">
+        <section className="py-12 md:py-16 bg-card">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">

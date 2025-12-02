@@ -3,14 +3,25 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, AlertTriangle, Building2, Heart, Shield, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import crisisBanner from "@/assets/crisis-support-banner.jpg";
 
 const CrisisSupport = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
+      {/* Banner Image */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
+        <img 
+          src={crisisBanner} 
+          alt="Lighthouse beacon cutting through storm clouds at dawn" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-b from-primary/5 to-background">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <span className="text-accent font-medium text-sm uppercase tracking-wider">
