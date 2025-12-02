@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Phone, Shield } from "lucide-react";
+import logo from "@/assets/logo.jpeg";
 
 const Hero = () => {
   return (
@@ -13,6 +14,18 @@ const Hero = () => {
 
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
+          {/* Logo */}
+          <div 
+            className="flex justify-center animate-fade-up"
+            style={{ animationDelay: "0.05s" }}
+          >
+            <img 
+              src={logo} 
+              alt="Freedom Interventions" 
+              className="h-[10.5rem] md:h-[14rem] w-auto mix-blend-multiply" 
+            />
+          </div>
+
           {/* Badge */}
           <div 
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-sm font-medium text-primary animate-fade-up"
