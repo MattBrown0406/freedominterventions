@@ -29,12 +29,19 @@ const Interventionist = () => {
                     <span>National & International</span>
                   </div>
                 </div>
-                <a href="tel:+15038362136" className="mt-6">
-                  <Button variant="hero" size="lg">
-                    <Phone className="mr-2 h-4 w-4" />
-                    Schedule a Consultation
-                  </Button>
-                </a>
+                <div className="mt-6 flex flex-col gap-3 w-full max-w-xs">
+                  <a href="/#booking">
+                    <Button variant="hero" size="lg" className="w-full">
+                      Schedule a Consultation
+                    </Button>
+                  </a>
+                  <a href="tel:+15038362136">
+                    <Button variant="outline" size="lg" className="w-full">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call Now
+                    </Button>
+                  </a>
+                </div>
               </div>
 
               {/* Bio Column */}
