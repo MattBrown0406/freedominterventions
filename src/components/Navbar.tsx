@@ -34,9 +34,11 @@ const Navbar = () => {
                 {link.name}
               </a>
             ))}
-            <Button variant="hero" size="default">
-              Get Help Now
-            </Button>
+            <a href="tel:+15038362136">
+              <Button variant="hero" size="default">
+                Get Help Now
+              </Button>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -63,9 +65,11 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
-              <Button variant="hero" size="default" className="mt-2">
-                Get Help Now
-              </Button>
+              <a href="tel:+15038362136">
+                <Button variant="hero" size="default" className="mt-2">
+                  Get Help Now
+                </Button>
+              </a>
             </div>
           </div>
         )}
