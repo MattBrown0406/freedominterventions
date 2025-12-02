@@ -65,19 +65,15 @@ const Interventionist = () => {
 
                 <div className="space-y-6 text-muted-foreground leading-relaxed">
                   <p>
-                    I have been a professional interventionist since 2004. In the years since, I have facilitated many hundreds of interventions. One of the things I've learned during that time is that while most interventions have a general blueprint or structure to them, they are all different. Each individual and family needs special attention to the specific details of their addicted loved one.
+                    I've been a professional interventionist since 2004, and over these years, I've had the privilege of guiding hundreds of families through interventions. While they follow a proven structure, each one is tailored to the unique circumstances of the individual and family.
                   </p>
 
                   <p>
-                    My family did their own intervention on me in 2001 at the age of 28. One of the things I remember from that day was something my mother said to me: "I will never be a prisoner in my own home ever again." I realize now that I was holding my family hostage, emotionally speaking. None of us knew what to do. I didn't want the life I was living, but I was terrified of stepping into a life that was completely foreign to me.
+                    In 2001, at age 28, my own family stepped up with an intervention for me. My mother's words that day stay with me: "I will never be a prisoner in my own home ever again." It highlighted how my addiction had strained us all emotionally. We were all uncertain—me fearful of change, and them unaware of professional guidance available. They gave it their all, but it took me two more years to seek treatment. That delay worsened my addiction and extended our hardship. On <strong className="text-foreground">April 6, 2003</strong>, I entered recovery, and I've been sober ever since.
                   </p>
 
                   <p>
-                    They had no idea at the time that there were professionals that could've helped them. They certainly did their best they could in the moment, but it took me two more years to finally get the help I needed. During that time, my addiction got worse and we all suffered longer than we needed to. <strong className="text-foreground">April 6, 2003</strong> was the day I finally got help, and I have been sober ever since.
-                  </p>
-
-                  <p>
-                    For the last 22 years, I've empowered families to get help for their addicted and alcoholic loved ones. I truly believe that change is possible and that families and loved ones, with the right direction, can make that change possible. It would be my pleasure to consult with you about what can be done in your family to help your loved one find lasting sobriety and freedom.
+                    For the past 22 years, I've helped families support their loved ones toward sobriety. I firmly believe recovery is possible with the right approach. If you're ready to help your loved one find lasting freedom, reach out for a consultation. We'll review your situation and map out practical next steps together.
                   </p>
 
                   <div className="bg-accent/50 border border-border rounded-xl p-6 mt-8">
