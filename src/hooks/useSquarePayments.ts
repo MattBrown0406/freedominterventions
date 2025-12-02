@@ -8,7 +8,7 @@ declare global {
 
 // Square Application ID - this is a public key, safe for frontend
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
-const SQUARE_LOCATION_ID = 'LFQ4T7BNM8EQA'; // You may need to update this
+const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
 
 interface UseSquarePaymentsReturn {
   card: any;

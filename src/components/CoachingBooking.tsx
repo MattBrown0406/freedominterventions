@@ -14,7 +14,7 @@ const SESSION_PRICE = 15000; // $150.00 in cents
 
 // Square credentials - Application ID is public (like a client ID)
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
-const SQUARE_LOCATION_ID = 'LFQ4T7BNM8EQA'; // Update this with your actual location ID
+const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
 
 export const CoachingBooking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
