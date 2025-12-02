@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 
 const Hero = () => {
@@ -49,12 +49,6 @@ const Hero = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <a href="#booking">
-              <Button variant="hero" size="xl">
-                <Calendar className="w-5 h-5" />
-                Free Consultation
-              </Button>
-            </a>
             <a href="#services">
               <Button variant="hero-outline" size="xl">
                 Learn More
