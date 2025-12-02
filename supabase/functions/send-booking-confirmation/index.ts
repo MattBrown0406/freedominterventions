@@ -13,7 +13,8 @@ interface BookingConfirmationRequest {
   bookingType: string;
   bookingDate: string;
   bookingTime: string;
-  durationMinutes: number;
+  durationMinutes?: number;
+  isReschedule?: boolean;
 }
 
 async function getZoomAccessToken(): Promise<string> {
@@ -136,7 +137,8 @@ const handler = async (req: Request): Promise<Response> => {
       bookingType,
       bookingDate,
       bookingTime,
-      durationMinutes,
+      durationMinutes = bookingType === 'consultation' ? 30 : 60,
+      isReschedule = false,
     }: BookingConfirmationRequest = await req.json();
 
     console.log("Processing booking confirmation for:", customerEmail);
@@ -178,15 +180,26 @@ const handler = async (req: Request): Promise<Response> => {
       ? "Free Consultation (30 minutes)" 
       : "Coaching Session (1 hour - $150)";
 
+    const emailTitle = isReschedule 
+      ? "Your Appointment Has Been Rescheduled!"
+      : "Your Appointment is Confirmed!";
+
+    const emailSubject = isReschedule
+      ? `Rescheduled: Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} - Freedom Interventions`
+      : `Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} is Confirmed - Freedom Interventions`;
+
     // Send confirmation email
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #1e40af;">Your Appointment is Confirmed!</h1>
+        <h1 style="color: #1e40af;">${emailTitle}</h1>
         <p>Dear ${customerName},</p>
-        <p>Thank you for booking with Freedom Interventions. Your appointment has been confirmed.</p>
+        <p>${isReschedule 
+          ? "Your appointment with Freedom Interventions has been successfully rescheduled." 
+          : "Thank you for booking with Freedom Interventions. Your appointment has been confirmed."}</p>
         
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Appointment Details</h2>
+          <p><strong>Booking ID:</strong> ${bookingId}</p>
           <p><strong>Type:</strong> ${appointmentType}</p>
           <p><strong>Date:</strong> ${formattedDate}</p>
           <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
@@ -199,7 +212,11 @@ const handler = async (req: Request): Promise<Response> => {
           <p style="margin-top: 15px; font-size: 14px; color: #666;">Or copy this link: ${joinUrl}</p>
         </div>
         
-        <p>If you need to reschedule or have any questions, please contact us at:</p>
+        <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0; font-size: 14px;"><strong>Need to reschedule?</strong> Use your Booking ID above along with your email address at our reschedule page.</p>
+        </div>
+        
+        <p>If you have any questions, please contact us at:</p>
         <ul>
           <li>Phone: (503) 836-2136</li>
           <li>Email: matt@freedominterventions.com</li>
@@ -212,7 +229,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     await sendEmail(
       customerEmail,
-      `Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} is Confirmed - Freedom Interventions`,
+      emailSubject,
       emailHtml
     );
 
