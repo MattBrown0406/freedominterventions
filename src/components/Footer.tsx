@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
@@ -29,7 +29,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2 space-y-4">
             <a href="#" className="flex items-center gap-2">
-              <img src={logo} alt="Freedom Interventions" className="h-[10.5rem] w-auto" />
+              <img src={logo} alt="Freedom Interventions" className="h-[10.5rem] w-auto mix-blend-multiply" />
             </a>
             <p className="text-muted-foreground max-w-xs">
               Guiding families toward hope and recovery with compassionate, professional intervention services.
