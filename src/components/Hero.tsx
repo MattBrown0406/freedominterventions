@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 
 const Hero = () => {
@@ -49,9 +49,9 @@ const Hero = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <a href="tel:+15038362136">
+            <a href="https://calendly.com/matt-freedominterventions/new-meeting" target="_blank" rel="noopener noreferrer">
               <Button variant="hero" size="xl">
-                <Phone className="w-5 h-5" />
+                <Calendar className="w-5 h-5" />
                 Free Consultation
               </Button>
             </a>
