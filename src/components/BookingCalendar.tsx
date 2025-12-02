@@ -83,11 +83,41 @@ export const BookingCalendar = () => {
     }
   };
 
+  const sendBookingConfirmation = async (
+    id: string,
+    type: BookingType,
+    date: string,
+    time: string,
+    duration: number
+  ) => {
+    try {
+      const { error } = await supabase.functions.invoke('send-booking-confirmation', {
+        body: {
+          bookingId: id,
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          bookingType: type,
+          bookingDate: date,
+          bookingTime: time,
+          durationMinutes: duration,
+        }
+      });
+
+      if (error) {
+        console.error('Failed to send confirmation:', error);
+        toast.error("Booking saved, but confirmation email failed to send.");
+      }
+    } catch (error) {
+      console.error('Confirmation error:', error);
+    }
+  };
+
   const bookFreeConsultation = async () => {
     if (!selectedDate || !selectedTime) return;
 
     setLoading(true);
     try {
+      const bookingDate = format(selectedDate, 'yyyy-MM-dd');
       const { data, error } = await supabase
         .from('bookings')
         .insert({
@@ -95,7 +125,7 @@ export const BookingCalendar = () => {
           customer_name: customerInfo.name,
           customer_email: customerInfo.email,
           customer_phone: customerInfo.phone || null,
-          booking_date: format(selectedDate, 'yyyy-MM-dd'),
+          booking_date: bookingDate,
           booking_time: selectedTime,
           duration_minutes: 30,
           status: 'confirmed'
@@ -108,6 +138,9 @@ export const BookingCalendar = () => {
       setBookingId(data.id);
       setStep("confirmation");
       toast.success("Consultation booked successfully!");
+
+      // Send confirmation email with Zoom link
+      await sendBookingConfirmation(data.id, 'consultation', bookingDate, selectedTime, 30);
     } catch (error: any) {
       console.error('Booking error:', error);
       toast.error("Failed to book consultation. Please try again.");
@@ -145,6 +178,8 @@ export const BookingCalendar = () => {
         return;
       }
 
+      const bookingDate = format(selectedDate, 'yyyy-MM-dd');
+      
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-payment',
@@ -152,7 +187,7 @@ export const BookingCalendar = () => {
           amount: SESSION_PRICE,
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
-          bookingDate: format(selectedDate, 'yyyy-MM-dd'),
+          bookingDate,
           bookingTime: selectedTime,
         }
       });
@@ -167,7 +202,7 @@ export const BookingCalendar = () => {
           customer_name: customerInfo.name,
           customer_email: customerInfo.email,
           customer_phone: customerInfo.phone || null,
-          booking_date: format(selectedDate, 'yyyy-MM-dd'),
+          booking_date: bookingDate,
           booking_time: selectedTime,
           duration_minutes: 60,
           status: 'confirmed',
@@ -184,6 +219,11 @@ export const BookingCalendar = () => {
       setBookingId(bookingData?.id || null);
       setStep("confirmation");
       toast.success("Booking confirmed!");
+
+      // Send confirmation email with Zoom link
+      if (bookingData?.id) {
+        await sendBookingConfirmation(bookingData.id, 'coaching', bookingDate, selectedTime, 60);
+      }
     } catch (error: any) {
       console.error('Payment error:', error);
       toast.error(error.message || "Payment failed. Please try again.");
