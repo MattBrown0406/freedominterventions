@@ -30,6 +30,23 @@ export const BookingCalendar = () => {
   const [cardReady, setCardReady] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
+  const filterSameDaySlots = (slots: string[], date: Date) => {
+    const now = new Date();
+    const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
+    
+    if (!isToday) return slots;
+    
+    // Filter slots to only include times at least 1 hour from now
+    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+    
+    return slots.filter(slot => {
+      const [hours, minutes] = slot.split(':').map(Number);
+      const slotTime = new Date(date);
+      slotTime.setHours(hours, minutes, 0, 0);
+      return slotTime >= oneHourFromNow;
+    });
+  };
+
   const fetchAvailableSlots = async (date: Date) => {
     setLoading(true);
     try {
@@ -38,7 +55,10 @@ export const BookingCalendar = () => {
       });
 
       if (error) throw error;
-      setAvailableSlots(data.slots || []);
+      
+      // Filter same-day slots to require 1 hour lead time
+      const filteredSlots = filterSameDaySlots(data.slots || [], date);
+      setAvailableSlots(filteredSlots);
     } catch (error: any) {
       console.error('Error fetching slots:', error);
       toast.error("Failed to load available times");
@@ -334,7 +354,11 @@ export const BookingCalendar = () => {
                       mode="single"
                       selected={selectedDate}
                       onSelect={handleDateSelect}
-                      disabled={(date) => date < new Date()}
+                      disabled={(date) => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        return date < today;
+                      }}
                       className="rounded-md border"
                     />
                   </div>
