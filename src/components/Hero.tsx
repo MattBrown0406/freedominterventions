@@ -22,7 +22,11 @@ const Hero = () => {
             <img 
               src={logo} 
               alt="Freedom Interventions" 
-              className="h-[10.5rem] md:h-[14rem] w-auto mix-blend-multiply" 
+              className="h-[10.5rem] md:h-[14rem] w-auto mix-blend-multiply"
+              style={{
+                maskImage: 'radial-gradient(ellipse 85% 85% at center, black 60%, transparent 100%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 85% 85% at center, black 60%, transparent 100%)'
+              }}
             />
           </div>
 
