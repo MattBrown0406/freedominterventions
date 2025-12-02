@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Phone, Shield } from "lucide-react";
-import logo from "@/assets/logo.jpeg";
+import logo from "@/assets/logo-edited.png";
 
 const Hero = () => {
   return (
@@ -22,7 +22,7 @@ const Hero = () => {
             <img 
               src={logo} 
               alt="Freedom Interventions" 
-              className="h-[10.5rem] md:h-[14rem] w-auto mix-blend-multiply" 
+              className="h-[10.5rem] md:h-[14rem] w-auto" 
             />
           </div>
 
