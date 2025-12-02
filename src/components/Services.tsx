@@ -1,10 +1,12 @@
 import { Users, Heart, BookOpen, HeartHandshake } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const services = [
   {
     icon: Users,
     title: "Family Intervention",
     description: "We guide families through the intervention process with compassion, helping loved ones take the first step toward recovery while defining and implementing important boundaries.",
+    link: "/family-intervention",
   },
   {
     icon: Heart,
@@ -23,6 +25,13 @@ const services = [
   },
 ];
 
+interface Service {
+  icon: typeof Users;
+  title: string;
+  description: string;
+  link?: string;
+}
+
 const Services = () => {
   return (
     <section id="services" className="py-20 md:py-32 bg-card">
@@ -40,23 +49,45 @@ const Services = () => {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {services.map((service, index) => (
-            <div
-              key={service.title}
-              className="group p-6 md:p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                <service.icon className="w-7 h-7 text-primary" />
+          {services.map((service: Service, index) => {
+            const CardContent = (
+              <>
+                <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                  <service.icon className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-semibold text-foreground mb-3">
+                  {service.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {service.description}
+                </p>
+                {service.link && (
+                  <span className="mt-4 inline-block text-primary text-sm font-medium group-hover:underline">
+                    Learn more →
+                  </span>
+                )}
+              </>
+            );
+
+            return service.link ? (
+              <Link
+                to={service.link}
+                key={service.title}
+                className="group p-6 md:p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {CardContent}
+              </Link>
+            ) : (
+              <div
+                key={service.title}
+                className="group p-6 md:p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                {CardContent}
               </div>
-              <h3 className="text-xl font-serif font-semibold text-foreground mb-3">
-                {service.title}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {service.description}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

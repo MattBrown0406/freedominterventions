@@ -1,10 +1,11 @@
 import { Phone, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
   const footerLinks = {
     services: [
-      { name: "Family Intervention", href: "#services" },
+      { name: "Family Intervention", href: "/family-intervention", isRoute: true },
       { name: "Crisis Support", href: "#services" },
       { name: "Treatment Planning", href: "#services" },
       { name: "Aftercare Guidance", href: "#services" },
@@ -52,12 +53,21 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    {link.name}
-                  </a>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
