@@ -23,6 +23,7 @@ import Nevada from "./pages/Nevada";
 import Contact from "./pages/Contact";
 import PartyWreckersPodcast from "./pages/PartyWreckersPodcast";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import ScrollToTop from "./components/ScrollToTop";
 import TawkToChat from "./components/TawkToChat";
 
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/party-wreckers-podcast" element={<PartyWreckersPodcast />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/reschedule" element={<Reschedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
