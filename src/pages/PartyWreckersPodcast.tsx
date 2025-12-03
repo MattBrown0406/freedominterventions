@@ -16,7 +16,7 @@ const PartyWreckersPodcast = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative py-24 bg-card">
+      <section className="relative pt-24 pb-8 bg-card">
         <div className="container px-6">
           <div className="max-w-3xl mx-auto text-center">
             <img 
@@ -35,7 +35,7 @@ const PartyWreckersPodcast = () => {
       </section>
 
       {/* Content Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-8 md:py-12">
         <div className="container px-6">
           <div className="max-w-4xl mx-auto">
             <div className="prose prose-lg mx-auto text-muted-foreground">
