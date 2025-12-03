@@ -16,6 +16,7 @@ import Oregon from "./pages/Oregon";
 import Washington from "./pages/Washington";
 import Idaho from "./pages/Idaho";
 import Florida from "./pages/Florida";
+import California from "./pages/California";
 import ScrollToTop from "./components/ScrollToTop";
 import TawkToChat from "./components/TawkToChat";
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/washington" element={<Washington />} />
           <Route path="/idaho" element={<Idaho />} />
           <Route path="/florida" element={<Florida />} />
+          <Route path="/california" element={<California />} />
           <Route path="/reschedule" element={<Reschedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

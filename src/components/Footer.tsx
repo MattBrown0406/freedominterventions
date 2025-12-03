@@ -19,6 +19,7 @@ const Footer = () => {
       { name: "Contact", href: "#contact" },
     ],
     states: [
+      { name: "California", href: "/california" },
       { name: "Florida", href: "/florida" },
       { name: "Idaho", href: "/idaho" },
       { name: "Oregon", href: "/oregon" },
