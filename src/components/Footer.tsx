@@ -11,7 +11,6 @@ const Footer = () => {
       { name: "Aftercare Guidance", href: "/aftercare-guidance", isRoute: true },
     ],
     company: [
-      { name: "About Us", href: "#about" },
       { name: "Our Team", href: "/interventionist", isRoute: true },
       { name: "Testimonials", href: "#" },
       { name: "Contact", href: "#contact" },
