@@ -14,6 +14,48 @@ const SQUARE_BASE_URL = 'https://connect.squareup.com/v2';
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
+// Simple in-memory rate limiter for payment attempts
+const paymentAttempts = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const MAX_PAYMENT_ATTEMPTS = 5; // 5 attempts per hour per IP
+
+function getClientIP(req: Request): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+         req.headers.get('x-real-ip') || 
+         'unknown';
+}
+
+function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
+  const now = Date.now();
+  const record = paymentAttempts.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    paymentAttempts.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: MAX_PAYMENT_ATTEMPTS - 1 };
+  }
+  
+  if (record.count >= MAX_PAYMENT_ATTEMPTS) {
+    return { allowed: false, remaining: 0 };
+  }
+  
+  record.count++;
+  return { allowed: true, remaining: MAX_PAYMENT_ATTEMPTS - record.count };
+}
+
+// Input validation helpers
+function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 255;
+}
+
+function validateString(value: string, maxLength: number): boolean {
+  return typeof value === 'string' && value.trim().length > 0 && value.length <= maxLength;
+}
+
+function sanitizeString(value: string): string {
+  return value.trim().slice(0, 255);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -21,13 +63,16 @@ serve(async (req) => {
 
   try {
     const { action, ...params } = await req.json();
-    console.log(`Square booking action: ${action}`, params);
+    console.log(`Square booking action: ${action}`, { action, timestamp: new Date().toISOString() });
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     switch (action) {
       case 'get-available-slots': {
         const { date } = params;
+        if (!date || typeof date !== 'string') {
+          throw new Error('Valid date is required');
+        }
         const slots = generateTimeSlots(date);
         return new Response(JSON.stringify({ slots }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -41,11 +86,16 @@ serve(async (req) => {
           throw new Error('Booking ID and email are required');
         }
 
+        // Validate inputs
+        if (!validateString(bookingId, 100) || !validateEmail(email)) {
+          throw new Error('Invalid booking ID or email format');
+        }
+
         const { data: booking, error } = await supabase
           .from('bookings')
           .select('id, booking_type, booking_date, booking_time, customer_name, customer_email, status')
           .eq('id', bookingId)
-          .eq('customer_email', email.toLowerCase())
+          .eq('customer_email', email.toLowerCase().trim())
           .eq('status', 'confirmed')
           .maybeSingle();
 
@@ -66,12 +116,21 @@ serve(async (req) => {
           throw new Error('Missing required fields for rescheduling');
         }
 
+        // Validate inputs
+        if (!validateString(bookingId, 100) || !validateEmail(email)) {
+          throw new Error('Invalid booking ID or email format');
+        }
+
+        if (!validateString(newDate, 20) || !validateString(newTime, 10)) {
+          throw new Error('Invalid date or time format');
+        }
+
         // First verify the booking exists and email matches
         const { data: existingBooking, error: lookupError } = await supabase
           .from('bookings')
           .select('id, customer_email, customer_name, booking_type')
           .eq('id', bookingId)
-          .eq('customer_email', email.toLowerCase())
+          .eq('customer_email', email.toLowerCase().trim())
           .eq('status', 'confirmed')
           .maybeSingle();
 
@@ -97,7 +156,7 @@ serve(async (req) => {
           throw new Error('Failed to reschedule booking');
         }
 
-        console.log('Booking rescheduled successfully:', updatedBooking);
+        console.log('Booking rescheduled successfully:', { bookingId: updatedBooking.id });
 
         // Send reschedule confirmation email
         try {
@@ -126,7 +185,56 @@ serve(async (req) => {
       }
 
       case 'create-payment': {
+        // Rate limit check for payment attempts
+        const clientIP = getClientIP(req);
+        const rateLimit = checkRateLimit(clientIP);
+        
+        if (!rateLimit.allowed) {
+          console.warn(`Rate limit exceeded for IP: ${clientIP}`);
+          return new Response(JSON.stringify({ 
+            error: 'Too many payment attempts. Please try again later.' 
+          }), {
+            status: 429,
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json',
+              'Retry-After': '3600'
+            },
+          });
+        }
+
         const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime } = params;
+        
+        // Validate all required inputs
+        if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {
+          throw new Error('Invalid payment source');
+        }
+
+        if (typeof amount !== 'number' || amount <= 0 || amount > 100000) {
+          throw new Error('Invalid payment amount');
+        }
+
+        if (!validateEmail(customerEmail)) {
+          throw new Error('Invalid email address');
+        }
+
+        if (!validateString(customerName, 100)) {
+          throw new Error('Invalid customer name');
+        }
+
+        if (!validateString(bookingDate, 20) || !validateString(bookingTime, 10)) {
+          throw new Error('Invalid booking date or time');
+        }
+
+        const sanitizedName = sanitizeString(customerName);
+        const sanitizedEmail = customerEmail.toLowerCase().trim();
+
+        console.log('Processing payment', { 
+          amount, 
+          customerEmail: sanitizedEmail, 
+          bookingDate, 
+          rateLimitRemaining: rateLimit.remaining 
+        });
         
         const paymentResponse = await fetch(`${SQUARE_BASE_URL}/payments`, {
           method: 'POST',
@@ -143,15 +251,16 @@ serve(async (req) => {
               currency: 'USD',
             },
             location_id: SQUARE_LOCATION_ID,
-            note: `Coaching session for ${customerName} on ${bookingDate} at ${bookingTime}`,
-            buyer_email_address: customerEmail,
+            note: `Coaching session for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
+            buyer_email_address: sanitizedEmail,
           }),
         });
 
         const paymentData = await paymentResponse.json();
-        console.log('Square payment response:', paymentData);
+        console.log('Square payment response status:', paymentResponse.status);
 
         if (paymentData.errors) {
+          console.error('Square payment error:', paymentData.errors);
           throw new Error(paymentData.errors[0]?.detail || 'Payment failed');
         }
 
@@ -161,8 +270,8 @@ serve(async (req) => {
           bookingDetails: {
             date: bookingDate,
             time: bookingTime,
-            customerName,
-            customerEmail,
+            customerName: sanitizedName,
+            customerEmail: sanitizedEmail,
           }
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -174,7 +283,7 @@ serve(async (req) => {
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error in square-booking function:', error);
+    console.error('Error in square-booking function:', errorMessage);
     return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
