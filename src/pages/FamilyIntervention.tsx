@@ -11,7 +11,7 @@ const FamilyIntervention = () => {
       <Navbar />
       
       {/* Banner Image */}
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
         <img 
           src={familyBanner} 
           alt="Family holding hands in unity" 

@@ -11,7 +11,7 @@ const AftercareGuidance = () => {
       <Navbar />
       
       {/* Hero Banner */}
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
         <img
           src={aftercareBanner}
           alt="Peaceful path through a park symbolizing the journey of long-term recovery"
