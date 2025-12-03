@@ -15,6 +15,7 @@ const Footer = () => {
       { name: "Testimonials", href: "/testimonials", isRoute: true },
       { name: "Oregon Crisis", href: "/oregon", isRoute: true },
       { name: "Washington Crisis", href: "/washington", isRoute: true },
+      { name: "Idaho Crisis", href: "/idaho", isRoute: true },
       { name: "Contact", href: "#contact" },
     ],
     legal: [
