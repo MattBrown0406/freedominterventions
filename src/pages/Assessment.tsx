@@ -11,8 +11,16 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Plus, Trash2 } from "lucide-react";
+
+interface TreatmentEntry {
+  programName: string;
+  dateAttended: string;
+  successfulCompletion: boolean;
+}
 
 const dsmBehaviors = [
   "Used larger amounts or longer than intended",
@@ -33,6 +41,7 @@ const dsmBehaviors = [
 const Assessment = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [treatmentHistory, setTreatmentHistory] = useState<TreatmentEntry[]>([]);
   
   const [formData, setFormData] = useState({
     // Section 1
@@ -83,8 +92,6 @@ const Assessment = () => {
     
     // Section 7
     priorTreatment: "",
-    treatmentCount: "",
-    soberTime: "",
     currentTriggers: "",
     willingnessToChange: "",
     
@@ -119,6 +126,27 @@ const Assessment = () => {
     if (count >= 4) return "Moderate";
     if (count >= 2) return "Mild";
     return "Below threshold";
+  };
+
+  const addTreatmentEntry = () => {
+    setTreatmentHistory(prev => [...prev, { programName: "", dateAttended: "", successfulCompletion: false }]);
+  };
+
+  const removeTreatmentEntry = (index: number) => {
+    setTreatmentHistory(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const updateTreatmentEntry = (index: number, field: keyof TreatmentEntry, value: string | boolean) => {
+    setTreatmentHistory(prev => prev.map((entry, i) => 
+      i === index ? { ...entry, [field]: value } : entry
+    ));
+  };
+
+  const formatTreatmentHistory = () => {
+    if (treatmentHistory.length === 0) return "None reported";
+    return treatmentHistory.map((entry, i) => 
+      `${i + 1}. ${entry.programName || "Unknown"} - ${entry.dateAttended || "Date unknown"} - ${entry.successfulCompletion ? "Completed" : "Not completed"}`
+    ).join('\n');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -176,8 +204,8 @@ Support Network: ${formData.supportNetwork}
 
 SECTION 7: RELAPSE/RECOVERY ENVIRONMENT
 Prior Treatment Attempts: ${formData.priorTreatment}
-Number of Attempts: ${formData.treatmentCount}
-Successful Sober Time: ${formData.soberTime}
+Treatment History:
+${formatTreatmentHistory()}
 Current Triggers/Stressors: ${formData.currentTriggers}
 Willingness to Change (1-10): ${formData.willingnessToChange}
 
@@ -842,31 +870,73 @@ Date: ${new Date().toLocaleDateString()}
                         </div>
                       </RadioGroup>
                     </div>
-                    {formData.priorTreatment === "yes" && (
-                      <>
-                        <div>
-                          <Label htmlFor="treatmentCount">How many?</Label>
-                          <Input
-                            id="treatmentCount"
-                            type="number"
-                            value={formData.treatmentCount}
-                            onChange={(e) => handleInputChange("treatmentCount", e.target.value)}
-                            className="mt-2"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="soberTime">Successful sober time?</Label>
-                          <Input
-                            id="soberTime"
-                            placeholder="e.g., 6 months"
-                            value={formData.soberTime}
-                            onChange={(e) => handleInputChange("soberTime", e.target.value)}
-                            className="mt-2"
-                          />
-                        </div>
-                      </>
-                    )}
                   </div>
+
+                  {formData.priorTreatment === "yes" && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <Label>Treatment History</Label>
+                        <Button type="button" variant="outline" size="sm" onClick={addTreatmentEntry}>
+                          <Plus className="h-4 w-4 mr-1" /> Add Program
+                        </Button>
+                      </div>
+                      
+                      {treatmentHistory.length > 0 && (
+                        <div className="border rounded-lg overflow-hidden">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Name of Program</TableHead>
+                                <TableHead>Date Attended</TableHead>
+                                <TableHead className="text-center">Successful Completion</TableHead>
+                                <TableHead className="w-12"></TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {treatmentHistory.map((entry, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Input
+                                      placeholder="Program name"
+                                      value={entry.programName}
+                                      onChange={(e) => updateTreatmentEntry(index, "programName", e.target.value)}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Input
+                                      placeholder="e.g., Jan 2023"
+                                      value={entry.dateAttended}
+                                      onChange={(e) => updateTreatmentEntry(index, "dateAttended", e.target.value)}
+                                    />
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    <Checkbox
+                                      checked={entry.successfulCompletion}
+                                      onCheckedChange={(checked) => updateTreatmentEntry(index, "successfulCompletion", checked as boolean)}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeTreatmentEntry(index)}
+                                    >
+                                      <Trash2 className="h-4 w-4 text-destructive" />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      )}
+                      
+                      {treatmentHistory.length === 0 && (
+                        <p className="text-sm text-muted-foreground">Click "Add Program" to enter treatment history.</p>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <Label htmlFor="currentTriggers">Current triggers/stressors (job loss, relationships)?</Label>
