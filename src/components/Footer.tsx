@@ -12,7 +12,7 @@ const Footer = () => {
     ],
     company: [
       { name: "Our Team", href: "/interventionist", isRoute: true },
-      { name: "Testimonials", href: "#" },
+      { name: "Testimonials", href: "/testimonials", isRoute: true },
       { name: "Contact", href: "#contact" },
     ],
     legal: [
