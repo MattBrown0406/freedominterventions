@@ -104,9 +104,6 @@ const BlogPost = () => {
               <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
-            <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full mb-4">
-              {post.category}
-            </span>
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
               {post.title}
             </h1>
@@ -114,6 +111,9 @@ const BlogPost = () => {
               <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 {formatDate(post.published_at)}
+              </span>
+              <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                {post.category}
               </span>
             </div>
           </div>
