@@ -13,6 +13,7 @@ import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
 import Testimonials from "./pages/Testimonials";
 import Oregon from "./pages/Oregon";
+import Washington from "./pages/Washington";
 import ScrollToTop from "./components/ScrollToTop";
 import TawkToChat from "./components/TawkToChat";
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/aftercare-guidance" element={<AftercareGuidance />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/oregon" element={<Oregon />} />
+          <Route path="/washington" element={<Washington />} />
           <Route path="/reschedule" element={<Reschedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
