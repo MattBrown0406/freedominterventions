@@ -29,6 +29,17 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import TawkToChat from "./components/TawkToChat";
+import PortlandOregon from "./pages/PortlandOregon";
+import SeattleWashington from "./pages/SeattleWashington";
+import EugeneOregon from "./pages/EugeneOregon";
+import SanFranciscoCalifornia from "./pages/SanFranciscoCalifornia";
+import LosAngelesCalifornia from "./pages/LosAngelesCalifornia";
+import PhoenixArizona from "./pages/PhoenixArizona";
+import AustinTexas from "./pages/AustinTexas";
+import DallasTexas from "./pages/DallasTexas";
+import LasVegasNevada from "./pages/LasVegasNevada";
+import SaltLakeCityUtah from "./pages/SaltLakeCityUtah";
+import BoiseIdaho from "./pages/BoiseIdaho";
 
 const queryClient = new QueryClient();
 
