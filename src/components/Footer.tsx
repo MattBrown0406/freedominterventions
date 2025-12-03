@@ -117,7 +117,7 @@ const Footer = () => {
                   <span>Information by State</span>
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${statesOpen ? 'rotate-180' : ''}`} />
                 </button>
-                <ul className={`mt-2 ml-3 space-y-2 overflow-hidden transition-all duration-200 ${statesOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <ul className={`mt-2 ml-3 space-y-2 overflow-hidden transition-all duration-200 ${statesOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
                   {footerLinks.states.map((state) => (
                     <li key={state.name}>
                       <Link
