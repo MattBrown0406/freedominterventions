@@ -301,6 +301,9 @@ export const BookingCalendar = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Book a free consultation or a paid coaching session to get the support you need.
           </p>
+          <p className="text-sm text-muted-foreground mt-3 max-w-2xl mx-auto">
+            Please complete an <a href="/assessment" className="text-primary hover:underline font-medium">assessment</a> before your meeting time.
+          </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
