@@ -162,82 +162,96 @@ const Assessment = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.functions.invoke("send-contact-message", {
+      // Save to database
+      const assessmentData = {
+        // Section 1: Contact Information
+        contact_name: formData.contactName,
+        contact_email: formData.contactEmail,
+        contact_phone: formData.contactPhone || null,
+        contact_relationship: formData.contactRelationship || null,
+        best_day_to_contact: formData.bestDayToContact || null,
+        best_time_to_contact: formData.bestTimeToContact || null,
+        
+        // Section 2: Loved One's Basic Information
+        loved_one_name: formData.fullName,
+        loved_one_age: formData.age ? parseInt(formData.age) : null,
+        loved_one_gender: formData.gender || null,
+        primary_substances: formData.primarySubstances || null,
+        frequency: formData.frequency || null,
+        duration_of_use: formData.durationOfUse || null,
+        age_first_used: formData.ageFirstUsed ? parseInt(formData.ageFirstUsed) : null,
+        use_increased: formData.useIncreased || null,
+        
+        // Section 3: DSM-5 Criteria
+        dsm_behaviors: formData.dsmBehaviors,
+        dsm_yes_count: countYesResponses(),
+        severity_level: getSeverityLevel(countYesResponses()),
+        
+        // Section 4: Withdrawal and Medical Risks
+        withdrawal_symptoms: formData.withdrawalSymptoms || null,
+        withdrawal_description: formData.withdrawalDescription || null,
+        recent_detox: formData.recentDetox || null,
+        hospitalized_detox: formData.hospitalizedDetox || null,
+        withdrawal_medications: formData.withdrawalMedications || null,
+        withdrawal_medications_list: formData.withdrawalMedicationsList || null,
+        
+        // Section 5: Biomedical Conditions
+        health_issues: formData.healthIssues || null,
+        health_issues_list: formData.healthIssuesList || null,
+        recent_er_visits: formData.recentERVisits || null,
+        er_visit_details: formData.erVisitDetails || null,
+        prescribed_medications: formData.prescribedMedications || null,
+        prescribed_medications_list: formData.prescribedMedicationsList || null,
+        
+        // Section 6: Emotional/Behavioral Risks
+        mental_health_signs: formData.mentalHealthSigns || null,
+        mental_health_details: formData.mentalHealthDetails || null,
+        psychiatric_history: formData.psychiatricHistory || null,
+        psychiatric_details: formData.psychiatricDetails || null,
+        violence_history: formData.violenceHistory || null,
+        violence_details: formData.violenceDetails || null,
+        
+        // Section 7: Family/Social Environment
+        stable_living: formData.stableLiving || null,
+        homeless_unstable: formData.homelessUnstable || null,
+        family_enabling: formData.familyEnabling || null,
+        enabling_details: formData.enablingDetails || null,
+        children_present: formData.childrenPresent || null,
+        children_impacted: formData.childrenImpacted || null,
+        support_network: formData.supportNetwork || null,
+        
+        // Section 8: Relapse/Recovery Environment
+        prior_treatment: formData.priorTreatment || null,
+        treatment_history: treatmentHistory.length > 0 ? treatmentHistory : null,
+        current_triggers: formData.currentTriggers || null,
+        willingness_to_change: formData.willingnessToChange || null,
+        
+        // Section 9: Family Impact and Readiness
+        financial_impact: formData.financialImpact || null,
+        financial_details: formData.financialDetails || null,
+        child_welfare_involvement: formData.childWelfareInvolvement || null,
+        family_ready_intervention: formData.familyReadyIntervention || null,
+        intervention_barriers: formData.interventionBarriers || null,
+        
+        // Signature
+        family_signature: formData.familySignature || null,
+      };
+
+      const { error: dbError } = await supabase
+        .from("assessments")
+        .insert(assessmentData as never);
+
+      if (dbError) throw dbError;
+
+      // Also send email notification
+      await supabase.functions.invoke("send-contact-message", {
         body: {
-          name: formData.familySignature || "Assessment Form",
+          name: formData.contactName || "Assessment Form",
           email: "assessment@freedominterventions.com",
-          phone: "",
-          message: `
-FAMILY SUBSTANCE USE INTAKE QUESTIONNAIRE
-
-SECTION 1: CONTACT INFORMATION
-Name: ${formData.contactName}
-Email: ${formData.contactEmail}
-Phone: ${formData.contactPhone}
-Relationship to Loved One: ${formData.contactRelationship}
-Best Day to Contact: ${formData.bestDayToContact}
-Best Time to Contact: ${formData.bestTimeToContact}
-
-SECTION 2: LOVED ONE'S BASIC INFORMATION
-Full Name: ${formData.fullName}
-Age: ${formData.age}
-Gender: ${formData.gender}
-Primary Substance(s): ${formData.primarySubstances}
-Frequency: ${formData.frequency}
-Duration of Use: ${formData.durationOfUse}
-Age First Used: ${formData.ageFirstUsed}
-Use Increased Over Time: ${formData.useIncreased}
-
-SECTION 3: USE PATTERNS AND SEVERITY (DSM-5 CRITERIA)
-${dsmBehaviors.map(b => `${b}: ${formData.dsmBehaviors[b] ? 'Yes' : 'No'}`).join('\n')}
-Total Yes Responses: ${countYesResponses()}/13
-Severity Level: ${getSeverityLevel(countYesResponses())}
-
-SECTION 4: WITHDRAWAL AND MEDICAL RISKS
-Withdrawal Symptoms Observed: ${formData.withdrawalSymptoms}
-Description: ${formData.withdrawalDescription}
-Recent Detox Attempts: ${formData.recentDetox}
-Hospitalized for Detox: ${formData.hospitalizedDetox}
-Withdrawal Medications: ${formData.withdrawalMedications} - ${formData.withdrawalMedicationsList}
-
-SECTION 5: BIOMEDICAL CONDITIONS
-Known Health Issues: ${formData.healthIssues} - ${formData.healthIssuesList}
-Recent ER Visits: ${formData.recentERVisits} - ${formData.erVisitDetails}
-Prescribed Medications: ${formData.prescribedMedications} - ${formData.prescribedMedicationsList}
-
-SECTION 6: EMOTIONAL/BEHAVIORAL RISKS
-Mental Health Signs: ${formData.mentalHealthSigns} - ${formData.mentalHealthDetails}
-Psychiatric History: ${formData.psychiatricHistory} - ${formData.psychiatricDetails}
-Violence/Self-Harm/Trauma History: ${formData.violenceHistory} - ${formData.violenceDetails}
-
-SECTION 7: FAMILY/SOCIAL ENVIRONMENT
-Stable Living Situation: ${formData.stableLiving}
-Homeless or Unstable Housing: ${formData.homelessUnstable}
-Family Enabling: ${formData.familyEnabling} - ${formData.enablingDetails}
-Children Present (<18): ${formData.childrenPresent}
-Children Impacted: ${formData.childrenImpacted}
-Support Network: ${formData.supportNetwork}
-
-SECTION 8: RELAPSE/RECOVERY ENVIRONMENT
-Prior Treatment Attempts: ${formData.priorTreatment}
-Treatment History:
-${formatTreatmentHistory()}
-Current Triggers/Stressors: ${formData.currentTriggers}
-Willingness to Change (1-10): ${formData.willingnessToChange}
-
-SECTION 9: FAMILY IMPACT AND READINESS
-Financial Impact: ${formData.financialImpact} - ${formData.financialDetails}
-Child Welfare Involvement: ${formData.childWelfareInvolvement}
-Family Ready for Intervention: ${formData.familyReadyIntervention}
-Barriers: ${formData.interventionBarriers}
-
-Family Signature: ${formData.familySignature}
-Date: ${new Date().toLocaleDateString()}
-          `,
+          phone: formData.contactPhone || "",
+          message: `New assessment submitted for ${formData.fullName}.\n\nContact: ${formData.contactName} (${formData.contactEmail})\nBest time to reach: ${formData.bestDayToContact || "Any day"} - ${formData.bestTimeToContact || "Any time"}\n\nSeverity Level: ${getSeverityLevel(countYesResponses())} (${countYesResponses()}/13 criteria)\n\nView full assessment in the admin dashboard.`,
         },
       });
-
-      if (error) throw error;
 
       toast({
         title: "Assessment Submitted",
