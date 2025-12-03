@@ -12,7 +12,7 @@ const Footer = () => {
     ],
     company: [
       { name: "About Us", href: "#about" },
-      { name: "Our Team", href: "#" },
+      { name: "Our Team", href: "/interventionist", isRoute: true },
       { name: "Testimonials", href: "#" },
       { name: "Contact", href: "#contact" },
     ],
@@ -78,12 +78,21 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    {link.name}
-                  </a>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
