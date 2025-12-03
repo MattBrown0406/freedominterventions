@@ -14,24 +14,16 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20 md:h-24">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo and text */}
-          <div className="flex items-center gap-2">
-            <div className="flex flex-col items-start">
-              <a href="/" className="flex items-center gap-2">
-                <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg" />
-                <span className="font-serif text-xl md:text-2xl font-semibold text-primary">
-                  Freedom Interventions
-                </span>
-              </a>
-              <div className="w-full border-t border-border/50 my-1"></div>
-              <a href="/party-wreckers-podcast" className="flex items-center">
-                <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 md:h-8 w-auto" />
-              </a>
-            </div>
-          </div>
+          <a href="/" className="flex items-center gap-2">
+            <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg" />
+            <span className="font-serif text-xl md:text-2xl font-semibold text-primary">
+              Freedom Interventions
+            </span>
+          </a>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
@@ -85,6 +77,15 @@ const Navbar = () => {
             </div>
           </div>
         )}
+      </div>
+      
+      {/* Full-width border and Party Wreckers logo */}
+      <div className="border-t border-border/50">
+        <div className="container mx-auto px-6 py-2">
+          <a href="/party-wreckers-podcast" className="inline-block">
+            <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-10 md:h-12 w-auto" />
+          </a>
+        </div>
       </div>
     </nav>
   );
