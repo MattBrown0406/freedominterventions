@@ -40,6 +40,16 @@ import DallasTexas from "./pages/DallasTexas";
 import LasVegasNevada from "./pages/LasVegasNevada";
 import SaltLakeCityUtah from "./pages/SaltLakeCityUtah";
 import BoiseIdaho from "./pages/BoiseIdaho";
+import DenverColorado from "./pages/DenverColorado";
+import ChicagoIllinois from "./pages/ChicagoIllinois";
+import MinneapolisMinnesota from "./pages/MinneapolisMinnesota";
+import KansasCityMissouri from "./pages/KansasCityMissouri";
+import HoustonTexas from "./pages/HoustonTexas";
+import NewOrleansLouisiana from "./pages/NewOrleansLouisiana";
+import DetroitMichigan from "./pages/DetroitMichigan";
+import MiamiFlorida from "./pages/MiamiFlorida";
+import NashvilleTennessee from "./pages/NashvilleTennessee";
+import IndianapolisIndiana from "./pages/IndianapolisIndiana";
 
 const queryClient = new QueryClient();
 
