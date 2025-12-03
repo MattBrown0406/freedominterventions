@@ -2,90 +2,218 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import philadelphiaBanner from "@/assets/philadelphia-pennsylvania-banner.jpg";
 
 const PhiladelphiaPennsylvania = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Addiction Intervention Services in Philadelphia, Pennsylvania | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Philadelphia, PA. Help your loved one find lasting recovery with compassionate, experienced intervention support." />
+        <title>Philadelphia Pennsylvania Addiction Intervention Services | Freedom Interventions</title>
+        <meta name="description" content="Professional addiction intervention services in Philadelphia, Pennsylvania. Help your loved one find recovery from fentanyl, opioid, and drug addiction. Free consultations available." />
+        <meta name="keywords" content="Philadelphia addiction intervention, Pennsylvania drug intervention, Philly family intervention, fentanyl crisis Philadelphia, Kensington addiction help" />
+        <link rel="canonical" href="https://freedominterventions.com/philadelphia-pennsylvania" />
       </Helmet>
       
       <Navbar />
       
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${philadelphiaBanner})` }}
-          >
-            <div className="absolute inset-0 bg-foreground/60" />
-          </div>
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background mb-6">
-              Addiction Intervention Services in Philadelphia, Pennsylvania
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+        <img 
+          src={philadelphiaBanner} 
+          alt="Philadelphia Pennsylvania skyline with historic architecture" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
+      {/* Hero Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
+              <MapPin className="h-4 w-4" />
+              Philadelphia, Pennsylvania
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              Philadelphia's Addiction Emergency: Professional Intervention Services for Families in Crisis
             </h1>
-            <p className="text-xl md:text-2xl text-background/90 mb-8">
-              Bringing hope to Philadelphia families in crisis
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Philadelphia faces one of the nation's worst drug epidemics. With more overdose deaths than any major U.S. city, families need professional help now more than ever. Freedom Interventions provides compassionate, effective intervention services to help your loved one escape addiction's grip.
             </p>
-          </div>
-        </section>
-
-        {/* Content Sections */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6">
-              Philadelphia's Addiction Emergency
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Philadelphia faces one of the worst drug epidemics in the nation. The city has been devastated by opioid and fentanyl overdoses, with thousands dying each year. Kensington and other neighborhoods have become synonymous with open-air drug markets and visible addiction.
-            </p>
-            <p className="text-lg text-muted-foreground mb-6">
-              Behind every statistic is a family in crisis—parents, siblings, and children watching helplessly as addiction destroys someone they love. The City of Brotherly Love needs more families taking action through intervention.
-            </p>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              How Professional Intervention Works
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Professional intervention provides a structured, compassionate approach to breaking through denial and resistance. For Philadelphia families, we offer:
-            </p>
-            <ul className="list-disc list-inside text-lg text-muted-foreground mb-6 space-y-2">
-              <li>Pre-intervention family coaching and preparation</li>
-              <li>Education about addiction as a disease</li>
-              <li>Boundary setting and eliminating enabling</li>
-              <li>Treatment research and placement assistance</li>
-              <li>Professional facilitation of the intervention</li>
-              <li>Post-intervention family support</li>
-            </ul>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Experienced, Compassionate Help
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              With over 20 years of intervention experience and personal recovery, we understand addiction from every angle. We work with treatment facilities throughout Pennsylvania and nationally to find the right program for your loved one.
-            </p>
-
-            <div className="bg-accent/10 p-8 rounded-lg mt-12">
-              <h3 className="text-2xl font-serif font-bold text-foreground mb-4">
-                Your Family Doesn't Have to Face This Alone
-              </h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                If someone you love in Philadelphia is battling addiction, don't wait for another overdose. Professional intervention can save their life. Call today for a free consultation.
-              </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                <a href="tel:5038362136">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (503) 836-2136
                 </a>
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* Crisis Stats Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Understanding Philadelphia's Addiction Emergency
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Philadelphia has the highest overdose death rate of any large U.S. city. The Kensington neighborhood has become internationally known as "the largest open-air drug market on the East Coast," but addiction doesn't stop at neighborhood boundaries—it affects families throughout the entire Delaware Valley.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">1,400+</div>
+                <p className="text-muted-foreground">Overdose deaths in Philadelphia in 2023</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">90%</div>
+                <p className="text-muted-foreground">Of overdose deaths involve fentanyl</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">#1</div>
+                <p className="text-muted-foreground">Highest overdose rate among large U.S. cities</p>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed">
+              The combination of fentanyl's deadly potency, xylazine ("tranq") contamination, and entrenched drug markets has created an unprecedented crisis. Families from the Main Line to South Philly, from Fishtown to Chestnut Hill, are losing loved ones to this epidemic at alarming rates.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Addiction Affects Philadelphia Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Philadelphia's diverse neighborhoods are united by the pain of addiction. Working-class families in Kensington and Port Richmond watch children disappear into the streets. Affluent families in the suburbs discover their kids are buying fentanyl from dealers on social media. The epidemic crosses every demographic line.
+                  </p>
+                  <p>
+                    The City of Brotherly Love has always been defined by family and community. But addiction isolates families, creating shame that prevents them from seeking help. Many have tried everything—ultimatums, tough love, bailing their loved one out—only to watch the cycle continue.
+                  </p>
+                  <p>
+                    Whether your loved one is on the streets of Kensington or hiding their addiction in a professional career in Center City, Freedom Interventions understands what Philadelphia families are facing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Heart className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Freedom Interventions Helps Philadelphia Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    With over 20 years of experience and a national reach, Freedom Interventions provides comprehensive intervention services for Philadelphia-area families. We understand the unique challenges of the current crisis and have the expertise to help even in the most desperate situations.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Crisis Experience:</strong> We've worked with families in every stage of addiction crisis—from early intervention to helping get loved ones off the streets. We know how to navigate Philadelphia's treatment system and can place your loved one in appropriate care.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Treatment Coordination:</strong> We connect Philadelphia families with detox facilities equipped to handle fentanyl/xylazine withdrawal safely, followed by residential treatment programs that give your loved one the best chance at lasting recovery.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Family Recovery:</strong> Addiction devastates the entire family. We help establish healthy boundaries, end enabling patterns, and guide family members toward their own healing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-accent/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Hope for Philadelphia Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Despite Philadelphia's dire statistics, recovery happens every day. We've helped families from across the Delaware Valley guide their loved ones from the depths of addiction into treatment and lasting recovery. It's never too late—and it's never too early—to intervene.
+                  </p>
+                  <p>
+                    The margin for error with fentanyl is razor-thin. Every day without intervention is another day your loved one risks fatal overdose. If someone you love in Philadelphia is struggling with addiction, the time to act is now.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Get Help for Your Philadelphia Family Today
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Don't wait for another overdose. Our free, confidential consultation will help you understand your options and create a plan to save your loved one's life. We serve all of Philadelphia and the surrounding region including Bucks County, Montgomery County, Delaware County, Chester County, and South Jersey.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call (503) 836-2136
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
