@@ -2,90 +2,218 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import columbusBanner from "@/assets/columbus-ohio-banner.jpg";
 
 const ColumbusOhio = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Addiction Intervention Services in Columbus, Ohio | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Columbus, OH. Help your loved one find lasting recovery with compassionate, experienced intervention support." />
+        <title>Columbus Ohio Addiction Intervention Services | Freedom Interventions</title>
+        <meta name="description" content="Professional addiction intervention services in Columbus, Ohio. Help your loved one find recovery from fentanyl, opioid, and methamphetamine addiction. Free consultations available." />
+        <meta name="keywords" content="Columbus addiction intervention, Ohio drug intervention, Columbus family intervention, opioid crisis Ohio, fentanyl addiction help Columbus OH" />
+        <link rel="canonical" href="https://freedominterventions.com/columbus-ohio" />
       </Helmet>
       
       <Navbar />
       
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${columbusBanner})` }}
-          >
-            <div className="absolute inset-0 bg-foreground/60" />
-          </div>
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background mb-6">
-              Addiction Intervention Services in Columbus, Ohio
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+        <img 
+          src={columbusBanner} 
+          alt="Columbus Ohio skyline with Scioto River" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
+      {/* Hero Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
+              <MapPin className="h-4 w-4" />
+              Columbus, Ohio
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              Columbus and Ohio's Addiction Crisis: Professional Intervention Services for Central Ohio Families
             </h1>
-            <p className="text-xl md:text-2xl text-background/90 mb-8">
-              Guiding Columbus families toward hope and healing
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Ohio has been ground zero for America's opioid epidemic, and Columbus families continue to suffer devastating losses. With fentanyl now driving record overdose deaths, professional intervention can mean the difference between life and death. Freedom Interventions provides compassionate, effective services to help your loved one find recovery.
             </p>
-          </div>
-        </section>
-
-        {/* Content Sections */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6">
-              Ohio's Ongoing Addiction Crisis
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Ohio has been ground zero for the opioid epidemic, and Columbus has not been spared. The state consistently ranks among the highest for overdose deaths, with fentanyl now driving the majority of fatalities. Methamphetamine, cocaine, and alcohol addiction also continue to devastate families across central Ohio.
-            </p>
-            <p className="text-lg text-muted-foreground mb-6">
-              Families throughout the Columbus metro area know the heartbreak of watching addiction destroy someone they love. Despite trying everything they can think of—pleading, threatening, helping—nothing seems to work. Professional intervention offers a proven path forward.
-            </p>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              The Power of Professional Intervention
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              A well-planned intervention creates a moment of clarity that can break through denial and resistance. Our comprehensive services for Columbus families include:
-            </p>
-            <ul className="list-disc list-inside text-lg text-muted-foreground mb-6 space-y-2">
-              <li>In-depth family preparation and coaching</li>
-              <li>Understanding addiction as a medical condition</li>
-              <li>Setting and maintaining healthy boundaries</li>
-              <li>Treatment research and placement services</li>
-              <li>Professional intervention facilitation</li>
-              <li>Ongoing family support and aftercare planning</li>
-            </ul>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Decades of Experience, Compassionate Care
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              With over 20 years of intervention experience and personal recovery, we bring both professional expertise and genuine understanding to every family we serve. We connect Columbus families with top treatment facilities throughout Ohio and across the nation.
-            </p>
-
-            <div className="bg-accent/10 p-8 rounded-lg mt-12">
-              <h3 className="text-2xl font-serif font-bold text-foreground mb-4">
-                Your Family Deserves Help
-              </h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                If someone you love in Columbus is struggling with addiction, don't wait for tragedy. Professional intervention can save their life. Call today for a free, confidential consultation.
-              </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                <a href="tel:5038362136">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (503) 836-2136
                 </a>
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* Crisis Stats Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Understanding Ohio's Addiction Emergency
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Ohio consistently ranks among the states with the highest overdose death rates in America. Franklin County, home to Columbus, has seen devastating losses as fentanyl has replaced heroin and prescription opioids as the primary killer. The state's position along major drug trafficking routes has made it particularly vulnerable.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">5,000+</div>
+                <p className="text-muted-foreground">Overdose deaths in Ohio in 2023</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">90%</div>
+                <p className="text-muted-foreground">Of overdose deaths involve fentanyl</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">Top 5</div>
+                <p className="text-muted-foreground">Highest overdose death rate in the nation</p>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed">
+              From German Village to Dublin, from Clintonville to Grove City, addiction crosses every boundary in the Columbus metro. The combination of affordable fentanyl, widespread methamphetamine use, and limited treatment capacity has created an ongoing emergency for Ohio families.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Addiction Affects Columbus Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Columbus families across all demographics are being devastated by addiction. Young professionals in the Short North are hiding stimulant and opioid dependencies. Suburban parents in Westerville and Upper Arlington are discovering their kids addicted to fentanyl. Working families are losing loved ones to overdoses at funeral after funeral.
+                  </p>
+                  <p>
+                    Ohio's Midwestern values of self-reliance and privacy often prevent families from seeking help. Many believe they can handle the problem within the family, or that their loved one will eventually "hit bottom" and choose to get better. They don't realize that with fentanyl, bottom is often death.
+                  </p>
+                  <p>
+                    Whether your loved one is struggling in downtown Columbus or hiding their addiction in Delaware County's suburbs, Freedom Interventions has the experience to help your family.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Heart className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Freedom Interventions Helps Columbus Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    With over 20 years of experience helping families nationwide, Freedom Interventions provides comprehensive intervention services for Columbus-area families. We understand the severity of Ohio's crisis and have the expertise to help even in the most desperate situations.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Crisis Experience:</strong> We've worked with families at every stage of addiction—from concerned parents noticing early warning signs to families who've already lost members to overdose. Our interventions are tailored to your specific circumstances.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Treatment Placement:</strong> We connect Columbus families with appropriate detox and treatment facilities throughout Ohio and nationwide—programs equipped to handle fentanyl withdrawal safely and provide lasting recovery support.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Family Healing:</strong> We help the whole family begin recovery, ending enabling patterns, establishing healthy boundaries, and providing support throughout the journey.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-accent/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Hope for Central Ohio Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Despite Ohio's grim statistics, recovery is possible. Every day, people escape addiction and rebuild their lives. We've helped families throughout the Columbus metro guide their loved ones into treatment and witnessed remarkable transformations.
+                  </p>
+                  <p>
+                    Waiting is the most dangerous choice. With fentanyl present in virtually every street drug, every day without intervention is another day your loved one risks fatal overdose. If someone you love in Columbus is struggling, the time to act is now.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Get Help for Your Columbus Family Today
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Columbus and Central Ohio including Dublin, Westerville, Grove City, Reynoldsburg, Delaware, and surrounding communities.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call (503) 836-2136
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

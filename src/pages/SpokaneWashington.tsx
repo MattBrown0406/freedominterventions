@@ -2,90 +2,218 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import spokaneBanner from "@/assets/spokane-washington-banner.jpg";
 
 const SpokaneWashington = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Addiction Intervention Services in Spokane, Washington | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Spokane, WA. Help your loved one find lasting recovery with compassionate, experienced intervention support." />
+        <title>Spokane Washington Addiction Intervention Services | Freedom Interventions</title>
+        <meta name="description" content="Professional addiction intervention services in Spokane, Washington. Help your loved one find recovery from opioid, methamphetamine, and alcohol addiction. Free consultations available." />
+        <meta name="keywords" content="Spokane addiction intervention, Washington drug intervention, Spokane family intervention, opioid crisis Spokane, addiction help Spokane WA" />
+        <link rel="canonical" href="https://freedominterventions.com/spokane-washington" />
       </Helmet>
       
       <Navbar />
       
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${spokaneBanner})` }}
-          >
-            <div className="absolute inset-0 bg-foreground/60" />
-          </div>
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background mb-6">
-              Addiction Intervention Services in Spokane, Washington
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+        <img 
+          src={spokaneBanner} 
+          alt="Spokane Washington cityscape with Spokane Falls and clock tower" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
+      {/* Hero Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
+              <MapPin className="h-4 w-4" />
+              Spokane, Washington
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              Spokane's Addiction Crisis: Professional Intervention Services for Inland Northwest Families
             </h1>
-            <p className="text-xl md:text-2xl text-background/90 mb-8">
-              Guiding Spokane families through crisis to lasting recovery
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Spokane and the Inland Northwest face escalating addiction challenges. With fentanyl flooding the region and overdose deaths climbing, families need professional guidance to help their loved ones find recovery. Freedom Interventions provides compassionate, effective intervention services throughout Eastern Washington.
             </p>
-          </div>
-        </section>
-
-        {/* Content Sections */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6">
-              The Addiction Crisis in Spokane
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Spokane and the Inland Northwest face significant challenges with substance abuse. The opioid epidemic has hit Eastern Washington communities particularly hard, with overdose deaths continuing to rise. Methamphetamine and alcohol addiction also remain major concerns throughout the Spokane region.
-            </p>
-            <p className="text-lg text-muted-foreground mb-6">
-              Many Spokane families struggle in silence, unsure how to help a loved one caught in the cycle of addiction. The isolation of watching someone you care about destroy their life while feeling powerless to intervene is devastating.
-            </p>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              How Professional Intervention Helps
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              A professional interventionist brings structure, experience, and emotional support to what can otherwise be a chaotic and unsuccessful attempt to help. We work with Spokane families to:
-            </p>
-            <ul className="list-disc list-inside text-lg text-muted-foreground mb-6 space-y-2">
-              <li>Prepare family members for a productive, loving conversation</li>
-              <li>Establish healthy boundaries that support recovery</li>
-              <li>End enabling behaviors that perpetuate addiction</li>
-              <li>Research and arrange appropriate treatment options</li>
-              <li>Guide the intervention process from start to finish</li>
-              <li>Provide aftercare support for the entire family</li>
-            </ul>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Serving the Spokane Community
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              With over 20 years of experience helping families navigate addiction crises, we understand the unique challenges facing Spokane and Eastern Washington communities. We work closely with local treatment facilities and resources to ensure your loved one receives the best possible care.
-            </p>
-
-            <div className="bg-accent/10 p-8 rounded-lg mt-12">
-              <h3 className="text-2xl font-serif font-bold text-foreground mb-4">
-                Take the First Step Today
-              </h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                If someone you love in Spokane is struggling with addiction, don't wait for rock bottom. Professional intervention can save their life. Contact us for a free, confidential consultation.
-              </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                <a href="tel:5038362136">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (503) 836-2136
                 </a>
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* Crisis Stats Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Understanding Spokane's Addiction Emergency
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Spokane County has experienced a dramatic surge in overdose deaths, driven by the influx of fentanyl and continued methamphetamine abuse. The region's position along major drug trafficking routes has made it particularly vulnerable to the synthetic opioid crisis devastating communities across America.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">200+</div>
+                <p className="text-muted-foreground">Overdose deaths in Spokane County in 2023</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">78%</div>
+                <p className="text-muted-foreground">Of overdose deaths involve fentanyl</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">45%</div>
+                <p className="text-muted-foreground">Increase in meth seizures since 2020</p>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed">
+              The combination of geographic isolation, limited treatment resources, and the deadly potency of street drugs has created a crisis for Spokane families. From the South Hill to the Valley, from downtown to the surrounding rural communities, addiction is tearing families apart.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Addiction Affects Spokane Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Spokane's strong sense of community and family values makes watching a loved one struggle with addiction particularly painful. Parents in neighborhoods like Manito, Five Mile, and the South Perry District are discovering their children addicted to fentanyl. Working families are losing members to overdoses at unprecedented rates.
+                  </p>
+                  <p>
+                    The tight-knit nature of Spokane's communities can create additional shame and stigma, preventing families from seeking the help they desperately need. Many believe they can handle the problem privately, not understanding that addiction requires professional intervention.
+                  </p>
+                  <p>
+                    Whether your loved one is struggling on the streets of downtown Spokane or hiding their addiction in suburban Spokane Valley, Freedom Interventions understands the unique challenges Inland Northwest families face.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Heart className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Freedom Interventions Helps Spokane Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    With over 20 years of experience helping families throughout the Pacific Northwest, Freedom Interventions provides comprehensive intervention services tailored to Spokane-area families. We understand Eastern Washington's culture and the treatment resources available in the region.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Regional Expertise:</strong> We know which treatment facilities serve the Spokane area effectively, understand the unique challenges of rural and suburban Eastern Washington, and can coordinate care across state lines when needed.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Responsive Service:</strong> When your family is ready to act, we can mobilize quickly. Our experience in the Pacific Northwest means we understand the urgency and can be on-site when it matters most.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Family-Centered Approach:</strong> We help the entire family heal—establishing healthy boundaries, ending enabling patterns, and supporting everyone's recovery journey.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-accent/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Hope for Spokane Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Despite the challenging statistics, recovery is happening every day in Spokane. We've helped families throughout the Inland Northwest guide their loved ones into treatment and watched remarkable transformations unfold.
+                  </p>
+                  <p>
+                    The key is taking action before tragedy strikes. With fentanyl present in nearly every street drug, the risk of fatal overdose has never been higher. If someone you love in Spokane is struggling with addiction, don't wait for rock bottom—it may be too late.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Get Help for Your Spokane Family Today
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Spokane County including Spokane Valley, Liberty Lake, Cheney, Medical Lake, and surrounding communities.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call (503) 836-2136
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

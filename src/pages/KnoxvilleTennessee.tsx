@@ -2,90 +2,218 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import knoxvilleBanner from "@/assets/knoxville-tennessee-banner.jpg";
 
 const KnoxvilleTennessee = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Addiction Intervention Services in Knoxville, Tennessee | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Knoxville, TN. Help your loved one find lasting recovery with compassionate, experienced intervention support." />
+        <title>Knoxville Tennessee Addiction Intervention Services | Freedom Interventions</title>
+        <meta name="description" content="Professional addiction intervention services in Knoxville, Tennessee. Help your loved one find recovery from opioid, fentanyl, and methamphetamine addiction. Free consultations available." />
+        <meta name="keywords" content="Knoxville addiction intervention, Tennessee drug intervention, Knoxville family intervention, opioid crisis East Tennessee, addiction help Knoxville TN" />
+        <link rel="canonical" href="https://freedominterventions.com/knoxville-tennessee" />
       </Helmet>
       
       <Navbar />
       
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${knoxvilleBanner})` }}
-          >
-            <div className="absolute inset-0 bg-foreground/60" />
-          </div>
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background mb-6">
-              Addiction Intervention Services in Knoxville, Tennessee
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+        <img 
+          src={knoxvilleBanner} 
+          alt="Knoxville Tennessee cityscape with Great Smoky Mountains backdrop" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
+      {/* Hero Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
+              <MapPin className="h-4 w-4" />
+              Knoxville, Tennessee
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              Knoxville's Opioid Crisis: Professional Intervention Services for East Tennessee Families
             </h1>
-            <p className="text-xl md:text-2xl text-background/90 mb-8">
-              Helping East Tennessee families find freedom from addiction
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Knoxville and East Tennessee have been devastated by the opioid epidemic. From prescription pills to fentanyl, addiction has torn through families in communities from the Smoky Mountains to the Cumberland Plateau. Freedom Interventions provides compassionate, professional intervention services to help your loved one find recovery.
             </p>
-          </div>
-        </section>
-
-        {/* Content Sections */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6">
-              The Addiction Crisis in Knoxville
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Knoxville and East Tennessee have been hit hard by the opioid epidemic. The region's proximity to major drug trafficking routes has fueled addiction rates, with prescription pills, heroin, and fentanyl devastating communities. Methamphetamine and alcohol addiction also remain significant problems throughout the area.
-            </p>
-            <p className="text-lg text-muted-foreground mb-6">
-              Families in Knoxville watch in anguish as addiction transforms their loved ones. Many have tried confronting the problem on their own, only to be met with denial, anger, or broken promises. Professional help can make the difference.
-            </p>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Effective, Compassionate Intervention
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Professional intervention provides a structured pathway to treatment. For Knoxville families, we offer:
-            </p>
-            <ul className="list-disc list-inside text-lg text-muted-foreground mb-6 space-y-2">
-              <li>Complete family preparation and coaching</li>
-              <li>Education about addiction as a brain disease</li>
-              <li>Boundary setting and ending enabling patterns</li>
-              <li>Treatment facility selection and coordination</li>
-              <li>Skilled facilitation of the intervention</li>
-              <li>Aftercare support for lasting recovery</li>
-            </ul>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Experience You Can Trust
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              With over 20 years helping families nationwide and personal experience in recovery, we understand what's at stake. We work with excellent treatment programs throughout Tennessee and across the country to find the right fit for your loved one.
-            </p>
-
-            <div className="bg-accent/10 p-8 rounded-lg mt-12">
-              <h3 className="text-2xl font-serif font-bold text-foreground mb-4">
-                Hope is One Phone Call Away
-              </h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                If someone you love in Knoxville is struggling with addiction, professional intervention can open the door to recovery. Contact us today for a free, confidential consultation.
-              </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                <a href="tel:5038362136">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (503) 836-2136
                 </a>
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* Crisis Stats Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Understanding East Tennessee's Addiction Emergency
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  East Tennessee was ground zero for the prescription opioid epidemic, and the region continues to suffer some of the highest addiction and overdose rates in the nation. Knox County and surrounding areas have seen overdose deaths surge as fentanyl has replaced prescription pills and heroin.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">3,500+</div>
+                <p className="text-muted-foreground">Overdose deaths in Tennessee in 2023</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">85%</div>
+                <p className="text-muted-foreground">Of overdose deaths involve fentanyl</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">Top 10</div>
+                <p className="text-muted-foreground">Highest overdose death rate in the U.S.</p>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed">
+              The combination of legacy prescription opioid addiction, methamphetamine manufacturing, and the influx of fentanyl has created a multi-front crisis. Families throughout Knox County, Sevier County, Blount County, and the greater Knoxville metro are losing loved ones at alarming rates.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Addiction Affects Knoxville Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    East Tennessee's strong faith and family traditions make watching a loved one struggle with addiction particularly painful. Parents in neighborhoods from Sequoyah Hills to Halls watch their children transform from promising students to unrecognizable addicts. Working families lose wage earners to overdoses, leaving children without parents.
+                  </p>
+                  <p>
+                    The stigma of addiction in religious communities often prevents families from seeking help. Many believe their loved one simply lacks faith or willpower, not understanding that addiction is a brain disease requiring medical intervention.
+                  </p>
+                  <p>
+                    Whether your loved one started with prescription pills after an injury or discovered meth in the rural counties surrounding Knoxville, Freedom Interventions understands the unique challenges facing East Tennessee families.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Heart className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Freedom Interventions Helps Knoxville Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    With over 20 years of experience helping families nationwide, Freedom Interventions provides comprehensive intervention services for Knoxville-area families. We approach each family with compassion and respect for your values while providing the professional expertise needed to break through addiction.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Experienced Guidance:</strong> We've helped families in every stage of addiction crisis, from early intervention to emergency situations. Our approach is tailored to your family's specific circumstances and your loved one's unique needs.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Treatment Placement:</strong> We connect Knoxville families with appropriate treatment facilities throughout Tennessee and nationwide—programs equipped to handle fentanyl and meth addiction with high success rates.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Family Healing:</strong> We help the whole family recover, ending enabling patterns, establishing healthy boundaries, and supporting everyone through the recovery journey.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-accent/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Hope for East Tennessee Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Despite the devastating statistics, recovery happens every day in East Tennessee. We've helped families throughout the Knoxville metro guide their loved ones from the depths of addiction into treatment and lasting recovery. Your family's story can change too.
+                  </p>
+                  <p>
+                    Fentanyl has made every day without intervention a gamble with your loved one's life. Don't wait for rock bottom—it may be too late. If someone you love in Knoxville is struggling with addiction, the time to act is now.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Get Help for Your Knoxville Family Today
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Knoxville and East Tennessee including Oak Ridge, Maryville, Sevierville, Morristown, and surrounding communities.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call (503) 836-2136
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

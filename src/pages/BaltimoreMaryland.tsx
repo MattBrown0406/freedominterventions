@@ -2,90 +2,218 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import baltimoreBanner from "@/assets/baltimore-maryland-banner.jpg";
 
 const BaltimoreMaryland = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Addiction Intervention Services in Baltimore, Maryland | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Baltimore, MD. Help your loved one find lasting recovery with compassionate, experienced intervention support." />
+        <title>Baltimore Maryland Addiction Intervention Services | Freedom Interventions</title>
+        <meta name="description" content="Professional addiction intervention services in Baltimore, Maryland. Help your loved one find recovery from heroin, fentanyl, and opioid addiction. Free consultations available." />
+        <meta name="keywords" content="Baltimore addiction intervention, Maryland drug intervention, Baltimore family intervention, heroin crisis Baltimore, opioid addiction help Baltimore MD" />
+        <link rel="canonical" href="https://freedominterventions.com/baltimore-maryland" />
       </Helmet>
       
       <Navbar />
       
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${baltimoreBanner})` }}
-          >
-            <div className="absolute inset-0 bg-foreground/60" />
-          </div>
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background mb-6">
-              Addiction Intervention Services in Baltimore, Maryland
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+        <img 
+          src={baltimoreBanner} 
+          alt="Baltimore Maryland Inner Harbor waterfront at sunset" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
+      {/* Hero Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
+              <MapPin className="h-4 w-4" />
+              Baltimore, Maryland
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              Baltimore's Long Battle with Addiction: Professional Intervention Services for Maryland Families
             </h1>
-            <p className="text-xl md:text-2xl text-background/90 mb-8">
-              Guiding Baltimore families from crisis to recovery
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Baltimore has been on the front lines of America's addiction crisis for decades. From heroin to fentanyl, the epidemic continues to devastate families across the city and surrounding counties. Freedom Interventions provides experienced, compassionate intervention services to help your loved one find lasting recovery.
             </p>
-          </div>
-        </section>
-
-        {/* Content Sections */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6">
-              Baltimore's Struggle with Addiction
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Baltimore has long battled one of the highest addiction rates in America. The heroin and opioid epidemic has claimed thousands of lives, while cocaine, fentanyl, and alcohol continue to devastate families across all neighborhoods and demographics.
-            </p>
-            <p className="text-lg text-muted-foreground mb-6">
-              Families throughout Baltimore and the greater Maryland area know the heartbreak of watching addiction consume someone they love. Many have tried everything they can think of, yet their loved one continues spiraling deeper into substance abuse.
-            </p>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Breaking Through with Professional Intervention
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              A professional intervention creates a powerful moment of clarity. Working with Baltimore families, we provide:
-            </p>
-            <ul className="list-disc list-inside text-lg text-muted-foreground mb-6 space-y-2">
-              <li>Thorough family preparation and role assignments</li>
-              <li>Education about addiction and recovery</li>
-              <li>Establishing and maintaining healthy boundaries</li>
-              <li>Treatment facility research and arrangements</li>
-              <li>Compassionate intervention facilitation</li>
-              <li>Aftercare planning for patient and family</li>
-            </ul>
-
-            <h2 className="text-3xl font-serif font-bold text-foreground mb-6 mt-12">
-              Experience That Makes the Difference
-            </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              With over two decades of intervention experience and personal recovery, we bring understanding and expertise to every family we serve. We connect Baltimore families with treatment options throughout Maryland and across the country.
-            </p>
-
-            <div className="bg-accent/10 p-8 rounded-lg mt-12">
-              <h3 className="text-2xl font-serif font-bold text-foreground mb-4">
-                Take Action Before It's Too Late
-              </h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                If someone you love in Baltimore is struggling with addiction, waiting is dangerous. Professional intervention can be the lifeline your family needs. Contact us for a free, confidential consultation.
-              </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                <a href="tel:5038362136">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (503) 836-2136
                 </a>
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* Crisis Stats Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Understanding Baltimore's Addiction Crisis
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Baltimore has one of the highest addiction and overdose rates in America. The city's heroin epidemic, which began decades ago, has evolved into an even deadlier fentanyl crisis. Addiction affects every neighborhood—from struggling communities to affluent suburbs throughout the Baltimore metro area.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">900+</div>
+                <p className="text-muted-foreground">Overdose deaths in Baltimore City in 2023</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">2,500+</div>
+                <p className="text-muted-foreground">Overdose deaths statewide in Maryland</p>
+              </div>
+              <div className="bg-background p-6 rounded-xl border border-border">
+                <div className="text-3xl font-bold text-primary mb-2">88%</div>
+                <p className="text-muted-foreground">Of overdose deaths involve fentanyl</p>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground leading-relaxed">
+              Baltimore's addiction crisis spans generations and neighborhoods. From West Baltimore to Dundalk, from Towson to Columbia, families are losing loved ones to overdoses. The combination of entrenched drug markets, economic challenges, and fentanyl's lethality has created an ongoing emergency.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Addiction Affects Baltimore Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Baltimore families have been fighting addiction for generations. Parents who lost siblings to heroin now watch their children struggle with fentanyl. The cycle of addiction tears through families, destroying relationships and claiming lives across all demographics.
+                  </p>
+                  <p>
+                    The working-class pride of Baltimore often prevents families from seeking help. Many have "tried everything"—tough love, enabling, begging, threatening—without success. They don't realize that professional intervention offers a different approach with much higher success rates.
+                  </p>
+                  <p>
+                    Whether your loved one is caught in Baltimore's street drug scene or hiding a prescription pill addiction in the suburbs of Anne Arundel or Howard County, Freedom Interventions has the experience to help.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Heart className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  How Freedom Interventions Helps Baltimore Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    With over 20 years of experience helping families nationwide, Freedom Interventions provides comprehensive intervention services for Baltimore-area families. We understand the complexities of Baltimore's addiction landscape and have the expertise to help in even the most challenging situations.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Experienced Guidance:</strong> We've worked with families at every stage of addiction—from early warning signs to crisis situations. Our interventions are tailored to your specific circumstances and your loved one's unique needs.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Treatment Placement:</strong> We connect Baltimore families with appropriate detox and treatment facilities throughout Maryland and nationwide. We know which programs can handle fentanyl withdrawal safely and which offer the best outcomes.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Family Healing:</strong> We help the whole family recover—ending enabling patterns, establishing healthy boundaries, and supporting everyone's journey toward healing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-accent/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Hope for Baltimore Families
+                </h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Despite decades of struggle, recovery is possible for Baltimore families. Every day, people escape addiction and rebuild their lives. We've helped families throughout the Baltimore metro area guide their loved ones into treatment and witnessed remarkable transformations.
+                  </p>
+                  <p>
+                    With fentanyl in virtually every street drug, time is critical. Every day without intervention is another day your loved one risks fatal overdose. If someone you love in Baltimore is struggling, don't wait—the time to act is now.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Get Help for Your Baltimore Family Today
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Baltimore City and surrounding counties including Baltimore County, Anne Arundel, Howard, Harford, and Carroll County.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:503-836-2136">
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call (503) 836-2136
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
