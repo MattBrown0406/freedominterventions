@@ -43,13 +43,10 @@ const PartyWreckersPodcast = () => {
                 About the Podcast
               </h2>
               <p className="mb-6">
-                The Party Wreckers Podcast is dedicated to breaking the stigma around addiction and recovery. 
-                Hosted by intervention professionals with decades of combined experience, we share stories of 
-                hope, practical advice for families, and insights into the recovery journey.
+                The Party Wreckers Podcast is a weekly show for families, loved ones, and professionals who are tired of watching addiction destroy lives and relationships. Hosted by an experienced interventionist with more than two decades in the field, the podcast breaks down complex topics like enabling, boundaries, relapse, treatment programs, and recovery planning into clear, practical conversations. Each episode blends real-world intervention experience, storytelling, and education to help listeners understand addiction as a medical disease with a spiritual solution—while also showing them what to do next, not just what to think or feel about it.
               </p>
               <p className="mb-6">
-                Each episode features honest conversations about the challenges families face when a loved one 
-                struggles with addiction, and the transformative power of professional intervention.
+                Party Wreckers is designed as a reliable guide for anyone who feels stuck between loving someone with a substance use disorder and not knowing how to help. Through solo episodes, interviews with treatment and recovery experts, and case-based insights from hundreds of interventions, the show gives families language, tools, and step-by-step strategies they can use immediately. Listeners come away with a deeper understanding of support versus enabling, how to set and hold healthy boundaries, and how to build a long-term recovery plan that includes the whole family—not just the addicted person.
               </p>
               
               <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-6 mt-12">
