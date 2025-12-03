@@ -161,47 +161,46 @@ const Washington = () => {
               </p>
             </div>
 
-            {/* Action Steps for Washington Families */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Action Steps for Washington Families
+            {/* Why Seek Help */}
+            <div className="bg-card border border-border rounded-xl p-8">
+              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
+                Why Seek Professional Intervention in Washington
               </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="flex items-center gap-2 text-primary font-bold text-lg mb-2">
-                    <CheckCircle className="h-5 w-5" />
-                    1. Gauge Crisis
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
+                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    Log overdoses/arrests; seek free consults via ADAI resources.
-                  </p>
                 </div>
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="flex items-center gap-2 text-primary font-bold text-lg mb-2">
-                    <CheckCircle className="h-5 w-5" />
-                    2. Find Locals
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
+                    <p className="text-muted-foreground">Customized approaches that account for Washington's unique resources, regional factors, and fentanyl-meth challenges.</p>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    Freedom Interventions and statewide specialists cover Seattle to Spokane.
-                  </p>
                 </div>
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="flex items-center gap-2 text-primary font-bold text-lg mb-2">
-                    <CheckCircle className="h-5 w-5" />
-                    3. Unite Early
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
+                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    Compile records; rehearse boundaries with pro guidance.
-                  </p>
                 </div>
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="flex items-center gap-2 text-primary font-bold text-lg mb-2">
-                    <CheckCircle className="h-5 w-5" />
-                    4. Sustain Gains
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
+                    <p className="text-muted-foreground">Guidance through Washington's healthcare and legal systems, including DOH resources and community programs.</p>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    Enroll in aftercare, track via DOH dashboards 6-12 months.
-                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
+                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
+                  </div>
                 </div>
               </div>
             </div>
