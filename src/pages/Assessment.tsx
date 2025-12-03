@@ -23,19 +23,19 @@ interface TreatmentEntry {
 }
 
 const dsmBehaviors = [
-  "Used larger amounts or longer than intended",
-  "Wanted to cut down but couldn't",
-  "Spent excessive time obtaining/using/recovering",
-  "Cravings or strong urges to use",
-  "Missed family/work obligations due to use",
-  "Continued despite social/relationship problems",
-  "Gave up important activities for use",
-  "Risky use (driving, unsafe sex, etc.)",
-  "Tolerance (needs more for same effect)",
-  "Withdrawal symptoms (physical/emotional)",
-  "Used to relieve withdrawal",
-  "Failed to fulfill major role obligations",
-  "Legal problems related to use",
+  "Has your loved one used substances in larger amounts or for longer periods than they originally intended?",
+  "Has your loved one expressed a desire to cut down or stop using but been unable to do so?",
+  "Does your loved one spend a significant amount of time obtaining, using, or recovering from substances?",
+  "Does your loved one experience strong cravings or urges to use substances?",
+  "Has substance use caused your loved one to miss important family events, work responsibilities, or school obligations?",
+  "Has your loved one continued using despite it causing problems in their relationships or social life?",
+  "Has your loved one given up or reduced participation in activities they once enjoyed because of substance use?",
+  "Has your loved one engaged in risky behaviors while using, such as driving under the influence or unsafe sexual activity?",
+  "Has your loved one needed to use more of the substance to achieve the same effect they used to get with less (tolerance)?",
+  "Has your loved one experienced physical or emotional withdrawal symptoms when not using the substance?",
+  "Has your loved one used substances specifically to avoid or relieve withdrawal symptoms?",
+  "Has substance use interfered with your loved one's ability to fulfill major responsibilities at work, school, or home?",
+  "Has your loved one experienced legal problems as a result of their substance use?",
 ];
 
 const Assessment = () => {
