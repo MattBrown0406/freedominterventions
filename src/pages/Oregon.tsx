@@ -164,35 +164,46 @@ const Oregon = () => {
               </p>
             </div>
 
-            {/* Steps for Oregon Families */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Steps for Oregon Families
+            {/* Why Seek Help */}
+            <div className="bg-card border border-border rounded-xl p-8">
+              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
+                Why Seek Professional Intervention in Oregon
               </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="text-primary font-bold text-lg mb-2">1. Assess Urgency</div>
-                  <p className="text-muted-foreground text-sm">
-                    Track overdoses, arrests, or withdrawal—contact interventionists for free consults.
-                  </p>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
+                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
+                  </div>
                 </div>
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="text-primary font-bold text-lg mb-2">2. Research Locals</div>
-                  <p className="text-muted-foreground text-sm">
-                    Firms like Freedom Interventions serve Portland to Eugene and throughout Oregon.
-                  </p>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
+                    <p className="text-muted-foreground">Customized approaches that account for Oregon's unique resources, Measure 110 landscape, and regional factors.</p>
+                  </div>
                 </div>
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="text-primary font-bold text-lg mb-2">3. Prepare Collaboratively</div>
-                  <p className="text-muted-foreground text-sm">
-                    Gather medical/legal records; commit to boundaries.
-                  </p>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
+                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
+                  </div>
                 </div>
-                <div className="bg-card p-6 rounded-lg border">
-                  <div className="text-primary font-bold text-lg mb-2">4. Follow Through</div>
-                  <p className="text-muted-foreground text-sm">
-                    Secure aftercare via OHA resources, monitoring 6-12 months.
-                  </p>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
+                    <p className="text-muted-foreground">Guidance through Oregon's healthcare and legal systems, including deflection programs and OHA resources.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
+                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
+                  </div>
                 </div>
               </div>
             </div>
