@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ["DM Sans", "system-ui", "sans-serif"],
         serif: ["Playfair Display", "Georgia", "serif"],
+        script: ["Pacifico", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
