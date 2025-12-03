@@ -355,6 +355,7 @@ Date: ${new Date().toLocaleDateString()}
                           <SelectValue placeholder="Select a day" />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="today">Today</SelectItem>
                           <SelectItem value="monday">Monday</SelectItem>
                           <SelectItem value="tuesday">Tuesday</SelectItem>
                           <SelectItem value="wednesday">Wednesday</SelectItem>
