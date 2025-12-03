@@ -1072,7 +1072,14 @@ Date: ${new Date().toLocaleDateString()}
 
               {/* Disclaimer */}
               <Card className="bg-muted/50">
-                <CardContent className="pt-6">
+                <CardContent className="pt-6 space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Confidentiality Notice:</strong> All information provided in this questionnaire 
+                    is strictly confidential and protected in accordance with HIPAA (Health Insurance Portability 
+                    and Accountability Act) requirements. Your personal health information will only be used 
+                    for the purpose of professional evaluation and treatment planning, and will not be disclosed 
+                    to any third party without your written consent, except as required by law.
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     <strong>Disclaimer:</strong> This intake supports professional evaluation only. 
                     Contact SAMHSA at 1-800-662-HELP for referrals. Not for self-diagnosis.
