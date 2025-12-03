@@ -13,6 +13,7 @@ import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
 import Testimonials from "./pages/Testimonials";
 import ScrollToTop from "./components/ScrollToTop";
+import TawkToChat from "./components/TawkToChat";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <TawkToChat />
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
