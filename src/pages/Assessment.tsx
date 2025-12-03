@@ -20,6 +20,7 @@ interface TreatmentEntry {
   programName: string;
   dateAttended: string;
   successfulCompletion: boolean;
+  aftercareFollowed: boolean;
 }
 
 const dsmBehaviors = [
@@ -137,7 +138,7 @@ const Assessment = () => {
   };
 
   const addTreatmentEntry = () => {
-    setTreatmentHistory(prev => [...prev, { programName: "", dateAttended: "", successfulCompletion: false }]);
+    setTreatmentHistory(prev => [...prev, { programName: "", dateAttended: "", successfulCompletion: false, aftercareFollowed: false }]);
   };
 
   const removeTreatmentEntry = (index: number) => {
@@ -153,7 +154,7 @@ const Assessment = () => {
   const formatTreatmentHistory = () => {
     if (treatmentHistory.length === 0) return "None reported";
     return treatmentHistory.map((entry, i) => 
-      `${i + 1}. ${entry.programName || "Unknown"} - ${entry.dateAttended || "Date unknown"} - ${entry.successfulCompletion ? "Completed" : "Not completed"}`
+      `${i + 1}. ${entry.programName || "Unknown"} - ${entry.dateAttended || "Date unknown"} - ${entry.successfulCompletion ? "Completed" : "Not completed"} - Aftercare: ${entry.aftercareFollowed ? "Yes" : "No"}`
     ).join('\n');
   };
 
@@ -1014,6 +1015,7 @@ const Assessment = () => {
                                 <TableHead>Name of Program</TableHead>
                                 <TableHead>Date Attended</TableHead>
                                 <TableHead className="text-center">Successful Completion</TableHead>
+                                <TableHead className="text-center">Aftercare Followed</TableHead>
                                 <TableHead className="w-12"></TableHead>
                               </TableRow>
                             </TableHeader>
@@ -1038,6 +1040,12 @@ const Assessment = () => {
                                     <Checkbox
                                       checked={entry.successfulCompletion}
                                       onCheckedChange={(checked) => updateTreatmentEntry(index, "successfulCompletion", checked as boolean)}
+                                    />
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    <Checkbox
+                                      checked={entry.aftercareFollowed}
+                                      onCheckedChange={(checked) => updateTreatmentEntry(index, "aftercareFollowed", checked as boolean)}
                                     />
                                   </TableCell>
                                   <TableCell>
