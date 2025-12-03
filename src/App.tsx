@@ -75,6 +75,17 @@ const App = () => (
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/reschedule" element={<Reschedule />} />
+          <Route path="/portland-oregon" element={<PortlandOregon />} />
+          <Route path="/seattle-washington" element={<SeattleWashington />} />
+          <Route path="/eugene-oregon" element={<EugeneOregon />} />
+          <Route path="/san-francisco-california" element={<SanFranciscoCalifornia />} />
+          <Route path="/los-angeles-california" element={<LosAngelesCalifornia />} />
+          <Route path="/phoenix-arizona" element={<PhoenixArizona />} />
+          <Route path="/austin-texas" element={<AustinTexas />} />
+          <Route path="/dallas-texas" element={<DallasTexas />} />
+          <Route path="/las-vegas-nevada" element={<LasVegasNevada />} />
+          <Route path="/salt-lake-city-utah" element={<SaltLakeCityUtah />} />
+          <Route path="/boise-idaho" element={<BoiseIdaho />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

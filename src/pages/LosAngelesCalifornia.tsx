@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+import losAngelesBanner from "@/assets/los-angeles-banner.jpg";
 
 const LosAngelesCalifornia = () => {
   return (
@@ -17,8 +18,18 @@ const LosAngelesCalifornia = () => {
       
       <Navbar />
       
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+        <img 
+          src={losAngelesBanner} 
+          alt="Los Angeles skyline with palm trees silhouetted against golden sunset" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+      </div>
+      
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-primary/10 to-background">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
