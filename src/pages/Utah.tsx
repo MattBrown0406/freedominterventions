@@ -118,15 +118,49 @@ const Utah = () => {
               Rural isolation, stigma, youth vulnerabilities, and DUI surfeits impede equity, sustaining elevated rates despite naloxone gains. Interventions confer ROI via forestalled fatalities, incarcerations. 2025 portends vigilance amid trafficking persistence.
             </p>
 
-            <h2 className="font-serif text-3xl font-bold text-foreground mt-12 mb-6">
-              Pragmatic Directives for Utah Families
-            </h2>
-            <ul className="space-y-3 text-muted-foreground mb-8">
-              <li>Vigilantly document DUIs/overdoses; procure consultations via DHHS repositories</li>
-              <li>Retain specialists like Freedom Interventions, proximate from Provo to Ogden</li>
-              <li>Curate toxicology/medical/legal dossiers; simulate boundaries under guidance</li>
-              <li>Institutionalize aftercare: AA cadences, 6-12 month longitudinal tracking</li>
-            </ul>
+            {/* Why Seek Help */}
+            <div className="bg-card border border-border rounded-xl p-8 mt-12">
+              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
+                Why Seek Professional Intervention in Utah
+              </h2>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
+                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
+                    <p className="text-muted-foreground">Customized approaches that account for Utah's unique geography, resources, and cultural factors.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
+                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
+                    <p className="text-muted-foreground">Guidance through complex healthcare and legal systems, including state-specific commitment options.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
+                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <h2 className="font-serif text-3xl font-bold text-foreground mt-12 mb-6">
               Restoration Prospects in Zion's Realm
