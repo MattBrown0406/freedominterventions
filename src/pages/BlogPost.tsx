@@ -143,8 +143,8 @@ const BlogPost = () => {
               className="text-foreground leading-relaxed"
               dangerouslySetInnerHTML={{ 
                 __html: post.content
-                  .replace(/^## (.+)$/gm, '<h2 class="font-serif text-2xl md:text-3xl font-bold text-foreground mt-10 mb-4">$1</h2>')
-                  .replace(/^### (.+)$/gm, '<h3 class="font-serif text-xl md:text-2xl font-semibold text-foreground mt-8 mb-3">$1</h3>')
+                  .replace(/^## (.+)$/gm, '<h2 class="font-serif text-2xl md:text-3xl font-bold text-foreground mt-10 mb-1">$1</h2>')
+                  .replace(/^### (.+)$/gm, '<h3 class="font-serif text-xl md:text-2xl font-semibold text-foreground mt-8 mb-1">$1</h3>')
                   .replace(/\n/g, '<br />') 
               }}
             />
