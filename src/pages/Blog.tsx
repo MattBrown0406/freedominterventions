@@ -76,6 +76,15 @@ const Blog = () => {
                     key={post.id}
                     className="bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/50 transition-colors group"
                   >
+                    {post.image_url && (
+                      <div className="aspect-video overflow-hidden">
+                        <img 
+                          src={post.image_url} 
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
                     <div className="p-6">
                       <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full mb-4">
                         {post.category}
