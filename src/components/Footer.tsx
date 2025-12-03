@@ -23,6 +23,7 @@ const Footer = () => {
       { name: "Florida", href: "/florida" },
       { name: "Idaho", href: "/idaho" },
       { name: "Oregon", href: "/oregon" },
+      { name: "Utah", href: "/utah" },
       { name: "Washington", href: "/washington" },
     ],
     legal: [
