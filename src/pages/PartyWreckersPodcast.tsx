@@ -1,11 +1,62 @@
 import { Helmet } from "react-helmet";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, Play, Clock, Calendar } from "lucide-react";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.png";
 
+interface Episode {
+  title: string;
+  description: string;
+  pubDate: string;
+  audioUrl: string;
+  duration: string;
+  episodeNumber: string;
+}
+
 const PartyWreckersPodcast = () => {
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-podcast-episodes`,
+          {
+            headers: {
+              "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.episodes) {
+          setEpisodes(data.episodes);
+        }
+      } catch (error) {
+        console.error("Error fetching episodes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEpisodes();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
@@ -49,23 +100,69 @@ const PartyWreckersPodcast = () => {
                 Party Wreckers is designed as a reliable guide for anyone who feels stuck between loving someone with a substance use disorder and not knowing how to help. Through solo episodes, interviews with treatment and recovery experts, and case-based insights from hundreds of interventions, the show gives families language, tools, and step-by-step strategies they can use immediately. Listeners come away with a deeper understanding of support versus enabling, how to set and hold healthy boundaries, and how to build a long-term recovery plan that includes the whole family—not just the addicted person.
               </p>
               
+              {/* Latest Episodes Section */}
               <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-6 mt-12">
-                What We Cover
+                Latest Episodes
               </h2>
-              <ul className="space-y-3 mb-8">
-                <li>Real intervention stories and outcomes</li>
-                <li>Family dynamics and enabling behaviors</li>
-                <li>Treatment options and recovery pathways</li>
-                <li>Guest interviews with recovery professionals</li>
-                <li>Tips for supporting loved ones in recovery</li>
-              </ul>
+              
+              {loading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="bg-card p-6 rounded-xl border border-border animate-pulse">
+                      <div className="h-6 bg-muted rounded w-3/4 mb-3"></div>
+                      <div className="h-4 bg-muted rounded w-full mb-2"></div>
+                      <div className="h-4 bg-muted rounded w-2/3"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : episodes.length > 0 ? (
+                <div className="space-y-4">
+                  {episodes.map((episode, index) => (
+                    <div key={index} className="bg-card p-6 rounded-xl border border-border hover:border-primary/50 transition-colors">
+                      <div className="flex items-start gap-4">
+                        <a 
+                          href={episode.audioUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex-shrink-0 w-12 h-12 bg-primary rounded-full flex items-center justify-center hover:bg-primary/90 transition-colors"
+                        >
+                          <Play className="w-5 h-5 text-primary-foreground ml-1" />
+                        </a>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-foreground text-lg mb-2 line-clamp-2">
+                            {episode.episodeNumber && <span className="text-primary">Ep. {episode.episodeNumber}: </span>}
+                            {episode.title}
+                          </h3>
+                          <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                            {episode.description}
+                          </p>
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {formatDate(episode.pubDate)}
+                            </span>
+                            {episode.duration && (
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {episode.duration}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground">No episodes available at this time.</p>
+              )}
               
               <div className="bg-card p-8 rounded-2xl border border-border mt-12 text-center">
                 <h3 className="font-serif text-xl font-bold text-foreground mb-4">
-                  Episodes Coming Soon
+                  Need Help Now?
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  Stay tuned for upcoming episodes. In the meantime, if you need help with a loved one struggling with addiction, we're here for you.
+                  If you need help with a loved one struggling with addiction, we're here for you.
                 </p>
                 <a href="tel:+15038362136">
                   <Button variant="hero" size="lg">
