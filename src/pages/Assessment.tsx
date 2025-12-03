@@ -250,7 +250,7 @@ Date: ${new Date().toLocaleDateString()}
 
       <Navbar />
 
-      <main className="flex-grow">
+      <main className="flex-grow pt-24">
         {/* Hero Section */}
         <section className="bg-primary/10 py-16">
           <div className="container mx-auto px-4 text-center">
