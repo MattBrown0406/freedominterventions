@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 
 const Navbar = () => {
@@ -38,6 +38,7 @@ const Navbar = () => {
             ))}
             <a href="tel:+15038362136">
               <Button variant="hero" size="default">
+                <Phone className="w-4 h-4 mr-2" />
                 Get Help Now
               </Button>
             </a>
@@ -69,6 +70,7 @@ const Navbar = () => {
               ))}
               <a href="tel:+15038362136">
                 <Button variant="hero" size="default" className="mt-2">
+                  <Phone className="w-4 h-4 mr-2" />
                   Get Help Now
                 </Button>
               </a>
