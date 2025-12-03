@@ -1081,8 +1081,7 @@ Date: ${new Date().toLocaleDateString()}
                     to any third party without your written consent, except as required by law.
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    <strong>Disclaimer:</strong> This intake supports professional evaluation only. 
-                    Contact SAMHSA at 1-800-662-HELP for referrals. Not for self-diagnosis.
+                    <strong>Disclaimer:</strong> This intake supports professional evaluation only and is not for self-diagnosis.
                   </p>
                 </CardContent>
               </Card>
