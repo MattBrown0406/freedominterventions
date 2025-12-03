@@ -9,12 +9,20 @@ import { toast } from "sonner";
 import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard, Lock, Phone, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { SquareCardForm } from "./SquareCardForm";
+import { z } from "zod";
 
 const SESSION_PRICE = 15000; // $150.00 in cents
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
 const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
+
+// Validation schema for customer info
+const customerInfoSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().max(20, "Phone number must be less than 20 characters").optional().or(z.literal("")),
+});
 
 type BookingType = 'consultation' | 'coaching';
 type Step = 'type' | 'date' | 'time' | 'details' | 'payment' | 'confirmation';
@@ -29,6 +37,7 @@ export const BookingCalendar = () => {
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
   const [cardReady, setCardReady] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
 
   const filterSameDaySlots = (slots: string[], date: Date) => {
     const now = new Date();
@@ -88,8 +97,25 @@ export const BookingCalendar = () => {
 
   const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customerInfo.name || !customerInfo.email) {
-      toast.error("Please fill in all required fields");
+    setValidationErrors({});
+
+    // Validate with Zod schema
+    const validation = customerInfoSchema.safeParse(customerInfo);
+    if (!validation.success) {
+      const errors: { name?: string; email?: string; phone?: string } = {};
+      validation.error.errors.forEach((err) => {
+        const field = err.path[0] as 'name' | 'email' | 'phone';
+        errors[field] = err.message;
+      });
+      setValidationErrors(errors);
+      toast.error("Please correct the errors in the form");
+      return;
+    }
+
+    // Additional check for consultation requiring phone
+    if (bookingType === 'consultation' && !customerInfo.phone?.trim()) {
+      setValidationErrors({ phone: "Phone is required for consultations" });
+      toast.error("Phone number is required for consultations");
       return;
     }
 
@@ -409,10 +435,18 @@ export const BookingCalendar = () => {
                     <Input
                       id="name"
                       value={customerInfo.name}
-                      onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                      onChange={(e) => {
+                        setCustomerInfo({ ...customerInfo, name: e.target.value });
+                        if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined });
+                      }}
                       placeholder="John Doe"
+                      maxLength={100}
                       required
+                      className={validationErrors.name ? "border-destructive" : ""}
                     />
+                    {validationErrors.name && (
+                      <p className="text-sm text-destructive">{validationErrors.name}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email" className="flex items-center gap-2">
@@ -422,10 +456,18 @@ export const BookingCalendar = () => {
                       id="email"
                       type="email"
                       value={customerInfo.email}
-                      onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
+                      onChange={(e) => {
+                        setCustomerInfo({ ...customerInfo, email: e.target.value });
+                        if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined });
+                      }}
                       placeholder="john@example.com"
+                      maxLength={255}
                       required
+                      className={validationErrors.email ? "border-destructive" : ""}
                     />
+                    {validationErrors.email && (
+                      <p className="text-sm text-destructive">{validationErrors.email}</p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="flex items-center gap-2">
@@ -435,10 +477,18 @@ export const BookingCalendar = () => {
                       id="phone"
                       type="tel"
                       value={customerInfo.phone}
-                      onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                      onChange={(e) => {
+                        setCustomerInfo({ ...customerInfo, phone: e.target.value });
+                        if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined });
+                      }}
                       placeholder="(555) 123-4567"
+                      maxLength={20}
                       required={bookingType === 'consultation'}
+                      className={validationErrors.phone ? "border-destructive" : ""}
                     />
+                    {validationErrors.phone && (
+                      <p className="text-sm text-destructive">{validationErrors.phone}</p>
+                    )}
                   </div>
                   <div className="flex gap-2 pt-4">
                     <Button type="button" variant="ghost" onClick={() => setStep("time")}>
