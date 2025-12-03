@@ -586,8 +586,8 @@ Date: ${new Date().toLocaleDateString()}
                       </div>
                     </RadioGroup>
                     {formData.prescribedMedications === "yes" && (
-                      <Input
-                        placeholder="List medications..."
+                      <Textarea
+                        placeholder="Please list medication names and dosages if known..."
                         value={formData.prescribedMedicationsList}
                         onChange={(e) => handleInputChange("prescribedMedicationsList", e.target.value)}
                         className="mt-2"
