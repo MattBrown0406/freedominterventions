@@ -44,7 +44,15 @@ const Assessment = () => {
   const [treatmentHistory, setTreatmentHistory] = useState<TreatmentEntry[]>([]);
   
   const [formData, setFormData] = useState({
-    // Section 1
+    // Section 1: Contact Information
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
+    contactRelationship: "",
+    bestDayToContact: "",
+    bestTimeToContact: "",
+    
+    // Section 2: Loved One's Basic Information
     fullName: "",
     age: "",
     gender: "",
@@ -54,10 +62,10 @@ const Assessment = () => {
     ageFirstUsed: "",
     useIncreased: "",
     
-    // Section 2
+    // Section 3
     dsmBehaviors: {} as Record<string, boolean>,
     
-    // Section 3
+    // Section 4
     withdrawalSymptoms: "",
     withdrawalDescription: "",
     recentDetox: "",
@@ -65,7 +73,7 @@ const Assessment = () => {
     withdrawalMedications: "",
     withdrawalMedicationsList: "",
     
-    // Section 4
+    // Section 5
     healthIssues: "",
     healthIssuesList: "",
     recentERVisits: "",
@@ -73,7 +81,7 @@ const Assessment = () => {
     prescribedMedications: "",
     prescribedMedicationsList: "",
     
-    // Section 5
+    // Section 6
     mentalHealthSigns: "",
     mentalHealthDetails: "",
     psychiatricHistory: "",
@@ -81,7 +89,7 @@ const Assessment = () => {
     violenceHistory: "",
     violenceDetails: "",
     
-    // Section 6
+    // Section 7
     stableLiving: "",
     homelessUnstable: "",
     familyEnabling: "",
@@ -90,12 +98,12 @@ const Assessment = () => {
     childrenImpacted: "",
     supportNetwork: "",
     
-    // Section 7
+    // Section 8
     priorTreatment: "",
     currentTriggers: "",
     willingnessToChange: "",
     
-    // Section 8
+    // Section 9
     financialImpact: "",
     financialDetails: "",
     childWelfareInvolvement: "",
@@ -162,7 +170,15 @@ const Assessment = () => {
           message: `
 FAMILY SUBSTANCE USE INTAKE QUESTIONNAIRE
 
-SECTION 1: LOVED ONE'S BASIC INFORMATION
+SECTION 1: CONTACT INFORMATION
+Name: ${formData.contactName}
+Email: ${formData.contactEmail}
+Phone: ${formData.contactPhone}
+Relationship to Loved One: ${formData.contactRelationship}
+Best Day to Contact: ${formData.bestDayToContact}
+Best Time to Contact: ${formData.bestTimeToContact}
+
+SECTION 2: LOVED ONE'S BASIC INFORMATION
 Full Name: ${formData.fullName}
 Age: ${formData.age}
 Gender: ${formData.gender}
@@ -172,29 +188,29 @@ Duration of Use: ${formData.durationOfUse}
 Age First Used: ${formData.ageFirstUsed}
 Use Increased Over Time: ${formData.useIncreased}
 
-SECTION 2: USE PATTERNS AND SEVERITY (DSM-5 CRITERIA)
+SECTION 3: USE PATTERNS AND SEVERITY (DSM-5 CRITERIA)
 ${dsmBehaviors.map(b => `${b}: ${formData.dsmBehaviors[b] ? 'Yes' : 'No'}`).join('\n')}
 Total Yes Responses: ${countYesResponses()}/13
 Severity Level: ${getSeverityLevel(countYesResponses())}
 
-SECTION 3: WITHDRAWAL AND MEDICAL RISKS
+SECTION 4: WITHDRAWAL AND MEDICAL RISKS
 Withdrawal Symptoms Observed: ${formData.withdrawalSymptoms}
 Description: ${formData.withdrawalDescription}
 Recent Detox Attempts: ${formData.recentDetox}
 Hospitalized for Detox: ${formData.hospitalizedDetox}
 Withdrawal Medications: ${formData.withdrawalMedications} - ${formData.withdrawalMedicationsList}
 
-SECTION 4: BIOMEDICAL CONDITIONS
+SECTION 5: BIOMEDICAL CONDITIONS
 Known Health Issues: ${formData.healthIssues} - ${formData.healthIssuesList}
 Recent ER Visits: ${formData.recentERVisits} - ${formData.erVisitDetails}
 Prescribed Medications: ${formData.prescribedMedications} - ${formData.prescribedMedicationsList}
 
-SECTION 5: EMOTIONAL/BEHAVIORAL RISKS
+SECTION 6: EMOTIONAL/BEHAVIORAL RISKS
 Mental Health Signs: ${formData.mentalHealthSigns} - ${formData.mentalHealthDetails}
 Psychiatric History: ${formData.psychiatricHistory} - ${formData.psychiatricDetails}
 Violence/Self-Harm/Trauma History: ${formData.violenceHistory} - ${formData.violenceDetails}
 
-SECTION 6: FAMILY/SOCIAL ENVIRONMENT
+SECTION 7: FAMILY/SOCIAL ENVIRONMENT
 Stable Living Situation: ${formData.stableLiving}
 Homeless or Unstable Housing: ${formData.homelessUnstable}
 Family Enabling: ${formData.familyEnabling} - ${formData.enablingDetails}
@@ -202,14 +218,14 @@ Children Present (<18): ${formData.childrenPresent}
 Children Impacted: ${formData.childrenImpacted}
 Support Network: ${formData.supportNetwork}
 
-SECTION 7: RELAPSE/RECOVERY ENVIRONMENT
+SECTION 8: RELAPSE/RECOVERY ENVIRONMENT
 Prior Treatment Attempts: ${formData.priorTreatment}
 Treatment History:
 ${formatTreatmentHistory()}
 Current Triggers/Stressors: ${formData.currentTriggers}
 Willingness to Change (1-10): ${formData.willingnessToChange}
 
-SECTION 8: FAMILY IMPACT AND READINESS
+SECTION 9: FAMILY IMPACT AND READINESS
 Financial Impact: ${formData.financialImpact} - ${formData.financialDetails}
 Child Welfare Involvement: ${formData.childWelfareInvolvement}
 Family Ready for Intervention: ${formData.familyReadyIntervention}
@@ -277,10 +293,104 @@ Date: ${new Date().toLocaleDateString()}
             </Card>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Section 1: Basic Information */}
+              {/* Section 1: Contact Information */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 1: Loved One's Basic Information</CardTitle>
+                  <CardTitle>Section 1: Your Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="contactName">Your Full Name</Label>
+                      <Input
+                        id="contactName"
+                        value={formData.contactName}
+                        onChange={(e) => handleInputChange("contactName", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="contactRelationship">Relationship to Loved One</Label>
+                      <Input
+                        id="contactRelationship"
+                        placeholder="e.g., Parent, Spouse, Sibling"
+                        value={formData.contactRelationship}
+                        onChange={(e) => handleInputChange("contactRelationship", e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="contactEmail">Email Address</Label>
+                      <Input
+                        id="contactEmail"
+                        type="email"
+                        value={formData.contactEmail}
+                        onChange={(e) => handleInputChange("contactEmail", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="contactPhone">Phone Number</Label>
+                      <Input
+                        id="contactPhone"
+                        type="tel"
+                        value={formData.contactPhone}
+                        onChange={(e) => handleInputChange("contactPhone", e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Best Day to Contact</Label>
+                      <Select
+                        value={formData.bestDayToContact}
+                        onValueChange={(v) => handleInputChange("bestDayToContact", v)}
+                      >
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Select a day" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="monday">Monday</SelectItem>
+                          <SelectItem value="tuesday">Tuesday</SelectItem>
+                          <SelectItem value="wednesday">Wednesday</SelectItem>
+                          <SelectItem value="thursday">Thursday</SelectItem>
+                          <SelectItem value="friday">Friday</SelectItem>
+                          <SelectItem value="saturday">Saturday</SelectItem>
+                          <SelectItem value="sunday">Sunday</SelectItem>
+                          <SelectItem value="any">Any Day</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Best Time to Contact</Label>
+                      <Select
+                        value={formData.bestTimeToContact}
+                        onValueChange={(v) => handleInputChange("bestTimeToContact", v)}
+                      >
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Select a time" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="morning">Morning (9 AM - 12 PM)</SelectItem>
+                          <SelectItem value="afternoon">Afternoon (12 PM - 5 PM)</SelectItem>
+                          <SelectItem value="evening">Evening (5 PM - 7 PM)</SelectItem>
+                          <SelectItem value="any">Any Time</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Section 2: Basic Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Section 2: Loved One's Basic Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -399,10 +509,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 2: DSM-5 Criteria */}
+              {/* Section 3: DSM-5 Criteria */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 2: Use Patterns and Severity (DSM-5 Criteria Indicators)</CardTitle>
+                  <CardTitle>Section 3: Use Patterns and Severity (DSM-5 Criteria Indicators)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground mb-4">
@@ -440,10 +550,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 3: Withdrawal and Medical Risks */}
+              {/* Section 4: Withdrawal and Medical Risks */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 3: Withdrawal and Medical Risks</CardTitle>
+                  <CardTitle>Section 4: Withdrawal and Medical Risks</CardTitle>
                   <p className="text-sm text-muted-foreground">ASAM Dimension 1 - Acute Intoxication/Withdrawal</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -538,10 +648,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 4: Biomedical Conditions */}
+              {/* Section 5: Biomedical Conditions */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 4: Biomedical Conditions</CardTitle>
+                  <CardTitle>Section 5: Biomedical Conditions</CardTitle>
                   <p className="text-sm text-muted-foreground">ASAM Dimension 2</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -625,10 +735,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 5: Emotional/Behavioral Risks */}
+              {/* Section 6: Emotional/Behavioral Risks */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 5: Emotional/Behavioral Risks</CardTitle>
+                  <CardTitle>Section 6: Emotional/Behavioral Risks</CardTitle>
                   <p className="text-sm text-muted-foreground">ASAM Dimensions 3 & 4</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -712,10 +822,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 6: Family/Social Environment */}
+              {/* Section 7: Family/Social Environment */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 6: Family/Social Environment</CardTitle>
+                  <CardTitle>Section 7: Family/Social Environment</CardTitle>
                   <p className="text-sm text-muted-foreground">ASAM Dimension 5</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -845,10 +955,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 7: Relapse/Recovery Environment */}
+              {/* Section 8: Relapse/Recovery Environment */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 7: Relapse/Recovery Environment</CardTitle>
+                  <CardTitle>Section 8: Relapse/Recovery Environment</CardTitle>
                   <p className="text-sm text-muted-foreground">ASAM Dimension 6</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -969,10 +1079,10 @@ Date: ${new Date().toLocaleDateString()}
                 </CardContent>
               </Card>
 
-              {/* Section 8: Family Impact and Readiness */}
+              {/* Section 9: Family Impact and Readiness */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Section 8: Family Impact and Readiness</CardTitle>
+                  <CardTitle>Section 9: Family Impact and Readiness</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
