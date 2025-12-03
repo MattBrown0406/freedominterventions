@@ -156,7 +156,7 @@ const Footer = () => {
             © {new Date().getFullYear()} Freedom Interventions. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Licensed & Insured • Confidential Services
+            Certified & Insured • Confidential Services
           </p>
         </div>
       </div>
