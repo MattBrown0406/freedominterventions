@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -72,9 +73,10 @@ const Blog = () => {
             ) : blogPosts && blogPosts.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {blogPosts.map((post) => (
-                  <article 
+                  <Link 
+                    to={`/blog/${post.slug}`}
                     key={post.id}
-                    className="bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/50 transition-colors group"
+                    className="bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/50 transition-colors group block"
                   >
                     {post.image_url && (
                       <div className="aspect-video overflow-hidden">
@@ -106,7 +108,7 @@ const Blog = () => {
                         </span>
                       </div>
                     </div>
-                  </article>
+                  </Link>
                 ))}
               </div>
             ) : (
