@@ -1,0 +1,452 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { format } from "date-fns";
+
+interface Assessment {
+  id: string;
+  contact_name: string;
+  contact_email: string;
+  contact_phone: string | null;
+  contact_relationship: string | null;
+  best_day_to_contact: string | null;
+  best_time_to_contact: string | null;
+  loved_one_name: string;
+  loved_one_age: number | null;
+  primary_substances: string | null;
+  severity_level: string | null;
+  dsm_yes_count: number | null;
+  status: string;
+  created_at: string;
+  dsm_behaviors: Record<string, boolean> | null;
+  withdrawal_symptoms: string | null;
+  withdrawal_description: string | null;
+  recent_detox: string | null;
+  hospitalized_detox: string | null;
+  withdrawal_medications: string | null;
+  withdrawal_medications_list: string | null;
+  health_issues: string | null;
+  health_issues_list: string | null;
+  recent_er_visits: string | null;
+  er_visit_details: string | null;
+  prescribed_medications: string | null;
+  prescribed_medications_list: string | null;
+  mental_health_signs: string | null;
+  mental_health_details: string | null;
+  psychiatric_history: string | null;
+  psychiatric_details: string | null;
+  violence_history: string | null;
+  violence_details: string | null;
+  stable_living: string | null;
+  homeless_unstable: string | null;
+  family_enabling: string | null;
+  enabling_details: string | null;
+  children_present: string | null;
+  children_impacted: string | null;
+  support_network: string | null;
+  prior_treatment: string | null;
+  treatment_history: Array<{ programName: string; dateAttended: string; successfulCompletion: boolean }> | null;
+  current_triggers: string | null;
+  willingness_to_change: string | null;
+  financial_impact: string | null;
+  financial_details: string | null;
+  child_welfare_involvement: string | null;
+  family_ready_intervention: string | null;
+  intervention_barriers: string | null;
+  family_signature: string | null;
+  frequency: string | null;
+  duration_of_use: string | null;
+  age_first_used: number | null;
+  use_increased: string | null;
+  loved_one_gender: string | null;
+}
+
+// Helper to cast JSON fields
+const parseAssessment = (data: unknown): Assessment => {
+  const raw = data as Record<string, unknown>;
+  return {
+    ...raw,
+    dsm_behaviors: raw.dsm_behaviors as Record<string, boolean> | null,
+    treatment_history: raw.treatment_history as Array<{ programName: string; dateAttended: string; successfulCompletion: boolean }> | null,
+  } as Assessment;
+};
+
+const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/admin-login");
+        return;
+      }
+
+      // Check admin role
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      if (!roles) {
+        toast({
+          title: "Access Denied",
+          description: "You do not have admin privileges.",
+          variant: "destructive",
+        });
+        await supabase.auth.signOut();
+        navigate("/admin-login");
+        return;
+      }
+
+      fetchAssessments();
+    };
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        navigate("/admin-login");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, toast]);
+
+  const fetchAssessments = async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase
+      .from("assessments")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load assessments.",
+        variant: "destructive",
+      });
+    } else {
+      setAssessments((data || []).map(parseAssessment));
+    }
+    setIsLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const updateStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from("assessments")
+      .update({ status, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update status.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Status Updated",
+        description: `Assessment marked as ${status}.`,
+      });
+      fetchAssessments();
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "new":
+        return <Badge variant="destructive"><AlertCircle className="w-3 h-3 mr-1" /> New</Badge>;
+      case "in_progress":
+        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> In Progress</Badge>;
+      case "reviewed":
+        return <Badge variant="default"><CheckCircle className="w-3 h-3 mr-1" /> Reviewed</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
+    }
+  };
+
+  const dsmBehaviors = [
+    "Used larger amounts or longer than intended",
+    "Wanted to cut down but couldn't",
+    "Spent excessive time obtaining/using/recovering",
+    "Cravings or strong urges to use",
+    "Missed family/work obligations due to use",
+    "Continued despite social/relationship problems",
+    "Gave up important activities for use",
+    "Risky use (driving, unsafe sex, etc.)",
+    "Tolerance (needs more for same effect)",
+    "Withdrawal symptoms (physical/emotional)",
+    "Used to relieve withdrawal",
+    "Failed to fulfill major role obligations",
+    "Legal problems related to use",
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Admin Dashboard | Freedom Interventions</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+
+      {/* Header */}
+      <header className="border-b bg-card">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Assessment Dashboard</h1>
+            <p className="text-sm text-muted-foreground">Review submitted family assessments</p>
+          </div>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="w-4 h-4 mr-2" /> Sign Out
+          </Button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Loading assessments...</p>
+          </div>
+        ) : assessments.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <p className="text-muted-foreground">No assessments submitted yet.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {assessments.map((assessment) => (
+              <Card key={assessment.id}>
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-lg">
+                        {assessment.loved_one_name}
+                        {assessment.loved_one_age && ` (Age ${assessment.loved_one_age})`}
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        Submitted by {assessment.contact_name} • {assessment.contact_relationship || "Relationship not specified"}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {format(new Date(assessment.created_at), "MMM d, yyyy 'at' h:mm a")}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {getStatusBadge(assessment.status)}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Contact</p>
+                      <p className="text-sm">{assessment.contact_email}</p>
+                      {assessment.contact_phone && <p className="text-sm">{assessment.contact_phone}</p>}
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Best Time</p>
+                      <p className="text-sm capitalize">
+                        {assessment.best_day_to_contact || "Not specified"} • {assessment.best_time_to_contact || "Any time"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Severity</p>
+                      <p className="text-sm">
+                        {assessment.severity_level || "Not assessed"} ({assessment.dsm_yes_count || 0}/13 criteria)
+                      </p>
+                    </div>
+                  </div>
+
+                  {assessment.primary_substances && (
+                    <div className="mb-4">
+                      <p className="text-xs text-muted-foreground uppercase">Primary Substances</p>
+                      <p className="text-sm">{assessment.primary_substances}</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setExpandedId(expandedId === assessment.id ? null : assessment.id)}
+                    >
+                      {expandedId === assessment.id ? (
+                        <>
+                          <ChevronUp className="w-4 h-4 mr-1" /> Hide Details
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-4 h-4 mr-1" /> View Full Assessment
+                        </>
+                      )}
+                    </Button>
+                    {assessment.status === "new" && (
+                      <Button size="sm" variant="secondary" onClick={() => updateStatus(assessment.id, "in_progress")}>
+                        Mark In Progress
+                      </Button>
+                    )}
+                    {assessment.status !== "reviewed" && (
+                      <Button size="sm" onClick={() => updateStatus(assessment.id, "reviewed")}>
+                        Mark Reviewed
+                      </Button>
+                    )}
+                  </div>
+
+                  {expandedId === assessment.id && (
+                    <div className="mt-4 pt-4 border-t space-y-6">
+                      {/* Section 2: Basic Info */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Loved One's Information</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                          <div><span className="text-muted-foreground">Gender:</span> {assessment.loved_one_gender || "N/A"}</div>
+                          <div><span className="text-muted-foreground">Frequency:</span> {assessment.frequency || "N/A"}</div>
+                          <div><span className="text-muted-foreground">Duration:</span> {assessment.duration_of_use || "N/A"}</div>
+                          <div><span className="text-muted-foreground">Age First Used:</span> {assessment.age_first_used || "N/A"}</div>
+                          <div><span className="text-muted-foreground">Use Increased:</span> {assessment.use_increased || "N/A"}</div>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 3: DSM-5 Criteria */}
+                      <div>
+                        <h4 className="font-semibold mb-2">DSM-5 Criteria ({assessment.dsm_yes_count || 0}/13)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm">
+                          {dsmBehaviors.map((behavior) => (
+                            <div key={behavior} className="flex items-center gap-2">
+                              <span className={assessment.dsm_behaviors?.[behavior] ? "text-destructive" : "text-muted-foreground"}>
+                                {assessment.dsm_behaviors?.[behavior] ? "✓" : "○"}
+                              </span>
+                              <span className={assessment.dsm_behaviors?.[behavior] ? "" : "text-muted-foreground"}>
+                                {behavior}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 4: Withdrawal */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Withdrawal & Medical Risks</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="text-muted-foreground">Withdrawal Symptoms:</span> {assessment.withdrawal_symptoms || "N/A"}</p>
+                          {assessment.withdrawal_description && <p className="pl-4 text-muted-foreground">{assessment.withdrawal_description}</p>}
+                          <p><span className="text-muted-foreground">Recent Detox:</span> {assessment.recent_detox || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Hospitalized:</span> {assessment.hospitalized_detox || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Withdrawal Medications:</span> {assessment.withdrawal_medications || "N/A"} {assessment.withdrawal_medications_list && `- ${assessment.withdrawal_medications_list}`}</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 5: Biomedical */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Biomedical Conditions</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="text-muted-foreground">Health Issues:</span> {assessment.health_issues || "N/A"} {assessment.health_issues_list && `- ${assessment.health_issues_list}`}</p>
+                          <p><span className="text-muted-foreground">Recent ER Visits:</span> {assessment.recent_er_visits || "N/A"} {assessment.er_visit_details && `- ${assessment.er_visit_details}`}</p>
+                          <p><span className="text-muted-foreground">Prescribed Medications:</span> {assessment.prescribed_medications || "N/A"} {assessment.prescribed_medications_list && `- ${assessment.prescribed_medications_list}`}</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 6: Emotional/Behavioral */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Emotional/Behavioral Risks</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="text-muted-foreground">Mental Health Signs:</span> {assessment.mental_health_signs || "N/A"} {assessment.mental_health_details && `- ${assessment.mental_health_details}`}</p>
+                          <p><span className="text-muted-foreground">Psychiatric History:</span> {assessment.psychiatric_history || "N/A"} {assessment.psychiatric_details && `- ${assessment.psychiatric_details}`}</p>
+                          <p><span className="text-muted-foreground">Violence/Self-Harm/Trauma:</span> {assessment.violence_history || "N/A"} {assessment.violence_details && `- ${assessment.violence_details}`}</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 7: Family/Social */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Family/Social Environment</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="text-muted-foreground">Stable Living:</span> {assessment.stable_living || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Homeless/Unstable:</span> {assessment.homeless_unstable || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Family Enabling:</span> {assessment.family_enabling || "N/A"} {assessment.enabling_details && `- ${assessment.enabling_details}`}</p>
+                          <p><span className="text-muted-foreground">Children Present:</span> {assessment.children_present || "N/A"}</p>
+                          {assessment.children_present === "yes" && <p><span className="text-muted-foreground">Children Impacted:</span> {assessment.children_impacted || "N/A"}</p>}
+                          <p><span className="text-muted-foreground">Support Network:</span> {assessment.support_network || "N/A"}</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 8: Relapse/Recovery */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Relapse/Recovery Environment</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="text-muted-foreground">Prior Treatment:</span> {assessment.prior_treatment || "N/A"}</p>
+                          {assessment.treatment_history && assessment.treatment_history.length > 0 && (
+                            <div className="pl-4">
+                              <p className="text-muted-foreground">Treatment History:</p>
+                              <ul className="list-disc pl-4">
+                                {assessment.treatment_history.map((t, i) => (
+                                  <li key={i}>{t.programName} - {t.dateAttended} ({t.successfulCompletion ? "Completed" : "Not completed"})</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          <p><span className="text-muted-foreground">Current Triggers:</span> {assessment.current_triggers || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Willingness to Change:</span> {assessment.willingness_to_change || "N/A"}/10</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Section 9: Family Impact */}
+                      <div>
+                        <h4 className="font-semibold mb-2">Family Impact & Readiness</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="text-muted-foreground">Financial Impact:</span> {assessment.financial_impact || "N/A"} {assessment.financial_details && `- ${assessment.financial_details}`}</p>
+                          <p><span className="text-muted-foreground">Child Welfare Involvement:</span> {assessment.child_welfare_involvement || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Family Ready for Intervention:</span> {assessment.family_ready_intervention || "N/A"}</p>
+                          <p><span className="text-muted-foreground">Barriers:</span> {assessment.intervention_barriers || "N/A"}</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      <div>
+                        <p className="text-sm"><span className="text-muted-foreground">Signed by:</span> {assessment.family_signature || "N/A"}</p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default AdminDashboard;

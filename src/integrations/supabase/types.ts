@@ -14,6 +14,192 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessments: {
+        Row: {
+          age_first_used: number | null
+          best_day_to_contact: string | null
+          best_time_to_contact: string | null
+          child_welfare_involvement: string | null
+          children_impacted: string | null
+          children_present: string | null
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          contact_relationship: string | null
+          created_at: string
+          current_triggers: string | null
+          dsm_behaviors: Json | null
+          dsm_yes_count: number | null
+          duration_of_use: string | null
+          enabling_details: string | null
+          er_visit_details: string | null
+          family_enabling: string | null
+          family_ready_intervention: string | null
+          family_signature: string | null
+          financial_details: string | null
+          financial_impact: string | null
+          frequency: string | null
+          health_issues: string | null
+          health_issues_list: string | null
+          homeless_unstable: string | null
+          hospitalized_detox: string | null
+          id: string
+          intervention_barriers: string | null
+          loved_one_age: number | null
+          loved_one_gender: string | null
+          loved_one_name: string
+          mental_health_details: string | null
+          mental_health_signs: string | null
+          notes: string | null
+          prescribed_medications: string | null
+          prescribed_medications_list: string | null
+          primary_substances: string | null
+          prior_treatment: string | null
+          psychiatric_details: string | null
+          psychiatric_history: string | null
+          recent_detox: string | null
+          recent_er_visits: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity_level: string | null
+          stable_living: string | null
+          status: string | null
+          support_network: string | null
+          treatment_history: Json | null
+          updated_at: string
+          use_increased: string | null
+          violence_details: string | null
+          violence_history: string | null
+          willingness_to_change: string | null
+          withdrawal_description: string | null
+          withdrawal_medications: string | null
+          withdrawal_medications_list: string | null
+          withdrawal_symptoms: string | null
+        }
+        Insert: {
+          age_first_used?: number | null
+          best_day_to_contact?: string | null
+          best_time_to_contact?: string | null
+          child_welfare_involvement?: string | null
+          children_impacted?: string | null
+          children_present?: string | null
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          contact_relationship?: string | null
+          created_at?: string
+          current_triggers?: string | null
+          dsm_behaviors?: Json | null
+          dsm_yes_count?: number | null
+          duration_of_use?: string | null
+          enabling_details?: string | null
+          er_visit_details?: string | null
+          family_enabling?: string | null
+          family_ready_intervention?: string | null
+          family_signature?: string | null
+          financial_details?: string | null
+          financial_impact?: string | null
+          frequency?: string | null
+          health_issues?: string | null
+          health_issues_list?: string | null
+          homeless_unstable?: string | null
+          hospitalized_detox?: string | null
+          id?: string
+          intervention_barriers?: string | null
+          loved_one_age?: number | null
+          loved_one_gender?: string | null
+          loved_one_name: string
+          mental_health_details?: string | null
+          mental_health_signs?: string | null
+          notes?: string | null
+          prescribed_medications?: string | null
+          prescribed_medications_list?: string | null
+          primary_substances?: string | null
+          prior_treatment?: string | null
+          psychiatric_details?: string | null
+          psychiatric_history?: string | null
+          recent_detox?: string | null
+          recent_er_visits?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity_level?: string | null
+          stable_living?: string | null
+          status?: string | null
+          support_network?: string | null
+          treatment_history?: Json | null
+          updated_at?: string
+          use_increased?: string | null
+          violence_details?: string | null
+          violence_history?: string | null
+          willingness_to_change?: string | null
+          withdrawal_description?: string | null
+          withdrawal_medications?: string | null
+          withdrawal_medications_list?: string | null
+          withdrawal_symptoms?: string | null
+        }
+        Update: {
+          age_first_used?: number | null
+          best_day_to_contact?: string | null
+          best_time_to_contact?: string | null
+          child_welfare_involvement?: string | null
+          children_impacted?: string | null
+          children_present?: string | null
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          contact_relationship?: string | null
+          created_at?: string
+          current_triggers?: string | null
+          dsm_behaviors?: Json | null
+          dsm_yes_count?: number | null
+          duration_of_use?: string | null
+          enabling_details?: string | null
+          er_visit_details?: string | null
+          family_enabling?: string | null
+          family_ready_intervention?: string | null
+          family_signature?: string | null
+          financial_details?: string | null
+          financial_impact?: string | null
+          frequency?: string | null
+          health_issues?: string | null
+          health_issues_list?: string | null
+          homeless_unstable?: string | null
+          hospitalized_detox?: string | null
+          id?: string
+          intervention_barriers?: string | null
+          loved_one_age?: number | null
+          loved_one_gender?: string | null
+          loved_one_name?: string
+          mental_health_details?: string | null
+          mental_health_signs?: string | null
+          notes?: string | null
+          prescribed_medications?: string | null
+          prescribed_medications_list?: string | null
+          primary_substances?: string | null
+          prior_treatment?: string | null
+          psychiatric_details?: string | null
+          psychiatric_history?: string | null
+          recent_detox?: string | null
+          recent_er_visits?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity_level?: string | null
+          stable_living?: string | null
+          status?: string | null
+          support_network?: string | null
+          treatment_history?: Json | null
+          updated_at?: string
+          use_increased?: string | null
+          violence_details?: string | null
+          violence_history?: string | null
+          willingness_to_change?: string | null
+          withdrawal_description?: string | null
+          withdrawal_medications?: string | null
+          withdrawal_medications_list?: string | null
+          withdrawal_symptoms?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           category: string
@@ -107,15 +293,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -242,6 +455,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
