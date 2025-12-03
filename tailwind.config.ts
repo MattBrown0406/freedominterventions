@@ -17,6 +17,7 @@ export default {
         sans: ["DM Sans", "system-ui", "sans-serif"],
         serif: ["Playfair Display", "Georgia", "serif"],
         script: ["Pacifico", "cursive"],
+        lobster: ["Lobster", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",

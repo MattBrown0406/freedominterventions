@@ -76,7 +76,7 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 w-auto" />
-                <span className="font-script">The Party Wreckers Podcast</span>
+                <span className="font-lobster">The Party Wreckers Podcast</span>
               </a>
               <a href="tel:+15038362136">
                 <Button variant="hero" size="default" className="mt-2">
@@ -94,7 +94,7 @@ const Navbar = () => {
         <div className="container mx-auto px-6 py-1 flex justify-end">
           <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
             <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" />
-            <span className="font-script text-sm md:text-base text-foreground">
+            <span className="font-lobster text-sm md:text-base text-foreground">
               The Party Wreckers Podcast
             </span>
           </a>
