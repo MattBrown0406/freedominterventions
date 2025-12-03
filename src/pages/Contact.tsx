@@ -159,7 +159,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Service Area</h3>
                     <p className="text-muted-foreground">Based in Oregon</p>
-                    <p className="text-sm text-muted-foreground mt-1">Serving families nationwide</p>
+                    <p className="text-sm text-muted-foreground mt-1">Serving families nationwide and around the world</p>
                   </div>
                 </div>
               </div>
