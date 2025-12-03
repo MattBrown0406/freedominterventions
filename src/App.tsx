@@ -96,6 +96,16 @@ const App = () => (
           <Route path="/las-vegas-nevada" element={<LasVegasNevada />} />
           <Route path="/salt-lake-city-utah" element={<SaltLakeCityUtah />} />
           <Route path="/boise-idaho" element={<BoiseIdaho />} />
+          <Route path="/denver-colorado" element={<DenverColorado />} />
+          <Route path="/chicago-illinois" element={<ChicagoIllinois />} />
+          <Route path="/minneapolis-minnesota" element={<MinneapolisMinnesota />} />
+          <Route path="/kansas-city-missouri" element={<KansasCityMissouri />} />
+          <Route path="/houston-texas" element={<HoustonTexas />} />
+          <Route path="/new-orleans-louisiana" element={<NewOrleansLouisiana />} />
+          <Route path="/detroit-michigan" element={<DetroitMichigan />} />
+          <Route path="/miami-florida" element={<MiamiFlorida />} />
+          <Route path="/nashville-tennessee" element={<NashvilleTennessee />} />
+          <Route path="/indianapolis-indiana" element={<IndianapolisIndiana />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
