@@ -82,8 +82,11 @@ const Navbar = () => {
       {/* Full-width border and Party Wreckers logo */}
       <div className="border-t border-border/50">
         <div className="container mx-auto px-6 py-2">
-          <a href="/party-wreckers-podcast" className="inline-block">
+          <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
             <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-10 md:h-12 w-auto" />
+            <span className="font-script text-base md:text-lg text-foreground">
+              The Party Wreckers Podcast
+            </span>
           </a>
         </div>
       </div>
