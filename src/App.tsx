@@ -50,6 +50,13 @@ import DetroitMichigan from "./pages/DetroitMichigan";
 import MiamiFlorida from "./pages/MiamiFlorida";
 import NashvilleTennessee from "./pages/NashvilleTennessee";
 import IndianapolisIndiana from "./pages/IndianapolisIndiana";
+import SpokaneWashington from "./pages/SpokaneWashington";
+import BendOregon from "./pages/BendOregon";
+import PhiladelphiaPennsylvania from "./pages/PhiladelphiaPennsylvania";
+import BaltimoreMaryland from "./pages/BaltimoreMaryland";
+import AnchorageAlaska from "./pages/AnchorageAlaska";
+import KnoxvilleTennessee from "./pages/KnoxvilleTennessee";
+import ColumbusOhio from "./pages/ColumbusOhio";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +113,13 @@ const App = () => (
           <Route path="/miami-florida" element={<MiamiFlorida />} />
           <Route path="/nashville-tennessee" element={<NashvilleTennessee />} />
           <Route path="/indianapolis-indiana" element={<IndianapolisIndiana />} />
+          <Route path="/spokane-washington" element={<SpokaneWashington />} />
+          <Route path="/bend-oregon" element={<BendOregon />} />
+          <Route path="/philadelphia-pennsylvania" element={<PhiladelphiaPennsylvania />} />
+          <Route path="/baltimore-maryland" element={<BaltimoreMaryland />} />
+          <Route path="/anchorage-alaska" element={<AnchorageAlaska />} />
+          <Route path="/knoxville-tennessee" element={<KnoxvilleTennessee />} />
+          <Route path="/columbus-ohio" element={<ColumbusOhio />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
