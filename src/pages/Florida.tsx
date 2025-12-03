@@ -191,45 +191,45 @@ const Florida = () => {
               </div>
             </div>
 
-            {/* Action Steps */}
+            {/* Why Seek Help */}
             <div className="bg-card border border-border rounded-xl p-8">
               <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Actionable Recommendations for Florida Families
+                Why Seek Professional Intervention in Florida
               </h2>
               <div className="space-y-4">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
                   <div>
-                    <h3 className="font-semibold text-foreground">Monitor Warning Signs</h3>
-                    <p className="text-muted-foreground">Track DUI incidents, overdose indicators, or behavioral changes. Solicit complimentary consultations via state resources.</p>
+                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
+                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
                   <div>
-                    <h3 className="font-semibold text-foreground">Engage Specialists</h3>
-                    <p className="text-muted-foreground">Contact Freedom Interventions for expert guidance spanning Miami to Tampa and throughout Florida.</p>
+                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
+                    <p className="text-muted-foreground">Customized approaches that account for Florida's unique legal frameworks, regional resources, and cultural factors.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
                   <div>
-                    <h3 className="font-semibold text-foreground">Prepare Documentation</h3>
-                    <p className="text-muted-foreground">Amass toxicology reports, medical records, and legal documents. Rehearse boundaries with professional guidance.</p>
+                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
+                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
                   <div>
-                    <h3 className="font-semibold text-foreground">Invoke Marchman/Baker Acts</h3>
-                    <p className="text-muted-foreground">Procure interventionist-guided petitions when voluntary treatment is refused and criteria are met.</p>
+                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
+                    <p className="text-muted-foreground">Expert guidance through Marchman and Baker Act processes, including petition preparation and court representation.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
                   <div>
-                    <h3 className="font-semibold text-foreground">Institutionalize Aftercare</h3>
-                    <p className="text-muted-foreground">Establish AA/NA attendance, therapy, and family counseling. Monitor progress for 6-12 months.</p>
+                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
+                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
                   </div>
                 </div>
               </div>
