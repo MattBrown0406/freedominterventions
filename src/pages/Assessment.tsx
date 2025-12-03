@@ -673,8 +673,8 @@ Date: ${new Date().toLocaleDateString()}
                       </div>
                     </RadioGroup>
                     {formData.violenceHistory === "yes" && (
-                      <Input
-                        placeholder="Please describe..."
+                      <Textarea
+                        placeholder="Please provide details about any history of violence, self-harm, or trauma. Keep your description to 3-5 short sentences..."
                         value={formData.violenceDetails}
                         onChange={(e) => handleInputChange("violenceDetails", e.target.value)}
                         className="mt-2"
