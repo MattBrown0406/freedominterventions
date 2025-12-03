@@ -531,7 +531,7 @@ const Assessment = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground mb-4">
-                    Rate the loved one's behaviors in the past 12 months (Family observations):
+                    Confirm your loved one's behaviors in the past 12 months (Family observations):
                   </p>
                   
                   <div className="space-y-3">
