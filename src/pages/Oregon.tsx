@@ -3,14 +3,26 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 
 const Oregon = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
+      {/* Banner Image */}
+      <section className="pt-20">
+        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
+          <img 
+            src={oregonBanner} 
+            alt="Oregon landscape with mountains and forest path symbolizing hope and recovery" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </section>
+      
       {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-to-b from-primary/10 to-background">
+      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
