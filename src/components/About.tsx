@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const features = [
   "Certified Intervention Professionals (CIP)",
@@ -59,10 +60,12 @@ const About = () => {
               ))}
             </ul>
 
-            <Button variant="outline" size="lg">
-              Learn More About Us
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <Link to="/interventionist">
+              <Button variant="outline" size="lg">
+                Learn More About Us
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
