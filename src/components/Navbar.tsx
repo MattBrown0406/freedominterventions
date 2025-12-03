@@ -70,6 +70,14 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
+              <a
+                href="/party-wreckers-podcast"
+                className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2 flex items-center gap-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 w-auto" />
+                <span className="font-script">The Party Wreckers Podcast</span>
+              </a>
               <a href="tel:+15038362136">
                 <Button variant="hero" size="default" className="mt-2">
                   <Phone className="w-4 h-4 mr-2" />
@@ -81,8 +89,8 @@ const Navbar = () => {
         )}
       </div>
       
-      {/* Full-width border and Party Wreckers logo */}
-      <div className="border-t border-border/50">
+      {/* Full-width border and Party Wreckers logo - hidden on mobile */}
+      <div className="border-t border-border/50 hidden md:block">
         <div className="container mx-auto px-6 py-1 flex justify-end">
           <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
             <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" />
