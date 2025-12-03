@@ -140,8 +140,13 @@ const BlogPost = () => {
         <div className="container px-6">
           <article className="max-w-3xl mx-auto prose prose-lg prose-slate dark:prose-invert">
             <div 
-              className="text-foreground leading-relaxed whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+              className="text-foreground leading-relaxed"
+              dangerouslySetInnerHTML={{ 
+                __html: post.content
+                  .replace(/^## (.+)$/gm, '<h2 class="font-serif text-2xl md:text-3xl font-bold text-foreground mt-10 mb-4">$1</h2>')
+                  .replace(/^### (.+)$/gm, '<h3 class="font-serif text-xl md:text-2xl font-semibold text-foreground mt-8 mb-3">$1</h3>')
+                  .replace(/\n/g, '<br />') 
+              }}
             />
           </article>
         </div>
