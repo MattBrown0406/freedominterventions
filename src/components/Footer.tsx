@@ -1,8 +1,11 @@
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
+  const [statesOpen, setStatesOpen] = useState(false);
+  
   const footerLinks = {
     services: [
       { name: "Family Intervention", href: "/family-intervention", isRoute: true },
@@ -13,10 +16,12 @@ const Footer = () => {
     company: [
       { name: "Our Team", href: "/interventionist", isRoute: true },
       { name: "Testimonials", href: "/testimonials", isRoute: true },
-      { name: "Oregon Crisis", href: "/oregon", isRoute: true },
-      { name: "Washington Crisis", href: "/washington", isRoute: true },
-      { name: "Idaho Crisis", href: "/idaho", isRoute: true },
       { name: "Contact", href: "#contact" },
+    ],
+    states: [
+      { name: "Idaho", href: "/idaho" },
+      { name: "Oregon", href: "/oregon" },
+      { name: "Washington", href: "/washington" },
     ],
     legal: [
       { name: "Privacy Policy", href: "#" },
@@ -97,6 +102,28 @@ const Footer = () => {
                   )}
                 </li>
               ))}
+              {/* Collapsible States Section */}
+              <li>
+                <button
+                  onClick={() => setStatesOpen(!statesOpen)}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
+                  <span>Information by State</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${statesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <ul className={`mt-2 ml-3 space-y-2 overflow-hidden transition-all duration-200 ${statesOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  {footerLinks.states.map((state) => (
+                    <li key={state.name}>
+                      <Link
+                        to={state.href}
+                        className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
+                      >
+                        {state.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
             </ul>
           </div>
 
