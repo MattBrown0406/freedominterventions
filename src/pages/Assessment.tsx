@@ -636,7 +636,7 @@ const Assessment = () => {
                   </div>
 
                   <div>
-                    <Label>Current medications for withdrawal?</Label>
+                    <Label>Current medications for withdrawal and/or MAT?</Label>
                     <RadioGroup
                       value={formData.withdrawalMedications}
                       onValueChange={(v) => handleInputChange("withdrawalMedications", v)}
@@ -653,7 +653,7 @@ const Assessment = () => {
                     </RadioGroup>
                     {formData.withdrawalMedications === "yes" && (
                       <Input
-                        placeholder="List medications..."
+                        placeholder="Please identify the medication and dosage..."
                         value={formData.withdrawalMedicationsList}
                         onChange={(e) => handleInputChange("withdrawalMedicationsList", e.target.value)}
                         className="mt-2"
