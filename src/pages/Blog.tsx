@@ -40,7 +40,7 @@ const Blog = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative py-24 bg-card">
+      <section className="relative pt-32 pb-24 bg-card">
         <div className="container px-6">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
