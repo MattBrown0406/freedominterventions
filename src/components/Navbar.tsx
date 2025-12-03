@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
+import partyWreckersLogo from "@/assets/party-wreckers-logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,14 +16,22 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-20 md:h-24">
           {/* Logo and text */}
-          <a href="/" className="flex items-center gap-2">
-            <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg" />
-            <span className="font-serif text-xl md:text-2xl font-semibold text-primary">
-              Freedom Interventions
-            </span>
-          </a>
+          <div className="flex items-center gap-2">
+            <div className="flex flex-col items-start">
+              <a href="/" className="flex items-center gap-2">
+                <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg" />
+                <span className="font-serif text-xl md:text-2xl font-semibold text-primary">
+                  Freedom Interventions
+                </span>
+              </a>
+              <div className="w-full border-t border-border/50 my-1"></div>
+              <a href="/party-wreckers-podcast" className="flex items-center">
+                <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 md:h-8 w-auto" />
+              </a>
+            </div>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">

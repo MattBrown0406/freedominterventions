@@ -21,6 +21,7 @@ import Utah from "./pages/Utah";
 import Arizona from "./pages/Arizona";
 import Nevada from "./pages/Nevada";
 import Contact from "./pages/Contact";
+import PartyWreckersPodcast from "./pages/PartyWreckersPodcast";
 import ScrollToTop from "./components/ScrollToTop";
 import TawkToChat from "./components/TawkToChat";
 
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/arizona" element={<Arizona />} />
           <Route path="/nevada" element={<Nevada />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/party-wreckers-podcast" element={<PartyWreckersPodcast />} />
           <Route path="/reschedule" element={<Reschedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
