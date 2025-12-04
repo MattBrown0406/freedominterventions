@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -107,7 +108,7 @@ const BlogPost = () => {
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
               {post.title}
             </h1>
-            <div className="flex items-center gap-4 text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-6">
               <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 {formatDate(post.published_at)}
@@ -116,6 +117,11 @@ const BlogPost = () => {
                 {post.category}
               </span>
             </div>
+            <ShareButtons 
+              url={window.location.href} 
+              title={post.title} 
+              description={post.excerpt} 
+            />
           </div>
         </div>
       </section>
