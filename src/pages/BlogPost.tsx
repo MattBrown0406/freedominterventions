@@ -90,6 +90,17 @@ const BlogPost = () => {
       <Helmet>
         <title>{post.title} | Freedom Interventions Blog</title>
         <meta name="description" content={post.excerpt} />
+        {/* Open Graph */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.excerpt} />
+        <meta property="og:url" content={window.location.href} />
+        {post.image_url && <meta property="og:image" content={post.image_url.startsWith('http') ? post.image_url : `${window.location.origin}${post.image_url}`} />}
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt} />
+        {post.image_url && <meta name="twitter:image" content={post.image_url.startsWith('http') ? post.image_url : `${window.location.origin}${post.image_url}`} />}
       </Helmet>
 
       <Navbar />
