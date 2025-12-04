@@ -33,13 +33,13 @@ const FeaturedArticleCarousel = () => {
     },
   });
 
-  // Auto-rotate every 6 seconds
+  // Auto-rotate every hour
   useEffect(() => {
     if (!posts || posts.length <= 1) return;
     
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % posts.length);
-    }, 6000);
+    }, 3600000); // 1 hour in milliseconds
 
     return () => clearInterval(interval);
   }, [posts]);
