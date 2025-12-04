@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import FeaturedArticleCarousel from "./FeaturedArticleCarousel";
 
 const features = [
   "Certified Intervention Professionals (CIP)",
@@ -14,17 +15,10 @@ const About = () => {
     <section id="about" className="py-20 md:py-32 overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Image */}
+          {/* Featured Articles Carousel */}
           <div className="relative order-2 lg:order-1">
             <div className="relative">
-              {/* Main image placeholder with gradient */}
-              <div className="relative z-10 rounded-2xl overflow-hidden aspect-[4/5] bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 flex items-center justify-center">
-                <img
-                  src="/about-organic.jpg"
-                  alt="Supportive intervention session"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <FeaturedArticleCarousel />
               
               {/* Decorative elements */}
               <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-secondary/50 organic-blob -z-10" />
