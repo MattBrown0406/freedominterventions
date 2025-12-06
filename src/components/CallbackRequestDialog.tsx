@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
+import { z } from "zod";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { CalendarIcon, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Validation schema for callback request form
+const callbackSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  phone: z.string().trim().min(1, "Phone number is required").max(20, "Phone number is too long"),
+  email: z.string().max(255, "Email is too long").email("Invalid email address").optional().or(z.literal("")),
+  notes: z.string().max(1000, "Notes must be less than 1000 characters").optional(),
+});
+
 interface CallbackRequestDialogProps {
   children: React.ReactNode;
 }
@@ -51,6 +60,7 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [timeWindow, setTimeWindow] = useState("");
   const [notes, setNotes] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const resetForm = () => {
     setName("");
@@ -60,26 +70,51 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
     setTimeWindow("");
     setNotes("");
     setSubmitted(false);
+    setErrors({});
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
-    if (!name.trim() || !phone.trim() || !selectedDate || !timeWindow) {
+    // Validate required fields first
+    if (!selectedDate || !timeWindow) {
       toast.error("Please fill in all required fields");
       return;
     }
 
+    // Validate with Zod schema
+    const validationResult = callbackSchema.safeParse({
+      name,
+      phone,
+      email: email || undefined,
+      notes: notes || undefined,
+    });
+
+    if (!validationResult.success) {
+      const fieldErrors: Record<string, string> = {};
+      validationResult.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
+      });
+      setErrors(fieldErrors);
+      toast.error("Please fix the validation errors");
+      return;
+    }
+
+    const validatedData = validationResult.data;
+
     setLoading(true);
     try {
       const { error } = await supabase.from("bookings").insert({
-        customer_name: name.trim(),
-        customer_phone: phone.trim(),
-        customer_email: email.trim() || null,
+        customer_name: validatedData.name,
+        customer_phone: validatedData.phone,
+        customer_email: validatedData.email || null,
         booking_date: format(selectedDate, "yyyy-MM-dd"),
         booking_time: timeWindow,
         booking_type: "callback",
-        notes: notes.trim() || null,
+        notes: validatedData.notes || null,
         status: "pending",
       });
 
@@ -149,8 +184,10 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
                 placeholder="Your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
+                maxLength={100}
+                className={errors.name ? "border-destructive" : ""}
               />
+              {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
@@ -163,8 +200,10 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
                 placeholder="(555) 123-4567"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                required
+                maxLength={20}
+                className={errors.phone ? "border-destructive" : ""}
               />
+              {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
             </div>
 
             <div className="space-y-2">
@@ -175,7 +214,10 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                maxLength={255}
+                className={errors.email ? "border-destructive" : ""}
               />
+              {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
@@ -238,7 +280,10 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={3}
+                maxLength={1000}
+                className={errors.notes ? "border-destructive" : ""}
               />
+              {errors.notes && <p className="text-xs text-destructive">{errors.notes}</p>}
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
