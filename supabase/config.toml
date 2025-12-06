@@ -8,3 +8,12 @@ verify_jwt = false
 
 [functions.send-contact-message]
 verify_jwt = false
+
+[functions.generate-blog-image]
+verify_jwt = true
+
+[functions.fetch-podcast-episodes]
+verify_jwt = false
+
+[functions.og-image]
+verify_jwt = false

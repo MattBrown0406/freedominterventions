@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image } from "lucide-react";
 import { format } from "date-fns";
-
+import BlogImageManager from "@/components/admin/BlogImageManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -240,19 +241,32 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {isLoading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Loading assessments...</p>
-          </div>
-        ) : assessments.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">No assessments submitted yet.</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {assessments.map((assessment) => (
+        <Tabs defaultValue="assessments" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="assessments" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Assessments
+            </TabsTrigger>
+            <TabsTrigger value="blog-images" className="gap-2">
+              <Image className="w-4 h-4" />
+              Blog Images
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="assessments">
+            {isLoading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Loading assessments...</p>
+              </div>
+            ) : assessments.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <p className="text-muted-foreground">No assessments submitted yet.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {assessments.map((assessment) => (
               <Card key={assessment.id}>
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
@@ -460,8 +474,14 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        )}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="blog-images">
+              <BlogImageManager />
+            </TabsContent>
+          </Tabs>
       </main>
     </div>
   );
