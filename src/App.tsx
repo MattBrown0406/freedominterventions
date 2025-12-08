@@ -20,6 +20,8 @@ import California from "./pages/California";
 import Utah from "./pages/Utah";
 import Arizona from "./pages/Arizona";
 import Nevada from "./pages/Nevada";
+import Texas from "./pages/Texas";
+import NewMexico from "./pages/NewMexico";
 import Contact from "./pages/Contact";
 import PartyWreckersPodcast from "./pages/PartyWreckersPodcast";
 import Blog from "./pages/Blog";
@@ -86,6 +88,8 @@ const App = () => (
           <Route path="/utah" element={<Utah />} />
           <Route path="/arizona" element={<Arizona />} />
           <Route path="/nevada" element={<Nevada />} />
+          <Route path="/texas" element={<Texas />} />
+          <Route path="/new-mexico" element={<NewMexico />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/party-wreckers-podcast" element={<PartyWreckersPodcast />} />
           <Route path="/blog" element={<Blog />} />
