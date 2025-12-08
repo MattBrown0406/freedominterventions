@@ -57,6 +57,8 @@ import BaltimoreMaryland from "./pages/BaltimoreMaryland";
 import AnchorageAlaska from "./pages/AnchorageAlaska";
 import KnoxvilleTennessee from "./pages/KnoxvilleTennessee";
 import ColumbusOhio from "./pages/ColumbusOhio";
+import OmahaNebraska from "./pages/OmahaNebraska";
+import OklahomaCityOklahoma from "./pages/OklahomaCityOklahoma";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +122,8 @@ const App = () => (
           <Route path="/anchorage-alaska" element={<AnchorageAlaska />} />
           <Route path="/knoxville-tennessee" element={<KnoxvilleTennessee />} />
           <Route path="/columbus-ohio" element={<ColumbusOhio />} />
+          <Route path="/omaha-nebraska" element={<OmahaNebraska />} />
+          <Route path="/oklahoma-city-oklahoma" element={<OklahomaCityOklahoma />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
