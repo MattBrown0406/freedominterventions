@@ -5,6 +5,7 @@ import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
   const [statesOpen, setStatesOpen] = useState(false);
+  const [provincesOpen, setProvincesOpen] = useState(false);
   
   const footerLinks = {
     services: [
@@ -30,6 +31,18 @@ const Footer = () => {
       { name: "Texas", href: "/texas" },
       { name: "Utah", href: "/utah" },
       { name: "Washington", href: "/washington" },
+    ],
+    provinces: [
+      { name: "Alberta", href: "/alberta" },
+      { name: "British Columbia", href: "/british-columbia" },
+      { name: "Manitoba", href: "/manitoba" },
+      { name: "New Brunswick", href: "/new-brunswick" },
+      { name: "Newfoundland & Labrador", href: "/newfoundland-labrador" },
+      { name: "Nova Scotia", href: "/nova-scotia" },
+      { name: "Ontario", href: "/ontario" },
+      { name: "Prince Edward Island", href: "/prince-edward-island" },
+      { name: "Quebec", href: "/quebec" },
+      { name: "Saskatchewan", href: "/saskatchewan" },
     ],
     legal: [
       { name: "Privacy Policy", href: "#" },
@@ -127,6 +140,28 @@ const Footer = () => {
                         className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
                       >
                         {state.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              {/* Collapsible Provinces Section */}
+              <li>
+                <button
+                  onClick={() => setProvincesOpen(!provincesOpen)}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
+                >
+                  <span>Information by Province</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${provincesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <ul className={`mt-2 ml-3 space-y-2 overflow-hidden transition-all duration-200 ${provincesOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  {footerLinks.provinces.map((province) => (
+                    <li key={province.name}>
+                      <Link
+                        to={province.href}
+                        className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
+                      >
+                        {province.name}
                       </Link>
                     </li>
                   ))}
