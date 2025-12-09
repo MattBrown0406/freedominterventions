@@ -12,16 +12,6 @@ import CrisisSupport from "./pages/CrisisSupport";
 import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
 import Testimonials from "./pages/Testimonials";
-import Oregon from "./pages/Oregon";
-import Washington from "./pages/Washington";
-import Idaho from "./pages/Idaho";
-import Florida from "./pages/Florida";
-import California from "./pages/California";
-import Utah from "./pages/Utah";
-import Arizona from "./pages/Arizona";
-import Nevada from "./pages/Nevada";
-import Texas from "./pages/Texas";
-import NewMexico from "./pages/NewMexico";
 import Contact from "./pages/Contact";
 import PartyWreckersPodcast from "./pages/PartyWreckersPodcast";
 import Blog from "./pages/Blog";
@@ -31,6 +21,60 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import TawkToChat from "./components/TawkToChat";
+
+// US States
+import Alabama from "./pages/Alabama";
+import Alaska from "./pages/Alaska";
+import Arizona from "./pages/Arizona";
+import Arkansas from "./pages/Arkansas";
+import California from "./pages/California";
+import Colorado from "./pages/Colorado";
+import Connecticut from "./pages/Connecticut";
+import Delaware from "./pages/Delaware";
+import Florida from "./pages/Florida";
+import Georgia from "./pages/Georgia";
+import Hawaii from "./pages/Hawaii";
+import Idaho from "./pages/Idaho";
+import Illinois from "./pages/Illinois";
+import Indiana from "./pages/Indiana";
+import Iowa from "./pages/Iowa";
+import Kansas from "./pages/Kansas";
+import Kentucky from "./pages/Kentucky";
+import Louisiana from "./pages/Louisiana";
+import Maine from "./pages/Maine";
+import Maryland from "./pages/Maryland";
+import Massachusetts from "./pages/Massachusetts";
+import Michigan from "./pages/Michigan";
+import Minnesota from "./pages/Minnesota";
+import Mississippi from "./pages/Mississippi";
+import Missouri from "./pages/Missouri";
+import Montana from "./pages/Montana";
+import Nebraska from "./pages/Nebraska";
+import Nevada from "./pages/Nevada";
+import NewHampshire from "./pages/NewHampshire";
+import NewJersey from "./pages/NewJersey";
+import NewMexico from "./pages/NewMexico";
+import NewYork from "./pages/NewYork";
+import NorthCarolina from "./pages/NorthCarolina";
+import NorthDakota from "./pages/NorthDakota";
+import Ohio from "./pages/Ohio";
+import Oklahoma from "./pages/Oklahoma";
+import Oregon from "./pages/Oregon";
+import Pennsylvania from "./pages/Pennsylvania";
+import RhodeIsland from "./pages/RhodeIsland";
+import SouthCarolina from "./pages/SouthCarolina";
+import SouthDakota from "./pages/SouthDakota";
+import Tennessee from "./pages/Tennessee";
+import Texas from "./pages/Texas";
+import Utah from "./pages/Utah";
+import Vermont from "./pages/Vermont";
+import Virginia from "./pages/Virginia";
+import Washington from "./pages/Washington";
+import WestVirginia from "./pages/WestVirginia";
+import Wisconsin from "./pages/Wisconsin";
+import Wyoming from "./pages/Wyoming";
+
+// US Cities
 import PortlandOregon from "./pages/PortlandOregon";
 import SeattleWashington from "./pages/SeattleWashington";
 import EugeneOregon from "./pages/EugeneOregon";
@@ -61,6 +105,8 @@ import KnoxvilleTennessee from "./pages/KnoxvilleTennessee";
 import ColumbusOhio from "./pages/ColumbusOhio";
 import OmahaNebraska from "./pages/OmahaNebraska";
 import OklahomaCityOklahoma from "./pages/OklahomaCityOklahoma";
+
+// Canadian Provinces
 import BritishColumbia from "./pages/BritishColumbia";
 import Alberta from "./pages/Alberta";
 import Ontario from "./pages/Ontario";
@@ -90,16 +136,6 @@ const App = () => (
           <Route path="/treatment-planning" element={<TreatmentPlanning />} />
           <Route path="/aftercare-guidance" element={<AftercareGuidance />} />
           <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/oregon" element={<Oregon />} />
-          <Route path="/washington" element={<Washington />} />
-          <Route path="/idaho" element={<Idaho />} />
-          <Route path="/florida" element={<Florida />} />
-          <Route path="/california" element={<California />} />
-          <Route path="/utah" element={<Utah />} />
-          <Route path="/arizona" element={<Arizona />} />
-          <Route path="/nevada" element={<Nevada />} />
-          <Route path="/texas" element={<Texas />} />
-          <Route path="/new-mexico" element={<NewMexico />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/party-wreckers-podcast" element={<PartyWreckersPodcast />} />
           <Route path="/blog" element={<Blog />} />
@@ -108,6 +144,60 @@ const App = () => (
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/reschedule" element={<Reschedule />} />
+          
+          {/* US States */}
+          <Route path="/alabama" element={<Alabama />} />
+          <Route path="/alaska" element={<Alaska />} />
+          <Route path="/arizona" element={<Arizona />} />
+          <Route path="/arkansas" element={<Arkansas />} />
+          <Route path="/california" element={<California />} />
+          <Route path="/colorado" element={<Colorado />} />
+          <Route path="/connecticut" element={<Connecticut />} />
+          <Route path="/delaware" element={<Delaware />} />
+          <Route path="/florida" element={<Florida />} />
+          <Route path="/georgia" element={<Georgia />} />
+          <Route path="/hawaii" element={<Hawaii />} />
+          <Route path="/idaho" element={<Idaho />} />
+          <Route path="/illinois" element={<Illinois />} />
+          <Route path="/indiana" element={<Indiana />} />
+          <Route path="/iowa" element={<Iowa />} />
+          <Route path="/kansas" element={<Kansas />} />
+          <Route path="/kentucky" element={<Kentucky />} />
+          <Route path="/louisiana" element={<Louisiana />} />
+          <Route path="/maine" element={<Maine />} />
+          <Route path="/maryland" element={<Maryland />} />
+          <Route path="/massachusetts" element={<Massachusetts />} />
+          <Route path="/michigan" element={<Michigan />} />
+          <Route path="/minnesota" element={<Minnesota />} />
+          <Route path="/mississippi" element={<Mississippi />} />
+          <Route path="/missouri" element={<Missouri />} />
+          <Route path="/montana" element={<Montana />} />
+          <Route path="/nebraska" element={<Nebraska />} />
+          <Route path="/nevada" element={<Nevada />} />
+          <Route path="/new-hampshire" element={<NewHampshire />} />
+          <Route path="/new-jersey" element={<NewJersey />} />
+          <Route path="/new-mexico" element={<NewMexico />} />
+          <Route path="/new-york" element={<NewYork />} />
+          <Route path="/north-carolina" element={<NorthCarolina />} />
+          <Route path="/north-dakota" element={<NorthDakota />} />
+          <Route path="/ohio" element={<Ohio />} />
+          <Route path="/oklahoma" element={<Oklahoma />} />
+          <Route path="/oregon" element={<Oregon />} />
+          <Route path="/pennsylvania" element={<Pennsylvania />} />
+          <Route path="/rhode-island" element={<RhodeIsland />} />
+          <Route path="/south-carolina" element={<SouthCarolina />} />
+          <Route path="/south-dakota" element={<SouthDakota />} />
+          <Route path="/tennessee" element={<Tennessee />} />
+          <Route path="/texas" element={<Texas />} />
+          <Route path="/utah" element={<Utah />} />
+          <Route path="/vermont" element={<Vermont />} />
+          <Route path="/virginia" element={<Virginia />} />
+          <Route path="/washington" element={<Washington />} />
+          <Route path="/west-virginia" element={<WestVirginia />} />
+          <Route path="/wisconsin" element={<Wisconsin />} />
+          <Route path="/wyoming" element={<Wyoming />} />
+          
+          {/* US Cities */}
           <Route path="/portland-oregon" element={<PortlandOregon />} />
           <Route path="/seattle-washington" element={<SeattleWashington />} />
           <Route path="/eugene-oregon" element={<EugeneOregon />} />
@@ -138,6 +228,7 @@ const App = () => (
           <Route path="/columbus-ohio" element={<ColumbusOhio />} />
           <Route path="/omaha-nebraska" element={<OmahaNebraska />} />
           <Route path="/oklahoma-city-oklahoma" element={<OklahomaCityOklahoma />} />
+          
           {/* Canadian Provinces */}
           <Route path="/british-columbia" element={<BritishColumbia />} />
           <Route path="/alberta" element={<Alberta />} />
@@ -149,6 +240,7 @@ const App = () => (
           <Route path="/new-brunswick" element={<NewBrunswick />} />
           <Route path="/newfoundland-labrador" element={<NewfoundlandLabrador />} />
           <Route path="/prince-edward-island" element={<PrinceEdwardIsland />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
