@@ -163,7 +163,7 @@ const Assessment = () => {
     setIsSubmitting(true);
 
     try {
-      // Save to database
+      // Prepare assessment data
       const assessmentData = {
         // Section 1: Contact Information
         contact_name: formData.contactName,
@@ -238,30 +238,28 @@ const Assessment = () => {
         family_signature: formData.familySignature || null,
       };
 
-      const { error: dbError } = await supabase
-        .from("assessments")
-        .insert(assessmentData as never);
-
-      if (dbError) throw dbError;
-
-      // Also send email notification
-      await supabase.functions.invoke("send-contact-message", {
-        body: {
-          name: formData.contactName || "Assessment Form",
-          email: "assessment@freedominterventions.com",
-          phone: formData.contactPhone || "",
-          message: `New assessment submitted for ${formData.fullName}.\n\nContact: ${formData.contactName} (${formData.contactEmail})\nBest time to reach: ${formData.bestDayToContact || "Any day"} - ${formData.bestTimeToContact || "Any time"}\n\nSeverity Level: ${getSeverityLevel(countYesResponses())} (${countYesResponses()}/13 criteria)\n\nView full assessment in the admin dashboard.`,
-        },
+      // Submit via edge function with rate limiting
+      const { data, error } = await supabase.functions.invoke("submit-assessment", {
+        body: assessmentData,
       });
+
+      if (error) {
+        throw new Error(error.message || "Submission failed");
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
 
       toast({
         title: "Assessment Submitted",
         description: "Thank you. We will review your assessment and contact you soon.",
       });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Please try again or call us directly.";
       toast({
         title: "Submission Failed",
-        description: "Please try again or call us directly.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
