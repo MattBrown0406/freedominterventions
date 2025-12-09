@@ -19,27 +19,31 @@ const paymentAttempts = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const MAX_PAYMENT_ATTEMPTS = 5; // 5 attempts per hour per IP
 
+// Separate rate limiter for booking creation (consultations)
+const bookingAttempts = new Map<string, { count: number; resetTime: number }>();
+const MAX_BOOKING_ATTEMPTS = 5; // 5 booking attempts per hour per IP
+
 function getClientIP(req: Request): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
          req.headers.get('x-real-ip') || 
          'unknown';
 }
 
-function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
+function checkRateLimit(ip: string, limitMap: Map<string, { count: number; resetTime: number }>, maxAttempts: number): { allowed: boolean; remaining: number } {
   const now = Date.now();
-  const record = paymentAttempts.get(ip);
+  const record = limitMap.get(ip);
   
   if (!record || now > record.resetTime) {
-    paymentAttempts.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true, remaining: MAX_PAYMENT_ATTEMPTS - 1 };
+    limitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: maxAttempts - 1 };
   }
   
-  if (record.count >= MAX_PAYMENT_ATTEMPTS) {
+  if (record.count >= maxAttempts) {
     return { allowed: false, remaining: 0 };
   }
   
   record.count++;
-  return { allowed: true, remaining: MAX_PAYMENT_ATTEMPTS - record.count };
+  return { allowed: true, remaining: maxAttempts - record.count };
 }
 
 // Input validation helpers
@@ -187,7 +191,7 @@ serve(async (req) => {
       case 'create-payment': {
         // Rate limit check for payment attempts
         const clientIP = getClientIP(req);
-        const rateLimit = checkRateLimit(clientIP);
+        const rateLimit = checkRateLimit(clientIP, paymentAttempts, MAX_PAYMENT_ATTEMPTS);
         
         if (!rateLimit.allowed) {
           console.warn(`Rate limit exceeded for IP: ${clientIP}`);
@@ -273,6 +277,85 @@ serve(async (req) => {
             customerName: sanitizedName,
             customerEmail: sanitizedEmail,
           }
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'create-booking': {
+        // Rate limit check for booking creation
+        const clientIP = getClientIP(req);
+        const rateLimit = checkRateLimit(clientIP, bookingAttempts, MAX_BOOKING_ATTEMPTS);
+        
+        if (!rateLimit.allowed) {
+          console.warn(`Booking rate limit exceeded for IP: ${clientIP}`);
+          return new Response(JSON.stringify({ 
+            error: 'Too many booking attempts. Please try again later.' 
+          }), {
+            status: 429,
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json',
+              'Retry-After': '3600'
+            },
+          });
+        }
+
+        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents } = params;
+
+        // Validate required fields
+        if (!validateString(customerName, 100)) {
+          throw new Error('Valid customer name is required');
+        }
+
+        if (!validateEmail(customerEmail)) {
+          throw new Error('Valid email address is required');
+        }
+
+        if (!validateString(bookingDate, 20) || !validateString(bookingTime, 10)) {
+          throw new Error('Valid booking date and time are required');
+        }
+
+        if (!bookingType || !['consultation', 'coaching'].includes(bookingType)) {
+          throw new Error('Valid booking type is required');
+        }
+
+        const sanitizedData = {
+          booking_type: bookingType,
+          customer_name: sanitizeString(customerName),
+          customer_email: customerEmail.toLowerCase().trim(),
+          customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
+          booking_date: bookingDate,
+          booking_time: bookingTime,
+          duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : 60,
+          status: 'confirmed',
+          payment_id: paymentId || null,
+          amount_cents: typeof amountCents === 'number' ? amountCents : null,
+        };
+
+        console.log('Creating booking:', { 
+          type: sanitizedData.booking_type,
+          date: sanitizedData.booking_date,
+          time: sanitizedData.booking_time,
+          rateLimitRemaining: rateLimit.remaining 
+        });
+
+        const { data: booking, error: bookingError } = await supabase
+          .from('bookings')
+          .insert(sanitizedData)
+          .select()
+          .single();
+
+        if (bookingError) {
+          console.error('Error creating booking:', bookingError);
+          throw new Error('Failed to create booking');
+        }
+
+        console.log('Booking created successfully:', { bookingId: booking.id });
+
+        return new Response(JSON.stringify({ 
+          success: true, 
+          booking 
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
