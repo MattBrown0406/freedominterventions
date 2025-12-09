@@ -61,6 +61,16 @@ import KnoxvilleTennessee from "./pages/KnoxvilleTennessee";
 import ColumbusOhio from "./pages/ColumbusOhio";
 import OmahaNebraska from "./pages/OmahaNebraska";
 import OklahomaCityOklahoma from "./pages/OklahomaCityOklahoma";
+import BritishColumbia from "./pages/BritishColumbia";
+import Alberta from "./pages/Alberta";
+import Ontario from "./pages/Ontario";
+import Quebec from "./pages/Quebec";
+import Manitoba from "./pages/Manitoba";
+import Saskatchewan from "./pages/Saskatchewan";
+import NovaScotia from "./pages/NovaScotia";
+import NewBrunswick from "./pages/NewBrunswick";
+import NewfoundlandLabrador from "./pages/NewfoundlandLabrador";
+import PrinceEdwardIsland from "./pages/PrinceEdwardIsland";
 
 const queryClient = new QueryClient();
 
@@ -128,6 +138,17 @@ const App = () => (
           <Route path="/columbus-ohio" element={<ColumbusOhio />} />
           <Route path="/omaha-nebraska" element={<OmahaNebraska />} />
           <Route path="/oklahoma-city-oklahoma" element={<OklahomaCityOklahoma />} />
+          {/* Canadian Provinces */}
+          <Route path="/british-columbia" element={<BritishColumbia />} />
+          <Route path="/alberta" element={<Alberta />} />
+          <Route path="/ontario" element={<Ontario />} />
+          <Route path="/quebec" element={<Quebec />} />
+          <Route path="/manitoba" element={<Manitoba />} />
+          <Route path="/saskatchewan" element={<Saskatchewan />} />
+          <Route path="/nova-scotia" element={<NovaScotia />} />
+          <Route path="/new-brunswick" element={<NewBrunswick />} />
+          <Route path="/newfoundland-labrador" element={<NewfoundlandLabrador />} />
+          <Route path="/prince-edward-island" element={<PrinceEdwardIsland />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
