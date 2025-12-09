@@ -43,7 +43,7 @@ const Testimonials = () => {
       <Navbar />
       <main className="pt-20 md:pt-24">
         {/* Hero Banner */}
-        <section className="relative h-[40vh] md:h-[50vh] overflow-hidden">
+        <section className="relative h-[30vh] md:h-[35vh] overflow-hidden">
           <img
             src={testimonialsBanner}
             alt="Hope and healing - testimonials from families"
@@ -52,7 +52,7 @@ const Testimonials = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-6">
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-3">
                 Stories of Hope
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -63,7 +63,7 @@ const Testimonials = () => {
         </section>
 
         {/* Testimonials Grid */}
-        <section className="py-16 md:py-24">
+        <section className="py-10 md:py-12">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
