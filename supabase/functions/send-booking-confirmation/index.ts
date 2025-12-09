@@ -22,31 +22,47 @@ async function getZoomAccessToken(): Promise<string> {
   const clientId = Deno.env.get("ZOOM_CLIENT_ID");
   const clientSecret = Deno.env.get("ZOOM_CLIENT_SECRET");
 
+  console.log("Zoom credentials check:", {
+    hasAccountId: !!accountId,
+    hasClientId: !!clientId,
+    hasClientSecret: !!clientSecret,
+    accountIdLength: accountId?.length || 0,
+    clientIdLength: clientId?.length || 0,
+  });
+
   if (!accountId || !clientId || !clientSecret) {
-    throw new Error("Zoom credentials not configured");
+    throw new Error("Zoom credentials not configured - missing one or more: ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET");
   }
 
   const credentials = btoa(`${clientId}:${clientSecret}`);
   
-  const response = await fetch(
-    `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${accountId}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    }
-  );
+  const tokenUrl = `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${accountId}`;
+  console.log("Requesting Zoom token from:", tokenUrl.replace(accountId, "REDACTED"));
+  
+  const response = await fetch(tokenUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 
+  const responseText = await response.text();
+  console.log("Zoom token response status:", response.status);
+  
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Zoom token error:", errorText);
-    throw new Error(`Failed to get Zoom access token: ${response.status}`);
+    console.error("Zoom token error response:", responseText);
+    throw new Error(`Failed to get Zoom access token: ${response.status} - ${responseText}`);
   }
 
-  const data = await response.json();
-  return data.access_token;
+  try {
+    const data = JSON.parse(responseText);
+    console.log("Zoom token received, expires in:", data.expires_in, "seconds");
+    return data.access_token;
+  } catch (e) {
+    console.error("Failed to parse Zoom token response:", responseText);
+    throw new Error("Invalid response from Zoom OAuth");
+  }
 }
 
 async function createZoomMeeting(
