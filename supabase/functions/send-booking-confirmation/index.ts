@@ -111,33 +111,34 @@ async function sendEmail(
   subject: string,
   html: string
 ): Promise<void> {
-  const resendApiKey = Deno.env.get("RESEND_API_KEY");
-  if (!resendApiKey) {
-    throw new Error("RESEND_API_KEY not configured");
+  const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
+  if (!sendgridApiKey) {
+    throw new Error("SENDGRID_API_KEY not configured");
   }
 
-  const response = await fetch("https://api.resend.com/emails", {
+  console.log("Sending email via SendGrid to:", to);
+
+  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${resendApiKey}`,
+      Authorization: `Bearer ${sendgridApiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Freedom Interventions <onboarding@resend.dev>",
-      to: [to],
+      personalizations: [{ to: [{ email: to }] }],
+      from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
       subject,
-      html,
+      content: [{ type: "text/html", value: html }],
     }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("Resend error:", errorText);
-    throw new Error(`Failed to send email: ${response.status}`);
+    console.error("SendGrid error:", errorText);
+    throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
   }
 
-  const data = await response.json();
-  console.log("Email sent:", data);
+  console.log("Email sent successfully via SendGrid");
 }
 
 const handler = async (req: Request): Promise<Response> => {
