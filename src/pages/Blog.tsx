@@ -41,10 +41,10 @@ const Blog = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 bg-card">
+      <section className="relative pt-32 pb-12 bg-card">
         <div className="container px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
               Blog
             </h1>
             <p className="text-lg text-muted-foreground">
@@ -55,7 +55,7 @@ const Blog = () => {
       </section>
 
       {/* Blog Posts Grid */}
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-16">
         <div className="container px-6">
           <div className="max-w-5xl mx-auto">
             {isLoading ? (
