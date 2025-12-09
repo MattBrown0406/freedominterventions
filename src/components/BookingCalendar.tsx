@@ -164,32 +164,33 @@ export const BookingCalendar = () => {
     setLoading(true);
     try {
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
-      const { data, error } = await supabase
-        .from('bookings')
-        .insert({
-          booking_type: 'consultation',
-          customer_name: customerInfo.name,
-          customer_email: customerInfo.email,
-          customer_phone: customerInfo.phone || null,
-          booking_date: bookingDate,
-          booking_time: selectedTime,
-          duration_minutes: 30,
-          status: 'confirmed'
-        })
-        .select()
-        .single();
+      
+      // Use edge function with rate limiting
+      const { data, error } = await supabase.functions.invoke('square-booking', {
+        body: {
+          action: 'create-booking',
+          bookingType: 'consultation',
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          customerPhone: customerInfo.phone || null,
+          bookingDate,
+          bookingTime: selectedTime,
+          durationMinutes: 30,
+        }
+      });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
-      setBookingId(data.id);
+      setBookingId(data.booking.id);
       setStep("confirmation");
       toast.success("Consultation booked successfully!");
 
       // Send confirmation email with Zoom link
-      await sendBookingConfirmation(data.id, 'consultation', bookingDate, selectedTime, 30);
+      await sendBookingConfirmation(data.booking.id, 'consultation', bookingDate, selectedTime, 30);
     } catch (error: any) {
       console.error('Booking error:', error);
-      toast.error("Failed to book consultation. Please try again.");
+      toast.error(error.message || "Failed to book consultation. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -240,35 +241,34 @@ export const BookingCalendar = () => {
 
       if (error) throw error;
 
-      // Save booking to database
-      const { data: bookingData, error: bookingError } = await supabase
-        .from('bookings')
-        .insert({
-          booking_type: 'coaching',
-          customer_name: customerInfo.name,
-          customer_email: customerInfo.email,
-          customer_phone: customerInfo.phone || null,
-          booking_date: bookingDate,
-          booking_time: selectedTime,
-          duration_minutes: 60,
-          status: 'confirmed',
-          payment_id: data.payment?.id,
-          amount_cents: SESSION_PRICE
-        })
-        .select()
-        .single();
+      // Save booking via edge function with rate limiting
+      const { data: bookingData, error: bookingError } = await supabase.functions.invoke('square-booking', {
+        body: {
+          action: 'create-booking',
+          bookingType: 'coaching',
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          customerPhone: customerInfo.phone || null,
+          bookingDate,
+          bookingTime: selectedTime,
+          durationMinutes: 60,
+          paymentId: data.payment?.id,
+          amountCents: SESSION_PRICE
+        }
+      });
 
       if (bookingError) {
         console.error('Booking save error:', bookingError);
       }
 
-      setBookingId(bookingData?.id || null);
+      const booking = bookingData?.booking;
+      setBookingId(booking?.id || null);
       setStep("confirmation");
       toast.success("Booking confirmed!");
 
       // Send confirmation email with Zoom link
-      if (bookingData?.id) {
-        await sendBookingConfirmation(bookingData.id, 'coaching', bookingDate, selectedTime, 60);
+      if (booking?.id) {
+        await sendBookingConfirmation(booking.id, 'coaching', bookingDate, selectedTime, 60);
       }
     } catch (error: any) {
       console.error('Payment error:', error);
