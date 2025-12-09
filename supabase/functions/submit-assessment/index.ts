@@ -178,33 +178,44 @@ serve(async (req) => {
 
     console.log(`Assessment saved successfully with ID: ${data.id}`);
 
-    // Send email notification (non-blocking)
+    // Send email notification via SendGrid (non-blocking)
     try {
-      const resendApiKey = Deno.env.get("RESEND_API_KEY");
-      if (resendApiKey) {
-        await fetch("https://api.resend.com/emails", {
+      const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
+      if (sendgridApiKey) {
+        console.log("Sending assessment notification via SendGrid");
+        
+        const emailResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${sendgridApiKey}`,
             "Content-Type": "application/json",
-            Authorization: `Bearer ${resendApiKey}`,
           },
           body: JSON.stringify({
-            from: "Freedom Interventions <noreply@freedominterventions.com>",
-            to: ["matt@freedominterventions.com"],
+            personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
+            from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
             subject: `New Assessment: ${assessmentData.loved_one_name}`,
-            html: `
-              <h2>New Assessment Submitted</h2>
-              <p><strong>Loved One:</strong> ${assessmentData.loved_one_name}</p>
-              <p><strong>Contact:</strong> ${assessmentData.contact_name} (${assessmentData.contact_email})</p>
-              <p><strong>Phone:</strong> ${assessmentData.contact_phone || "Not provided"}</p>
-              <p><strong>Best time to reach:</strong> ${assessmentData.best_day_to_contact || "Any day"} - ${assessmentData.best_time_to_contact || "Any time"}</p>
-              <p><strong>Severity Level:</strong> ${assessmentData.severity_level} (${assessmentData.dsm_yes_count}/13 criteria)</p>
-              <br>
-              <p>View full assessment in the admin dashboard.</p>
-            `,
+            content: [{
+              type: "text/html",
+              value: `
+                <h2>New Assessment Submitted</h2>
+                <p><strong>Loved One:</strong> ${assessmentData.loved_one_name}</p>
+                <p><strong>Contact:</strong> ${assessmentData.contact_name} (${assessmentData.contact_email})</p>
+                <p><strong>Phone:</strong> ${assessmentData.contact_phone || "Not provided"}</p>
+                <p><strong>Best time to reach:</strong> ${assessmentData.best_day_to_contact || "Any day"} - ${assessmentData.best_time_to_contact || "Any time"}</p>
+                <p><strong>Severity Level:</strong> ${assessmentData.severity_level} (${assessmentData.dsm_yes_count}/13 criteria)</p>
+                <br>
+                <p>View full assessment in the admin dashboard.</p>
+              `,
+            }],
           }),
         });
-        console.log("Email notification sent");
+
+        if (emailResponse.ok) {
+          console.log("Email notification sent via SendGrid");
+        } else {
+          const errorText = await emailResponse.text();
+          console.error("SendGrid error:", errorText);
+        }
       }
     } catch (emailError) {
       console.error("Email notification failed:", emailError);

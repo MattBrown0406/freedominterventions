@@ -22,9 +22,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Processing contact message from:", email);
 
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    if (!resendApiKey) {
-      throw new Error("RESEND_API_KEY not configured");
+    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
+    if (!sendgridApiKey) {
+      throw new Error("SENDGRID_API_KEY not configured");
     }
 
     // Send email to Matt
@@ -48,29 +48,30 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    const response = await fetch("https://api.resend.com/emails", {
+    console.log("Sending email via SendGrid");
+
+    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${resendApiKey}`,
+        Authorization: `Bearer ${sendgridApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Freedom Interventions <onboarding@resend.dev>",
-        to: ["matt@freedominterventions.com"],
-        reply_to: email,
+        personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
+        from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
+        reply_to: { email: email, name: name },
         subject: `Contact Form: Message from ${name}`,
-        html: emailHtml,
+        content: [{ type: "text/html", value: emailHtml }],
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Resend error:", errorText);
-      throw new Error(`Failed to send email: ${response.status}`);
+      console.error("SendGrid error:", errorText);
+      throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
     }
 
-    const data = await response.json();
-    console.log("Email sent successfully:", data);
+    console.log("Email sent successfully via SendGrid");
 
     return new Response(
       JSON.stringify({ success: true }),
