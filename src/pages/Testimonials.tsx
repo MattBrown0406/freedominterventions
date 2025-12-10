@@ -7,7 +7,7 @@ import testimonialsBanner from "@/assets/testimonials-banner.jpg";
 const Testimonials = () => {
   const testimonials = [
     {
-      quote: "Our family was terrified and exhausted after years of crisis when we reached out to Matt at Freedom Interventions, and he educated us on addiction and boundaries while crafting a compassionate plan. The intervention day was emotional but guided calmly by Matt, leading our loved one to agree to treatment. Matt supported us afterward, helping us navigate recovery as a family. Today, our loved one is sober and rebuilding, and our family is stronger than ever—thanks to them.",
+      quote: "Our family was terrified and exhausted after years of crisis when we reached out to Matt at Freedom Interventions, and he educated us on addiction and boundaries while crafting a compassionate plan. The intervention day was emotional but guided calmly by Matt, leading our loved one to agree to treatment. Matt supported us afterward, helping us navigate recovery as a family. Today, our loved one is sober and rebuilding, and our family is stronger than ever—thanks to him.",
       author: "Cheryl",
       location: "Oregon",
     },
