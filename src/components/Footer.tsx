@@ -1,12 +1,8 @@
-import { Phone, Mail, ChevronDown } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
-  const [statesOpen, setStatesOpen] = useState(false);
-  const [provincesOpen, setProvincesOpen] = useState(false);
-  
   const footerLinks = {
     services: [
       { name: "Family Intervention", href: "/family-intervention", isRoute: true },
@@ -20,70 +16,6 @@ const Footer = () => {
       { name: "Blog", href: "/blog", isRoute: true },
       { name: "Contact", href: "/contact", isRoute: true },
     ],
-    states: [
-      { name: "Alabama", href: "/alabama" },
-      { name: "Alaska", href: "/alaska" },
-      { name: "Arizona", href: "/arizona" },
-      { name: "Arkansas", href: "/arkansas" },
-      { name: "California", href: "/california" },
-      { name: "Colorado", href: "/colorado" },
-      { name: "Connecticut", href: "/connecticut" },
-      { name: "Delaware", href: "/delaware" },
-      { name: "Florida", href: "/florida" },
-      { name: "Georgia", href: "/georgia" },
-      { name: "Hawaii", href: "/hawaii" },
-      { name: "Idaho", href: "/idaho" },
-      { name: "Illinois", href: "/illinois" },
-      { name: "Indiana", href: "/indiana" },
-      { name: "Iowa", href: "/iowa" },
-      { name: "Kansas", href: "/kansas" },
-      { name: "Kentucky", href: "/kentucky" },
-      { name: "Louisiana", href: "/louisiana" },
-      { name: "Maine", href: "/maine" },
-      { name: "Maryland", href: "/maryland" },
-      { name: "Massachusetts", href: "/massachusetts" },
-      { name: "Michigan", href: "/michigan" },
-      { name: "Minnesota", href: "/minnesota" },
-      { name: "Mississippi", href: "/mississippi" },
-      { name: "Missouri", href: "/missouri" },
-      { name: "Montana", href: "/montana" },
-      { name: "Nebraska", href: "/nebraska" },
-      { name: "Nevada", href: "/nevada" },
-      { name: "New Hampshire", href: "/new-hampshire" },
-      { name: "New Jersey", href: "/new-jersey" },
-      { name: "New Mexico", href: "/new-mexico" },
-      { name: "New York", href: "/new-york" },
-      { name: "North Carolina", href: "/north-carolina" },
-      { name: "North Dakota", href: "/north-dakota" },
-      { name: "Ohio", href: "/ohio" },
-      { name: "Oklahoma", href: "/oklahoma" },
-      { name: "Oregon", href: "/oregon" },
-      { name: "Pennsylvania", href: "/pennsylvania" },
-      { name: "Rhode Island", href: "/rhode-island" },
-      { name: "South Carolina", href: "/south-carolina" },
-      { name: "South Dakota", href: "/south-dakota" },
-      { name: "Tennessee", href: "/tennessee" },
-      { name: "Texas", href: "/texas" },
-      { name: "Utah", href: "/utah" },
-      { name: "Vermont", href: "/vermont" },
-      { name: "Virginia", href: "/virginia" },
-      { name: "Washington", href: "/washington" },
-      { name: "West Virginia", href: "/west-virginia" },
-      { name: "Wisconsin", href: "/wisconsin" },
-      { name: "Wyoming", href: "/wyoming" },
-    ],
-    provinces: [
-      { name: "Alberta", href: "/alberta" },
-      { name: "British Columbia", href: "/british-columbia" },
-      { name: "Manitoba", href: "/manitoba" },
-      { name: "New Brunswick", href: "/new-brunswick" },
-      { name: "Newfoundland & Labrador", href: "/newfoundland-labrador" },
-      { name: "Nova Scotia", href: "/nova-scotia" },
-      { name: "Ontario", href: "/ontario" },
-      { name: "Prince Edward Island", href: "/prince-edward-island" },
-      { name: "Quebec", href: "/quebec" },
-      { name: "Saskatchewan", href: "/saskatchewan" },
-    ],
     legal: [
       { name: "Privacy Policy", href: "#" },
       { name: "Terms of Service", href: "#" },
@@ -94,9 +26,9 @@ const Footer = () => {
   return (
     <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-6 py-12 md:py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-1 space-y-4">
             <a href="#" className="flex items-center gap-2">
               <img src={logo} alt="Freedom Interventions" className="h-[10.5rem] w-auto mix-blend-multiply" />
             </a>
@@ -163,50 +95,6 @@ const Footer = () => {
                   )}
                 </li>
               ))}
-              {/* Collapsible States Section */}
-              <li>
-                <button
-                  onClick={() => setStatesOpen(!statesOpen)}
-                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  <span>Information by State</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${statesOpen ? 'rotate-180' : ''}`} />
-                </button>
-                <ul className={`mt-2 ml-3 space-y-2 overflow-hidden transition-all duration-200 ${statesOpen ? 'max-h-[600px] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'}`}>
-                  {footerLinks.states.map((state) => (
-                    <li key={state.name}>
-                      <Link
-                        to={state.href}
-                        className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
-                      >
-                        {state.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              {/* Collapsible Provinces Section */}
-              <li>
-                <button
-                  onClick={() => setProvincesOpen(!provincesOpen)}
-                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
-                >
-                  <span>Information by Province</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${provincesOpen ? 'rotate-180' : ''}`} />
-                </button>
-                <ul className={`mt-2 ml-3 space-y-2 overflow-hidden transition-all duration-200 ${provincesOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'}`}>
-                  {footerLinks.provinces.map((province) => (
-                    <li key={province.name}>
-                      <Link
-                        to={province.href}
-                        className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
-                      >
-                        {province.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
             </ul>
           </div>
 
