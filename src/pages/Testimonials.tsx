@@ -12,6 +12,11 @@ const Testimonials = () => {
       location: "Oregon",
     },
     {
+      quote: "I thought my marriage was over after years of watching my wife's addiction destroy our life together—constant lies, fights, and her isolation left me hopeless. Matt gave my children and I the tools to lead a loving but firm intervention, educating us on how to speak her language of pain without blame. We know there is still a lot of work ahead of us, be we wouldn't be here if we hadn't done the intervention.",
+      author: "John",
+      location: "SLC, UT",
+    },
+    {
       quote: "Matt helped our family when we had nowhere else to turn. His compassion and expertise guided us through the most difficult time of our lives. Our son is now 3 years sober.",
       author: "The Johnson Family",
       location: "Portland, OR",
