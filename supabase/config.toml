@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.submit-assessment]
 verify_jwt = false
+
+[functions.og-html]
+verify_jwt = false
