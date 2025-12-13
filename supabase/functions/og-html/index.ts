@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="${pageUrl}">
+  <meta property="og:url" content="${url.toString()}">
   <meta property="og:title" content="${escapeHtml(post.title)}">
   <meta property="og:description" content="${escapeHtml(post.excerpt)}">
   <meta property="og:image" content="${imageUrl}">
@@ -60,14 +60,14 @@ Deno.serve(async (req) => {
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="${pageUrl}">
+  <meta name="twitter:url" content="${url.toString()}">
   <meta name="twitter:title" content="${escapeHtml(post.title)}">
   <meta name="twitter:description" content="${escapeHtml(post.excerpt)}">
   <meta name="twitter:image" content="${imageUrl}">
   
   <!-- Redirect to actual page for browsers -->
   <meta http-equiv="refresh" content="0;url=${pageUrl}">
-  <link rel="canonical" href="${pageUrl}">
+
 </head>
 <body>
   <p>Redirecting to <a href="${pageUrl}">${escapeHtml(post.title)}</a>...</p>
