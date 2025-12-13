@@ -7,18 +7,26 @@ interface ShareButtonsProps {
   url: string;
   title: string;
   description?: string;
+  slug?: string;
 }
 
-const ShareButtons = ({ url, title, description }: ShareButtonsProps) => {
+const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
+  // For Facebook sharing, use the og-html edge function to serve proper OG meta tags
+  // Facebook's crawler doesn't execute JavaScript, so it needs pre-rendered HTML
+  const ogHtmlUrl = slug 
+    ? `https://rizfkjgwhcpwiryyqejx.supabase.co/functions/v1/og-html?slug=${encodeURIComponent(slug)}`
+    : url;
+
+  const encodedOgUrl = encodeURIComponent(ogHtmlUrl);
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
   const encodedDescription = encodeURIComponent(description || "");
 
   const shareLinks = {
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`,
+    twitter: `https://twitter.com/intent/tweet?url=${encodedOgUrl}&text=${encodedTitle}`,
     email: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`,
   };
 

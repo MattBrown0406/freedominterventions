@@ -131,7 +131,8 @@ const BlogPost = () => {
             <ShareButtons 
               url={window.location.href} 
               title={post.title} 
-              description={post.excerpt} 
+              description={post.excerpt}
+              slug={post.slug}
             />
           </div>
         </div>
