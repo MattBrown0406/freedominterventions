@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Facebook, Linkedin, Mail, Link2, Check } from "lucide-react";
+import { Linkedin, Mail, Link2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -37,7 +37,6 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
   const encodedDescription = encodeURIComponent(description || "");
 
   const shareLinks = {
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`,
     x: `https://twitter.com/intent/tweet?url=${encodedOgUrl}&text=${encodedTitle}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedOgUrl}`,
     email: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`,
@@ -65,10 +64,10 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
         variant="outline"
         size="icon"
         className="h-9 w-9 rounded-full"
-        onClick={() => openShareWindow(shareLinks.facebook)}
-        aria-label="Share on Facebook"
+        onClick={() => openShareWindow(shareLinks.x)}
+        aria-label="Share on X"
       >
-        <Facebook className="h-4 w-4" />
+        <XIcon className="h-4 w-4" />
       </Button>
       <Button
         variant="outline"
