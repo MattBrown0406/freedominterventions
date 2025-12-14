@@ -65,9 +65,8 @@ Deno.serve(async (req) => {
   <meta name="twitter:description" content="${escapeHtml(post.excerpt)}">
   <meta name="twitter:image" content="${imageUrl}">
   
-  <!-- Redirect to actual page for browsers -->
-  <meta http-equiv="refresh" content="0;url=${pageUrl}">
-
+  <!-- JavaScript redirect for browsers (crawlers don't execute JS) -->
+  <script>window.location.replace("${pageUrl}");</script>
 </head>
 <body>
   <p>Redirecting to <a href="${pageUrl}">${escapeHtml(post.title)}</a>...</p>
