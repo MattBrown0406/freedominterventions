@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { postId, title, category } = await req.json();
+    const { postId, title, category, customPrompt } = await req.json();
 
     if (!postId || !title) {
       return new Response(
@@ -25,8 +25,8 @@ Deno.serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    // Create prompt for image generation
-    const imagePrompt = `Create a professional, evocative blog cover image for an addiction intervention and recovery service article titled "${title}". 
+    // Create prompt for image generation - use custom prompt if provided
+    const imagePrompt = customPrompt || `Create a professional, evocative blog cover image for an addiction intervention and recovery service article titled "${title}". 
     
 The image should:
 - Be emotionally supportive and hopeful, not dark or triggering
