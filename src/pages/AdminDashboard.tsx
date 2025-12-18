@@ -130,10 +130,10 @@ const AdminDashboard = () => {
 
   const fetchAssessments = async () => {
     setIsLoading(true);
-    const { data, error } = await supabase
-      .from("assessments")
-      .select("*")
-      .order("created_at", { ascending: false });
+
+    const { data, error } = await supabase.functions.invoke("admin-assessments", {
+      body: { action: "list" },
+    });
 
     if (error) {
       toast({
@@ -141,9 +141,13 @@ const AdminDashboard = () => {
         description: "Failed to load assessments.",
         variant: "destructive",
       });
-    } else {
-      setAssessments((data || []).map(parseAssessment));
+      setAssessments([]);
+      setIsLoading(false);
+      return;
     }
+
+    const rows = (data as { assessments?: unknown[] } | null)?.assessments ?? [];
+    setAssessments(rows.map(parseAssessment));
     setIsLoading(false);
   };
 
