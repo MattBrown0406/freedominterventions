@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import Navbar from "@/components/Navbar";
@@ -58,31 +58,7 @@ const BlogPost = () => {
   }
 
   if (error || !post) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="pt-32 pb-24">
-          <div className="container px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="font-serif text-4xl font-bold text-foreground mb-6">
-                Article Not Found
-              </h1>
-              <p className="text-muted-foreground mb-8">
-                The article you're looking for doesn't exist or has been removed.
-              </p>
-              <Link
-                to="/blog"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Blog
-              </Link>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <Navigate to="/404" replace />;
   }
 
   return (
