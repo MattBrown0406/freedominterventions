@@ -242,6 +242,7 @@ const App = () => (
           <Route path="/prince-edward-island" element={<PrinceEdwardIsland />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
