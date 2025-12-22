@@ -30,7 +30,8 @@ Deno.serve(async (req) => {
     
 The image should:
 - Be emotionally supportive and hopeful, not dark or triggering
-- Feature abstract or symbolic imagery (like paths, light, hands reaching, nature scenes)
+- Feature abstract or symbolic imagery (like light through windows, hands reaching, silhouettes, doors, empty chairs, family gatherings, sunrise/sunset skies)
+- AVOID: winding paths, rivers, roads, trails, or any path/river in the center of the image
 - Use warm, calming colors (golden light, soft blues, warm earth tones)
 - Be suitable for a professional healthcare/intervention services website
 - Convey themes of hope, family support, and recovery
