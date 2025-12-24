@@ -72,15 +72,27 @@ const Interventionist = () => {
 
                 <div className="space-y-6 text-muted-foreground leading-relaxed">
                   <p>
-                    I've been a professional interventionist since 2004, and over these years, I've had the privilege of guiding hundreds of families through interventions. While they follow a proven structure, each one is tailored to the unique circumstances of the individual and family.
+                    I have been a professional interventionist since 2004, and over the past two decades I've had the privilege of walking alongside hundreds of families during some of the most difficult moments of their lives. While every intervention follows a proven, ethical structure, no two families are the same. Each approach is carefully tailored to the individual, the family system, and the realities they are facing.
                   </p>
 
                   <p>
-                    In 2001, at age 28, my own family stepped up with an intervention for me. My mother's words that day stay with me: "I will never be a prisoner in my own home ever again." It highlighted how my addiction had strained us all emotionally. We were all uncertain—me fearful of change, and them unaware of professional guidance available. They gave it their all, but it took me two more years to seek treatment. That delay worsened my addiction and extended our hardship. On <strong className="text-foreground">April 6, 2003</strong>, I entered recovery, and I've been sober ever since.
+                    My work is deeply personal. In 2001, at the age of 28, my own family held an intervention for me. One moment from that day has never left me. My mother said, "I will never be a prisoner in my own home ever again." In that sentence was the pain, fear, and exhaustion my addiction had created for the people who loved me most.
                   </p>
 
                   <p>
-                    For the past {yearsSober} years, I've helped families support their loved ones toward sobriety. I firmly believe recovery is possible with the right approach. If you're ready to help your loved one find lasting freedom, reach out for a consultation. We'll review your situation and map out practical next steps together.
+                    At the time, we were all navigating unfamiliar territory. I was terrified of change, and my family didn't yet know that professional guidance and support existed. They did the best they could with what they had—but I wasn't ready. It took two more years before I finally entered treatment. During that time, my addiction progressed, and the emotional toll on my family only deepened.
+                  </p>
+
+                  <p>
+                    On <strong className="text-foreground">April 6, 2003</strong>, I entered recovery, and I have remained sober ever since.
+                  </p>
+
+                  <p>
+                    That lived experience shapes everything I do today. For more than {yearsSober} years, I've helped families learn how to stop carrying the burden alone, how to engage their loved one without enabling, and how to create the conditions where real change becomes possible. I believe deeply that recovery is not only possible—but sustainable—when families are supported, educated, and guided with clarity and compassion.
+                  </p>
+
+                  <p>
+                    If you're feeling overwhelmed, uncertain, or unsure of what to do next, you don't have to figure it out on your own. I invite you to reach out for a consultation. Together, we'll take an honest look at your situation and outline practical, thoughtful next steps toward lasting freedom—for your loved one and for your family.
                   </p>
 
                   <div className="bg-accent/50 border border-border rounded-xl p-6 mt-8">
