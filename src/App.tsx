@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import SubstanceGuide from "./pages/SubstanceGuide";
 import InterventionToolkit from "./pages/InterventionToolkit";
+import InterventionFAQPage from "./pages/InterventionFAQPage";
 import TawkToChat from "./components/TawkToChat";
 
 // US States
@@ -148,6 +149,7 @@ const App = () => (
           <Route path="/reschedule" element={<Reschedule />} />
           <Route path="/substance-guide" element={<SubstanceGuide />} />
           <Route path="/intervention-toolkit" element={<InterventionToolkit />} />
+          <Route path="/intervention-faq" element={<InterventionFAQPage />} />
           
           {/* US States */}
           <Route path="/alabama" element={<Alabama />} />

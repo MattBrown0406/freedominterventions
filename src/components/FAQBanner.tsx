@@ -21,7 +21,7 @@ const FAQBanner = () => {
             </div>
           </div>
           <Button asChild size="lg" className="group whitespace-nowrap">
-            <Link to="/intervention-toolkit#faq">
+            <Link to="/intervention-faq">
               Read the FAQ
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>

@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import InterventionFAQ from "@/components/InterventionFAQ";
 import { Helmet } from "react-helmet";
 import { 
   Target, 
@@ -31,8 +30,6 @@ const InterventionToolkit = () => {
       <Navbar />
       
       <main>
-        {/* FAQ Section */}
-        <InterventionFAQ />
 
         {/* Hero Section */}
         <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10">
