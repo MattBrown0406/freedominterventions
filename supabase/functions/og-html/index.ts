@@ -102,13 +102,26 @@ Deno.serve(async (req) => {
   
   <!-- LinkedIn specific -->
   <meta property="article:published_time" content="${new Date().toISOString()}">
-  
-  <!-- Redirect for human visitors (crawlers don't execute JavaScript) -->
-  <meta http-equiv="refresh" content="0;url=${pageUrl}">
+
+  <!--
+    IMPORTANT:
+    Do NOT use meta-refresh redirects here.
+    Some social crawlers follow redirects and then read OG tags from the final page (our SPA),
+    which results in missing preview title/image.
+
+    Instead:
+    - Crawlers get a stable HTML document with OG tags.
+    - Human visitors get a fast JavaScript redirect.
+  -->
   <script>
-    // Immediate redirect for browsers
-    window.location.replace("${pageUrl}");
+    // Redirect for human visitors (most crawlers don't execute JS)
+    setTimeout(() => {
+      window.location.replace("${pageUrl}");
+    }, 50);
   </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0;url=${pageUrl}">
+  </noscript>
   
   <style>
     body {
