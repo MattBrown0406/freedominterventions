@@ -17,6 +17,7 @@ import PartyWreckersPodcast from "./pages/PartyWreckersPodcast";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Assessment from "./pages/Assessment";
+import SelfAssessment from "./pages/SelfAssessment";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
@@ -144,6 +145,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/assessment" element={<Assessment />} />
+          <Route path="/self-assessment" element={<SelfAssessment />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/reschedule" element={<Reschedule />} />
