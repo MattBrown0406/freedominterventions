@@ -14,7 +14,10 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const slug = url.searchParams.get("slug");
 
+    console.log("OG HTML request received for slug:", slug);
+
     if (!slug) {
+      console.error("No slug provided");
       return new Response("Slug is required", { status: 400 });
     }
 
@@ -29,66 +32,134 @@ Deno.serve(async (req) => {
       .eq("published", true)
       .maybeSingle();
 
-    if (error || !post) {
+    if (error) {
+      console.error("Database error:", error);
+      return new Response("Database error", { status: 500 });
+    }
+
+    if (!post) {
+      console.error("Post not found for slug:", slug);
       return new Response("Post not found", { status: 404 });
     }
 
-    const siteUrl = "https://freedominterventions.com";
-    const imageUrl = post.image_url?.startsWith("http") 
-      ? post.image_url 
-      : `${siteUrl}${post.image_url}`;
-    const pageUrl = `${siteUrl}/blog/${post.slug}`;
+    console.log("Post found:", post.title);
+    console.log("Image URL from DB:", post.image_url);
 
-    // Serve HTML with proper OG tags for crawlers
+    const siteUrl = "https://freedominterventions.com";
+    
+    // Construct absolute image URL - handle various formats
+    let imageUrl = "";
+    if (post.image_url) {
+      if (post.image_url.startsWith("http://") || post.image_url.startsWith("https://")) {
+        imageUrl = post.image_url;
+      } else if (post.image_url.startsWith("/")) {
+        imageUrl = `${siteUrl}${post.image_url}`;
+      } else {
+        imageUrl = `${siteUrl}/${post.image_url}`;
+      }
+    }
+    
+    console.log("Final image URL:", imageUrl);
+    
+    const pageUrl = `${siteUrl}/blog/${post.slug}`;
+    const escapedTitle = escapeHtml(post.title);
+    const escapedExcerpt = escapeHtml(post.excerpt || "");
+
+    // Serve complete HTML with all necessary OG tags for social media crawlers
+    // The key is providing a complete HTML document that crawlers can parse
     const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(post.title)} | Freedom Interventions</title>
-  <meta name="description" content="${escapeHtml(post.excerpt)}">
+  <title>${escapedTitle} | Freedom Interventions</title>
+  <meta name="description" content="${escapedExcerpt}">
   <link rel="canonical" href="${pageUrl}">
   
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph / Facebook Meta Tags -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="${pageUrl}">
-  <meta property="og:title" content="${escapeHtml(post.title)}">
-  <meta property="og:description" content="${escapeHtml(post.excerpt)}">
+  <meta property="og:title" content="${escapedTitle}">
+  <meta property="og:description" content="${escapedExcerpt}">
+  <meta property="og:site_name" content="Freedom Interventions">
+  <meta property="og:locale" content="en_US">
+  ${imageUrl ? `
   <meta property="og:image" content="${imageUrl}">
+  <meta property="og:image:secure_url" content="${imageUrl}">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:site_name" content="Freedom Interventions">
+  <meta property="og:image:alt" content="${escapedTitle}">
+  ` : ""}
   
-  <!-- Twitter -->
+  <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:domain" content="freedominterventions.com">
   <meta name="twitter:url" content="${pageUrl}">
-  <meta name="twitter:title" content="${escapeHtml(post.title)}">
-  <meta name="twitter:description" content="${escapeHtml(post.excerpt)}">
-  <meta name="twitter:image" content="${imageUrl}">
+  <meta name="twitter:title" content="${escapedTitle}">
+  <meta name="twitter:description" content="${escapedExcerpt}">
+  ${imageUrl ? `<meta name="twitter:image" content="${imageUrl}">` : ""}
   
-  <!-- JavaScript redirect for browsers (crawlers don't execute JS) -->
-  <script>window.location.replace("${pageUrl}");</script>
+  <!-- LinkedIn specific -->
+  <meta property="article:published_time" content="${new Date().toISOString()}">
+  
+  <!-- Redirect for human visitors (crawlers don't execute JavaScript) -->
+  <meta http-equiv="refresh" content="0;url=${pageUrl}">
+  <script>
+    // Immediate redirect for browsers
+    window.location.replace("${pageUrl}");
+  </script>
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting to <a href="${pageUrl}">${escapeHtml(post.title)}</a>...</p>
+  <div class="container">
+    <p>Redirecting to <a href="${pageUrl}">${escapedTitle}</a>...</p>
+    <p><small>If you are not redirected, <a href="${pageUrl}">click here</a>.</small></p>
+  </div>
 </body>
 </html>`;
+
+    console.log("Returning HTML response with OG tags");
 
     return new Response(html, {
       status: 200,
       headers: {
         ...corsHeaders,
         "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
+        "X-Robots-Tag": "noindex", // Prevent this redirect page from being indexed
       },
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error in og-html function:", error);
     return new Response("Internal server error", { status: 500 });
   }
 });
 
 function escapeHtml(text: string): string {
+  if (!text) return "";
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
