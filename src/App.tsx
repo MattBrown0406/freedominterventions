@@ -20,6 +20,7 @@ import Assessment from "./pages/Assessment";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
+import SubstanceGuide from "./pages/SubstanceGuide";
 import TawkToChat from "./components/TawkToChat";
 
 // US States
@@ -144,6 +145,7 @@ const App = () => (
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/reschedule" element={<Reschedule />} />
+          <Route path="/substance-guide" element={<SubstanceGuide />} />
           
           {/* US States */}
           <Route path="/alabama" element={<Alabama />} />
