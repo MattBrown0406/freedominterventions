@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import ResourceBanner from "@/components/ResourceBanner";
+import FAQBanner from "@/components/FAQBanner";
 import ToolkitBanner from "@/components/ToolkitBanner";
 import About from "@/components/About";
 import { BookingCalendar } from "@/components/BookingCalendar";
@@ -16,6 +17,7 @@ const Index = () => {
         <Hero />
         <Services />
         <ResourceBanner />
+        <FAQBanner />
         <ToolkitBanner />
         <About />
         <BookingCalendar />
