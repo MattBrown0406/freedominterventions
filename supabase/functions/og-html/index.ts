@@ -65,6 +65,20 @@ Deno.serve(async (req) => {
     const escapedTitle = escapeHtml(post.title);
     const escapedExcerpt = escapeHtml(post.excerpt || "");
 
+    // Detect social media / search crawlers. They may follow redirects and then read OG tags from the SPA.
+    // For crawlers: serve a stable HTML document with OG tags and NO redirect.
+    // For humans: include a meta refresh + JS redirect for maximum compatibility (including in-app browsers).
+    const userAgent = req.headers.get("user-agent") || "";
+    const isCrawler = /(facebookexternalhit|facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Googlebot|bingbot|DuckDuckBot)/i.test(userAgent);
+
+    const redirectTags = isCrawler
+      ? ""
+      : `
+  <meta http-equiv="refresh" content="0;url=${pageUrl}">
+  <script>
+    window.location.replace("${pageUrl}");
+  </script>`;
+
     // Serve complete HTML with all necessary OG tags for social media crawlers
     // The key is providing a complete HTML document that crawlers can parse
     const html = `<!DOCTYPE html>
@@ -103,27 +117,30 @@ Deno.serve(async (req) => {
   <!-- LinkedIn specific -->
   <meta property="article:published_time" content="${new Date().toISOString()}">
 
-  <!--
-    IMPORTANT:
-    Do NOT use meta-refresh redirects here.
-    Some social crawlers follow redirects and then read OG tags from the final page (our SPA),
-    which results in missing preview title/image.
+  ${redirectTags}
 
-    Instead:
-    - Crawlers get a stable HTML document with OG tags.
-    - Human visitors get a fast JavaScript redirect.
-  -->
-  <script>
-    // Redirect for human visitors (most crawlers don't execute JS)
-    setTimeout(() => {
-      window.location.replace("${pageUrl}");
-    }, 50);
-  </script>
-  <noscript>
-    <meta http-equiv="refresh" content="0;url=${pageUrl}">
-  </noscript>
-  
   <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
