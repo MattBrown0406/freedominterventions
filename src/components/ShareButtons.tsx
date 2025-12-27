@@ -31,20 +31,17 @@ const XIcon = ({ className }: { className?: string }) => (
 const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
-  // Production domain for clean share URLs
-  const productionDomain = "https://freedominterventions.com";
-  
-  // Use /share/:slug path which will be proxied to the edge function via _redirects
-  // This shows a clean domain in social previews while still serving proper OG tags
-  const ogShareUrl = slug 
-    ? `${productionDomain}/share/${slug}`
+  // Use the backend OG HTML endpoint for social sharing to ensure OG tags work
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const ogShareUrl = slug
+    ? `${supabaseUrl}/functions/v1/og-html?slug=${encodeURIComponent(slug)}`
     : url;
 
   const encodedOgUrl = encodeURIComponent(ogShareUrl);
   const encodedTitle = encodeURIComponent(title);
   const encodedDescription = encodeURIComponent(description || "");
 
-  // Social media share URLs using the clean /share/ URL
+  // Social media share URLs using the OG-enabled backend URL
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`;
   const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodedOgUrl}&text=${encodedTitle}`;
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedOgUrl}`;
