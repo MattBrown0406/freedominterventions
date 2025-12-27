@@ -1,5 +1,0 @@
-# Proxy share links to OG HTML edge function for social media previews
-/share/:slug  https://rizfkjgwhcpwiryyqejx.supabase.co/functions/v1/og-html?slug=:slug  200
-
-# Ensure www redirects to non-www (or vice versa)
-https://www.freedominterventions.com/*  https://freedominterventions.com/:splat  301
