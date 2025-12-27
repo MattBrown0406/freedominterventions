@@ -33,9 +33,12 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
 
   // Use the backend OG HTML endpoint for social sharing to ensure OG tags work
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const ogShareUrl = slug
+  const ogShareUrlBase = slug
     ? `${supabaseUrl}/functions/v1/og-html?slug=${encodeURIComponent(slug)}`
     : url;
+
+  // Add a cache-buster so platforms re-scrape when you share again
+  const ogShareUrl = `${ogShareUrlBase}${ogShareUrlBase.includes("?") ? "&" : "?"}t=${Date.now()}`;
 
   const encodedOgUrl = encodeURIComponent(ogShareUrl);
   const encodedTitle = encodeURIComponent(title);
