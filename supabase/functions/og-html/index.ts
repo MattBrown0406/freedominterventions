@@ -67,12 +67,27 @@ Deno.serve(async (req) => {
     const escapedExcerpt = escapeHtml(post.excerpt || "");
 
     // Detect social media / search crawlers.
-    // Important: our backend function domain forces Content-Type to text/plain, so HTML cannot reliably render for humans.
-    // Solution:
-    // - Crawlers: return 200 + OG HTML (they only read tags).
-    // - Humans: return an HTTP redirect to the real article URL.
+    // IMPORTANT:
+    // - On the backend function domain, responses may be delivered as text/plain to some browsers.
+    // - That means if a HUMAN opens this URL, they can see raw HTML source.
+    // Therefore we must be extremely strict: only serve OG HTML to true scrapers.
+    const secFetchMode = (req.headers.get("sec-fetch-mode") || "").toLowerCase();
+    const secFetchDest = (req.headers.get("sec-fetch-dest") || "").toLowerCase();
+    const isBrowserNavigation = secFetchMode === "navigate" || secFetchDest === "document";
+
+    // Heuristic: many in-app / real browsers send these headers; scrapers usually don't.
+    const looksLikeBrowser =
+      isBrowserNavigation ||
+      req.headers.has("accept-language") ||
+      req.headers.has("sec-fetch-site") ||
+      req.headers.has("upgrade-insecure-requests") ||
+      req.headers.has("sec-ch-ua");
+
     const isInAppBrowser = /(FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|Line\/|WhatsApp)/i.test(userAgent);
-    const isCrawler = /(facebookexternalhit|facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|TelegramBot|Googlebot|bingbot|DuckDuckBot)/i.test(userAgent) && !isInAppBrowser;
+    const isBotUA = /(facebookexternalhit|facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|TelegramBot|Googlebot|bingbot|DuckDuckBot)/i.test(userAgent);
+
+    // Serve OG HTML only when it's a bot UA AND it does not look like a browser.
+    const isCrawler = isBotUA && !isInAppBrowser && !looksLikeBrowser;
 
     if (!isCrawler) {
       console.log("Non-crawler request, redirecting to:", pageUrl);
@@ -184,8 +199,11 @@ Deno.serve(async (req) => {
       headers: {
         ...corsHeaders,
         "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=3600, s-maxage=86400",
-        "X-Robots-Tag": "noindex", // Prevent this redirect page from being indexed
+        // Prevent platforms and browsers from reusing stale OG HTML.
+        // Social networks still cache on their side, but this helps reduce unintended caching.
+        "Cache-Control": "no-store, max-age=0",
+        Pragma: "no-cache",
+        "X-Robots-Tag": "noindex", // Prevent this page from being indexed
       },
     });
   } catch (error) {
