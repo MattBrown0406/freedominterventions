@@ -13,8 +13,9 @@ Deno.serve(async (req) => {
   try {
     const url = new URL(req.url);
     const slug = url.searchParams.get("slug");
+    const userAgent = req.headers.get("user-agent") || "";
 
-    console.log("OG HTML request received for slug:", slug);
+    console.log("OG HTML request received", { slug, userAgent });
 
     if (!slug) {
       console.error("No slug provided");
@@ -65,22 +66,29 @@ Deno.serve(async (req) => {
     const escapedTitle = escapeHtml(post.title);
     const escapedExcerpt = escapeHtml(post.excerpt || "");
 
-    // Detect social media / search crawlers. They may follow redirects and then read OG tags from the SPA.
-    // For crawlers: serve a stable HTML document with OG tags and NO redirect.
-    // For humans: include a meta refresh + JS redirect for maximum compatibility (including in-app browsers).
-    const userAgent = req.headers.get("user-agent") || "";
-    const isCrawler = /(facebookexternalhit|facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Googlebot|bingbot|DuckDuckBot)/i.test(userAgent);
+    // Detect social media / search crawlers.
+    // Important: our backend function domain forces Content-Type to text/plain, so HTML cannot reliably render for humans.
+    // Solution:
+    // - Crawlers: return 200 + OG HTML (they only read tags).
+    // - Humans: return an HTTP redirect to the real article URL.
+    const isInAppBrowser = /(FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|Line\/|WhatsApp)/i.test(userAgent);
+    const isCrawler = /(facebookexternalhit|facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|TelegramBot|Googlebot|bingbot|DuckDuckBot)/i.test(userAgent) && !isInAppBrowser;
 
-    const redirectTags = isCrawler
-      ? ""
-      : `
-  <meta http-equiv="refresh" content="0;url=${pageUrl}">
-  <script>
-    window.location.replace("${pageUrl}");
-  </script>`;
+    if (!isCrawler) {
+      console.log("Non-crawler request, redirecting to:", pageUrl);
+      return new Response(null, {
+        status: 302,
+        headers: {
+          ...corsHeaders,
+          Location: pageUrl,
+          "Cache-Control": "no-store",
+          "X-Robots-Tag": "noindex",
+        },
+      });
+    }
 
-    // Serve complete HTML with all necessary OG tags for social media crawlers
-    // The key is providing a complete HTML document that crawlers can parse
+    // Serve complete HTML with OG tags for social media crawlers
+    // (Crawlers don't need to render the HTML; they parse tags.)
     const html = `<!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
@@ -116,8 +124,6 @@ Deno.serve(async (req) => {
   
   <!-- LinkedIn specific -->
   <meta property="article:published_time" content="${new Date().toISOString()}">
-
-  ${redirectTags}
 
   <style>
     body {
