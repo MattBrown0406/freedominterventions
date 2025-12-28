@@ -46,6 +46,11 @@ const Testimonials = () => {
       author: "Jennifer L.",
       location: "Austin, TX",
     },
+    {
+      quote: "Our son's drinking had taken over our home. The intervention was terrifying to plan, but it gave us a script, a boundary, and a lifeline out of chaos. He agreed to treatment that same day, and he has been sober for 11 months now. We finally have family dinners without walking on eggshells, and I sleep through the night for the first time in years.",
+      author: "Elizabeth",
+      location: "Bend, OR",
+    },
   ];
 
   return (
