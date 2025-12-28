@@ -51,6 +51,11 @@ const Testimonials = () => {
       author: "Elizabeth",
       location: "Bend, OR",
     },
+    {
+      quote: "For years we confused love with rescuing our daughter from every consequence. The intervention helped us see how our fear was feeding her addiction, not protecting her. Setting firm, loving limits felt unbearable at first, but it is what pushed her to accept help and enter treatment. Today she is in a sober living program, rebuilding her life, and our relationship is more honest than it has ever been.",
+      author: "Angie",
+      location: "Seattle, WA",
+    },
   ];
 
   return (
