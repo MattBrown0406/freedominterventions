@@ -56,6 +56,11 @@ const Testimonials = () => {
       author: "Angie",
       location: "Seattle, WA",
     },
+    {
+      quote: "I was sure my husband would explode in anger if we confronted him, but the structured intervention kept the focus on love, not blame. Hearing our family calmly share how his drinking affected them broke through his denial in a way my begging never did. He agreed to rehab, has been sober for over a year, and our home finally feels safe and hopeful again.",
+      author: "Charlene",
+      location: "Colorado Springs, CO",
+    },
   ];
 
   return (
