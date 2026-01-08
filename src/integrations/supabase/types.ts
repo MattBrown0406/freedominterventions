@@ -337,7 +337,9 @@ export type Database = {
           booking_id: string | null
           created_at: string
           id: string
+          ip: string | null
           metadata: Json
+          user_agent: string | null
         }
         Insert: {
           action: string
@@ -346,7 +348,9 @@ export type Database = {
           booking_id?: string | null
           created_at?: string
           id?: string
+          ip?: string | null
           metadata?: Json
+          user_agent?: string | null
         }
         Update: {
           action?: string
@@ -355,7 +359,9 @@ export type Database = {
           booking_id?: string | null
           created_at?: string
           id?: string
+          ip?: string | null
           metadata?: Json
+          user_agent?: string | null
         }
         Relationships: []
       }
