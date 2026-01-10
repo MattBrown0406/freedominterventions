@@ -112,19 +112,19 @@ const FeaturedArticleCarousel = () => {
         </Link>
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Navigation Arrows - always visible on mobile, hover on desktop */}
       {posts.length > 1 && (
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/20 hover:bg-background/40 backdrop-blur-sm text-background p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/30 hover:bg-background/50 backdrop-blur-sm text-background p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-target"
             aria-label="Previous article"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/20 hover:bg-background/40 backdrop-blur-sm text-background p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/30 hover:bg-background/50 backdrop-blur-sm text-background p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-target"
             aria-label="Next article"
           >
             <ChevronRight className="w-5 h-5" />
@@ -134,15 +134,15 @@ const FeaturedArticleCarousel = () => {
 
       {/* Dots Indicator */}
       {posts.length > 1 && (
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
           {posts.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
+              className={`h-2 rounded-full transition-all touch-target ${
                 index === currentIndex
                   ? "bg-secondary w-6"
-                  : "bg-background/50 hover:bg-background/70"
+                  : "bg-background/50 hover:bg-background/70 w-2"
               }`}
               aria-label={`Go to article ${index + 1}`}
             />

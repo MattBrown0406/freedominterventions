@@ -30,19 +30,19 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-1 space-y-4">
             <a href="#" className="flex items-center gap-2">
-              <img src={logo} alt="Freedom Interventions" className="h-[10.5rem] w-auto mix-blend-multiply" />
+              <img src={logo} alt="Freedom Interventions" className="h-24 md:h-[10.5rem] w-auto mix-blend-multiply" />
             </a>
-            <p className="text-muted-foreground max-w-xs">
+            <p className="text-muted-foreground max-w-xs text-sm md:text-base">
               Guiding families toward hope and recovery with compassionate, professional intervention services.
             </p>
             <div className="space-y-2 pt-2">
-              <a href="tel:+15038362136" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                <Phone className="w-4 h-4" />
+              <a href="tel:+15038362136" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base">
+                <Phone className="w-4 h-4 flex-shrink-0" />
                 <span>(503) 836-2136</span>
               </a>
-              <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                <Mail className="w-4 h-4" />
-                <span>matt@freedominterventions.com</span>
+              <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base min-w-0">
+                <Mail className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">matt@freedominterventions.com</span>
               </a>
             </div>
           </div>

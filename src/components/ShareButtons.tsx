@@ -72,8 +72,8 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
 
   return (
     <TooltipProvider>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground mr-2">Share:</span>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm text-muted-foreground mr-2 w-full sm:w-auto">Share:</span>
         
         <Tooltip>
           <TooltipTrigger asChild>

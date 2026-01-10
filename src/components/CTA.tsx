@@ -11,12 +11,12 @@ const CTA = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-primary-foreground leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-primary-foreground leading-tight">
             Take the First Step
             <span className="block">Toward Recovery</span>
           </h2>
           
-          <p className="text-primary-foreground/80 text-lg max-w-xl mx-auto">
+          <p className="text-primary-foreground/80 text-base md:text-lg max-w-xl mx-auto">
             Don't wait another day. We are ready to help your family find hope and healing. Confidential consultations are always free.
           </p>
 

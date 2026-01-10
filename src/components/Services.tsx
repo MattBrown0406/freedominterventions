@@ -43,10 +43,10 @@ const Services = () => {
           <span className="text-accent font-medium text-sm uppercase tracking-wider">
             How We Help
           </span>
-          <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground">
+          <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground">
             Our Services
           </h2>
-          <p className="mt-4 text-muted-foreground text-lg">
+          <p className="mt-4 text-muted-foreground text-base md:text-lg">
             Comprehensive intervention services designed to help your loved one find their path to recovery.
           </p>
         </div>
