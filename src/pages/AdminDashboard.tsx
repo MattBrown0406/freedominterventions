@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image, Download } from "lucide-react";
+import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import BlogImageManager from "@/components/admin/BlogImageManager";
 interface Assessment {
@@ -319,7 +320,7 @@ const AdminDashboard = () => {
                     </div>
                   )}
 
-                  <div className="flex gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     <Button
                       variant="outline"
                       size="sm"
@@ -334,6 +335,13 @@ const AdminDashboard = () => {
                           <Eye className="w-4 h-4 mr-1" /> View Full Assessment
                         </>
                       )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => generateAssessmentPdf(assessment)}
+                    >
+                      <Download className="w-4 h-4 mr-1" /> Download PDF
                     </Button>
                     {assessment.status === "new" && (
                       <Button size="sm" variant="secondary" onClick={() => updateStatus(assessment.id, "in_progress")}>
