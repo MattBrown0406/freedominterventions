@@ -32,9 +32,9 @@ const Testimonials = () => {
       location: "San Diego, CA",
     },
     {
-      quote: "Matt's personal experience with recovery made all the difference. He understood what my husband was going through in a way no one else could. We're forever grateful.",
-      author: "Sarah & Tom K.",
-      location: "Denver, CO",
+      quote: "Matt Brown is an incredible asset when it comes to interventions. His training, communication, and professionalism set him apart. He is responsive, clear, and supportive throughout the entire process. I recommend him highly to families seeking help during an extremely difficult time.",
+      author: "L B.",
+      location: "Santa Cruz, CA",
     },
     {
       quote: "The intervention was the hardest thing we ever did as a family, but Matt made it bearable. His guidance through treatment planning ensured our mom got the right care.",
