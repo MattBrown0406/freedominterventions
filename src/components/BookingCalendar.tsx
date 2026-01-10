@@ -403,16 +403,16 @@ export const BookingCalendar = () => {
                   {loading ? (
                     <p className="text-center text-muted-foreground">Loading available times...</p>
                   ) : availableSlots.length > 0 ? (
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
                       {availableSlots.map((slot) => (
                         <Button
                           key={slot}
                           variant={selectedTime === slot ? "default" : "outline"}
                           onClick={() => handleTimeSelect(slot)}
-                          className="flex items-center gap-2"
+                          className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 h-10 sm:h-11"
                         >
-                          <Clock className="w-4 h-4" />
-                          {formatTime(slot)}
+                          <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="whitespace-nowrap">{formatTime(slot)}</span>
                         </Button>
                       ))}
                     </div>

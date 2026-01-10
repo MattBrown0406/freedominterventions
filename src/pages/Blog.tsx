@@ -59,7 +59,7 @@ const Blog = () => {
         <div className="container px-6">
           <div className="max-w-5xl mx-auto">
             {isLoading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="bg-card rounded-2xl border border-border p-6 animate-pulse">
                     <div className="h-6 bg-muted rounded w-20 mb-4"></div>
@@ -71,7 +71,7 @@ const Blog = () => {
                 ))}
               </div>
             ) : blogPosts && blogPosts.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {blogPosts.map((post) => (
                   <Link 
                     to={`/blog/${post.slug}`}

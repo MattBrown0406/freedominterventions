@@ -21,9 +21,9 @@ const Navbar = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo and text */}
-          <a href="/" className="flex items-center gap-2">
-            <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg" />
-            <span className="font-serif text-xl md:text-2xl font-semibold text-primary">
+          <a href="/" className="flex items-center gap-2 min-w-0">
+            <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg flex-shrink-0" />
+            <span className="font-serif text-base sm:text-xl md:text-2xl font-semibold text-primary truncate">
               Freedom Interventions
             </span>
           </a>

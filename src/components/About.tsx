@@ -14,7 +14,7 @@ const About = () => {
   return (
     <section id="about" className="py-20 md:py-32 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           {/* Featured Articles Carousel */}
           <div className="relative order-2 lg:order-1">
             <div className="relative">
@@ -31,11 +31,11 @@ const About = () => {
             <span className="text-accent font-medium text-sm uppercase tracking-wider">
               About Freedom Interventions
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
               Breaking the Chains of
               <span className="block text-primary">Addiction Together</span>
             </h2>
-            <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
+            <div className="space-y-4 text-muted-foreground text-base md:text-lg leading-relaxed">
               <p>
                 At Freedom Interventions, we understand that watching a loved one struggle with addiction is one of life's greatest challenges. Our mission is to guide families through this difficult time with expertise, compassion, and unwavering support.
               </p>

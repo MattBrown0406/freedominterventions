@@ -92,7 +92,7 @@ const BlogPost = () => {
               <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
-            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
               {post.title}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-6">
