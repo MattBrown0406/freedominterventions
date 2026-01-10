@@ -6,7 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, Copy, ExternalLink } from "lucide-react";
+
+// Update these URLs with your actual Yelp and Google review page links
+const YELP_REVIEW_URL = "https://www.yelp.com/writeareview/biz/freedom-interventions";
+const GOOGLE_REVIEW_URL = "https://g.page/r/freedom-interventions/review";
 
 export const ReviewSubmissionForm = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,6 +19,7 @@ export const ReviewSubmissionForm = () => {
   const [reviewText, setReviewText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedReview, setSubmittedReview] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +48,7 @@ export const ReviewSubmissionForm = () => {
 
       if (error) throw error;
 
+      setSubmittedReview(reviewText.trim());
       setIsSubmitted(true);
       toast.success("Thank you! Your review has been submitted for approval.");
     } catch (error) {
@@ -53,15 +59,70 @@ export const ReviewSubmissionForm = () => {
     }
   };
 
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(submittedReview);
+      toast.success("Review copied to clipboard!");
+    } catch (error) {
+      toast.error("Failed to copy. Please select and copy manually.");
+    }
+  };
+
   if (isSubmitted) {
     return (
       <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="pt-6 text-center">
-          <CheckCircle className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-foreground mb-2">Thank You!</h3>
-          <p className="text-muted-foreground">
-            Your review has been submitted and will be published after approval.
-          </p>
+        <CardContent className="pt-6">
+          <div className="text-center mb-6">
+            <CheckCircle className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">Thank You!</h3>
+            <p className="text-muted-foreground">
+              Your review has been submitted and will be published after approval.
+            </p>
+          </div>
+
+          <div className="border-t border-border pt-6">
+            <p className="text-sm text-muted-foreground text-center mb-4">
+              Help others find us by sharing your review on these platforms:
+            </p>
+            
+            <div className="bg-muted/50 rounded-lg p-4 mb-4">
+              <p className="text-sm text-foreground italic mb-3">"{submittedReview}"</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleCopyToClipboard}
+                className="w-full sm:w-auto"
+              >
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Review Text
+              </Button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a
+                href={GOOGLE_REVIEW_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1"
+              >
+                <Button variant="outline" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Leave a Google Review
+                </Button>
+              </a>
+              <a
+                href={YELP_REVIEW_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1"
+              >
+                <Button variant="outline" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Leave a Yelp Review
+                </Button>
+              </a>
+            </div>
+          </div>
         </CardContent>
       </Card>
     );
