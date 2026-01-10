@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Quote } from "lucide-react";
 import testimonialsBanner from "@/assets/testimonials-banner.jpg";
-
+import { ReviewSubmissionForm } from "@/components/ReviewSubmissionForm";
 const Testimonials = () => {
   const testimonials = [
     {
@@ -107,6 +107,13 @@ const Testimonials = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Review Submission Form */}
+        <section className="py-12 bg-muted/30">
+          <div className="container mx-auto px-6 max-w-2xl">
+            <ReviewSubmissionForm />
           </div>
         </section>
 
