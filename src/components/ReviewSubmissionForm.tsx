@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Send, CheckCircle, Copy, ExternalLink } from "lucide-react";
 
 const YELP_REVIEW_URL = "https://www.yelp.com/writeareview/biz/freedom-interventions-bend";
-const GOOGLE_REVIEW_URL = "https://g.page/r/freedom-interventions/review";
+const GOOGLE_REVIEW_URL = "https://www.google.com/maps/search/?api=1&query=Freedom+Interventions+Bend+OR";
 
 export const ReviewSubmissionForm = () => {
   const [firstName, setFirstName] = useState("");
