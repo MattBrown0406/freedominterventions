@@ -20,6 +20,7 @@ import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVI
 interface TreatmentEntry {
   programName: string;
   programType: string;
+  ageAtTreatment: string;
   dateAttended: string;
   durationDays: string;
   successfulCompletion: boolean;
@@ -290,7 +291,7 @@ const Assessment = () => {
   const removeSubstance = (i: number) => setSubstancesUsed(prev => prev.filter((_, idx) => idx !== i));
   const updateSubstance = (i: number, field: keyof SubstanceEntry, value: any) => setSubstancesUsed(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
 
-  const addTreatment = () => setTreatmentHistory(prev => [...prev, { programName: "", programType: "", dateAttended: "", durationDays: "", successfulCompletion: false, aftercareFollowed: false, reasonForLeaving: "" }]);
+  const addTreatment = () => setTreatmentHistory(prev => [...prev, { programName: "", programType: "", ageAtTreatment: "", dateAttended: "", durationDays: "", successfulCompletion: false, aftercareFollowed: false, reasonForLeaving: "" }]);
   const removeTreatment = (i: number) => setTreatmentHistory(prev => prev.filter((_, idx) => idx !== i));
   const updateTreatment = (i: number, field: keyof TreatmentEntry, value: any) => setTreatmentHistory(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
 
@@ -1268,19 +1269,20 @@ const Assessment = () => {
                                 <TableRow>
                                   <TableHead>Program Name</TableHead>
                                   <TableHead>Type</TableHead>
+                                  <TableHead>Age</TableHead>
                                   <TableHead>Date</TableHead>
                                   <TableHead className="text-center">Completed</TableHead>
-                                  <TableHead className="text-center">Aftercare</TableHead>
+                                  <TableHead className="text-center">Followed Aftercare</TableHead>
                                   <TableHead></TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
                                 {treatmentHistory.map((entry, i) => (
                                   <TableRow key={i}>
-                                    <TableCell><Input value={entry.programName} onChange={(e) => updateTreatment(i, "programName", e.target.value)} /></TableCell>
+                                    <TableCell><Input placeholder="Program name" value={entry.programName} onChange={(e) => updateTreatment(i, "programName", e.target.value)} /></TableCell>
                                     <TableCell>
                                       <Select value={entry.programType} onValueChange={(v) => updateTreatment(i, "programType", v)}>
-                                        <SelectTrigger><SelectValue placeholder="Type" /></SelectTrigger>
+                                        <SelectTrigger className="w-[120px]"><SelectValue placeholder="Type" /></SelectTrigger>
                                         <SelectContent>
                                           <SelectItem value="detox">Detox</SelectItem>
                                           <SelectItem value="residential">Residential</SelectItem>
@@ -1288,10 +1290,13 @@ const Assessment = () => {
                                           <SelectItem value="iop">IOP</SelectItem>
                                           <SelectItem value="outpatient">Outpatient</SelectItem>
                                           <SelectItem value="sober-living">Sober Living</SelectItem>
+                                          <SelectItem value="12-step">12-Step Program</SelectItem>
+                                          <SelectItem value="other">Other</SelectItem>
                                         </SelectContent>
                                       </Select>
                                     </TableCell>
-                                    <TableCell><Input placeholder="e.g., Jan 2023" value={entry.dateAttended} onChange={(e) => updateTreatment(i, "dateAttended", e.target.value)} /></TableCell>
+                                    <TableCell><Input type="number" className="w-16" placeholder="Age" value={entry.ageAtTreatment} onChange={(e) => updateTreatment(i, "ageAtTreatment", e.target.value)} /></TableCell>
+                                    <TableCell><Input className="w-28" placeholder="e.g., Jan 2023" value={entry.dateAttended} onChange={(e) => updateTreatment(i, "dateAttended", e.target.value)} /></TableCell>
                                     <TableCell className="text-center"><Checkbox checked={entry.successfulCompletion} onCheckedChange={(c) => updateTreatment(i, "successfulCompletion", c)} /></TableCell>
                                     <TableCell className="text-center"><Checkbox checked={entry.aftercareFollowed} onCheckedChange={(c) => updateTreatment(i, "aftercareFollowed", c)} /></TableCell>
                                     <TableCell><Button type="button" variant="ghost" size="sm" onClick={() => removeTreatment(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button></TableCell>
@@ -1301,6 +1306,7 @@ const Assessment = () => {
                             </Table>
                           </div>
                         )}
+                        <p className="text-sm text-muted-foreground">Please list all treatment programs you can remember, including detox, rehab, outpatient, sober living, etc.</p>
                       </div>
                     )}
 
