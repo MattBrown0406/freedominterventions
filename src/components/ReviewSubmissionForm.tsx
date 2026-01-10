@@ -8,8 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Send, CheckCircle, Copy, ExternalLink } from "lucide-react";
 
-// Update these URLs with your actual Yelp and Google review page links
-const YELP_REVIEW_URL = "https://www.yelp.com/writeareview/biz/freedom-interventions";
+const YELP_REVIEW_URL = "https://www.yelp.com/writeareview/biz/freedom-interventions-bend";
 const GOOGLE_REVIEW_URL = "https://g.page/r/freedom-interventions/review";
 
 export const ReviewSubmissionForm = () => {
