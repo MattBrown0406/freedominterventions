@@ -84,186 +84,624 @@ export type Database = {
       }
       assessments: {
         Row: {
+          accidents_due_to_use: string | null
+          acknowledges_problem: string | null
+          additional_information: string | null
           age_first_used: number | null
+          appetite_changes: string | null
+          arrests_details: string | null
+          arrests_history: string | null
+          bankruptcy: string | null
+          best_approach: string | null
           best_day_to_contact: string | null
           best_time_to_contact: string | null
+          blackouts_history: string | null
+          blended_family: string | null
+          bottom_lines: Json | null
+          boundaries_assessment: string | null
+          budget_for_treatment: string | null
           child_welfare_involvement: string | null
           children_impacted: string | null
           children_present: string | null
+          chronic_pain: string | null
+          chronic_pain_details: string | null
+          codependency_patterns: string | null
+          cognitive_impairment: string | null
           contact_email: string
           contact_name: string
           contact_phone: string | null
           contact_relationship: string | null
+          coping_skills: string | null
           created_at: string
+          current_intoxication_level: string | null
+          current_mental_health_symptoms: Json | null
+          current_mental_health_treatment: string | null
           current_triggers: string | null
+          current_using_substances: string | null
+          custody_issues: string | null
+          date_of_birth: string | null
+          dcf_involvement_details: string | null
+          debt_amount: string | null
+          delirium_tremens_history: string | null
+          divorced_parents: string | null
+          dsm_activities_given_up: string | null
           dsm_behaviors: Json | null
+          dsm_continued_despite_knowledge: string | null
+          dsm_continued_use_problems: string | null
+          dsm_cravings: string | null
+          dsm_desire_cut_down: string | null
+          dsm_failure_obligations: string | null
+          dsm_hazardous_use: string | null
+          dsm_larger_amounts: string | null
+          dsm_time_spent: string | null
+          dsm_tolerance: string | null
+          dsm_withdrawal: string | null
           dsm_yes_count: number | null
+          dui_history: string | null
           duration_of_use: string | null
+          eating_disorder_history: string | null
+          education_level: string | null
+          employment_barriers: string | null
+          employment_status: string | null
+          enabling_behaviors_list: Json | null
           enabling_details: string | null
           er_visit_details: string | null
+          estranged_details: string | null
+          estranged_family_members: string | null
+          ethnicity: string | null
+          family_addiction_history: Json | null
+          family_communication_patterns: string | null
+          family_conflicts: string | null
+          family_conflicts_details: string | null
+          family_counseling_history: string | null
           family_enabling: string | null
+          family_in_recovery: string | null
+          family_intervention_concerns: string | null
+          family_members_participating: Json | null
+          family_mental_health_history: Json | null
+          family_overdose_deaths: string | null
+          family_psychiatric_hospitalizations: string | null
           family_ready_intervention: string | null
+          family_recovery_history: string | null
+          family_roles: string | null
+          family_secrets: string | null
           family_signature: string | null
+          family_suicide_history: string | null
+          family_trauma_history: string | null
+          family_unity_level: string | null
           financial_details: string | null
           financial_impact: string | null
           frequency: string | null
+          generational_addiction_pattern: string | null
+          geographic_preferences: string | null
+          health_consequences: string | null
           health_issues: string | null
           health_issues_list: string | null
+          hiding_use: string | null
+          high_risk_situations: string | null
           homeless_unstable: string | null
+          homicidal_ideation: string | null
           hospitalized_detox: string | null
           id: string
+          immediate_safety_concerns: string | null
+          impulse_control_issues: string | null
+          infectious_disease_details: string | null
+          infectious_diseases: string | null
+          insurance_information: string | null
           intervention_barriers: string | null
+          intervention_type_preference: string | null
+          iv_drug_use: string | null
+          job_loss_due_to_use: string | null
+          last_physical_exam: string | null
+          last_use_date: string | null
+          legal_issues: string | null
+          legal_issues_details: string | null
+          living_situation: string | null
+          longest_sobriety_period: string | null
           loved_one_age: number | null
           loved_one_gender: string | null
           loved_one_name: string
+          marital_status: string | null
+          medical_supervision_needed: string | null
           mental_health_details: string | null
+          mental_health_diagnoses: Json | null
+          mental_health_medications: Json | null
           mental_health_signs: string | null
+          morning_use: string | null
+          motivation_level: string | null
+          naloxone_reversals: number | null
           notes: string | null
+          occupation: string | null
+          overall_risk_level: string | null
+          overdose_details: string | null
+          overdose_history: string | null
+          peer_support_recovery: string | null
+          pending_charges: string | null
+          people_using_in_home: string | null
+          physical_altercations: string | null
+          physical_disabilities: string | null
+          polysubstance_use: string | null
+          potential_objections: string | null
+          pregnancy_status: string | null
           prescribed_medications: string | null
           prescribed_medications_list: string | null
+          previous_recovery_attempts: string | null
+          primary_care_physician: string | null
+          primary_language: string | null
           primary_substances: string | null
           prior_treatment: string | null
+          probation_parole: string | null
           psychiatric_details: string | null
           psychiatric_history: string | null
+          ptsd_symptoms: string | null
           recent_detox: string | null
           recent_er_visits: string | null
+          recommended_level_of_care: string | null
+          relapse_triggers: Json | null
+          relapse_warning_signs: string | null
+          relationship_losses: string | null
+          relationship_losses_details: string | null
+          relationship_with_using_friends: string | null
+          resistance_factors: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          route_of_administration: string | null
+          safe_housing_available: string | null
+          seizure_history: string | null
+          self_harm_history: string | null
           severity_level: string | null
+          sleep_problems: string | null
+          sober_living_interest: string | null
+          special_considerations: string | null
           stable_living: string | null
+          stage_of_change: string | null
           status: string | null
+          stolen_from_family: string | null
+          substances_accessible_home: string | null
+          substances_used: Json | null
+          suicide_attempts_details: string | null
+          suicide_attempts_history: string | null
+          suicide_ideation: string | null
+          suicide_ideation_details: string | null
           support_network: string | null
+          transportation_access: string | null
+          trauma_details: string | null
+          trauma_history: string | null
+          treatment_goals: string | null
           treatment_history: Json | null
+          treatment_preferences: string | null
+          twelve_step_involvement: string | null
+          typical_daily_use: string | null
           updated_at: string
+          urgency_level: string | null
           use_increased: string | null
+          using_alone: string | null
+          veteran_status: string | null
           violence_details: string | null
           violence_history: string | null
+          what_didnt_work: string | null
+          what_motivates_individual: string | null
+          what_worked_before: string | null
+          who_holds_leverage: string | null
           willingness_to_change: string | null
           withdrawal_description: string | null
           withdrawal_medications: string | null
           withdrawal_medications_list: string | null
+          withdrawal_severity: string | null
           withdrawal_symptoms: string | null
         }
         Insert: {
+          accidents_due_to_use?: string | null
+          acknowledges_problem?: string | null
+          additional_information?: string | null
           age_first_used?: number | null
+          appetite_changes?: string | null
+          arrests_details?: string | null
+          arrests_history?: string | null
+          bankruptcy?: string | null
+          best_approach?: string | null
           best_day_to_contact?: string | null
           best_time_to_contact?: string | null
+          blackouts_history?: string | null
+          blended_family?: string | null
+          bottom_lines?: Json | null
+          boundaries_assessment?: string | null
+          budget_for_treatment?: string | null
           child_welfare_involvement?: string | null
           children_impacted?: string | null
           children_present?: string | null
+          chronic_pain?: string | null
+          chronic_pain_details?: string | null
+          codependency_patterns?: string | null
+          cognitive_impairment?: string | null
           contact_email: string
           contact_name: string
           contact_phone?: string | null
           contact_relationship?: string | null
+          coping_skills?: string | null
           created_at?: string
+          current_intoxication_level?: string | null
+          current_mental_health_symptoms?: Json | null
+          current_mental_health_treatment?: string | null
           current_triggers?: string | null
+          current_using_substances?: string | null
+          custody_issues?: string | null
+          date_of_birth?: string | null
+          dcf_involvement_details?: string | null
+          debt_amount?: string | null
+          delirium_tremens_history?: string | null
+          divorced_parents?: string | null
+          dsm_activities_given_up?: string | null
           dsm_behaviors?: Json | null
+          dsm_continued_despite_knowledge?: string | null
+          dsm_continued_use_problems?: string | null
+          dsm_cravings?: string | null
+          dsm_desire_cut_down?: string | null
+          dsm_failure_obligations?: string | null
+          dsm_hazardous_use?: string | null
+          dsm_larger_amounts?: string | null
+          dsm_time_spent?: string | null
+          dsm_tolerance?: string | null
+          dsm_withdrawal?: string | null
           dsm_yes_count?: number | null
+          dui_history?: string | null
           duration_of_use?: string | null
+          eating_disorder_history?: string | null
+          education_level?: string | null
+          employment_barriers?: string | null
+          employment_status?: string | null
+          enabling_behaviors_list?: Json | null
           enabling_details?: string | null
           er_visit_details?: string | null
+          estranged_details?: string | null
+          estranged_family_members?: string | null
+          ethnicity?: string | null
+          family_addiction_history?: Json | null
+          family_communication_patterns?: string | null
+          family_conflicts?: string | null
+          family_conflicts_details?: string | null
+          family_counseling_history?: string | null
           family_enabling?: string | null
+          family_in_recovery?: string | null
+          family_intervention_concerns?: string | null
+          family_members_participating?: Json | null
+          family_mental_health_history?: Json | null
+          family_overdose_deaths?: string | null
+          family_psychiatric_hospitalizations?: string | null
           family_ready_intervention?: string | null
+          family_recovery_history?: string | null
+          family_roles?: string | null
+          family_secrets?: string | null
           family_signature?: string | null
+          family_suicide_history?: string | null
+          family_trauma_history?: string | null
+          family_unity_level?: string | null
           financial_details?: string | null
           financial_impact?: string | null
           frequency?: string | null
+          generational_addiction_pattern?: string | null
+          geographic_preferences?: string | null
+          health_consequences?: string | null
           health_issues?: string | null
           health_issues_list?: string | null
+          hiding_use?: string | null
+          high_risk_situations?: string | null
           homeless_unstable?: string | null
+          homicidal_ideation?: string | null
           hospitalized_detox?: string | null
           id?: string
+          immediate_safety_concerns?: string | null
+          impulse_control_issues?: string | null
+          infectious_disease_details?: string | null
+          infectious_diseases?: string | null
+          insurance_information?: string | null
           intervention_barriers?: string | null
+          intervention_type_preference?: string | null
+          iv_drug_use?: string | null
+          job_loss_due_to_use?: string | null
+          last_physical_exam?: string | null
+          last_use_date?: string | null
+          legal_issues?: string | null
+          legal_issues_details?: string | null
+          living_situation?: string | null
+          longest_sobriety_period?: string | null
           loved_one_age?: number | null
           loved_one_gender?: string | null
           loved_one_name: string
+          marital_status?: string | null
+          medical_supervision_needed?: string | null
           mental_health_details?: string | null
+          mental_health_diagnoses?: Json | null
+          mental_health_medications?: Json | null
           mental_health_signs?: string | null
+          morning_use?: string | null
+          motivation_level?: string | null
+          naloxone_reversals?: number | null
           notes?: string | null
+          occupation?: string | null
+          overall_risk_level?: string | null
+          overdose_details?: string | null
+          overdose_history?: string | null
+          peer_support_recovery?: string | null
+          pending_charges?: string | null
+          people_using_in_home?: string | null
+          physical_altercations?: string | null
+          physical_disabilities?: string | null
+          polysubstance_use?: string | null
+          potential_objections?: string | null
+          pregnancy_status?: string | null
           prescribed_medications?: string | null
           prescribed_medications_list?: string | null
+          previous_recovery_attempts?: string | null
+          primary_care_physician?: string | null
+          primary_language?: string | null
           primary_substances?: string | null
           prior_treatment?: string | null
+          probation_parole?: string | null
           psychiatric_details?: string | null
           psychiatric_history?: string | null
+          ptsd_symptoms?: string | null
           recent_detox?: string | null
           recent_er_visits?: string | null
+          recommended_level_of_care?: string | null
+          relapse_triggers?: Json | null
+          relapse_warning_signs?: string | null
+          relationship_losses?: string | null
+          relationship_losses_details?: string | null
+          relationship_with_using_friends?: string | null
+          resistance_factors?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          route_of_administration?: string | null
+          safe_housing_available?: string | null
+          seizure_history?: string | null
+          self_harm_history?: string | null
           severity_level?: string | null
+          sleep_problems?: string | null
+          sober_living_interest?: string | null
+          special_considerations?: string | null
           stable_living?: string | null
+          stage_of_change?: string | null
           status?: string | null
+          stolen_from_family?: string | null
+          substances_accessible_home?: string | null
+          substances_used?: Json | null
+          suicide_attempts_details?: string | null
+          suicide_attempts_history?: string | null
+          suicide_ideation?: string | null
+          suicide_ideation_details?: string | null
           support_network?: string | null
+          transportation_access?: string | null
+          trauma_details?: string | null
+          trauma_history?: string | null
+          treatment_goals?: string | null
           treatment_history?: Json | null
+          treatment_preferences?: string | null
+          twelve_step_involvement?: string | null
+          typical_daily_use?: string | null
           updated_at?: string
+          urgency_level?: string | null
           use_increased?: string | null
+          using_alone?: string | null
+          veteran_status?: string | null
           violence_details?: string | null
           violence_history?: string | null
+          what_didnt_work?: string | null
+          what_motivates_individual?: string | null
+          what_worked_before?: string | null
+          who_holds_leverage?: string | null
           willingness_to_change?: string | null
           withdrawal_description?: string | null
           withdrawal_medications?: string | null
           withdrawal_medications_list?: string | null
+          withdrawal_severity?: string | null
           withdrawal_symptoms?: string | null
         }
         Update: {
+          accidents_due_to_use?: string | null
+          acknowledges_problem?: string | null
+          additional_information?: string | null
           age_first_used?: number | null
+          appetite_changes?: string | null
+          arrests_details?: string | null
+          arrests_history?: string | null
+          bankruptcy?: string | null
+          best_approach?: string | null
           best_day_to_contact?: string | null
           best_time_to_contact?: string | null
+          blackouts_history?: string | null
+          blended_family?: string | null
+          bottom_lines?: Json | null
+          boundaries_assessment?: string | null
+          budget_for_treatment?: string | null
           child_welfare_involvement?: string | null
           children_impacted?: string | null
           children_present?: string | null
+          chronic_pain?: string | null
+          chronic_pain_details?: string | null
+          codependency_patterns?: string | null
+          cognitive_impairment?: string | null
           contact_email?: string
           contact_name?: string
           contact_phone?: string | null
           contact_relationship?: string | null
+          coping_skills?: string | null
           created_at?: string
+          current_intoxication_level?: string | null
+          current_mental_health_symptoms?: Json | null
+          current_mental_health_treatment?: string | null
           current_triggers?: string | null
+          current_using_substances?: string | null
+          custody_issues?: string | null
+          date_of_birth?: string | null
+          dcf_involvement_details?: string | null
+          debt_amount?: string | null
+          delirium_tremens_history?: string | null
+          divorced_parents?: string | null
+          dsm_activities_given_up?: string | null
           dsm_behaviors?: Json | null
+          dsm_continued_despite_knowledge?: string | null
+          dsm_continued_use_problems?: string | null
+          dsm_cravings?: string | null
+          dsm_desire_cut_down?: string | null
+          dsm_failure_obligations?: string | null
+          dsm_hazardous_use?: string | null
+          dsm_larger_amounts?: string | null
+          dsm_time_spent?: string | null
+          dsm_tolerance?: string | null
+          dsm_withdrawal?: string | null
           dsm_yes_count?: number | null
+          dui_history?: string | null
           duration_of_use?: string | null
+          eating_disorder_history?: string | null
+          education_level?: string | null
+          employment_barriers?: string | null
+          employment_status?: string | null
+          enabling_behaviors_list?: Json | null
           enabling_details?: string | null
           er_visit_details?: string | null
+          estranged_details?: string | null
+          estranged_family_members?: string | null
+          ethnicity?: string | null
+          family_addiction_history?: Json | null
+          family_communication_patterns?: string | null
+          family_conflicts?: string | null
+          family_conflicts_details?: string | null
+          family_counseling_history?: string | null
           family_enabling?: string | null
+          family_in_recovery?: string | null
+          family_intervention_concerns?: string | null
+          family_members_participating?: Json | null
+          family_mental_health_history?: Json | null
+          family_overdose_deaths?: string | null
+          family_psychiatric_hospitalizations?: string | null
           family_ready_intervention?: string | null
+          family_recovery_history?: string | null
+          family_roles?: string | null
+          family_secrets?: string | null
           family_signature?: string | null
+          family_suicide_history?: string | null
+          family_trauma_history?: string | null
+          family_unity_level?: string | null
           financial_details?: string | null
           financial_impact?: string | null
           frequency?: string | null
+          generational_addiction_pattern?: string | null
+          geographic_preferences?: string | null
+          health_consequences?: string | null
           health_issues?: string | null
           health_issues_list?: string | null
+          hiding_use?: string | null
+          high_risk_situations?: string | null
           homeless_unstable?: string | null
+          homicidal_ideation?: string | null
           hospitalized_detox?: string | null
           id?: string
+          immediate_safety_concerns?: string | null
+          impulse_control_issues?: string | null
+          infectious_disease_details?: string | null
+          infectious_diseases?: string | null
+          insurance_information?: string | null
           intervention_barriers?: string | null
+          intervention_type_preference?: string | null
+          iv_drug_use?: string | null
+          job_loss_due_to_use?: string | null
+          last_physical_exam?: string | null
+          last_use_date?: string | null
+          legal_issues?: string | null
+          legal_issues_details?: string | null
+          living_situation?: string | null
+          longest_sobriety_period?: string | null
           loved_one_age?: number | null
           loved_one_gender?: string | null
           loved_one_name?: string
+          marital_status?: string | null
+          medical_supervision_needed?: string | null
           mental_health_details?: string | null
+          mental_health_diagnoses?: Json | null
+          mental_health_medications?: Json | null
           mental_health_signs?: string | null
+          morning_use?: string | null
+          motivation_level?: string | null
+          naloxone_reversals?: number | null
           notes?: string | null
+          occupation?: string | null
+          overall_risk_level?: string | null
+          overdose_details?: string | null
+          overdose_history?: string | null
+          peer_support_recovery?: string | null
+          pending_charges?: string | null
+          people_using_in_home?: string | null
+          physical_altercations?: string | null
+          physical_disabilities?: string | null
+          polysubstance_use?: string | null
+          potential_objections?: string | null
+          pregnancy_status?: string | null
           prescribed_medications?: string | null
           prescribed_medications_list?: string | null
+          previous_recovery_attempts?: string | null
+          primary_care_physician?: string | null
+          primary_language?: string | null
           primary_substances?: string | null
           prior_treatment?: string | null
+          probation_parole?: string | null
           psychiatric_details?: string | null
           psychiatric_history?: string | null
+          ptsd_symptoms?: string | null
           recent_detox?: string | null
           recent_er_visits?: string | null
+          recommended_level_of_care?: string | null
+          relapse_triggers?: Json | null
+          relapse_warning_signs?: string | null
+          relationship_losses?: string | null
+          relationship_losses_details?: string | null
+          relationship_with_using_friends?: string | null
+          resistance_factors?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          route_of_administration?: string | null
+          safe_housing_available?: string | null
+          seizure_history?: string | null
+          self_harm_history?: string | null
           severity_level?: string | null
+          sleep_problems?: string | null
+          sober_living_interest?: string | null
+          special_considerations?: string | null
           stable_living?: string | null
+          stage_of_change?: string | null
           status?: string | null
+          stolen_from_family?: string | null
+          substances_accessible_home?: string | null
+          substances_used?: Json | null
+          suicide_attempts_details?: string | null
+          suicide_attempts_history?: string | null
+          suicide_ideation?: string | null
+          suicide_ideation_details?: string | null
           support_network?: string | null
+          transportation_access?: string | null
+          trauma_details?: string | null
+          trauma_history?: string | null
+          treatment_goals?: string | null
           treatment_history?: Json | null
+          treatment_preferences?: string | null
+          twelve_step_involvement?: string | null
+          typical_daily_use?: string | null
           updated_at?: string
+          urgency_level?: string | null
           use_increased?: string | null
+          using_alone?: string | null
+          veteran_status?: string | null
           violence_details?: string | null
           violence_history?: string | null
+          what_didnt_work?: string | null
+          what_motivates_individual?: string | null
+          what_worked_before?: string | null
+          who_holds_leverage?: string | null
           willingness_to_change?: string | null
           withdrawal_description?: string | null
           withdrawal_medications?: string | null
           withdrawal_medications_list?: string | null
+          withdrawal_severity?: string | null
           withdrawal_symptoms?: string | null
         }
         Relationships: []
