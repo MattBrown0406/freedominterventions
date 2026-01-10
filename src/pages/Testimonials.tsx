@@ -42,9 +42,9 @@ const Testimonials = () => {
       location: "Substance Abuse Coordinator",
     },
     {
-      quote: "Matt flew out within 24 hours when we called in crisis. His calm presence and clear direction helped us navigate a terrifying situation. Our son agreed to treatment that same day.",
-      author: "Jennifer L.",
-      location: "Austin, TX",
+      quote: "I had an hour-long consult with Matt Brown regarding a loved one struggling with addiction. He was very helpful, answered all of my questions, and provided thoughtful advice. Two days later, he followed up with me to see how things were going. Although we ultimately didn't move forward with an intervention at that time, I felt confident that Matt would have done a good job if we had.",
+      author: "Anonymous",
+      location: "Consultation Client",
     },
     {
       quote: "Our son's drinking had taken over our home. The intervention was terrifying to plan, but it gave us a script, a boundary, and a lifeline out of chaos. He agreed to treatment that same day, and he has been sober for 11 months now. We finally have family dinners without walking on eggshells, and I sleep through the night for the first time in years.",
