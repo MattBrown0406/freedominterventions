@@ -23,8 +23,8 @@ const Testimonials = () => {
     },
     {
       quote: "I had an hour-long consult with Matt Brown regarding a loved one struggling with addiction. He was very helpful, answered all of my questions, and provided thoughtful advice. Two days later, he followed up with me to see how things were going. Although we ultimately didn't move forward with an intervention at that time, I felt confident that Matt would have done a good job if we had.",
-      author: "Anonymous",
-      location: "Consultation Client",
+      author: "Noel Y.",
+      location: "Portland, OR",
     },
     {
       quote: "Our family was terrified and exhausted after years of crisis when we reached out to Matt at Freedom Interventions, and he educated us on addiction and boundaries while crafting a compassionate plan. The intervention day was emotional but guided calmly by Matt, leading our daughter to agree to treatment. Matt supported us afterward, helping us navigate recovery as a family. Today, our daughter is sober and rebuilding, and our family is stronger than ever—thanks to him.",
