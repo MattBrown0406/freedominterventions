@@ -84,80 +84,159 @@ serve(async (req) => {
       );
     }
 
-    // Validate field lengths
-    if (body.contact_name.length > 200) {
-      return new Response(
-        JSON.stringify({ error: "Contact name is too long" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-    
-    if (body.contact_email.length > 255) {
-      return new Response(
-        JSON.stringify({ error: "Email is too long" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
     // Create Supabase client with service role for insert
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Sanitize and prepare assessment data
+    // Prepare assessment data - pass through all fields
     const assessmentData = {
       contact_name: body.contact_name?.trim().slice(0, 200),
       contact_email: body.contact_email?.trim().toLowerCase().slice(0, 255),
-      contact_phone: body.contact_phone?.trim().slice(0, 50) || null,
-      contact_relationship: body.contact_relationship?.trim().slice(0, 100) || null,
-      best_day_to_contact: body.best_day_to_contact?.slice(0, 50) || null,
-      best_time_to_contact: body.best_time_to_contact?.slice(0, 50) || null,
+      contact_phone: body.contact_phone || null,
+      contact_relationship: body.contact_relationship || null,
+      best_day_to_contact: body.best_day_to_contact || null,
+      best_time_to_contact: body.best_time_to_contact || null,
       loved_one_name: body.loved_one_name?.trim().slice(0, 200),
-      loved_one_age: body.loved_one_age ? Math.min(Math.max(parseInt(body.loved_one_age) || 0, 0), 150) : null,
-      loved_one_gender: body.loved_one_gender?.slice(0, 50) || null,
-      primary_substances: body.primary_substances?.trim().slice(0, 500) || null,
-      frequency: body.frequency?.slice(0, 100) || null,
-      duration_of_use: body.duration_of_use?.slice(0, 100) || null,
-      age_first_used: body.age_first_used ? Math.min(Math.max(parseInt(body.age_first_used) || 0, 0), 150) : null,
-      use_increased: body.use_increased?.slice(0, 50) || null,
+      loved_one_age: body.loved_one_age || null,
+      loved_one_gender: body.loved_one_gender || null,
+      date_of_birth: body.date_of_birth || null,
+      marital_status: body.marital_status || null,
+      employment_status: body.employment_status || null,
+      occupation: body.occupation || null,
+      education_level: body.education_level || null,
+      living_situation: body.living_situation || null,
+      veteran_status: body.veteran_status || null,
+      primary_language: body.primary_language || null,
+      primary_substances: body.primary_substances || null,
+      substances_used: body.substances_used || null,
+      polysubstance_use: body.polysubstance_use || null,
+      iv_drug_use: body.iv_drug_use || null,
+      overdose_history: body.overdose_history || null,
+      overdose_details: body.overdose_details || null,
+      naloxone_reversals: body.naloxone_reversals || null,
+      morning_use: body.morning_use || null,
+      using_alone: body.using_alone || null,
+      hiding_use: body.hiding_use || null,
+      blackouts_history: body.blackouts_history || null,
+      age_first_used: body.age_first_used || null,
+      duration_of_use: body.duration_of_use || null,
+      longest_sobriety_period: body.longest_sobriety_period || null,
+      use_increased: body.use_increased || null,
+      typical_daily_use: body.typical_daily_use || null,
+      last_use_date: body.last_use_date || null,
+      frequency: body.frequency || null,
       dsm_behaviors: body.dsm_behaviors || {},
-      dsm_yes_count: typeof body.dsm_yes_count === "number" ? Math.min(Math.max(body.dsm_yes_count, 0), 13) : 0,
-      severity_level: body.severity_level?.slice(0, 50) || null,
-      withdrawal_symptoms: body.withdrawal_symptoms?.slice(0, 50) || null,
-      withdrawal_description: body.withdrawal_description?.trim().slice(0, 1000) || null,
-      recent_detox: body.recent_detox?.slice(0, 50) || null,
-      hospitalized_detox: body.hospitalized_detox?.trim().slice(0, 500) || null,
-      withdrawal_medications: body.withdrawal_medications?.slice(0, 50) || null,
-      withdrawal_medications_list: body.withdrawal_medications_list?.trim().slice(0, 500) || null,
-      health_issues: body.health_issues?.slice(0, 50) || null,
-      health_issues_list: body.health_issues_list?.trim().slice(0, 1000) || null,
-      recent_er_visits: body.recent_er_visits?.slice(0, 50) || null,
-      er_visit_details: body.er_visit_details?.trim().slice(0, 1000) || null,
-      prescribed_medications: body.prescribed_medications?.slice(0, 50) || null,
-      prescribed_medications_list: body.prescribed_medications_list?.trim().slice(0, 1000) || null,
-      mental_health_signs: body.mental_health_signs?.slice(0, 50) || null,
-      mental_health_details: body.mental_health_details?.trim().slice(0, 1000) || null,
-      psychiatric_history: body.psychiatric_history?.slice(0, 50) || null,
-      psychiatric_details: body.psychiatric_details?.trim().slice(0, 1000) || null,
-      violence_history: body.violence_history?.slice(0, 50) || null,
-      violence_details: body.violence_details?.trim().slice(0, 1000) || null,
-      stable_living: body.stable_living?.slice(0, 50) || null,
-      homeless_unstable: body.homeless_unstable?.trim().slice(0, 500) || null,
-      family_enabling: body.family_enabling?.slice(0, 50) || null,
-      enabling_details: body.enabling_details?.trim().slice(0, 1000) || null,
-      children_present: body.children_present?.slice(0, 50) || null,
-      children_impacted: body.children_impacted?.trim().slice(0, 1000) || null,
-      support_network: body.support_network?.trim().slice(0, 1000) || null,
-      prior_treatment: body.prior_treatment?.slice(0, 50) || null,
+      dsm_yes_count: body.dsm_yes_count || 0,
+      severity_level: body.severity_level || null,
+      withdrawal_symptoms: body.withdrawal_symptoms || null,
+      withdrawal_description: body.withdrawal_description || null,
+      seizure_history: body.seizure_history || null,
+      delirium_tremens_history: body.delirium_tremens_history || null,
+      recent_detox: body.recent_detox || null,
+      hospitalized_detox: body.hospitalized_detox || null,
+      withdrawal_medications: body.withdrawal_medications || null,
+      withdrawal_medications_list: body.withdrawal_medications_list || null,
+      health_issues: body.health_issues || null,
+      health_issues_list: body.health_issues_list || null,
+      recent_er_visits: body.recent_er_visits || null,
+      er_visit_details: body.er_visit_details || null,
+      prescribed_medications: body.prescribed_medications || null,
+      prescribed_medications_list: body.prescribed_medications_list || null,
+      chronic_pain: body.chronic_pain || null,
+      chronic_pain_details: body.chronic_pain_details || null,
+      infectious_diseases: body.infectious_diseases || null,
+      pregnancy_status: body.pregnancy_status || null,
+      sleep_problems: body.sleep_problems || null,
+      mental_health_signs: body.mental_health_signs || null,
+      mental_health_details: body.mental_health_details || null,
+      psychiatric_history: body.psychiatric_history || null,
+      psychiatric_details: body.psychiatric_details || null,
+      current_mental_health_symptoms: body.current_mental_health_symptoms || null,
+      suicide_ideation: body.suicide_ideation || null,
+      suicide_ideation_details: body.suicide_ideation_details || null,
+      suicide_attempts_history: body.suicide_attempts_history || null,
+      self_harm_history: body.self_harm_history || null,
+      homicidal_ideation: body.homicidal_ideation || null,
+      trauma_history: body.trauma_history || null,
+      trauma_details: body.trauma_details || null,
+      ptsd_symptoms: body.ptsd_symptoms || null,
+      mental_health_diagnoses: body.mental_health_diagnoses || null,
+      current_mental_health_treatment: body.current_mental_health_treatment || null,
+      stage_of_change: body.stage_of_change || null,
+      acknowledges_problem: body.acknowledges_problem || null,
+      motivation_level: body.motivation_level || null,
+      willingness_to_change: body.willingness_to_change || null,
+      what_worked_before: body.what_worked_before || null,
+      what_didnt_work: body.what_didnt_work || null,
+      treatment_goals: body.treatment_goals || null,
+      resistance_factors: body.resistance_factors || null,
+      relapse_triggers: body.relapse_triggers || null,
+      high_risk_situations: body.high_risk_situations || null,
+      coping_skills: body.coping_skills || null,
+      relapse_warning_signs: body.relapse_warning_signs || null,
+      peer_support_recovery: body.peer_support_recovery || null,
+      twelve_step_involvement: body.twelve_step_involvement || null,
+      prior_treatment: body.prior_treatment || null,
       treatment_history: body.treatment_history || null,
-      current_triggers: body.current_triggers?.trim().slice(0, 1000) || null,
-      willingness_to_change: body.willingness_to_change?.slice(0, 50) || null,
-      financial_impact: body.financial_impact?.slice(0, 50) || null,
-      financial_details: body.financial_details?.trim().slice(0, 1000) || null,
-      child_welfare_involvement: body.child_welfare_involvement?.trim().slice(0, 500) || null,
-      family_ready_intervention: body.family_ready_intervention?.slice(0, 50) || null,
-      intervention_barriers: body.intervention_barriers?.trim().slice(0, 1000) || null,
-      family_signature: body.family_signature?.trim().slice(0, 200) || null,
+      current_triggers: body.current_triggers || null,
+      stable_living: body.stable_living || null,
+      homeless_unstable: body.homeless_unstable || null,
+      people_using_in_home: body.people_using_in_home || null,
+      substances_accessible_home: body.substances_accessible_home || null,
+      support_network: body.support_network || null,
+      safe_housing_available: body.safe_housing_available || null,
+      transportation_access: body.transportation_access || null,
+      legal_issues: body.legal_issues || null,
+      legal_issues_details: body.legal_issues_details || null,
+      pending_charges: body.pending_charges || null,
+      probation_parole: body.probation_parole || null,
+      dui_history: body.dui_history || null,
+      family_members_participating: body.family_members_participating || null,
+      family_unity_level: body.family_unity_level || null,
+      family_communication_patterns: body.family_communication_patterns || null,
+      family_conflicts: body.family_conflicts || null,
+      family_conflicts_details: body.family_conflicts_details || null,
+      divorced_parents: body.divorced_parents || null,
+      estranged_family_members: body.estranged_family_members || null,
+      estranged_details: body.estranged_details || null,
+      codependency_patterns: body.codependency_patterns || null,
+      boundaries_assessment: body.boundaries_assessment || null,
+      family_enabling: body.family_enabling || null,
+      enabling_details: body.enabling_details || null,
+      family_secrets: body.family_secrets || null,
+      family_trauma_history: body.family_trauma_history || null,
+      children_present: body.children_present || null,
+      children_impacted: body.children_impacted || null,
+      who_holds_leverage: body.who_holds_leverage || null,
+      family_addiction_history: body.family_addiction_history || null,
+      generational_addiction_pattern: body.generational_addiction_pattern || null,
+      family_recovery_history: body.family_recovery_history || null,
+      family_overdose_deaths: body.family_overdose_deaths || null,
+      family_mental_health_history: body.family_mental_health_history || null,
+      family_suicide_history: body.family_suicide_history || null,
+      family_psychiatric_hospitalizations: body.family_psychiatric_hospitalizations || null,
+      violence_history: body.violence_history || null,
+      violence_details: body.violence_details || null,
+      financial_impact: body.financial_impact || null,
+      financial_details: body.financial_details || null,
+      job_loss_due_to_use: body.job_loss_due_to_use || null,
+      relationship_losses: body.relationship_losses || null,
+      stolen_from_family: body.stolen_from_family || null,
+      arrests_history: body.arrests_history || null,
+      arrests_details: body.arrests_details || null,
+      child_welfare_involvement: body.child_welfare_involvement || null,
+      family_ready_intervention: body.family_ready_intervention || null,
+      intervention_barriers: body.intervention_barriers || null,
+      what_motivates_individual: body.what_motivates_individual || null,
+      treatment_preferences: body.treatment_preferences || null,
+      geographic_preferences: body.geographic_preferences || null,
+      insurance_information: body.insurance_information || null,
+      budget_for_treatment: body.budget_for_treatment || null,
+      urgency_level: body.urgency_level || null,
+      immediate_safety_concerns: body.immediate_safety_concerns || null,
+      additional_information: body.additional_information || null,
+      family_signature: body.family_signature || null,
     };
 
     console.log(`Inserting assessment for: ${assessmentData.loved_one_name}`);
@@ -178,44 +257,178 @@ serve(async (req) => {
 
     console.log(`Assessment saved successfully with ID: ${data.id}`);
 
-    // Send email notification via SendGrid (non-blocking)
+    // Send email notification via Resend API
     try {
-      const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-      if (sendgridApiKey) {
-        console.log("Sending assessment notification via SendGrid");
-        
-        const emailResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      const resendApiKey = Deno.env.get("RESEND_API_KEY");
+      if (resendApiKey) {
+        console.log("Sending assessment notification via Resend");
+
+        // Parse withdrawal symptoms if present
+        let withdrawalInfo = "None reported";
+        if (assessmentData.withdrawal_symptoms) {
+          try {
+            const symptoms = JSON.parse(assessmentData.withdrawal_symptoms);
+            const physical = symptoms.physical?.length ? symptoms.physical.join(", ") : "None";
+            const psychological = symptoms.psychological?.length ? symptoms.psychological.join(", ") : "None";
+            withdrawalInfo = `Physical: ${physical}<br>Psychological: ${psychological}`;
+          } catch {
+            withdrawalInfo = assessmentData.withdrawal_symptoms;
+          }
+        }
+
+        // Format treatment history
+        let treatmentInfo = "None reported";
+        if (assessmentData.treatment_history && Array.isArray(assessmentData.treatment_history)) {
+          treatmentInfo = assessmentData.treatment_history.map((t: any) => 
+            `${t.programName || "Unknown"} (${t.programType || "Unknown"}) - Age ${t.ageAtTreatment || "?"}, ${t.successfulCompletion ? "Completed" : "Did not complete"}, ${t.aftercareFollowed ? "Followed aftercare" : "Did not follow aftercare"}`
+          ).join("<br>");
+        }
+
+        // Determine urgency styling
+        const isHighUrgency = assessmentData.urgency_level === "critical" || 
+                              assessmentData.suicide_ideation === "yes" || 
+                              assessmentData.immediate_safety_concerns;
+        const urgencyColor = isHighUrgency ? "#dc2626" : "#059669";
+        const urgencyText = isHighUrgency ? "⚠️ HIGH PRIORITY" : "Standard";
+
+        const emailHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .header { background: #1e3a5f; color: white; padding: 20px; text-align: center; }
+              .urgency { background: ${urgencyColor}; color: white; padding: 10px; text-align: center; font-weight: bold; }
+              .section { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px; }
+              .section h3 { color: #1e3a5f; margin-top: 0; border-bottom: 2px solid #1e3a5f; padding-bottom: 5px; }
+              .label { font-weight: bold; color: #555; }
+              .value { margin-left: 10px; }
+              .warning { background: #fef2f2; border-left: 4px solid #dc2626; padding: 10px; margin: 10px 0; }
+              .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>📋 New Comprehensive Assessment</h1>
+              <p>Submitted ${new Date().toLocaleString('en-US', { timeZone: 'America/Denver' })}</p>
+            </div>
+            
+            <div class="urgency">${urgencyText} - Severity: ${assessmentData.severity_level || "Not assessed"} (${assessmentData.dsm_yes_count}/11 DSM criteria)</div>
+            
+            ${isHighUrgency ? `
+            <div class="warning">
+              <strong>⚠️ Safety Concerns Noted:</strong><br>
+              ${assessmentData.suicide_ideation === "yes" ? "• Suicidal ideation reported<br>" : ""}
+              ${assessmentData.immediate_safety_concerns ? `• ${assessmentData.immediate_safety_concerns}` : ""}
+            </div>
+            ` : ""}
+            
+            <div class="section">
+              <h3>👤 Individual Information</h3>
+              <p><span class="label">Name:</span> <span class="value">${assessmentData.loved_one_name}</span></p>
+              <p><span class="label">Age:</span> <span class="value">${assessmentData.loved_one_age || "Not provided"}</span></p>
+              <p><span class="label">Gender:</span> <span class="value">${assessmentData.loved_one_gender || "Not provided"}</span></p>
+              <p><span class="label">Employment:</span> <span class="value">${assessmentData.employment_status || "Not provided"}</span></p>
+              <p><span class="label">Living Situation:</span> <span class="value">${assessmentData.living_situation || "Not provided"}</span></p>
+            </div>
+            
+            <div class="section">
+              <h3>📞 Contact Information</h3>
+              <p><span class="label">Contact Name:</span> <span class="value">${assessmentData.contact_name}</span></p>
+              <p><span class="label">Relationship:</span> <span class="value">${assessmentData.contact_relationship || "Not specified"}</span></p>
+              <p><span class="label">Email:</span> <span class="value"><a href="mailto:${assessmentData.contact_email}">${assessmentData.contact_email}</a></span></p>
+              <p><span class="label">Phone:</span> <span class="value">${assessmentData.contact_phone || "Not provided"}</span></p>
+              <p><span class="label">Best Time:</span> <span class="value">${assessmentData.best_day_to_contact || "Any day"} - ${assessmentData.best_time_to_contact || "Any time"}</span></p>
+            </div>
+            
+            <div class="section">
+              <h3>💊 Substance Use Summary</h3>
+              <p><span class="label">Primary Substances:</span> <span class="value">${assessmentData.primary_substances || "Not specified"}</span></p>
+              <p><span class="label">Duration:</span> <span class="value">${assessmentData.duration_of_use || "Not specified"}</span></p>
+              <p><span class="label">IV Drug Use:</span> <span class="value">${assessmentData.iv_drug_use || "Not specified"}</span></p>
+              <p><span class="label">Overdose History:</span> <span class="value">${assessmentData.overdose_history || "Not specified"}</span></p>
+              <p><span class="label">Longest Sobriety:</span> <span class="value">${assessmentData.longest_sobriety_period || "Not specified"}</span></p>
+            </div>
+            
+            <div class="section">
+              <h3>⚕️ Withdrawal & Medical</h3>
+              <p><span class="label">Seizure History:</span> <span class="value">${assessmentData.seizure_history || "Not specified"}</span></p>
+              <p><span class="label">Delirium Tremens:</span> <span class="value">${assessmentData.delirium_tremens_history || "Not specified"}</span></p>
+              <p><span class="label">Withdrawal Symptoms:</span><br>${withdrawalInfo}</p>
+            </div>
+            
+            <div class="section">
+              <h3>🧠 Mental Health</h3>
+              <p><span class="label">Psychiatric History:</span> <span class="value">${assessmentData.psychiatric_history || "Not specified"}</span></p>
+              <p><span class="label">Trauma History:</span> <span class="value">${assessmentData.trauma_history || "Not specified"}</span></p>
+              <p><span class="label">Suicide Ideation:</span> <span class="value">${assessmentData.suicide_ideation || "Not specified"}</span></p>
+              <p><span class="label">Suicide Attempts:</span> <span class="value">${assessmentData.suicide_attempts_history || "Not specified"}</span></p>
+            </div>
+            
+            <div class="section">
+              <h3>📚 Treatment History</h3>
+              <p><span class="label">Prior Treatment:</span> <span class="value">${assessmentData.prior_treatment || "Not specified"}</span></p>
+              <p>${treatmentInfo}</p>
+            </div>
+            
+            <div class="section">
+              <h3>👨‍👩‍👧‍👦 Family Dynamics</h3>
+              <p><span class="label">Family Unity:</span> <span class="value">${assessmentData.family_unity_level || "Not assessed"}</span></p>
+              <p><span class="label">Ready for Intervention:</span> <span class="value">${assessmentData.family_ready_intervention || "Not specified"}</span></p>
+              <p><span class="label">Intervention Barriers:</span> <span class="value">${assessmentData.intervention_barriers || "None noted"}</span></p>
+              <p><span class="label">Who Holds Leverage:</span> <span class="value">${assessmentData.who_holds_leverage || "Not specified"}</span></p>
+            </div>
+            
+            <div class="section">
+              <h3>🎯 Intervention Planning</h3>
+              <p><span class="label">Stage of Change:</span> <span class="value">${assessmentData.stage_of_change || "Not assessed"}</span></p>
+              <p><span class="label">Urgency Level:</span> <span class="value">${assessmentData.urgency_level || "Not specified"}</span></p>
+              <p><span class="label">Treatment Preferences:</span> <span class="value">${assessmentData.treatment_preferences || "None specified"}</span></p>
+              <p><span class="label">Geographic Preferences:</span> <span class="value">${assessmentData.geographic_preferences || "None specified"}</span></p>
+              <p><span class="label">Budget:</span> <span class="value">${assessmentData.budget_for_treatment || "Not specified"}</span></p>
+              <p><span class="label">Insurance:</span> <span class="value">${assessmentData.insurance_information || "Not provided"}</span></p>
+            </div>
+            
+            ${assessmentData.additional_information ? `
+            <div class="section">
+              <h3>📝 Additional Information</h3>
+              <p>${assessmentData.additional_information}</p>
+            </div>
+            ` : ""}
+            
+            <div class="footer">
+              <p><strong>View the full assessment in the admin dashboard:</strong></p>
+              <p><a href="https://freedominterventions.com/admin" style="background: #1e3a5f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Go to Admin Dashboard</a></p>
+              <br>
+              <p>Freedom Interventions Assessment System</p>
+            </div>
+          </body>
+          </html>
+        `;
+
+        const emailResponse = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${sendgridApiKey}`,
+            "Authorization": `Bearer ${resendApiKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
-            from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-            subject: `New Assessment: ${assessmentData.loved_one_name}`,
-            content: [{
-              type: "text/html",
-              value: `
-                <h2>New Assessment Submitted</h2>
-                <p><strong>Loved One:</strong> ${assessmentData.loved_one_name}</p>
-                <p><strong>Contact:</strong> ${assessmentData.contact_name} (${assessmentData.contact_email})</p>
-                <p><strong>Phone:</strong> ${assessmentData.contact_phone || "Not provided"}</p>
-                <p><strong>Best time to reach:</strong> ${assessmentData.best_day_to_contact || "Any day"} - ${assessmentData.best_time_to_contact || "Any time"}</p>
-                <p><strong>Severity Level:</strong> ${assessmentData.severity_level} (${assessmentData.dsm_yes_count}/13 criteria)</p>
-                <br>
-                <p>View full assessment in the admin dashboard.</p>
-              `,
-            }],
+            from: "Freedom Interventions <notifications@freedominterventions.com>",
+            to: ["matt@freedominterventions.com"],
+            subject: `${isHighUrgency ? "⚠️ URGENT: " : ""}New Assessment: ${assessmentData.loved_one_name} (${assessmentData.severity_level || "Unassessed"})`,
+            html: emailHtml,
           }),
         });
 
         if (emailResponse.ok) {
-          console.log("Email notification sent via SendGrid");
+          const emailResult = await emailResponse.json();
+          console.log("Email sent successfully via Resend:", emailResult);
         } else {
           const errorText = await emailResponse.text();
-          console.error("SendGrid error:", errorText);
+          console.error("Resend API error:", errorText);
         }
+      } else {
+        console.log("RESEND_API_KEY not configured, skipping email notification");
       }
     } catch (emailError) {
       console.error("Email notification failed:", emailError);
