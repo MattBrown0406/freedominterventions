@@ -1124,7 +1124,7 @@ const Assessment = () => {
                     </div>
 
                     <div>
-                      <Label>History of trauma (abuse, neglect, violence, accidents)?</Label>
+                      <Label>History of trauma (abuse, neglect, violence, accidents, sexual, abandonment, PTSD)?</Label>
                       <RadioGroup value={formData.traumaHistory} onValueChange={(v) => handleInputChange("traumaHistory", v)} className="flex gap-4 mt-2">
                         <div className="flex items-center space-x-2"><RadioGroupItem value="yes" id="trauma-yes" /><Label htmlFor="trauma-yes" className="font-normal">Yes</Label></div>
                         <div className="flex items-center space-x-2"><RadioGroupItem value="no" id="trauma-no" /><Label htmlFor="trauma-no" className="font-normal">No</Label></div>
