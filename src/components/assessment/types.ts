@@ -442,3 +442,49 @@ export const ROUTES_OF_ADMINISTRATION = [
   "Rectal",
   "Multiple routes"
 ];
+
+export const PHYSICAL_WITHDRAWAL_SYMPTOMS = [
+  "Tremors/shaking (hands, body)",
+  "Sweating (excessive perspiration)",
+  "Nausea/vomiting",
+  "Diarrhea/stomach cramps",
+  "Rapid heart rate/palpitations",
+  "Elevated blood pressure",
+  "Fever/chills",
+  "Muscle aches/pains",
+  "Headaches",
+  "Loss of appetite",
+  "Fatigue/exhaustion",
+  "Insomnia/difficulty sleeping",
+  "Hypersomnia (sleeping too much)",
+  "Dilated pupils",
+  "Runny nose/watery eyes",
+  "Goosebumps/skin crawling sensations",
+  "Yawning (excessive)",
+  "Seizures",
+  "Coordination problems/unsteady gait",
+  "Restless legs/body movements"
+];
+
+export const PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS = [
+  "Anxiety/nervousness",
+  "Agitation/irritability",
+  "Restlessness/inability to sit still",
+  "Depression/low mood",
+  "Mood swings",
+  "Difficulty concentrating",
+  "Memory problems/confusion",
+  "Cravings (intense urges to use)",
+  "Panic attacks",
+  "Paranoia/suspiciousness",
+  "Hallucinations (seeing/hearing things)",
+  "Disorientation/confusion",
+  "Nightmares/vivid dreams",
+  "Emotional numbness",
+  "Suicidal thoughts",
+  "Anger outbursts",
+  "Social withdrawal",
+  "Loss of motivation/anhedonia",
+  "Racing thoughts",
+  "Feeling of impending doom"
+];

@@ -15,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-react";
-import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION } from "@/components/assessment/types";
+import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION, PHYSICAL_WITHDRAWAL_SYMPTOMS, PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS } from "@/components/assessment/types";
 
 interface TreatmentEntry {
   programName: string;
@@ -108,7 +108,8 @@ const Assessment = () => {
     dsmBehaviors: {} as Record<string, boolean>,
 
     // Section 5: Withdrawal/Medical (ASAM Dim 1 & 2)
-    withdrawalSymptoms: "",
+    physicalWithdrawalSymptoms: [] as string[],
+    psychologicalWithdrawalSymptoms: [] as string[],
     withdrawalDescription: "",
     seizureHistory: "",
     deliriumTremensHistory: "",
@@ -257,6 +258,24 @@ const Assessment = () => {
     }));
   };
 
+  const handlePhysicalWithdrawalChange = (symptom: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      physicalWithdrawalSymptoms: checked 
+        ? [...prev.physicalWithdrawalSymptoms, symptom]
+        : prev.physicalWithdrawalSymptoms.filter(s => s !== symptom)
+    }));
+  };
+
+  const handlePsychologicalWithdrawalChange = (symptom: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      psychologicalWithdrawalSymptoms: checked 
+        ? [...prev.psychologicalWithdrawalSymptoms, symptom]
+        : prev.psychologicalWithdrawalSymptoms.filter(s => s !== symptom)
+    }));
+  };
+
   const countDsmYes = () => Object.values(formData.dsmBehaviors).filter(v => v).length;
   
   const getSeverityLevel = (count: number) => {
@@ -331,7 +350,9 @@ const Assessment = () => {
         dsm_behaviors: formData.dsmBehaviors,
         dsm_yes_count: countDsmYes(),
         severity_level: getSeverityLevel(countDsmYes()).level,
-        withdrawal_symptoms: formData.withdrawalSymptoms || null,
+        withdrawal_symptoms: formData.physicalWithdrawalSymptoms.length > 0 || formData.psychologicalWithdrawalSymptoms.length > 0 
+          ? JSON.stringify({ physical: formData.physicalWithdrawalSymptoms, psychological: formData.psychologicalWithdrawalSymptoms })
+          : null,
         withdrawal_description: formData.withdrawalDescription || null,
         seizure_history: formData.seizureHistory || null,
         delirium_tremens_history: formData.deliriumTremensHistory || null,
@@ -902,15 +923,59 @@ const Assessment = () => {
                     <CardTitle>Section 5: Medical & Withdrawal Risk Assessment</CardTitle>
                     <p className="text-sm text-muted-foreground">ASAM Dimensions 1 & 2: Acute Intoxication/Withdrawal & Biomedical Conditions</p>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
                       <div>
-                        <Label>Observed withdrawal symptoms?</Label>
-                        <RadioGroup value={formData.withdrawalSymptoms} onValueChange={(v) => handleInputChange("withdrawalSymptoms", v)} className="flex gap-4 mt-2">
-                          <div className="flex items-center space-x-2"><RadioGroupItem value="yes" id="ws-yes" /><Label htmlFor="ws-yes" className="font-normal">Yes</Label></div>
-                          <div className="flex items-center space-x-2"><RadioGroupItem value="no" id="ws-no" /><Label htmlFor="ws-no" className="font-normal">No</Label></div>
-                        </RadioGroup>
+                        <Label className="text-base font-semibold">Observable Physical Withdrawal Symptoms</Label>
+                        <p className="text-sm text-muted-foreground mb-3">Check all symptoms you have observed in your loved one when they haven't used or are between uses:</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {PHYSICAL_WITHDRAWAL_SYMPTOMS.map((symptom) => (
+                            <div key={symptom} className="flex items-center space-x-2">
+                              <Checkbox 
+                                id={`physical-${symptom}`}
+                                checked={formData.physicalWithdrawalSymptoms.includes(symptom)}
+                                onCheckedChange={(checked) => handlePhysicalWithdrawalChange(symptom, checked as boolean)}
+                              />
+                              <Label htmlFor={`physical-${symptom}`} className="font-normal text-sm cursor-pointer">{symptom}</Label>
+                            </div>
+                          ))}
+                        </div>
                       </div>
+
+                      <Separator />
+
+                      <div>
+                        <Label className="text-base font-semibold">Observable Psychological Withdrawal Symptoms</Label>
+                        <p className="text-sm text-muted-foreground mb-3">Check all psychological/emotional symptoms you have observed:</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS.map((symptom) => (
+                            <div key={symptom} className="flex items-center space-x-2">
+                              <Checkbox 
+                                id={`psych-${symptom}`}
+                                checked={formData.psychologicalWithdrawalSymptoms.includes(symptom)}
+                                onCheckedChange={(checked) => handlePsychologicalWithdrawalChange(symptom, checked as boolean)}
+                              />
+                              <Label htmlFor={`psych-${symptom}`} className="font-normal text-sm cursor-pointer">{symptom}</Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {(formData.physicalWithdrawalSymptoms.length > 0 || formData.psychologicalWithdrawalSymptoms.length > 0) && (
+                        <div className="bg-muted p-4 rounded-lg">
+                          <p className="text-sm font-medium">Selected symptoms: {formData.physicalWithdrawalSymptoms.length + formData.psychologicalWithdrawalSymptoms.length}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="withdrawalDescription">Additional details about withdrawal symptoms</Label>
+                      <Textarea id="withdrawalDescription" placeholder="Describe timing, severity, duration of symptoms observed..." value={formData.withdrawalDescription} onChange={(e) => handleInputChange("withdrawalDescription", e.target.value)} />
+                    </div>
+
+                    <Separator />
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <Label>History of seizures during withdrawal?</Label>
                         <RadioGroup value={formData.seizureHistory} onValueChange={(v) => handleInputChange("seizureHistory", v)} className="flex gap-4 mt-2">
@@ -918,16 +983,6 @@ const Assessment = () => {
                           <div className="flex items-center space-x-2"><RadioGroupItem value="no" id="sz-no" /><Label htmlFor="sz-no" className="font-normal">No</Label></div>
                         </RadioGroup>
                       </div>
-                    </div>
-
-                    {formData.withdrawalSymptoms === "yes" && (
-                      <div>
-                        <Label htmlFor="withdrawalDescription">Describe withdrawal symptoms observed</Label>
-                        <Textarea id="withdrawalDescription" placeholder="Sweats, shakes, nausea, anxiety, etc." value={formData.withdrawalDescription} onChange={(e) => handleInputChange("withdrawalDescription", e.target.value)} />
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label>History of delirium tremens (DTs)?</Label>
                         <RadioGroup value={formData.deliriumTremensHistory} onValueChange={(v) => handleInputChange("deliriumTremensHistory", v)} className="flex gap-4 mt-2">
@@ -943,8 +998,6 @@ const Assessment = () => {
                         </RadioGroup>
                       </div>
                     </div>
-
-                    <Separator />
 
                     <div>
                       <Label>Known health issues?</Label>
