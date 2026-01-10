@@ -27,9 +27,9 @@ const Testimonials = () => {
       location: "Seattle, WA",
     },
     {
-      quote: "After years of enabling my brother's addiction, Matt helped our entire family understand our roles and how to truly support his recovery. He's been sober for 5 years now.",
-      author: "David R.",
-      location: "San Francisco, CA",
+      quote: "We hired Matt Brown for an intervention for our family member. It was the best decision we made. Matt is extremely knowledgeable and experienced. He took the time to understand our situation and prepared us thoroughly for the intervention. He explained the entire process clearly, including payment and refund policies, which made everything transparent and stress-free. The intervention itself was handled with compassion and professionalism. Matt continued to support us even after our loved one entered treatment, checking in and guiding us through next steps after discharge. I highly recommend Matt Brown and Freedom Interventions to anyone dealing with addiction or mental health challenges in their family.",
+      author: "Punam B.",
+      location: "San Diego, CA",
     },
     {
       quote: "Matt's personal experience with recovery made all the difference. He understood what my husband was going through in a way no one else could. We're forever grateful.",
