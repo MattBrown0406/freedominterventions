@@ -37,9 +37,9 @@ const Testimonials = () => {
       location: "Santa Cruz, CA",
     },
     {
-      quote: "The intervention was the hardest thing we ever did as a family, but Matt made it bearable. His guidance through treatment planning ensured our mom got the right care.",
-      author: "The Martinez Family",
-      location: "Phoenix, AZ",
+      quote: "Matt Brown has saved many lives. He is professional, knowledgeable, and truly cares about the people and families he works with. Matt stands firm in his recovery and uses his experience to help others find hope and healing. I would recommend Matt Brown to any family seeking an interventionist.",
+      author: "Kalei McDonald",
+      location: "Substance Abuse Coordinator",
     },
     {
       quote: "Matt flew out within 24 hours when we called in crisis. His calm presence and clear direction helped us navigate a terrifying situation. Our son agreed to treatment that same day.",
