@@ -12,6 +12,7 @@ import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, F
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import BlogImageManager from "@/components/admin/BlogImageManager";
+import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -356,132 +357,7 @@ const AdminDashboard = () => {
                   </div>
 
                   {expandedId === assessment.id && (
-                    <div className="mt-4 pt-4 border-t space-y-6">
-                      {/* Section 2: Basic Info */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Loved One's Information</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                          <div><span className="text-muted-foreground">Gender:</span> {assessment.loved_one_gender || "N/A"}</div>
-                          <div><span className="text-muted-foreground">Frequency:</span> {assessment.frequency || "N/A"}</div>
-                          <div><span className="text-muted-foreground">Duration:</span> {assessment.duration_of_use || "N/A"}</div>
-                          <div><span className="text-muted-foreground">Age First Used:</span> {assessment.age_first_used || "N/A"}</div>
-                          <div><span className="text-muted-foreground">Use Increased:</span> {assessment.use_increased || "N/A"}</div>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 3: DSM-5 Criteria */}
-                      <div>
-                        <h4 className="font-semibold mb-2">DSM-5 Criteria ({assessment.dsm_yes_count || 0}/13)</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm">
-                          {dsmBehaviorQuestions.map((question, index) => (
-                            <div key={question} className="flex items-center gap-2">
-                              <span className={assessment.dsm_behaviors?.[question] ? "text-destructive" : "text-muted-foreground"}>
-                                {assessment.dsm_behaviors?.[question] ? "✓" : "○"}
-                              </span>
-                              <span className={assessment.dsm_behaviors?.[question] ? "" : "text-muted-foreground"}>
-                                {dsmBehaviorLabels[index]}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 4: Withdrawal */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Withdrawal & Medical Risks</h4>
-                        <div className="space-y-1 text-sm">
-                          <p><span className="text-muted-foreground">Withdrawal Symptoms:</span> {assessment.withdrawal_symptoms || "N/A"}</p>
-                          {assessment.withdrawal_description && <p className="pl-4 text-muted-foreground">{assessment.withdrawal_description}</p>}
-                          <p><span className="text-muted-foreground">Recent Detox:</span> {assessment.recent_detox || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Hospitalized:</span> {assessment.hospitalized_detox || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Withdrawal Medications:</span> {assessment.withdrawal_medications || "N/A"} {assessment.withdrawal_medications_list && `- ${assessment.withdrawal_medications_list}`}</p>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 5: Biomedical */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Biomedical Conditions</h4>
-                        <div className="space-y-1 text-sm">
-                          <p><span className="text-muted-foreground">Health Issues:</span> {assessment.health_issues || "N/A"} {assessment.health_issues_list && `- ${assessment.health_issues_list}`}</p>
-                          <p><span className="text-muted-foreground">Recent ER Visits:</span> {assessment.recent_er_visits || "N/A"} {assessment.er_visit_details && `- ${assessment.er_visit_details}`}</p>
-                          <p><span className="text-muted-foreground">Prescribed Medications:</span> {assessment.prescribed_medications || "N/A"} {assessment.prescribed_medications_list && `- ${assessment.prescribed_medications_list}`}</p>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 6: Emotional/Behavioral */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Emotional/Behavioral Risks</h4>
-                        <div className="space-y-1 text-sm">
-                          <p><span className="text-muted-foreground">Mental Health Signs:</span> {assessment.mental_health_signs || "N/A"} {assessment.mental_health_details && `- ${assessment.mental_health_details}`}</p>
-                          <p><span className="text-muted-foreground">Psychiatric History:</span> {assessment.psychiatric_history || "N/A"} {assessment.psychiatric_details && `- ${assessment.psychiatric_details}`}</p>
-                          <p><span className="text-muted-foreground">Violence/Self-Harm/Trauma:</span> {assessment.violence_history || "N/A"} {assessment.violence_details && `- ${assessment.violence_details}`}</p>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 7: Family/Social */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Family/Social Environment</h4>
-                        <div className="space-y-1 text-sm">
-                          <p><span className="text-muted-foreground">Stable Living:</span> {assessment.stable_living || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Homeless/Unstable:</span> {assessment.homeless_unstable || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Family Enabling:</span> {assessment.family_enabling || "N/A"} {assessment.enabling_details && `- ${assessment.enabling_details}`}</p>
-                          <p><span className="text-muted-foreground">Children Present:</span> {assessment.children_present || "N/A"}</p>
-                          {assessment.children_present === "yes" && <p><span className="text-muted-foreground">Children Impacted:</span> {assessment.children_impacted || "N/A"}</p>}
-                          <p><span className="text-muted-foreground">Support Network:</span> {assessment.support_network || "N/A"}</p>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 8: Relapse/Recovery */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Relapse/Recovery Environment</h4>
-                        <div className="space-y-1 text-sm">
-                          <p><span className="text-muted-foreground">Prior Treatment:</span> {assessment.prior_treatment || "N/A"}</p>
-                          {assessment.treatment_history && assessment.treatment_history.length > 0 && (
-                            <div className="pl-4">
-                              <p className="text-muted-foreground">Treatment History:</p>
-                              <ul className="list-disc pl-4">
-                                {assessment.treatment_history.map((t, i) => (
-                                  <li key={i}>{t.programName} - {t.dateAttended} ({t.successfulCompletion ? "Completed" : "Not completed"})</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                          <p><span className="text-muted-foreground">Current Triggers:</span> {assessment.current_triggers || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Willingness to Change:</span> {assessment.willingness_to_change || "N/A"}/10</p>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      {/* Section 9: Family Impact */}
-                      <div>
-                        <h4 className="font-semibold mb-2">Family Impact & Readiness</h4>
-                        <div className="space-y-1 text-sm">
-                          <p><span className="text-muted-foreground">Financial Impact:</span> {assessment.financial_impact || "N/A"} {assessment.financial_details && `- ${assessment.financial_details}`}</p>
-                          <p><span className="text-muted-foreground">Child Welfare Involvement:</span> {assessment.child_welfare_involvement || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Family Ready for Intervention:</span> {assessment.family_ready_intervention || "N/A"}</p>
-                          <p><span className="text-muted-foreground">Barriers:</span> {assessment.intervention_barriers || "N/A"}</p>
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      <div>
-                        <p className="text-sm"><span className="text-muted-foreground">Signed by:</span> {assessment.family_signature || "N/A"}</p>
-                      </div>
-                    </div>
+                    <AssessmentExpandedView assessment={assessment} />
                   )}
                 </CardContent>
               </Card>
