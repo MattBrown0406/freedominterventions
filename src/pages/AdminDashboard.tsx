@@ -339,7 +339,7 @@ const AdminDashboard = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => generateAssessmentPdf(assessment)}
+                      onClick={() => generateAssessmentPdf(assessment as any)}
                     >
                       <Download className="w-4 h-4 mr-1" /> Download PDF
                     </Button>
