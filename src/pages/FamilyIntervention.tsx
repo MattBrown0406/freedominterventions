@@ -1,20 +1,54 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Users, Shield, Heart, ArrowRight } from "lucide-react";
+import { Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import familyBanner from "@/assets/family-intervention-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { BreadcrumbSchema, FAQSchema } from "@/components/StructuredData";
 
 const FamilyIntervention = () => {
+  const faqs = [
+    {
+      question: "What is a family intervention?",
+      answer: "A family intervention is a carefully planned conversation where family members and others outline the impact of substance use and present a concrete treatment option to a loved one struggling with addiction.",
+    },
+    {
+      question: "Why is family unity important in an intervention?",
+      answer: "Unity reduces the chances of manipulation and ensures the person struggling receives one clear, consistent message rather than conflicting ones. It also protects relatives' emotional health.",
+    },
+    {
+      question: "What are healthy boundaries in addiction intervention?",
+      answer: "Healthy boundaries are clear limits that protect relatives' safety and emotional health while encouraging responsibility. They include decisions about what behaviors are acceptable and what support the family will provide.",
+    },
+    {
+      question: "What is enabling and how do I stop it?",
+      answer: "Enabling includes rescuing a loved one from consequences, covering for them, giving money, or tolerating unsafe behavior. Stopping enabling means agreeing as a family to only support recovery, not the addiction.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Family Intervention Services - The Importance of Family Unity | Freedom Interventions"
+        description="Learn how family unity, healthy boundaries, and ending enabling behaviors are essential for successful addiction intervention. Professional guidance for families nationwide."
+        canonical="https://freedominterventions.com/family-intervention"
+        keywords="family intervention, addiction intervention, family unity, enabling behaviors, intervention process, family boundaries, addiction support"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com/" },
+          { name: "Family Intervention", url: "https://freedominterventions.com/family-intervention" },
+        ]}
+      />
+      <FAQSchema faqs={faqs} />
       <Navbar />
       
       {/* Banner Image */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
         <img 
           src={familyBanner} 
-          alt="Family holding hands in unity" 
+          alt="Family holding hands in unity during addiction intervention support" 
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
@@ -26,7 +60,7 @@ const FamilyIntervention = () => {
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <Users className="h-4 w-4" />
+                <Users className="h-4 w-4" aria-hidden="true" />
                 Family Intervention Services
               </div>
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
@@ -45,7 +79,7 @@ const FamilyIntervention = () => {
             <div className="max-w-3xl mx-auto prose prose-lg">
               
               {/* Why Family Unity Matters */}
-              <div className="mb-12">
+              <article className="mb-12">
                 <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
                   Why Family Unity Matters
                 </h2>
@@ -57,10 +91,10 @@ const FamilyIntervention = () => {
                     Unity also reduces the chances that one relative will be manipulated, guilt-tripped, or pressured into secret deals that undermine the plan. When each member agrees on the same boundaries, consequences, and expectations, the person struggling with addiction receives one clear message instead of several conflicting ones.
                   </p>
                 </div>
-              </div>
+              </article>
 
               {/* Intervention, Not Confrontation */}
-              <div className="mb-12">
+              <article className="mb-12">
                 <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
                   Intervention, Not Confrontation
                 </h2>
@@ -72,10 +106,10 @@ const FamilyIntervention = () => {
                     Planning together beforehand—with a professional interventionist—helps each person decide what they want to say, what they are willing to change, and what support they can realistically offer. That preparation turns raw emotion into a coherent message that is easier for a loved one to hear, even if they initially resist.
                   </p>
                 </div>
-              </div>
+              </article>
 
               {/* Boundaries as an Act of Love */}
-              <div className="mb-12">
+              <article className="mb-12">
                 <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
                   Boundaries as an Act of Love
                 </h2>
@@ -83,19 +117,19 @@ const FamilyIntervention = () => {
                   <p>
                     Healthy boundaries are the backbone of a united family intervention. Treatment and family-support resources consistently stress that clear limits protect relatives' safety and emotional health while encouraging responsibility in the person with addiction. Boundaries answer questions like: What will we no longer pay for? What behavior will we no longer allow in the home? What needs to change for us to stay involved?
                   </p>
-                  <div className="bg-accent/50 border border-border rounded-xl p-6 my-8">
+                  <aside className="bg-accent/50 border border-border rounded-xl p-6 my-8">
                     <p className="text-foreground italic">
                       One helpful way to picture this is to imagine your family as a castle. The castle walls and moat are your boundaries: they protect what is precious inside, while the drawbridge represents the choices you make about who is allowed in, under what conditions, and for how long. Without boundaries, the drawbridge is always down, and addiction can march in and out at all hours, draining your energy, finances, and peace; with healthy boundaries, the family still welcomes connection, but no longer allows destructive behavior to storm the castle.
                     </p>
-                  </div>
+                  </aside>
                   <p>
                     Far from being cruel or cold, boundaries are a form of "love with limits." Clinical guidance on addiction recovery shows that when families consistently follow through on reasonable limits, they reduce chaos, lower resentment, and make ongoing substance use less comfortable and less sustainable. Just like a well-kept castle, the goal is not to shut everyone out, but to protect the people inside so real healing and recovery can take place.
                   </p>
                 </div>
-              </div>
+              </article>
 
               {/* Ending Enabling and Codependency */}
-              <div className="mb-12">
+              <article className="mb-12">
                 <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
                   Ending Enabling and Codependency
                 </h2>
@@ -107,10 +141,10 @@ const FamilyIntervention = () => {
                     Family programs point out that when relatives agree to stop enabling together, the person with addiction can no longer "split" the family—turning to the softest member for money, housing, or excuses. Replacing enabling with consistent, recovery-focused support sends a unified message: <strong className="text-foreground">"We love you deeply, but we will no longer support the addiction. We will only support recovery."</strong>
                   </p>
                 </div>
-              </div>
+              </article>
 
               {/* Supporting Long-Term Recovery */}
-              <div className="mb-12">
+              <article className="mb-12">
                 <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
                   Supporting Long-Term Recovery
                 </h2>
@@ -122,10 +156,10 @@ const FamilyIntervention = () => {
                     Unified families also create safer home environments after treatment by maintaining the same boundaries and expectations they agreed on during the intervention. This can look like removing substances from the home, aligning on consequences for relapse, encouraging meeting attendance, and checking in regularly without micromanaging. Over time, these shared practices turn the family from a crisis-driven system into a recovery-oriented one.
                   </p>
                 </div>
-              </div>
+              </article>
 
               {/* Practical Steps */}
-              <div className="mb-12">
+              <article className="mb-12">
                 <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
                   Practical Steps for Families
                 </h2>
@@ -166,14 +200,14 @@ const FamilyIntervention = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </article>
 
               {/* Closing */}
-              <div className="bg-primary/5 border border-primary/20 rounded-xl p-8 text-center">
+              <aside className="bg-primary/5 border border-primary/20 rounded-xl p-8 text-center">
                 <p className="text-foreground text-lg leading-relaxed">
                   When families stand together around clear boundaries, a refusal to enable, and a shared vision of recovery, an intervention becomes more than a single event. It becomes the starting point for a new, healthier way of relating—one where <strong>unity, not addiction, defines the family</strong>.
                 </p>
-              </div>
+              </aside>
             </div>
           </div>
         </section>
@@ -192,7 +226,7 @@ const FamilyIntervention = () => {
                 <Link to="/#booking">
                   <Button variant="hero" size="lg">
                     Schedule a Consultation
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
                 <a href="tel:+15038362136">
