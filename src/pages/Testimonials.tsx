@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Quote } from "lucide-react";
 import testimonialsBanner from "@/assets/testimonials-banner.jpg";
 import { ReviewSubmissionForm } from "@/components/ReviewSubmissionForm";
+import SEOHead from "@/components/SEOHead";
+import { BreadcrumbSchema } from "@/components/StructuredData";
+import { Helmet } from "react-helmet";
+
 const Testimonials = () => {
   const testimonials = [
     {
@@ -63,15 +67,58 @@ const Testimonials = () => {
     },
   ];
 
+  // Review Schema for testimonials
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Freedom Interventions",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5",
+      reviewCount: testimonials.length.toString(),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    review: testimonials.slice(0, 5).map((t) => ({
+      "@type": "Review",
+      author: {
+        "@type": "Person",
+        name: t.author,
+      },
+      reviewBody: t.quote,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: "5",
+        bestRating: "5",
+        worstRating: "1",
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Testimonials & Family Success Stories | Freedom Interventions"
+        description="Read real stories from families who found hope through professional addiction intervention. See how Freedom Interventions has helped over 1000 families achieve lasting recovery."
+        canonical="https://freedominterventions.com/testimonials"
+        keywords="intervention testimonials, addiction recovery stories, family intervention reviews, Matt Brown reviews, intervention success stories"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com/" },
+          { name: "Testimonials", url: "https://freedominterventions.com/testimonials" },
+        ]}
+      />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(reviewSchema)}</script>
+      </Helmet>
       <Navbar />
       <main className="pt-20 md:pt-24">
         {/* Hero Banner */}
         <section className="relative h-[30vh] md:h-[35vh] overflow-hidden">
           <img
             src={testimonialsBanner}
-            alt="Hope and healing - testimonials from families"
+            alt="Families sharing their hope and healing testimonials"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
@@ -92,19 +139,21 @@ const Testimonials = () => {
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
-                <div
+                <article
                   key={index}
                   className="bg-card border border-border rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
-                  <Quote className="h-8 w-8 text-primary/40 mb-4" />
-                  <p className="text-muted-foreground leading-relaxed mb-6 italic">
+                  <Quote className="h-8 w-8 text-primary/40 mb-4" aria-hidden="true" />
+                  <blockquote className="text-muted-foreground leading-relaxed mb-6 italic">
                     "{testimonial.quote}"
-                  </p>
-                  <div className="border-t border-border pt-4">
-                    <p className="font-semibold text-foreground">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.location}</p>
-                  </div>
-                </div>
+                  </blockquote>
+                  <footer className="border-t border-border pt-4">
+                    <cite className="not-italic">
+                      <p className="font-semibold text-foreground">{testimonial.author}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.location}</p>
+                    </cite>
+                  </footer>
+                </article>
               ))}
             </div>
           </div>

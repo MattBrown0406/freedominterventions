@@ -3,6 +3,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { MapPin, Globe, Phone } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
+import SEOHead from "@/components/SEOHead";
+import { PersonSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const Interventionist = () => {
   const calculateYearsSober = () => {
@@ -22,6 +24,19 @@ const Interventionist = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Meet Matt Brown - Professional Interventionist | Freedom Interventions"
+        description={`Matt Brown is a professional interventionist since 2004 with over ${yearsSober} years of sobriety. Based in Oregon, serving families nationwide and internationally with compassionate addiction intervention services.`}
+        canonical="https://freedominterventions.com/interventionist"
+        keywords="Matt Brown interventionist, professional interventionist, addiction interventionist Oregon, certified interventionist, family intervention specialist"
+      />
+      <PersonSchema />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com/" },
+          { name: "Meet Your Interventionist", url: "https://freedominterventions.com/interventionist" },
+        ]}
+      />
       <Navbar />
       <main className="pt-20 md:pt-24">
         <section className="py-16 md:py-24">
@@ -31,7 +46,7 @@ const Interventionist = () => {
               <div className="flex flex-col items-center md:sticky md:top-28">
                 <img
                   src={mattHeadshot}
-                  alt="Matt - Professional Interventionist"
+                  alt="Matt Brown - Professional Interventionist with over 20 years of experience"
                   className="w-full max-w-md rounded-2xl shadow-2xl"
                 />
                 <div className="mt-6 flex flex-wrap gap-3 justify-center">
