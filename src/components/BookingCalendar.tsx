@@ -354,7 +354,7 @@ export const BookingCalendar = () => {
                       <span className="text-lg font-semibold">Free Consultation</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      A 30-minute Zoom call with you and any concerned loved ones. We'll assess your situation and discuss the best path forward for your family.
+                      Not every family needs an intervention. We'll assess your situation and explore whether coaching can equip you with a strategy to move forward on your own.
                     </p>
                     <div className="text-2xl font-bold text-primary">Free</div>
                   </button>
