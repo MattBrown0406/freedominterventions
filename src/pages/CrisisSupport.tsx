@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import crisisBanner from "@/assets/crisis-support-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema } from "@/components/StructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const CrisisSupport = () => {
   return (
@@ -33,10 +34,11 @@ const CrisisSupport = () => {
       
       {/* Banner Image */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
-        <img 
+        <OptimizedImage 
           src={crisisBanner} 
           alt="Lighthouse beacon cutting through storm clouds at dawn" 
-          className="w-full h-full object-cover"
+          className="w-full h-full"
+          priority={true}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>

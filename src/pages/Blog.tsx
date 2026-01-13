@@ -6,6 +6,7 @@ import { Calendar, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const Blog = () => {
   const { data: blogPosts, isLoading } = useQuery({
@@ -84,10 +85,10 @@ const Blog = () => {
                   >
                     {post.image_url && (
                       <div className="aspect-video overflow-hidden">
-                        <img 
+                        <OptimizedImage 
                           src={post.image_url} 
                           alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                     )}

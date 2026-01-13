@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const Hero = () => {
   return (
@@ -14,15 +15,16 @@ const Hero = () => {
 
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-          {/* Logo */}
+          {/* Logo - priority load for LCP */}
           <div 
             className="flex justify-center animate-fade-up"
             style={{ animationDelay: "0.05s" }}
           >
-            <img 
+            <OptimizedImage 
               src={logo} 
               alt="Freedom Interventions" 
               className="h-[7rem] md:h-[9rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg" 
+              priority={true}
             />
           </div>
 
