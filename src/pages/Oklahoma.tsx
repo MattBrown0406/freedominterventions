@@ -3,11 +3,36 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Oklahoma = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Oklahoma Addiction Intervention Services | Freedom Interventions"
+        description="Oklahoma families face opioid and meth challenges. Professional interventionists help find recovery pathways throughout the state."
+        canonical="https://freedominterventions.com/oklahoma"
+        keywords="Oklahoma addiction intervention, Oklahoma City intervention services, Tulsa drug intervention, Oklahoma opioid crisis"
+        geoRegion="US-OK"
+        geoPlacename="Oklahoma"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Oklahoma City" state="OK" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Oklahoma", url: "https://freedominterventions.com/oklahoma" },
+        ]}
+      />
       <Navbar />
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Oklahoma", href: "/oklahoma" },
+      ]} />
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -27,6 +52,7 @@ const Oklahoma = () => {
           <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
         </div>
       </section>
+      <LocationLinks currentLocation="Oklahoma" locationType="state" />
       <Footer />
     </div>
   );

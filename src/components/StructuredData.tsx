@@ -287,3 +287,80 @@ export const PersonSchema = () => {
     </Helmet>
   );
 };
+
+// Service Schema for service pages
+export const ServiceSchema = ({
+  name,
+  description,
+  url,
+  serviceType,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  serviceType?: string;
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: name,
+    description: description,
+    url: url,
+    serviceType: serviceType || "Addiction Intervention",
+    provider: {
+      "@type": "ProfessionalService",
+      name: "Freedom Interventions",
+      url: "https://freedominterventions.com",
+      telephone: "+1-503-836-2136",
+      email: "matt@freedominterventions.com",
+    },
+    areaServed: [
+      { "@type": "Country", name: "United States" },
+      { "@type": "Country", name: "Canada" },
+    ],
+    audience: {
+      "@type": "Audience",
+      audienceType: "Families dealing with addiction",
+    },
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
+// Aggregate Rating Schema for reviews
+export const AggregateRatingSchema = ({
+  ratingValue,
+  reviewCount,
+  bestRating = "5",
+  worstRating = "1",
+}: {
+  ratingValue: string;
+  reviewCount: number;
+  bestRating?: string;
+  worstRating?: string;
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: "Freedom Interventions",
+    url: "https://freedominterventions.com",
+    telephone: "+1-503-836-2136",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: ratingValue,
+      reviewCount: reviewCount.toString(),
+      bestRating: bestRating,
+      worstRating: worstRating,
+    },
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
