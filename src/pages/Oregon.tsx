@@ -5,7 +5,8 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema } from "@/components/StructuredData";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const Oregon = () => {
   return (
@@ -20,6 +21,13 @@ const Oregon = () => {
       />
       <OrganizationSchema />
       <LocalBusinessSchema location="Portland" state="OR" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Oregon", url: "https://freedominterventions.com/oregon" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}
@@ -252,6 +260,8 @@ const Oregon = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Oregon" locationType="state" />
 
       <Footer />
     </div>

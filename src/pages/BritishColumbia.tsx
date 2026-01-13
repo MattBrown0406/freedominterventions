@@ -4,10 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import britishColumbiaBanner from "@/assets/british-columbia-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const BritishColumbia = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="British Columbia Addiction Intervention Services | Freedom Interventions"
+        description="British Columbia continues to face Canada's deadliest toxic drug crisis with over 2,500 lives lost annually. Professional interventionists help BC families find recovery."
+        canonical="https://freedominterventions.com/british-columbia"
+        keywords="British Columbia addiction intervention, Vancouver intervention services, BC drug crisis, fentanyl crisis BC, addiction help Vancouver"
+        geoRegion="CA-BC"
+        geoPlacename="British Columbia"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Vancouver" state="BC" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "British Columbia", url: "https://freedominterventions.com/british-columbia" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}
@@ -240,6 +260,8 @@ const BritishColumbia = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="British Columbia" locationType="province" />
 
       <Footer />
     </div>

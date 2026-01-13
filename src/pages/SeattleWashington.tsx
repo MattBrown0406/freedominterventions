@@ -1,20 +1,32 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import seattleBanner from "@/assets/seattle-washington-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const SeattleWashington = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Seattle Washington Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Seattle, Washington. Help your loved one recover from fentanyl, opioid, and alcohol addiction. Serving King County and Puget Sound region." />
-        <meta name="keywords" content="Seattle addiction intervention, Washington drug intervention, Seattle family intervention, fentanyl crisis Seattle, addiction help Seattle WA" />
-        <link rel="canonical" href="https://freedominterventions.com/seattle-washington" />
-      </Helmet>
+      <SEOHead
+        title="Seattle Washington Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Seattle, Washington. Help your loved one recover from fentanyl, opioid, and alcohol addiction. Serving King County and Puget Sound region."
+        canonical="https://freedominterventions.com/seattle-washington"
+        keywords="Seattle addiction intervention, Washington drug intervention, Seattle family intervention, fentanyl crisis Seattle, addiction help Seattle WA"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Seattle" state="WA" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Washington", url: "https://freedominterventions.com/washington" },
+          { name: "Seattle", url: "https://freedominterventions.com/seattle-washington" },
+        ]}
+      />
       
       <Navbar />
       
@@ -214,6 +226,8 @@ const SeattleWashington = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Seattle" locationType="city" parentState="Washington" />
 
       <Footer />
     </div>

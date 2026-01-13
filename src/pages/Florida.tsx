@@ -4,10 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
 import floridaBanner from "@/assets/florida-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const Florida = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Florida Addiction Intervention Services | Marchman & Baker Acts | Freedom Interventions"
+        description="Florida recorded 7,220 drug overdose deaths in 2023. Professional interventionists achieve 80-90% success navigating Florida's Marchman and Baker Acts."
+        canonical="https://freedominterventions.com/florida"
+        keywords="Florida addiction intervention, Miami intervention services, Marchman Act, Baker Act, Florida drug intervention, Tampa addiction help"
+        geoRegion="US-FL"
+        geoPlacename="Florida"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Miami" state="FL" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Florida", url: "https://freedominterventions.com/florida" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}
@@ -279,6 +299,8 @@ const Florida = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Florida" locationType="state" />
 
       <Footer />
     </div>

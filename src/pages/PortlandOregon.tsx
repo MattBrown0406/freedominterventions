@@ -1,20 +1,32 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import portlandBanner from "@/assets/portland-oregon-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const PortlandOregon = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Portland Oregon Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Portland, Oregon. Help your loved one find recovery from fentanyl, methamphetamine, and alcohol addiction. Free consultations available." />
-        <meta name="keywords" content="Portland addiction intervention, Oregon drug intervention, Portland family intervention, fentanyl crisis Portland, addiction help Portland OR" />
-        <link rel="canonical" href="https://freedominterventions.com/portland-oregon" />
-      </Helmet>
+      <SEOHead
+        title="Portland Oregon Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Portland, Oregon. Help your loved one find recovery from fentanyl, methamphetamine, and alcohol addiction. Free consultations available."
+        canonical="https://freedominterventions.com/portland-oregon"
+        keywords="Portland addiction intervention, Oregon drug intervention, Portland family intervention, fentanyl crisis Portland, addiction help Portland OR"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Portland" state="OR" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Oregon", url: "https://freedominterventions.com/oregon" },
+          { name: "Portland", url: "https://freedominterventions.com/portland-oregon" },
+        ]}
+      />
       
       <Navbar />
       
@@ -214,6 +226,8 @@ const PortlandOregon = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Portland" locationType="city" parentState="Oregon" />
 
       <Footer />
     </div>
