@@ -4,14 +4,38 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import newMexicoBanner from "@/assets/new-mexico-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const NewMexico = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="New Mexico Addiction Intervention Services"
+        description="Professional intervention services for New Mexico families. Expert interventionists help loved ones find treatment across the Land of Enchantment."
+        canonical="https://freedominterventions.com/new-mexico"
+        keywords="New Mexico intervention, addiction help NM, interventionist Albuquerque, drug intervention Santa Fe, Las Cruces addiction help"
+        geoRegion="US-NM"
+        geoPlacename="New Mexico"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="New Mexico" state="NM" />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://freedominterventions.com" },
+        { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+        { name: "New Mexico", url: "https://freedominterventions.com/new-mexico" }
+      ]} />
+      
       <Navbar />
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "New Mexico", href: "/new-mexico" }
+      ]} />
       
       {/* Banner Image */}
-      <section className="pt-20">
+      <section className="pt-8">
         <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
           <img 
             src={newMexicoBanner} 
@@ -241,6 +265,7 @@ const NewMexico = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="New Mexico" locationType="state" />
       <Footer />
     </div>
   );
