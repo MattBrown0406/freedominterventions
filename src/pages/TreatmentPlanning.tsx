@@ -5,18 +5,30 @@ import { BookOpen, Stethoscope, Building, Users, Home, ArrowRight, CheckCircle }
 import { Link } from "react-router-dom";
 import treatmentBanner from "@/assets/treatment-planning-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceSchema } from "@/components/StructuredData";
 
 const TreatmentPlanning = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Treatment Planning Services"
+        title="Treatment Planning Services | Freedom Interventions"
         description="Interventionists create comprehensive treatment plans covering detox, inpatient, outpatient, IOP, and sober living for lasting addiction recovery."
         canonical="https://freedominterventions.com/treatment-planning"
         keywords="addiction treatment planning, detox programs, inpatient rehab, outpatient treatment, IOP, sober living"
       />
       <OrganizationSchema />
+      <ServiceSchema
+        name="Treatment Planning Services"
+        description="Comprehensive treatment plans covering detox, inpatient, outpatient, IOP, and sober living for lasting addiction recovery."
+        url="https://freedominterventions.com/treatment-planning"
+        serviceType="Treatment Planning"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Treatment Planning", url: "https://freedominterventions.com/treatment-planning" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}

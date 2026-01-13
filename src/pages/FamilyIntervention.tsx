@@ -5,7 +5,7 @@ import { Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import familyBanner from "@/assets/family-intervention-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { BreadcrumbSchema, FAQSchema } from "@/components/StructuredData";
+import { BreadcrumbSchema, FAQSchema, OrganizationSchema, ServiceSchema } from "@/components/StructuredData";
 
 const FamilyIntervention = () => {
   const faqs = [
@@ -30,10 +30,17 @@ const FamilyIntervention = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Family Intervention Services - The Importance of Family Unity | Freedom Interventions"
+        title="Family Intervention Services | Freedom Interventions"
         description="Learn how family unity, healthy boundaries, and ending enabling behaviors are essential for successful addiction intervention. Professional guidance for families nationwide."
         canonical="https://freedominterventions.com/family-intervention"
         keywords="family intervention, addiction intervention, family unity, enabling behaviors, intervention process, family boundaries, addiction support"
+      />
+      <OrganizationSchema />
+      <ServiceSchema
+        name="Family Intervention Services"
+        description="Professional family intervention services helping families unite with healthy boundaries to guide loved ones toward addiction recovery."
+        url="https://freedominterventions.com/family-intervention"
+        serviceType="Family Intervention"
       />
       <BreadcrumbSchema
         items={[

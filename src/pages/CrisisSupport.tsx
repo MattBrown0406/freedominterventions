@@ -5,19 +5,30 @@ import { Phone, AlertTriangle, Building2, Heart, Shield, ArrowRight } from "luci
 import { Link } from "react-router-dom";
 import crisisBanner from "@/assets/crisis-support-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceSchema } from "@/components/StructuredData";
 
 const CrisisSupport = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Crisis Support"
+        title="Addiction Crisis Support | Freedom Interventions"
         description="Professional interventionists help families navigate addiction crises including jail, hospital visits, overdoses, and self-harm. Get expert crisis support now."
         canonical="https://freedominterventions.com/crisis-support"
         keywords="addiction crisis support, intervention crisis help, overdose family support, addiction emergency help"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Portland" state="OR" />
+      <ServiceSchema
+        name="Addiction Crisis Support"
+        description="Professional interventionists help families navigate addiction crises including jail stays, hospital visits, overdoses, and self-harm risks."
+        url="https://freedominterventions.com/crisis-support"
+        serviceType="Crisis Intervention"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Crisis Support", url: "https://freedominterventions.com/crisis-support" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}

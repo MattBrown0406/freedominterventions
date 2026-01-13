@@ -5,7 +5,7 @@ import { Quote } from "lucide-react";
 import testimonialsBanner from "@/assets/testimonials-banner.jpg";
 import { ReviewSubmissionForm } from "@/components/ReviewSubmissionForm";
 import SEOHead from "@/components/SEOHead";
-import { BreadcrumbSchema } from "@/components/StructuredData";
+import { BreadcrumbSchema, OrganizationSchema } from "@/components/StructuredData";
 import { Helmet } from "react-helmet";
 
 const Testimonials = () => {
@@ -103,6 +103,7 @@ const Testimonials = () => {
         canonical="https://freedominterventions.com/testimonials"
         keywords="intervention testimonials, addiction recovery stories, family intervention reviews, Matt Brown reviews, intervention success stories"
       />
+      <OrganizationSchema />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com/" },
