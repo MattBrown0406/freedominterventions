@@ -7,11 +7,15 @@ interface SEOHeadProps {
   keywords?: string;
   type?: string;
   image?: string;
+  imageAlt?: string;
   noindex?: boolean;
   geoRegion?: string;
   geoPlacename?: string;
+  geoPosition?: string;
   publishedTime?: string;
   modifiedTime?: string;
+  twitterCreator?: string;
+  section?: string;
 }
 
 const SEOHead = ({
@@ -21,11 +25,15 @@ const SEOHead = ({
   keywords,
   type = "website",
   image = "https://freedominterventions.com/favicon.jpeg",
+  imageAlt,
   noindex = false,
   geoRegion = "US-OR",
   geoPlacename = "Oregon",
+  geoPosition,
   publishedTime,
   modifiedTime,
+  twitterCreator = "@freedominterventions",
+  section,
 }: SEOHeadProps) => {
   const fullTitle = title.includes("Freedom Interventions")
     ? title
@@ -35,6 +43,9 @@ const SEOHead = ({
   const truncatedDescription = description.length > 160 
     ? description.substring(0, 157) + "..."
     : description;
+
+  // Generate image alt text if not provided
+  const ogImageAlt = imageAlt || `${title} - Freedom Interventions addiction intervention services`;
 
   return (
     <Helmet>
@@ -54,28 +65,38 @@ const SEOHead = ({
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={ogImageAlt} />
+      <meta property="og:image:type" content="image/jpeg" />
       {canonical && <meta property="og:url" content={canonical} />}
       <meta property="og:site_name" content="Freedom Interventions" />
       <meta property="og:locale" content="en_US" />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+      {section && <meta property="article:section" content={section} />}
+      {type === "article" && <meta property="article:author" content="Freedom Interventions" />}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={truncatedDescription} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content={ogImageAlt} />
       <meta name="twitter:site" content="@freedominterventions" />
+      <meta name="twitter:creator" content={twitterCreator} />
 
       {/* Additional SEO */}
       <meta name="author" content="Freedom Interventions" />
       <meta name="publisher" content="Freedom Interventions" />
       <meta name="geo.region" content={geoRegion} />
       <meta name="geo.placename" content={geoPlacename} />
+      {geoPosition && <meta name="geo.position" content={geoPosition} />}
+      {geoPosition && <meta name="ICBM" content={geoPosition} />}
       
       {/* Mobile & App */}
       <meta name="format-detection" content="telephone=yes" />
       <meta name="theme-color" content="#1a365d" />
+      <meta name="apple-mobile-web-app-title" content="Freedom Interventions" />
+      <meta name="application-name" content="Freedom Interventions" />
     </Helmet>
   );
 };
