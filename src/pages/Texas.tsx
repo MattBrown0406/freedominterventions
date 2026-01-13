@@ -7,6 +7,7 @@ import texasBanner from "@/assets/texas-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Texas = () => {
   return (
@@ -29,6 +30,11 @@ const Texas = () => {
         ]}
       />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Texas", href: "/texas" },
+      ]} />
       
       {/* Banner Image */}
       <section className="pt-20">

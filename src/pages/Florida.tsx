@@ -7,6 +7,7 @@ import floridaBanner from "@/assets/florida-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Florida = () => {
   return (
@@ -29,6 +30,11 @@ const Florida = () => {
         ]}
       />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Florida", href: "/florida" },
+      ]} />
       
       {/* Banner Image */}
       <section className="pt-20">

@@ -7,6 +7,7 @@ import britishColumbiaBanner from "@/assets/british-columbia-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const BritishColumbia = () => {
   return (
@@ -29,6 +30,11 @@ const BritishColumbia = () => {
         ]}
       />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "British Columbia", href: "/british-columbia" },
+      ]} />
       
       {/* Banner Image */}
       <section className="pt-20">

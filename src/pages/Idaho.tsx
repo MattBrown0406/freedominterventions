@@ -4,11 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import idahoBanner from "@/assets/idaho-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Idaho = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Idaho Addiction Intervention Services | Freedom Interventions"
+        description="Idaho has a growing drug crisis with 386 overdose deaths in 2023. Professional interventionists achieve 80-90% success in securing treatment entry for families."
+        canonical="https://freedominterventions.com/idaho"
+        keywords="Idaho addiction intervention, Boise intervention services, Idaho fentanyl crisis, Coeur d'Alene drug intervention"
+        geoRegion="US-ID"
+        geoPlacename="Idaho"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Boise" state="ID" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Idaho", url: "https://freedominterventions.com/idaho" },
+        ]}
+      />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Idaho", href: "/idaho" },
+      ]} />
       
       {/* Banner Image */}
       <section className="pt-20">
@@ -242,6 +268,8 @@ const Idaho = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Idaho" locationType="state" />
 
       <Footer />
     </div>

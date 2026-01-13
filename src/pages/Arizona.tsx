@@ -4,11 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import arizonaBanner from "@/assets/arizona-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Arizona = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Arizona Addiction Intervention Services | Freedom Interventions"
+        description="Arizona faces a serious substance use crisis with rising overdose rates. Professional interventionists provide families with structured, compassionate strategies."
+        canonical="https://freedominterventions.com/arizona"
+        keywords="Arizona addiction intervention, Phoenix intervention services, Tucson drug intervention, Arizona fentanyl crisis"
+        geoRegion="US-AZ"
+        geoPlacename="Arizona"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Phoenix" state="AZ" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Arizona", url: "https://freedominterventions.com/arizona" },
+        ]}
+      />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Arizona", href: "/arizona" },
+      ]} />
       
       {/* Banner Image */}
       <section className="pt-20">
@@ -246,6 +272,8 @@ const Arizona = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Arizona" locationType="state" />
 
       <Footer />
     </div>
