@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const NewfoundlandLabrador = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Newfoundland & Labrador", href: "/newfoundland-labrador" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Newfoundland & Labrador", url: "https://freedominterventions.com/newfoundland-labrador" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Newfoundland & Labrador Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Newfoundland and Labrador, Canada. Help your loved one find recovery from opioid and drug addiction. Serving St. John's and all NL communities."
+        canonical="https://freedominterventions.com/newfoundland-labrador"
+        keywords="Newfoundland addiction intervention, St Johns drug intervention, Labrador family intervention, opioid crisis Newfoundland, addiction help NL Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Newfoundland and Labrador" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -58,6 +84,7 @@ const NewfoundlandLabrador = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Newfoundland and Labrador" locationType="province" />
       <Footer />
     </div>
   );

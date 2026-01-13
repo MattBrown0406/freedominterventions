@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const Quebec = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Quebec", href: "/quebec" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Quebec", url: "https://freedominterventions.com/quebec" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Quebec Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Quebec, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Montreal, Quebec City, and all Quebec communities. Bilingual services available."
+        canonical="https://freedominterventions.com/quebec"
+        keywords="Quebec addiction intervention, Montreal drug intervention, Quebec City family intervention, opioid crisis Quebec, addiction help Quebec Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Quebec" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -117,6 +143,7 @@ const Quebec = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Quebec" locationType="province" />
       <Footer />
     </div>
   );

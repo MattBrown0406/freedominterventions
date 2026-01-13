@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const PrinceEdwardIsland = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Prince Edward Island", href: "/prince-edward-island" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Prince Edward Island", url: "https://freedominterventions.com/prince-edward-island" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Prince Edward Island Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Prince Edward Island, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Charlottetown and all PEI communities."
+        canonical="https://freedominterventions.com/prince-edward-island"
+        keywords="PEI addiction intervention, Charlottetown drug intervention, Prince Edward Island family intervention, opioid crisis PEI, addiction help PEI Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Prince Edward Island" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -58,6 +84,7 @@ const PrinceEdwardIsland = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Prince Edward Island" locationType="province" />
       <Footer />
     </div>
   );

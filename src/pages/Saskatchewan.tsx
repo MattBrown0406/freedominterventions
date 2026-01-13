@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const Saskatchewan = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Saskatchewan", href: "/saskatchewan" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Saskatchewan", url: "https://freedominterventions.com/saskatchewan" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Saskatchewan Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Saskatchewan, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Regina, Saskatoon, and all Saskatchewan communities."
+        canonical="https://freedominterventions.com/saskatchewan"
+        keywords="Saskatchewan addiction intervention, Regina drug intervention, Saskatoon family intervention, opioid crisis Saskatchewan, addiction help Saskatchewan Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Saskatchewan" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -58,6 +84,7 @@ const Saskatchewan = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Saskatchewan" locationType="province" />
       <Footer />
     </div>
   );

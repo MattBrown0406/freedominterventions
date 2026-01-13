@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const Ontario = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Ontario", href: "/ontario" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Ontario", url: "https://freedominterventions.com/ontario" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Ontario Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Ontario, Canada. Help your loved one find recovery from opioid, alcohol, and fentanyl addiction. Serving Toronto, Ottawa, and all Ontario communities."
+        canonical="https://freedominterventions.com/ontario"
+        keywords="Ontario addiction intervention, Toronto drug intervention, Ottawa family intervention, opioid crisis Ontario, addiction help Ontario Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Ontario" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -117,6 +143,7 @@ const Ontario = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Ontario" locationType="province" />
       <Footer />
     </div>
   );
