@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import knoxvilleBanner from "@/assets/knoxville-tennessee-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const KnoxvilleTennessee = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Tennessee", href: "/tennessee" },
+    { name: "Knoxville", href: "/knoxville-tennessee" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Knoxville Tennessee Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Knoxville, Tennessee. Help your loved one find recovery from opioid, fentanyl, and methamphetamine addiction. Free consultations available." />
-        <meta name="keywords" content="Knoxville addiction intervention, Tennessee drug intervention, Knoxville family intervention, opioid crisis East Tennessee, addiction help Knoxville TN" />
-        <link rel="canonical" href="https://freedominterventions.com/knoxville-tennessee" />
-      </Helmet>
+      <SEOHead
+        title="Knoxville Tennessee Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Knoxville, Tennessee. Help your loved one find recovery from opioid, fentanyl, and methamphetamine addiction. Free consultations available."
+        keywords="Knoxville addiction intervention, Tennessee drug intervention, Knoxville family intervention, opioid crisis East Tennessee, addiction help Knoxville TN"
+        canonical="https://freedominterventions.com/knoxville-tennessee"
+      />
+      <LocalBusinessSchema location="Knoxville" state="Tennessee" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const KnoxvilleTennessee = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Knoxville" locationType="city" />
       <Footer />
     </div>
   );

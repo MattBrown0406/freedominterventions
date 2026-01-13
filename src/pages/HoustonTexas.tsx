@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import houstonBanner from "@/assets/houston-texas-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const HoustonTexas = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Texas", href: "/texas" },
+    { name: "Houston", href: "/houston-texas" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Houston Texas Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Houston, Texas. Help your loved one recover from fentanyl, cocaine, and alcohol addiction. Serving Harris County and the Greater Houston area." />
-        <meta name="keywords" content="Houston addiction intervention, Texas drug intervention, Houston family intervention, fentanyl crisis Houston, cocaine addiction Texas" />
-        <link rel="canonical" href="https://freedominterventions.com/houston-texas" />
-      </Helmet>
+      <SEOHead
+        title="Houston Texas Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Houston, Texas. Help your loved one recover from fentanyl, cocaine, and alcohol addiction. Serving Harris County and the Greater Houston area."
+        keywords="Houston addiction intervention, Texas drug intervention, Houston family intervention, fentanyl crisis Houston, cocaine addiction Texas"
+        canonical="https://freedominterventions.com/houston-texas"
+      />
+      <LocalBusinessSchema location="Houston" state="Texas" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const HoustonTexas = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Houston" locationType="city" />
       <Footer />
     </div>
   );

@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import dallasBanner from "@/assets/dallas-texas-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const DallasTexas = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Texas", href: "/texas" },
+    { name: "Dallas", href: "/dallas-texas" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Dallas Texas Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Dallas-Fort Worth, Texas. Help your loved one recover from fentanyl, opioids, alcohol, and methamphetamine addiction. Serving the DFW Metroplex." />
-        <meta name="keywords" content="Dallas addiction intervention, DFW drug intervention, Dallas family intervention, fentanyl crisis Dallas, addiction help Dallas TX" />
-        <link rel="canonical" href="https://freedominterventions.com/dallas-texas" />
-      </Helmet>
+      <SEOHead
+        title="Dallas Texas Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Dallas-Fort Worth, Texas. Help your loved one recover from fentanyl, opioids, alcohol, and methamphetamine addiction. Serving the DFW Metroplex."
+        keywords="Dallas addiction intervention, DFW drug intervention, Dallas family intervention, fentanyl crisis Dallas, addiction help Dallas TX"
+        canonical="https://freedominterventions.com/dallas-texas"
+      />
+      <LocalBusinessSchema location="Dallas" state="Texas" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const DallasTexas = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Dallas" locationType="city" />
       <Footer />
     </div>
   );

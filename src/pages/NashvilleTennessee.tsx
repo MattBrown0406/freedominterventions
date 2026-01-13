@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import nashvilleBanner from "@/assets/nashville-tennessee-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const NashvilleTennessee = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Tennessee", href: "/tennessee" },
+    { name: "Nashville", href: "/nashville-tennessee" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Nashville Tennessee Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Nashville, Tennessee. Help your loved one recover from opioid, alcohol, and methamphetamine addiction. Serving Davidson County and Middle Tennessee." />
-        <meta name="keywords" content="Nashville addiction intervention, Tennessee drug intervention, Nashville family intervention, opioid crisis Nashville, fentanyl addiction Tennessee" />
-        <link rel="canonical" href="https://freedominterventions.com/nashville-tennessee" />
-      </Helmet>
+      <SEOHead
+        title="Nashville Tennessee Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Nashville, Tennessee. Help your loved one recover from opioid, alcohol, and methamphetamine addiction. Serving Davidson County and Middle Tennessee."
+        keywords="Nashville addiction intervention, Tennessee drug intervention, Nashville family intervention, opioid crisis Nashville, fentanyl addiction Tennessee"
+        canonical="https://freedominterventions.com/nashville-tennessee"
+      />
+      <LocalBusinessSchema location="Nashville" state="Tennessee" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const NashvilleTennessee = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Nashville" locationType="city" />
       <Footer />
     </div>
   );

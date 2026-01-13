@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import philadelphiaBanner from "@/assets/philadelphia-pennsylvania-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const PhiladelphiaPennsylvania = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Pennsylvania", href: "/pennsylvania" },
+    { name: "Philadelphia", href: "/philadelphia-pennsylvania" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Philadelphia Pennsylvania Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Philadelphia, Pennsylvania. Help your loved one find recovery from fentanyl, opioid, and drug addiction. Free consultations available." />
-        <meta name="keywords" content="Philadelphia addiction intervention, Pennsylvania drug intervention, Philly family intervention, fentanyl crisis Philadelphia, Kensington addiction help" />
-        <link rel="canonical" href="https://freedominterventions.com/philadelphia-pennsylvania" />
-      </Helmet>
+      <SEOHead
+        title="Philadelphia Pennsylvania Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Philadelphia, Pennsylvania. Help your loved one find recovery from fentanyl, opioid, and drug addiction. Free consultations available."
+        keywords="Philadelphia addiction intervention, Pennsylvania drug intervention, Philly family intervention, fentanyl crisis Philadelphia, Kensington addiction help"
+        canonical="https://freedominterventions.com/philadelphia-pennsylvania"
+      />
+      <LocalBusinessSchema location="Philadelphia" state="Pennsylvania" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const PhiladelphiaPennsylvania = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Philadelphia" locationType="city" />
       <Footer />
     </div>
   );

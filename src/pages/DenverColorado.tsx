@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import denverBanner from "@/assets/denver-colorado-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const DenverColorado = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Colorado", href: "/colorado" },
+    { name: "Denver", href: "/denver-colorado" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Denver Colorado Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Denver, Colorado. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving the Front Range and beyond." />
-        <meta name="keywords" content="Denver addiction intervention, Colorado drug intervention, Denver family intervention, fentanyl crisis Denver, methamphetamine addiction Colorado" />
-        <link rel="canonical" href="https://freedominterventions.com/denver-colorado" />
-      </Helmet>
+      <SEOHead
+        title="Denver Colorado Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Denver, Colorado. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving the Front Range and beyond."
+        keywords="Denver addiction intervention, Colorado drug intervention, Denver family intervention, fentanyl crisis Denver, methamphetamine addiction Colorado"
+        canonical="https://freedominterventions.com/denver-colorado"
+      />
+      <LocalBusinessSchema location="Denver" state="Colorado" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const DenverColorado = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Denver" locationType="city" />
       <Footer />
     </div>
   );

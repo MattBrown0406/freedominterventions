@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import newOrleansBanner from "@/assets/new-orleans-louisiana-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const NewOrleansLouisiana = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Louisiana", href: "/louisiana" },
+    { name: "New Orleans", href: "/new-orleans-louisiana" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>New Orleans Louisiana Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in New Orleans, Louisiana. Help your loved one recover from heroin, fentanyl, and alcohol addiction. Serving Orleans Parish and surrounding areas." />
-        <meta name="keywords" content="New Orleans addiction intervention, Louisiana drug intervention, NOLA family intervention, fentanyl crisis New Orleans, heroin addiction Louisiana" />
-        <link rel="canonical" href="https://freedominterventions.com/new-orleans-louisiana" />
-      </Helmet>
+      <SEOHead
+        title="New Orleans Louisiana Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in New Orleans, Louisiana. Help your loved one recover from heroin, fentanyl, and alcohol addiction. Serving Orleans Parish and surrounding areas."
+        keywords="New Orleans addiction intervention, Louisiana drug intervention, NOLA family intervention, fentanyl crisis New Orleans, heroin addiction Louisiana"
+        canonical="https://freedominterventions.com/new-orleans-louisiana"
+      />
+      <LocalBusinessSchema location="New Orleans" state="Louisiana" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const NewOrleansLouisiana = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="New Orleans" locationType="city" />
       <Footer />
     </div>
   );

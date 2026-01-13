@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import omahaBanner from "@/assets/omaha-nebraska-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const OmahaNebraska = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Nebraska", href: "/nebraska" },
+    { name: "Omaha", href: "/omaha-nebraska" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Omaha Nebraska Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Omaha, Nebraska. Help your loved one find recovery from methamphetamine, fentanyl, and alcohol addiction. Free consultations available." />
-        <meta name="keywords" content="Omaha addiction intervention, Nebraska drug intervention, Omaha family intervention, meth crisis Nebraska, addiction help Omaha NE" />
-        <link rel="canonical" href="https://freedominterventions.com/omaha-nebraska" />
-      </Helmet>
+      <SEOHead
+        title="Omaha Nebraska Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Omaha, Nebraska. Help your loved one find recovery from methamphetamine, fentanyl, and alcohol addiction. Free consultations available."
+        keywords="Omaha addiction intervention, Nebraska drug intervention, Omaha family intervention, meth crisis Nebraska, addiction help Omaha NE"
+        canonical="https://freedominterventions.com/omaha-nebraska"
+      />
+      <LocalBusinessSchema location="Omaha" state="Nebraska" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const OmahaNebraska = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Omaha" locationType="city" />
       <Footer />
     </div>
   );
