@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import austinBanner from "@/assets/austin-texas-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const AustinTexas = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Austin Texas Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Austin, Texas. Help your loved one recover from fentanyl, opioids, alcohol, and stimulant addiction. Serving Travis County and Central Texas." />
-        <meta name="keywords" content="Austin addiction intervention, Texas drug intervention, Austin family intervention, fentanyl crisis Austin, addiction help Austin TX" />
-        <link rel="canonical" href="https://freedominterventions.com/austin-texas" />
-      </Helmet>
+      <SEOHead
+        title="Austin Texas Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Austin, Texas. Help your loved one recover from fentanyl, opioids, alcohol, and stimulant addiction. Serving Travis County and Central Texas."
+        canonical="https://freedominterventions.com/austin-texas"
+        keywords="Austin addiction intervention, Texas drug intervention, Austin family intervention, fentanyl crisis Austin, addiction help Austin TX"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Austin" state="TX" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Texas", url: "https://freedominterventions.com/texas" },
+          { name: "Austin", url: "https://freedominterventions.com/austin-texas" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Texas", href: "/texas" },
+        { name: "Austin", href: "/austin-texas" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const AustinTexas = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Austin" locationType="city" parentState="Texas" />
 
       <Footer />
     </div>

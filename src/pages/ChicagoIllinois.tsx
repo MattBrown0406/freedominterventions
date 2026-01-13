@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import chicagoBanner from "@/assets/chicago-illinois-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const ChicagoIllinois = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Chicago Illinois Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Chicago, Illinois. Help your loved one recover from heroin, fentanyl, and alcohol addiction. Serving Cook County and Chicagoland." />
-        <meta name="keywords" content="Chicago addiction intervention, Illinois drug intervention, Chicago family intervention, heroin crisis Chicago, fentanyl addiction Illinois" />
-        <link rel="canonical" href="https://freedominterventions.com/chicago-illinois" />
-      </Helmet>
+      <SEOHead
+        title="Chicago Illinois Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Chicago, Illinois. Help your loved one recover from heroin, fentanyl, and alcohol addiction. Serving Cook County and Chicagoland."
+        canonical="https://freedominterventions.com/chicago-illinois"
+        keywords="Chicago addiction intervention, Illinois drug intervention, Chicago family intervention, heroin crisis Chicago, fentanyl addiction Illinois"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Chicago" state="IL" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Illinois", url: "https://freedominterventions.com/illinois" },
+          { name: "Chicago", url: "https://freedominterventions.com/chicago-illinois" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Illinois", href: "/illinois" },
+        { name: "Chicago", href: "/chicago-illinois" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const ChicagoIllinois = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Chicago" locationType="city" parentState="Illinois" />
 
       <Footer />
     </div>

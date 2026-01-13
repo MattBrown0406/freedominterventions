@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import boiseBanner from "@/assets/boise-idaho-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const BoiseIdaho = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Boise Idaho Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Boise, Idaho. Help your loved one recover from methamphetamine, opioid, and alcohol addiction. Serving Ada County and the Treasure Valley." />
-        <meta name="keywords" content="Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth crisis Idaho, addiction help Boise ID" />
-        <link rel="canonical" href="https://freedominterventions.com/boise-idaho" />
-      </Helmet>
+      <SEOHead
+        title="Boise Idaho Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Boise, Idaho. Help your loved one recover from methamphetamine, opioid, and alcohol addiction. Serving Ada County and the Treasure Valley."
+        canonical="https://freedominterventions.com/boise-idaho"
+        keywords="Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth crisis Idaho, addiction help Boise ID"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Boise" state="ID" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Idaho", url: "https://freedominterventions.com/idaho" },
+          { name: "Boise", url: "https://freedominterventions.com/boise-idaho" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Idaho", href: "/idaho" },
+        { name: "Boise", href: "/boise-idaho" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const BoiseIdaho = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Boise" locationType="city" parentState="Idaho" />
 
       <Footer />
     </div>

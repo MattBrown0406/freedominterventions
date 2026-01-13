@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import phoenixBanner from "@/assets/phoenix-arizona-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const PhoenixArizona = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Phoenix Arizona Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Phoenix, Arizona. Help your loved one recover from fentanyl, methamphetamine, and opioid addiction. Serving Maricopa County and the Valley of the Sun." />
-        <meta name="keywords" content="Phoenix addiction intervention, Arizona drug intervention, Phoenix family intervention, fentanyl crisis Phoenix, addiction help Phoenix AZ" />
-        <link rel="canonical" href="https://freedominterventions.com/phoenix-arizona" />
-      </Helmet>
+      <SEOHead
+        title="Phoenix Arizona Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Phoenix, Arizona. Help your loved one recover from fentanyl, methamphetamine, and opioid addiction. Serving Maricopa County and the Valley of the Sun."
+        canonical="https://freedominterventions.com/phoenix-arizona"
+        keywords="Phoenix addiction intervention, Arizona drug intervention, Phoenix family intervention, fentanyl crisis Phoenix, addiction help Phoenix AZ"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Phoenix" state="AZ" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Arizona", url: "https://freedominterventions.com/arizona" },
+          { name: "Phoenix", url: "https://freedominterventions.com/phoenix-arizona" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Arizona", href: "/arizona" },
+        { name: "Phoenix", href: "/phoenix-arizona" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const PhoenixArizona = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Phoenix" locationType="city" parentState="Arizona" />
 
       <Footer />
     </div>

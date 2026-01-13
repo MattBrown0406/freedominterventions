@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import sanFranciscoBanner from "@/assets/san-francisco-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const SanFranciscoCalifornia = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>San Francisco California Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in San Francisco, California. Help your loved one recover from fentanyl, opioid, and alcohol addiction. Serving the Bay Area and Silicon Valley." />
-        <meta name="keywords" content="San Francisco addiction intervention, Bay Area drug intervention, SF family intervention, fentanyl crisis San Francisco, addiction help SF CA" />
-        <link rel="canonical" href="https://freedominterventions.com/san-francisco-california" />
-      </Helmet>
+      <SEOHead
+        title="San Francisco California Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in San Francisco, California. Help your loved one recover from fentanyl, opioid, and alcohol addiction. Serving the Bay Area and Silicon Valley."
+        canonical="https://freedominterventions.com/san-francisco-california"
+        keywords="San Francisco addiction intervention, Bay Area drug intervention, SF family intervention, fentanyl crisis San Francisco, addiction help SF CA"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="San Francisco" state="CA" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "California", url: "https://freedominterventions.com/california" },
+          { name: "San Francisco", url: "https://freedominterventions.com/san-francisco-california" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "California", href: "/california" },
+        { name: "San Francisco", href: "/san-francisco-california" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const SanFranciscoCalifornia = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="San Francisco" locationType="city" parentState="California" />
 
       <Footer />
     </div>
