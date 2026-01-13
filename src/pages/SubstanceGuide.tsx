@@ -3,15 +3,19 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Wine, Pill, Zap, Brain, Leaf, FlaskConical } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 
 const SubstanceGuide = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Substance Types and Their Effects | Family Guide | Freedom Interventions</title>
-        <meta name="description" content="A practical guide for families to understand substance types, recognize addiction patterns, and know when professional intervention is needed." />
-      </Helmet>
+      <SEOHead
+        title="Substance Types and Their Effects | Family Guide"
+        description="A practical guide for families to understand substance types, recognize addiction patterns, and know when professional intervention is needed."
+        canonical="https://freedominterventions.com/substance-guide"
+        keywords="alcohol addiction, opioid addiction, fentanyl, methamphetamine, benzodiazepines, cannabis addiction, substance types"
+      />
+      <OrganizationSchema />
       <Navbar />
       
       {/* Hero Section */}

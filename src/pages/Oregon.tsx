@@ -4,10 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema } from "@/components/StructuredData";
 
 const Oregon = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Oregon Addiction Intervention Services"
+        description="Oregon faces a persistent addiction epidemic. Professional interventionists help families navigate fentanyl, methamphetamine, and alcohol addiction treatment."
+        canonical="https://freedominterventions.com/oregon"
+        keywords="Oregon addiction intervention, Portland intervention services, Oregon fentanyl crisis, Oregon drug treatment"
+        geoRegion="US-OR"
+        geoPlacename="Oregon"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Portland" state="OR" />
       <Navbar />
       
       {/* Banner Image */}

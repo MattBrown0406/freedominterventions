@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -112,13 +113,13 @@ const SelfAssessment = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Helmet>
-        <title>Is It Time for an Intervention? Self-Assessment | Freedom Interventions</title>
-        <meta
-          name="description"
-          content="A guided self-assessment for families to determine if professional intervention may be needed. Answer honestly to gain clarity on your situation."
-        />
-      </Helmet>
+      <SEOHead
+        title="Is It Time for an Intervention? Self-Assessment"
+        description="A guided self-assessment for families to determine if professional intervention may be needed. Answer honestly to gain clarity on your situation."
+        canonical="https://freedominterventions.com/self-assessment"
+        keywords="intervention assessment, addiction self-assessment, family intervention quiz, need intervention help"
+      />
+      <OrganizationSchema />
 
       <Navbar />
 

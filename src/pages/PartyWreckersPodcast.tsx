@@ -1,7 +1,8 @@
-import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Phone, Play, Clock, Calendar } from "lucide-react";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.png";
@@ -59,10 +60,13 @@ const PartyWreckersPodcast = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>The Party Wreckers Podcast | Freedom Interventions</title>
-        <meta name="description" content="Listen to The Party Wreckers Podcast - candid conversations about addiction, recovery, and intervention from the team at Freedom Interventions." />
-      </Helmet>
+      <SEOHead
+        title="The Party Wreckers Podcast"
+        description="Listen to The Party Wreckers Podcast - candid conversations about addiction, recovery, and intervention from the team at Freedom Interventions."
+        canonical="https://freedominterventions.com/podcast"
+        keywords="addiction podcast, recovery podcast, intervention podcast, Party Wreckers, substance abuse podcast"
+      />
+      <OrganizationSchema />
       
       <Navbar />
       

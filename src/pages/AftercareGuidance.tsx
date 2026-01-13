@@ -4,10 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import aftercareBanner from "@/assets/aftercare-guidance-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 
 const AftercareGuidance = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Aftercare Guidance for Lasting Recovery"
+        description="Following aftercare recommendations prevents relapse after addiction treatment. Learn how AA meetings, therapy, and social support drive long-term recovery."
+        canonical="https://freedominterventions.com/aftercare-guidance"
+        keywords="addiction aftercare, relapse prevention, AA meetings, recovery support, sober living aftercare"
+      />
+      <OrganizationSchema />
       <Navbar />
       
       {/* Hero Banner */}

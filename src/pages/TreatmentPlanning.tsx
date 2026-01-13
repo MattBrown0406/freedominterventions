@@ -4,10 +4,19 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Stethoscope, Building, Users, Home, ArrowRight, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import treatmentBanner from "@/assets/treatment-planning-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 
 const TreatmentPlanning = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Treatment Planning Services"
+        description="Interventionists create comprehensive treatment plans covering detox, inpatient, outpatient, IOP, and sober living for lasting addiction recovery."
+        canonical="https://freedominterventions.com/treatment-planning"
+        keywords="addiction treatment planning, detox programs, inpatient rehab, outpatient treatment, IOP, sober living"
+      />
+      <OrganizationSchema />
       <Navbar />
       
       {/* Banner Image */}

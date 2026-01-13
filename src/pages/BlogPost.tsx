@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
 
@@ -61,23 +62,51 @@ const BlogPost = () => {
     return <Navigate to="/404" replace />;
   }
 
+  const imageUrl = post.image_url 
+    ? (post.image_url.startsWith('http') ? post.image_url : `https://freedominterventions.com${post.image_url}`)
+    : "https://freedominterventions.com/favicon.jpeg";
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>{post.title} | Freedom Interventions Blog</title>
         <meta name="description" content={post.excerpt} />
+        <link rel="canonical" href={`https://freedominterventions.com/blog/${post.slug}`} />
+        <meta name="keywords" content={`${post.category}, addiction intervention, family support, recovery`} />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
         {/* Open Graph */}
         <meta property="og:type" content="article" />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
-        <meta property="og:url" content={window.location.href} />
-        {post.image_url && <meta property="og:image" content={post.image_url.startsWith('http') ? post.image_url : `${window.location.origin}${post.image_url}`} />}
+        <meta property="og:url" content={`https://freedominterventions.com/blog/${post.slug}`} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Freedom Interventions" />
+        <meta property="article:published_time" content={post.published_at || post.created_at} />
+        <meta property="article:modified_time" content={post.updated_at} />
+        <meta property="article:section" content={post.category} />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
-        {post.image_url && <meta name="twitter:image" content={post.image_url.startsWith('http') ? post.image_url : `${window.location.origin}${post.image_url}`} />}
+        <meta name="twitter:image" content={imageUrl} />
       </Helmet>
+      <ArticleSchema 
+        title={post.title}
+        description={post.excerpt}
+        datePublished={post.published_at || post.created_at}
+        dateModified={post.updated_at}
+        image={imageUrl}
+        url={`https://freedominterventions.com/blog/${post.slug}`}
+      />
+      <BreadcrumbSchema 
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Blog", url: "https://freedominterventions.com/blog" },
+          { name: post.title, url: `https://freedominterventions.com/blog/${post.slug}` }
+        ]}
+      />
 
       <Navbar />
 
