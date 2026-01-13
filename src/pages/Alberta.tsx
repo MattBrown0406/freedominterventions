@@ -1,15 +1,40 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const Alberta = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Alberta", href: "/alberta" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Alberta", url: "https://freedominterventions.com/alberta" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <SEOHead
+        title="Alberta Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Alberta, Canada. Help your loved one recover from fentanyl, opioid, and alcohol addiction. Serving Calgary, Edmonton, and all Alberta communities."
+        canonical="https://freedominterventions.com/alberta"
+        keywords="Alberta addiction intervention, Calgary drug intervention, Edmonton family intervention, fentanyl crisis Alberta, addiction help Alberta Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Alberta" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
-      {/* Hero Section */}
+      <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
+      
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -40,7 +65,6 @@ const Alberta = () => {
         </div>
       </section>
 
-      {/* Key Statistics */}
       <section className="py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -64,7 +88,6 @@ const Alberta = () => {
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto space-y-12">
@@ -95,7 +118,6 @@ const Alberta = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -121,6 +143,7 @@ const Alberta = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Alberta" locationType="province" />
       <Footer />
     </div>
   );

@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const NewBrunswick = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "New Brunswick", href: "/new-brunswick" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "New Brunswick", url: "https://freedominterventions.com/new-brunswick" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="New Brunswick Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in New Brunswick, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Saint John, Moncton, Fredericton, and all NB communities."
+        canonical="https://freedominterventions.com/new-brunswick"
+        keywords="New Brunswick addiction intervention, Saint John drug intervention, Moncton family intervention, opioid crisis New Brunswick, addiction help NB Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="New Brunswick" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -58,6 +84,7 @@ const NewBrunswick = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="New Brunswick" locationType="province" />
       <Footer />
     </div>
   );

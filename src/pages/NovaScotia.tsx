@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const NovaScotia = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Nova Scotia", href: "/nova-scotia" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Nova Scotia", url: "https://freedominterventions.com/nova-scotia" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Nova Scotia Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Nova Scotia, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Halifax and all Nova Scotia communities."
+        canonical="https://freedominterventions.com/nova-scotia"
+        keywords="Nova Scotia addiction intervention, Halifax drug intervention, Nova Scotia family intervention, opioid crisis Nova Scotia, addiction help Nova Scotia Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Nova Scotia" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -58,6 +84,7 @@ const NovaScotia = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Nova Scotia" locationType="province" />
       <Footer />
     </div>
   );

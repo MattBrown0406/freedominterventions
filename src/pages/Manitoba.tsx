@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
 
 const Manitoba = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Manitoba", href: "/manitoba" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Manitoba", url: "https://freedominterventions.com/manitoba" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Manitoba Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Manitoba, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Winnipeg and all Manitoba communities."
+        canonical="https://freedominterventions.com/manitoba"
+        keywords="Manitoba addiction intervention, Winnipeg drug intervention, Manitoba family intervention, opioid crisis Manitoba, addiction help Manitoba Canada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Manitoba" state="Canada" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+      
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -58,6 +84,7 @@ const Manitoba = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Manitoba" locationType="province" />
       <Footer />
     </div>
   );
