@@ -7,6 +7,7 @@ import { ReviewSubmissionForm } from "@/components/ReviewSubmissionForm";
 import SEOHead from "@/components/SEOHead";
 import { BreadcrumbSchema, OrganizationSchema } from "@/components/StructuredData";
 import { Helmet } from "react-helmet";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const Testimonials = () => {
   const testimonials = [
@@ -117,10 +118,11 @@ const Testimonials = () => {
       <main className="pt-20 md:pt-24">
         {/* Hero Banner */}
         <section className="relative h-[30vh] md:h-[35vh] overflow-hidden">
-          <img
+          <OptimizedImage
             src={testimonialsBanner}
             alt="Families sharing their hope and healing testimonials"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
+            priority={true}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center">

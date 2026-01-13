@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface BlogPost {
   id: string;
@@ -65,10 +66,10 @@ const FeaturedArticleCarousel = () => {
   if (!posts || posts.length === 0) {
     return (
       <div className="relative z-10 rounded-2xl overflow-hidden aspect-[4/5] bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 flex items-center justify-center">
-        <img
+        <OptimizedImage
           src="/about-organic.jpg"
           alt="Supportive intervention session"
-          className="w-full h-full object-cover"
+          className="w-full h-full"
         />
       </div>
     );
@@ -80,10 +81,10 @@ const FeaturedArticleCarousel = () => {
     <div className="relative z-10 rounded-2xl overflow-hidden aspect-[4/5] bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 group">
       {/* Background Image */}
       {currentPost.image_url && (
-        <img
+        <OptimizedImage
           src={currentPost.image_url}
           alt={currentPost.title}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+          className="absolute inset-0 w-full h-full"
         />
       )}
       

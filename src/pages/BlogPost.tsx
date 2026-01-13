@@ -8,6 +8,8 @@ import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
 
@@ -148,10 +150,11 @@ const BlogPost = () => {
         <section className="py-8">
           <div className="container px-6">
             <div className="max-w-4xl mx-auto">
-              <img
+              <OptimizedImage
                 src={post.image_url}
                 alt={post.title}
-                className="w-full h-auto rounded-2xl shadow-lg"
+                className="w-full h-auto rounded-2xl shadow-lg aspect-video"
+                priority={true}
               />
             </div>
           </div>

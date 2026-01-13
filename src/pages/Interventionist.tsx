@@ -5,6 +5,7 @@ import { MapPin, Globe, Phone } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
 import SEOHead from "@/components/SEOHead";
 import { PersonSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const Interventionist = () => {
   const calculateYearsSober = () => {
@@ -44,10 +45,11 @@ const Interventionist = () => {
             <div className="grid md:grid-cols-2 gap-12 items-start">
               {/* Photo Column */}
               <div className="flex flex-col items-center md:sticky md:top-28">
-                <img
+                <OptimizedImage
                   src={mattHeadshot}
                   alt="Matt Brown - Professional Interventionist with over 20 years of experience"
                   className="w-full max-w-md rounded-2xl shadow-2xl"
+                  priority={true}
                 />
                 <div className="mt-6 flex flex-wrap gap-3 justify-center">
                   <div className="flex items-center gap-2 text-muted-foreground">
