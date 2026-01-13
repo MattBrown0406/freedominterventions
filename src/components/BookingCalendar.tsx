@@ -354,7 +354,7 @@ export const BookingCalendar = () => {
                       <span className="text-lg font-semibold">Free Consultation</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      Not every family needs an intervention. We'll assess your situation and explore whether coaching can equip you with a strategy to move forward on your own.
+                      A 30-minute Zoom call. Not every family needs an intervention—we'll assess your situation and explore whether coaching can equip you with a strategy to move forward on your own.
                     </p>
                     <div className="text-2xl font-bold text-primary">Free</div>
                   </button>
