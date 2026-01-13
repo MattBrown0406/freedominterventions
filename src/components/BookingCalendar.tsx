@@ -354,7 +354,7 @@ export const BookingCalendar = () => {
                       <span className="text-lg font-semibold">Free Consultation</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      A 30-minute Zoom call with you and any concerned loved ones.
+                      A 30-minute Zoom call with you and any concerned loved ones. We'll assess your situation and discuss the best path forward for your family.
                     </p>
                     <div className="text-2xl font-bold text-primary">Free</div>
                   </button>
