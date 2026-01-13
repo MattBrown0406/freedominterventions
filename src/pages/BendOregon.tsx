@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import bendBanner from "@/assets/bend-oregon-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const BendOregon = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Oregon", href: "/oregon" },
+    { name: "Bend", href: "/bend-oregon" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Bend Oregon Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Bend, Oregon. Help your loved one find recovery from opioid, alcohol, and methamphetamine addiction. Free consultations available." />
-        <meta name="keywords" content="Bend addiction intervention, Central Oregon drug intervention, Bend family intervention, opioid crisis Bend, addiction help Bend OR" />
-        <link rel="canonical" href="https://freedominterventions.com/bend-oregon" />
-      </Helmet>
+      <SEOHead
+        title="Bend Oregon Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Bend, Oregon. Help your loved one find recovery from opioid, alcohol, and methamphetamine addiction. Free consultations available."
+        keywords="Bend addiction intervention, Central Oregon drug intervention, Bend family intervention, opioid crisis Bend, addiction help Bend OR"
+        canonical="https://freedominterventions.com/bend-oregon"
+      />
+      <LocalBusinessSchema location="Bend" state="Oregon" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const BendOregon = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Bend" locationType="city" />
       <Footer />
     </div>
   );

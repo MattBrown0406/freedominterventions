@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import indianapolisBanner from "@/assets/indianapolis-indiana-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const IndianapolisIndiana = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Indiana", href: "/indiana" },
+    { name: "Indianapolis", href: "/indianapolis-indiana" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Indianapolis Indiana Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Indianapolis, Indiana. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving Marion County and Central Indiana." />
-        <meta name="keywords" content="Indianapolis addiction intervention, Indiana drug intervention, Indianapolis family intervention, fentanyl crisis Indianapolis, methamphetamine addiction Indiana" />
-        <link rel="canonical" href="https://freedominterventions.com/indianapolis-indiana" />
-      </Helmet>
+      <SEOHead
+        title="Indianapolis Indiana Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Indianapolis, Indiana. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving Marion County and Central Indiana."
+        keywords="Indianapolis addiction intervention, Indiana drug intervention, Indianapolis family intervention, fentanyl crisis Indianapolis, methamphetamine addiction Indiana"
+        canonical="https://freedominterventions.com/indianapolis-indiana"
+      />
+      <LocalBusinessSchema location="Indianapolis" state="Indiana" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const IndianapolisIndiana = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Indianapolis" locationType="city" />
       <Footer />
     </div>
   );

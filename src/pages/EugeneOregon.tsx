@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import eugeneBanner from "@/assets/eugene-oregon-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const EugeneOregon = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Oregon", href: "/oregon" },
+    { name: "Eugene", href: "/eugene-oregon" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Eugene Oregon Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Eugene, Oregon. Help your loved one recover from methamphetamine, fentanyl, and alcohol addiction. Serving Lane County and the Willamette Valley." />
-        <meta name="keywords" content="Eugene addiction intervention, Lane County drug intervention, Eugene family intervention, meth crisis Eugene, addiction help Eugene OR" />
-        <link rel="canonical" href="https://freedominterventions.com/eugene-oregon" />
-      </Helmet>
+      <SEOHead
+        title="Eugene Oregon Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Eugene, Oregon. Help your loved one recover from methamphetamine, fentanyl, and alcohol addiction. Serving Lane County and the Willamette Valley."
+        keywords="Eugene addiction intervention, Lane County drug intervention, Eugene family intervention, meth crisis Eugene, addiction help Eugene OR"
+        canonical="https://freedominterventions.com/eugene-oregon"
+      />
+      <LocalBusinessSchema location="Eugene" state="Oregon" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const EugeneOregon = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Eugene" locationType="city" />
       <Footer />
     </div>
   );

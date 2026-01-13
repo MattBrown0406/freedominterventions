@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import detroitBanner from "@/assets/detroit-michigan-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const DetroitMichigan = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Michigan", href: "/michigan" },
+    { name: "Detroit", href: "/detroit-michigan" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Detroit Michigan Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Detroit, Michigan. Help your loved one recover from fentanyl, heroin, and alcohol addiction. Serving Wayne County and Metro Detroit." />
-        <meta name="keywords" content="Detroit addiction intervention, Michigan drug intervention, Detroit family intervention, fentanyl crisis Detroit, opioid addiction Michigan" />
-        <link rel="canonical" href="https://freedominterventions.com/detroit-michigan" />
-      </Helmet>
+      <SEOHead
+        title="Detroit Michigan Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Detroit, Michigan. Help your loved one recover from fentanyl, heroin, and alcohol addiction. Serving Wayne County and Metro Detroit."
+        keywords="Detroit addiction intervention, Michigan drug intervention, Detroit family intervention, fentanyl crisis Detroit, opioid addiction Michigan"
+        canonical="https://freedominterventions.com/detroit-michigan"
+      />
+      <LocalBusinessSchema location="Detroit" state="Michigan" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const DetroitMichigan = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Detroit" locationType="city" />
       <Footer />
     </div>
   );

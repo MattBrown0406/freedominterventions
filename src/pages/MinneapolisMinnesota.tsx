@@ -1,22 +1,36 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import minneapolisBanner from "@/assets/minneapolis-minnesota-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import LocationLinks from "@/components/LocationLinks";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 
 const MinneapolisMinnesota = () => {
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Minnesota", href: "/minnesota" },
+    { name: "Minneapolis", href: "/minneapolis-minnesota" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Minneapolis Minnesota Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Minneapolis, Minnesota. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving the Twin Cities metro." />
-        <meta name="keywords" content="Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl crisis Minneapolis, opioid addiction Minnesota" />
-        <link rel="canonical" href="https://freedominterventions.com/minneapolis-minnesota" />
-      </Helmet>
+      <SEOHead
+        title="Minneapolis Minnesota Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Minneapolis, Minnesota. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving the Twin Cities metro."
+        keywords="Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl crisis Minneapolis, opioid addiction Minnesota"
+        canonical="https://freedominterventions.com/minneapolis-minnesota"
+      />
+      <LocalBusinessSchema location="Minneapolis" state="Minnesota" />
+      <OrganizationSchema />
+      <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -215,6 +229,7 @@ const MinneapolisMinnesota = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Minneapolis" locationType="city" />
       <Footer />
     </div>
   );
