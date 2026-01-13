@@ -368,7 +368,7 @@ export const BookingCalendar = () => {
                       <span className="text-lg font-semibold">Coaching Session</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      A 1-hour Zoom call with you and any concerned loved ones.
+                      A 1-hour Zoom call with you and any concerned loved ones. This meeting is intended to give you an actionable plan to change your family's circumstances.
                     </p>
                     <div className="text-2xl font-bold text-primary">$150</div>
                   </button>
