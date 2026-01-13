@@ -4,10 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Phone, AlertTriangle, Building2, Heart, Shield, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import crisisBanner from "@/assets/crisis-support-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema } from "@/components/StructuredData";
 
 const CrisisSupport = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Addiction Crisis Support"
+        description="Professional interventionists help families navigate addiction crises including jail, hospital visits, overdoses, and self-harm. Get expert crisis support now."
+        canonical="https://freedominterventions.com/crisis-support"
+        keywords="addiction crisis support, intervention crisis help, overdose family support, addiction emergency help"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Portland" state="OR" />
       <Navbar />
       
       {/* Banner Image */}

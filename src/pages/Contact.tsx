@@ -1,10 +1,11 @@
-import { Helmet } from "react-helmet";
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -87,10 +88,14 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Contact Us | Freedom Interventions</title>
-        <meta name="description" content="Contact Freedom Interventions for professional addiction intervention services. Reach out for a free consultation and compassionate support for your family." />
-      </Helmet>
+      <SEOHead
+        title="Contact Us"
+        description="Contact Freedom Interventions for professional addiction intervention services. Reach out for a free consultation and compassionate support for your family."
+        canonical="https://freedominterventions.com/contact"
+        keywords="contact intervention services, addiction help contact, intervention consultation, family addiction support"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Portland" state="OR" />
       
       <Navbar />
       

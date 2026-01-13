@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -501,10 +502,13 @@ const Assessment = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Helmet>
-        <title>Comprehensive Clinical Assessment | Freedom Interventions</title>
-        <meta name="description" content="Complete our confidential DSM-V and ASAM-based assessment to help determine appropriate treatment placement and intervention approach." />
-      </Helmet>
+      <SEOHead
+        title="Comprehensive Clinical Assessment"
+        description="Complete our confidential DSM-V and ASAM-based assessment to help determine appropriate treatment placement and intervention approach."
+        canonical="https://freedominterventions.com/assessment"
+        keywords="addiction assessment, DSM-V evaluation, ASAM criteria, treatment assessment, intervention intake"
+      />
+      <OrganizationSchema />
 
       <Navbar />
 

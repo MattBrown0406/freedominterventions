@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Helmet } from "react-helmet";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 import { 
   Target, 
   AlertTriangle, 
@@ -20,13 +21,13 @@ import { Link } from "react-router-dom";
 const InterventionToolkit = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Intervention Planning Toolkit | Freedom Interventions</title>
-        <meta 
-          name="description" 
-          content="A step-by-step guide for families preparing for change. Learn what intervention planning involves, common mistakes to avoid, and when professional help is needed." 
-        />
-      </Helmet>
+      <SEOHead
+        title="Intervention Planning Toolkit"
+        description="A step-by-step guide for families preparing for change. Learn what intervention planning involves, common mistakes to avoid, and when professional help is needed."
+        canonical="https://freedominterventions.com/intervention-toolkit"
+        keywords="intervention planning guide, family intervention toolkit, addiction intervention steps, intervention preparation"
+      />
+      <OrganizationSchema />
       <Navbar />
       
       <main>

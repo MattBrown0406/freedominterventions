@@ -1,10 +1,11 @@
-import { Helmet } from "react-helmet";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema } from "@/components/StructuredData";
 
 const Blog = () => {
   const { data: blogPosts, isLoading } = useQuery({
@@ -33,10 +34,13 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Blog | Freedom Interventions</title>
-        <meta name="description" content="Read articles about addiction intervention, family support, recovery resources, and guidance for helping loved ones struggling with substance use." />
-      </Helmet>
+      <SEOHead
+        title="Addiction Intervention Blog"
+        description="Read articles about addiction intervention, family support, recovery resources, and guidance for helping loved ones struggling with substance use."
+        canonical="https://freedominterventions.com/blog"
+        keywords="addiction intervention blog, family addiction resources, recovery articles, substance abuse help, intervention guides"
+      />
+      <OrganizationSchema />
       
       <Navbar />
       
