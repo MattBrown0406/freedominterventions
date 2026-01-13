@@ -224,6 +224,37 @@ export const BreadcrumbSchema = ({
   );
 };
 
+// ItemList Schema for location directories
+export const ItemListSchema = ({
+  name,
+  description,
+  items,
+}: {
+  name: string;
+  description: string;
+  items: { name: string; url: string }[];
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: name,
+    description: description,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: item.url,
+    })),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
 // Person Schema for Matt Brown
 export const PersonSchema = () => {
   const schema = {
