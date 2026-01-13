@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import saltLakeCityBanner from "@/assets/salt-lake-city-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const SaltLakeCityUtah = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Salt Lake City Utah Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Salt Lake City, Utah. Help your loved one recover from opioid, prescription drug, and alcohol addiction. Serving Salt Lake County and the Wasatch Front." />
-        <meta name="keywords" content="Salt Lake City addiction intervention, Utah drug intervention, SLC family intervention, opioid crisis Utah, addiction help Salt Lake City" />
-        <link rel="canonical" href="https://freedominterventions.com/salt-lake-city-utah" />
-      </Helmet>
+      <SEOHead
+        title="Salt Lake City Utah Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Salt Lake City, Utah. Help your loved one recover from opioid, prescription drug, and alcohol addiction. Serving Salt Lake County and the Wasatch Front."
+        canonical="https://freedominterventions.com/salt-lake-city-utah"
+        keywords="Salt Lake City addiction intervention, Utah drug intervention, SLC family intervention, opioid crisis Utah, addiction help Salt Lake City"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Salt Lake City" state="UT" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Utah", url: "https://freedominterventions.com/utah" },
+          { name: "Salt Lake City", url: "https://freedominterventions.com/salt-lake-city-utah" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Utah", href: "/utah" },
+        { name: "Salt Lake City", href: "/salt-lake-city-utah" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const SaltLakeCityUtah = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Salt Lake City" locationType="city" parentState="Utah" />
 
       <Footer />
     </div>

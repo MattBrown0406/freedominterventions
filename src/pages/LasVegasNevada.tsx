@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import lasVegasBanner from "@/assets/las-vegas-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const LasVegasNevada = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Las Vegas Nevada Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Las Vegas, Nevada. Help your loved one recover from gambling addiction, fentanyl, alcohol, and methamphetamine addiction. Serving Clark County." />
-        <meta name="keywords" content="Las Vegas addiction intervention, Nevada drug intervention, Las Vegas family intervention, gambling addiction Las Vegas, fentanyl crisis Las Vegas" />
-        <link rel="canonical" href="https://freedominterventions.com/las-vegas-nevada" />
-      </Helmet>
+      <SEOHead
+        title="Las Vegas Nevada Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Las Vegas, Nevada. Help your loved one recover from gambling addiction, fentanyl, alcohol, and methamphetamine addiction. Serving Clark County."
+        canonical="https://freedominterventions.com/las-vegas-nevada"
+        keywords="Las Vegas addiction intervention, Nevada drug intervention, Las Vegas family intervention, gambling addiction Las Vegas, fentanyl crisis Las Vegas"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Las Vegas" state="NV" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Nevada", url: "https://freedominterventions.com/nevada" },
+          { name: "Las Vegas", url: "https://freedominterventions.com/las-vegas-nevada" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Nevada", href: "/nevada" },
+        { name: "Las Vegas", href: "/las-vegas-nevada" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const LasVegasNevada = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Las Vegas" locationType="city" parentState="Nevada" />
 
       <Footer />
     </div>

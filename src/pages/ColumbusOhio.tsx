@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import columbusBanner from "@/assets/columbus-ohio-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const ColumbusOhio = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Columbus Ohio Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Columbus, Ohio. Help your loved one find recovery from fentanyl, opioid, and methamphetamine addiction. Free consultations available." />
-        <meta name="keywords" content="Columbus addiction intervention, Ohio drug intervention, Columbus family intervention, opioid crisis Ohio, fentanyl addiction help Columbus OH" />
-        <link rel="canonical" href="https://freedominterventions.com/columbus-ohio" />
-      </Helmet>
+      <SEOHead
+        title="Columbus Ohio Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Columbus, Ohio. Help your loved one find recovery from fentanyl, opioid, and methamphetamine addiction. Free consultations available."
+        canonical="https://freedominterventions.com/columbus-ohio"
+        keywords="Columbus addiction intervention, Ohio drug intervention, Columbus family intervention, opioid crisis Ohio, fentanyl addiction help Columbus OH"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Columbus" state="OH" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Ohio", url: "https://freedominterventions.com/ohio" },
+          { name: "Columbus", url: "https://freedominterventions.com/columbus-ohio" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Ohio", href: "/ohio" },
+        { name: "Columbus", href: "/columbus-ohio" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const ColumbusOhio = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Columbus" locationType="city" parentState="Ohio" />
 
       <Footer />
     </div>

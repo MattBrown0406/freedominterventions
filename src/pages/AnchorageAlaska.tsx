@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import anchorageBanner from "@/assets/anchorage-alaska-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const AnchorageAlaska = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Anchorage Alaska Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Anchorage, Alaska. Help your loved one find recovery from alcohol, opioid, and methamphetamine addiction. Free consultations available." />
-        <meta name="keywords" content="Anchorage addiction intervention, Alaska drug intervention, Anchorage family intervention, alcohol addiction Alaska, addiction help Anchorage AK" />
-        <link rel="canonical" href="https://freedominterventions.com/anchorage-alaska" />
-      </Helmet>
+      <SEOHead
+        title="Anchorage Alaska Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Anchorage, Alaska. Help your loved one find recovery from alcohol, opioid, and methamphetamine addiction. Free consultations available."
+        canonical="https://freedominterventions.com/anchorage-alaska"
+        keywords="Anchorage addiction intervention, Alaska drug intervention, Anchorage family intervention, alcohol addiction Alaska, addiction help Anchorage AK"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Anchorage" state="AK" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Alaska", url: "https://freedominterventions.com/alaska" },
+          { name: "Anchorage", url: "https://freedominterventions.com/anchorage-alaska" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Alaska", href: "/alaska" },
+        { name: "Anchorage", href: "/anchorage-alaska" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const AnchorageAlaska = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Anchorage" locationType="city" parentState="Alaska" />
 
       <Footer />
     </div>

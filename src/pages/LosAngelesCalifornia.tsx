@@ -1,22 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import losAngelesBanner from "@/assets/los-angeles-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const LosAngelesCalifornia = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Los Angeles California Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional addiction intervention services in Los Angeles, California. Help your loved one recover from fentanyl, opioids, alcohol, and prescription drug addiction. Serving LA County and Southern California." />
-        <meta name="keywords" content="Los Angeles addiction intervention, LA drug intervention, Hollywood addiction help, fentanyl crisis Los Angeles, addiction intervention LA CA" />
-        <link rel="canonical" href="https://freedominterventions.com/los-angeles-california" />
-      </Helmet>
+      <SEOHead
+        title="Los Angeles California Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Los Angeles, California. Help your loved one recover from fentanyl, opioids, alcohol, and prescription drug addiction. Serving LA County and Southern California."
+        canonical="https://freedominterventions.com/los-angeles-california"
+        keywords="Los Angeles addiction intervention, LA drug intervention, Hollywood addiction help, fentanyl crisis Los Angeles, addiction intervention LA CA"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Los Angeles" state="CA" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "California", url: "https://freedominterventions.com/california" },
+          { name: "Los Angeles", url: "https://freedominterventions.com/los-angeles-california" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "California", href: "/california" },
+        { name: "Los Angeles", href: "/los-angeles-california" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
@@ -214,6 +233,8 @@ const LosAngelesCalifornia = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Los Angeles" locationType="city" parentState="California" />
 
       <Footer />
     </div>
