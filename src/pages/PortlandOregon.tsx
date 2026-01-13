@@ -7,6 +7,7 @@ import portlandBanner from "@/assets/portland-oregon-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const PortlandOregon = () => {
   return (
@@ -29,6 +30,12 @@ const PortlandOregon = () => {
       />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Oregon", href: "/oregon" },
+        { name: "Portland", href: "/portland-oregon" },
+      ]} />
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">

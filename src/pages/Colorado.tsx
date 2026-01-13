@@ -3,11 +3,37 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Colorado = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Colorado Addiction Intervention Services | Freedom Interventions"
+        description="Colorado faces rising overdose deaths from fentanyl and methamphetamine. Professional interventionists help families guide loved ones toward evidence-based treatment."
+        canonical="https://freedominterventions.com/colorado"
+        keywords="Colorado addiction intervention, Denver intervention services, Colorado fentanyl crisis, Boulder drug intervention"
+        geoRegion="US-CO"
+        geoPlacename="Colorado"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Denver" state="CO" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Colorado", url: "https://freedominterventions.com/colorado" },
+        ]}
+      />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Colorado", href: "/colorado" },
+      ]} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -142,6 +168,8 @@ const Colorado = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Colorado" locationType="state" />
 
       <Footer />
     </div>

@@ -3,11 +3,36 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Ohio = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Ohio Addiction Intervention Services | Freedom Interventions"
+        description="Ohio has been devastated by the opioid epidemic. Professional interventionists help families find recovery pathways throughout the state."
+        canonical="https://freedominterventions.com/ohio"
+        keywords="Ohio addiction intervention, Columbus intervention services, Cleveland drug intervention, Ohio opioid crisis"
+        geoRegion="US-OH"
+        geoPlacename="Ohio"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Columbus" state="OH" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Ohio", url: "https://freedominterventions.com/ohio" },
+        ]}
+      />
       <Navbar />
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Ohio", href: "/ohio" },
+      ]} />
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -27,6 +52,7 @@ const Ohio = () => {
           <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
         </div>
       </section>
+      <LocationLinks currentLocation="Ohio" locationType="state" />
       <Footer />
     </div>
   );

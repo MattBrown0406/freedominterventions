@@ -1,20 +1,41 @@
-import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, CheckCircle, AlertTriangle, Users, Heart, Shield, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import nevadaBanner from "@/assets/nevada-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Nevada = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Nevada Addiction Intervention Services | Freedom Interventions</title>
-        <meta name="description" content="Professional intervention services for Nevada families facing addiction. Expert support for fentanyl, methamphetamine, and alcohol addiction in Las Vegas, Reno, and throughout Nevada." />
-      </Helmet>
+      <SEOHead
+        title="Nevada Addiction Intervention Services | Freedom Interventions"
+        description="Nevada contends with an acute substance use crisis with 1,352 drug overdose deaths in 2023. Expert intervention services for Las Vegas, Reno, and throughout Nevada."
+        canonical="https://freedominterventions.com/nevada"
+        keywords="Nevada addiction intervention, Las Vegas intervention services, Reno drug intervention, Nevada fentanyl crisis"
+        geoRegion="US-NV"
+        geoPlacename="Nevada"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Las Vegas" state="NV" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Nevada", url: "https://freedominterventions.com/nevada" },
+        ]}
+      />
       
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Nevada", href: "/nevada" },
+      ]} />
       
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
@@ -312,6 +333,8 @@ const Nevada = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Nevada" locationType="state" />
 
       <Footer />
     </div>

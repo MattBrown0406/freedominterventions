@@ -7,6 +7,7 @@ import washingtonBanner from "@/assets/washington-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Washington = () => {
   return (
@@ -29,6 +30,11 @@ const Washington = () => {
         ]}
       />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Washington", href: "/washington" },
+      ]} />
       
       {/* Banner Image */}
       <section className="pt-20">

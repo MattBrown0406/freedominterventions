@@ -4,11 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Phone, Calendar, AlertTriangle, Users, TrendingUp, Shield } from "lucide-react";
 import utahBanner from "@/assets/utah-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Utah = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Utah Addiction Intervention Services | Freedom Interventions"
+        description="Utah confronts a persistent substance use crisis with 606 drug overdose deaths in 2023. Professional interventionists help families navigate fentanyl and opioid addiction."
+        canonical="https://freedominterventions.com/utah"
+        keywords="Utah addiction intervention, Salt Lake City intervention services, Utah fentanyl crisis, Provo drug intervention"
+        geoRegion="US-UT"
+        geoPlacename="Utah"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Salt Lake City" state="UT" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Utah", url: "https://freedominterventions.com/utah" },
+        ]}
+      />
       <Navbar />
+      
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "Utah", href: "/utah" },
+      ]} />
       
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center">
@@ -197,6 +223,8 @@ const Utah = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Utah" locationType="state" />
 
       <Footer />
     </div>

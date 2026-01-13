@@ -3,11 +3,36 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const NewYork = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="New York Addiction Intervention Services | Freedom Interventions"
+        description="New York faces severe opioid and fentanyl challenges. Professional interventionists help families navigate addiction and find recovery."
+        canonical="https://freedominterventions.com/new-york"
+        keywords="New York addiction intervention, NYC intervention services, New York opioid crisis, Long Island drug intervention"
+        geoRegion="US-NY"
+        geoPlacename="New York"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="New York" state="NY" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "New York", url: "https://freedominterventions.com/new-york" },
+        ]}
+      />
       <Navbar />
+      <BreadcrumbNav items={[
+        { name: "Service Areas", href: "/service-areas" },
+        { name: "New York", href: "/new-york" },
+      ]} />
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -28,6 +53,7 @@ const NewYork = () => {
           <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
         </div>
       </section>
+      <LocationLinks currentLocation="New York" locationType="state" />
       <Footer />
     </div>
   );
