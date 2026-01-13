@@ -4,10 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, Target, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import washingtonBanner from "@/assets/washington-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const Washington = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Washington State Addiction Intervention Services | Freedom Interventions"
+        description="Washington State grapples with a severe addiction epidemic, recording 3,600 drug overdose deaths. Professional interventionists help families navigate fentanyl and meth addiction."
+        canonical="https://freedominterventions.com/washington"
+        keywords="Washington addiction intervention, Seattle intervention services, Washington fentanyl crisis, Spokane drug intervention"
+        geoRegion="US-WA"
+        geoPlacename="Washington"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Seattle" state="WA" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Washington", url: "https://freedominterventions.com/washington" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}
@@ -237,6 +257,8 @@ const Washington = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Washington" locationType="state" />
 
       <Footer />
     </div>

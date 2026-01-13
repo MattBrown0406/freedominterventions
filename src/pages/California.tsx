@@ -4,10 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import californiaBanner from "@/assets/california-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const California = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="California Addiction Intervention Services | Freedom Interventions"
+        description="California faces the nation's most severe addiction crisis with over 9,000 overdose deaths annually. Professional interventionists provide families with structured, compassionate strategies."
+        canonical="https://freedominterventions.com/california"
+        keywords="California addiction intervention, Los Angeles intervention services, San Francisco drug intervention, California fentanyl crisis"
+        geoRegion="US-CA"
+        geoPlacename="California"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Los Angeles" state="CA" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "California", url: "https://freedominterventions.com/california" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}
@@ -231,6 +251,8 @@ const California = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="California" locationType="state" />
 
       <Footer />
     </div>

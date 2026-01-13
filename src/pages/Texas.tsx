@@ -4,10 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import texasBanner from "@/assets/texas-crisis-banner.jpg";
+import SEOHead from "@/components/SEOHead";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
 
 const Texas = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Texas Addiction Intervention Services | Freedom Interventions"
+        description="Texas faces an unprecedented addiction crisis with over 5,800 overdose deaths in 2023. Professional interventionists help families navigate fentanyl, methamphetamine, and alcohol addiction."
+        canonical="https://freedominterventions.com/texas"
+        keywords="Texas addiction intervention, Dallas intervention services, Houston drug intervention, Austin family intervention, Texas fentanyl crisis"
+        geoRegion="US-TX"
+        geoPlacename="Texas"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Dallas" state="TX" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Texas", url: "https://freedominterventions.com/texas" },
+        ]}
+      />
       <Navbar />
       
       {/* Banner Image */}
@@ -240,6 +260,8 @@ const Texas = () => {
           </div>
         </div>
       </section>
+
+      <LocationLinks currentLocation="Texas" locationType="state" />
 
       <Footer />
     </div>
