@@ -24,6 +24,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import SubstanceGuide from "./pages/SubstanceGuide";
 import InterventionToolkit from "./pages/InterventionToolkit";
 import InterventionFAQPage from "./pages/InterventionFAQPage";
+import ServiceAreas from "./pages/ServiceAreas";
 import TawkToChat from "./components/TawkToChat";
 
 // US States
@@ -152,6 +153,7 @@ const App = () => (
           <Route path="/substance-guide" element={<SubstanceGuide />} />
           <Route path="/intervention-toolkit" element={<InterventionToolkit />} />
           <Route path="/intervention-faq" element={<InterventionFAQPage />} />
+          <Route path="/service-areas" element={<ServiceAreas />} />
           
           {/* US States */}
           <Route path="/alabama" element={<Alabama />} />
