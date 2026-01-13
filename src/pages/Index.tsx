@@ -4,6 +4,8 @@ import EmpathySection from "@/components/EmpathySection";
 import Services from "@/components/Services";
 import SignsSection from "@/components/SignsSection";
 import TestimonialHighlight from "@/components/TestimonialHighlight";
+import ProcessOverview from "@/components/ProcessOverview";
+import UrgencyStats from "@/components/UrgencyStats";
 import AssessmentBanner from "@/components/AssessmentBanner";
 import ResourceBanner from "@/components/ResourceBanner";
 import FAQBanner from "@/components/FAQBanner";
@@ -32,9 +34,10 @@ const Index = () => {
         <Services />
         <SignsSection />
         <TestimonialHighlight />
+        <ProcessOverview />
+        <UrgencyStats />
         <AssessmentBanner />
         <ResourceBanner />
-        <FAQBanner />
         <ToolkitBanner />
         <About />
         <BookingCalendar />
