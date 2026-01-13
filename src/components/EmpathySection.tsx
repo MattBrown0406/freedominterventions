@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
+import { Heart, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const EmpathySection = () => {
@@ -41,9 +40,10 @@ const EmpathySection = () => {
 
           {/* CTA */}
           <Button asChild size="lg" className="font-semibold">
-            <Link to="/contact">
+            <a href="tel:+15038362136">
+              <Phone className="h-4 w-4" />
               Let's Talk — Free & Confidential
-            </Link>
+            </a>
           </Button>
 
           <p className="text-sm text-muted-foreground mt-4">
