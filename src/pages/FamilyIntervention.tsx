@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import familyBanner from "@/assets/family-intervention-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { BreadcrumbSchema, FAQSchema, OrganizationSchema, ServiceSchema } from "@/components/StructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const FamilyIntervention = () => {
   const faqs = [
@@ -53,10 +54,11 @@ const FamilyIntervention = () => {
       
       {/* Banner Image */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
-        <img 
+        <OptimizedImage 
           src={familyBanner} 
           alt="Family holding hands in unity during addiction intervention support" 
-          className="w-full h-full object-cover"
+          className="w-full h-full"
+          priority={true}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>
