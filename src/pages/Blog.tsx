@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 
 const Blog = () => {
@@ -42,6 +42,12 @@ const Blog = () => {
         keywords="addiction intervention blog, family addiction resources, recovery articles, substance abuse help, intervention guides"
       />
       <OrganizationSchema />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com/" },
+          { name: "Blog", url: "https://freedominterventions.com/blog" },
+        ]}
+      />
       
       <Navbar />
       
