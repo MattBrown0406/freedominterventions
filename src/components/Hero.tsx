@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
-import OptimizedImage from "@/components/OptimizedImage";
 
 const Hero = () => {
   return (
@@ -20,11 +19,12 @@ const Hero = () => {
             className="flex justify-center animate-fade-up"
             style={{ animationDelay: "0.05s" }}
           >
-            <OptimizedImage 
+            <img 
               src={logo} 
               alt="Freedom Interventions" 
-              className="h-[7rem] md:h-[9rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg" 
-              priority={true}
+              className="h-[7rem] md:h-[9rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg object-contain" 
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
 
