@@ -76,6 +76,7 @@ export interface AssessmentFormData {
   veteranStatus: string;
   insuranceCardFrontUrl: string;
   insuranceCardBackUrl: string;
+  stateMedicaid: string;
 
   // Section 3: Comprehensive Substance Use History
   primarySubstances: string;
