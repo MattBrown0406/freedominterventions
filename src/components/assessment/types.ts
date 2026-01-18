@@ -74,6 +74,8 @@ export interface AssessmentFormData {
   ethnicity: string;
   primaryLanguage: string;
   veteranStatus: string;
+  insuranceCardFrontUrl: string;
+  insuranceCardBackUrl: string;
 
   // Section 3: Comprehensive Substance Use History
   primarySubstances: string;

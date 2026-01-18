@@ -86,6 +86,8 @@ const Assessment = () => {
     livingSituation: "",
     veteranStatus: "",
     primaryLanguage: "",
+    insuranceCardFrontUrl: "",
+    insuranceCardBackUrl: "",
 
     // Section 3: Substance History
     primarySubstances: "",
@@ -457,6 +459,8 @@ const Assessment = () => {
         treatment_preferences: formData.treatmentPreferences || null,
         geographic_preferences: formData.geographicPreferences || null,
         insurance_information: formData.insuranceInformation || null,
+        insurance_card_front_url: formData.insuranceCardFrontUrl || null,
+        insurance_card_back_url: formData.insuranceCardBackUrl || null,
         budget_for_treatment: formData.budgetForTreatment || null,
         urgency_level: formData.urgencyLevel || null,
         immediate_safety_concerns: formData.immediateSafetyConcerns || null,
