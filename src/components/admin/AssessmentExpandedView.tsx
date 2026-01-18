@@ -1,6 +1,9 @@
+import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, User, Pill, Brain, Heart, Home, Users, Scale, Target, Shield } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, User, Pill, Brain, Heart, Home, Users, Scale, Target, Shield, CreditCard, ExternalLink, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SubstanceEntry {
   substance: string;
@@ -119,6 +122,96 @@ const YesNoField = ({ label, value, details }: { label: string; value: string | 
       <span className="text-muted-foreground text-sm">{label}: </span>
       <span className={`text-sm ${isYes ? "text-destructive font-medium" : ""}`}>{value}</span>
       {details && <span className="text-sm text-muted-foreground"> — {details}</span>}
+    </div>
+  );
+};
+
+// Insurance Card Viewer component for admins
+const InsuranceCardViewer = ({ frontPath, backPath }: { frontPath?: string; backPath?: string }) => {
+  const [frontUrl, setFrontUrl] = useState<string | null>(null);
+  const [backUrl, setBackUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUrls = async () => {
+      setLoading(true);
+      try {
+        if (frontPath) {
+          const { data } = await supabase.storage
+            .from('insurance-cards')
+            .createSignedUrl(frontPath, 3600); // 1 hour expiry
+          if (data?.signedUrl) setFrontUrl(data.signedUrl);
+        }
+        if (backPath) {
+          const { data } = await supabase.storage
+            .from('insurance-cards')
+            .createSignedUrl(backPath, 3600);
+          if (data?.signedUrl) setBackUrl(data.signedUrl);
+        }
+      } catch (error) {
+        console.error('Error fetching insurance card URLs:', error);
+      }
+      setLoading(false);
+    };
+
+    fetchUrls();
+  }, [frontPath, backPath]);
+
+  if (!frontPath && !backPath) return null;
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span>Loading insurance cards...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-4 p-4 bg-muted/50 rounded-lg border">
+      <div className="flex items-center gap-2 mb-3">
+        <CreditCard className="h-4 w-4 text-primary" />
+        <span className="font-medium text-sm">Insurance Cards</span>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {frontUrl && (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">Front of Card</p>
+            <a href={frontUrl} target="_blank" rel="noopener noreferrer">
+              <img 
+                src={frontUrl} 
+                alt="Insurance card front" 
+                className="rounded-md border shadow-sm max-h-48 object-contain hover:opacity-90 transition-opacity cursor-pointer"
+              />
+            </a>
+            <Button variant="outline" size="sm" asChild>
+              <a href={frontUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
+                <ExternalLink className="h-3 w-3" />
+                View Full Size
+              </a>
+            </Button>
+          </div>
+        )}
+        {backUrl && (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">Back of Card</p>
+            <a href={backUrl} target="_blank" rel="noopener noreferrer">
+              <img 
+                src={backUrl} 
+                alt="Insurance card back" 
+                className="rounded-md border shadow-sm max-h-48 object-contain hover:opacity-90 transition-opacity cursor-pointer"
+              />
+            </a>
+            <Button variant="outline" size="sm" asChild>
+              <a href={backUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
+                <ExternalLink className="h-3 w-3" />
+                View Full Size
+              </a>
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -585,6 +678,14 @@ const AssessmentExpandedView = ({ assessment }: AssessmentExpandedViewProps) => 
           <Field label="Geographic Preferences" value={assessment.geographic_preferences} />
           <Field label="Insurance Information" value={assessment.insurance_information} />
         </div>
+
+        {/* Insurance Card Images */}
+        {(assessment.insurance_card_front_url || assessment.insurance_card_back_url) && (
+          <InsuranceCardViewer
+            frontPath={assessment.insurance_card_front_url}
+            backPath={assessment.insurance_card_back_url}
+          />
+        )}
         
         <Field label="Best Approach" value={assessment.best_approach} />
         <Field label="Potential Objections" value={assessment.potential_objections} />

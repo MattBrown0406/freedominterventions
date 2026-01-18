@@ -108,6 +108,8 @@ serve(async (req) => {
       living_situation: body.living_situation || null,
       veteran_status: body.veteran_status || null,
       primary_language: body.primary_language || null,
+      insurance_card_front_url: body.insurance_card_front_url || null,
+      insurance_card_back_url: body.insurance_card_back_url || null,
       primary_substances: body.primary_substances || null,
       substances_used: body.substances_used || null,
       polysubstance_use: body.polysubstance_use || null,

@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { AssessmentFormData } from "../types";
+import InsuranceCardUpload from "../InsuranceCardUpload";
 
 interface DemographicsSectionProps {
   formData: AssessmentFormData;
@@ -245,6 +246,15 @@ const DemographicsSection = ({ formData, onInputChange }: DemographicsSectionPro
               />
             </div>
           </div>
+        </div>
+
+        {/* Insurance Card Upload */}
+        <div className="pt-4 border-t">
+          <InsuranceCardUpload
+            frontUrl={formData.insuranceCardFrontUrl}
+            backUrl={formData.insuranceCardBackUrl}
+            onUpload={onInputChange}
+          />
         </div>
       </CardContent>
     </Card>

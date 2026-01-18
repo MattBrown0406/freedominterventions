@@ -187,6 +187,8 @@ export type Database = {
           impulse_control_issues: string | null
           infectious_disease_details: string | null
           infectious_diseases: string | null
+          insurance_card_back_url: string | null
+          insurance_card_front_url: string | null
           insurance_information: string | null
           intervention_barriers: string | null
           intervention_type_preference: string | null
@@ -394,6 +396,8 @@ export type Database = {
           impulse_control_issues?: string | null
           infectious_disease_details?: string | null
           infectious_diseases?: string | null
+          insurance_card_back_url?: string | null
+          insurance_card_front_url?: string | null
           insurance_information?: string | null
           intervention_barriers?: string | null
           intervention_type_preference?: string | null
@@ -601,6 +605,8 @@ export type Database = {
           impulse_control_issues?: string | null
           infectious_disease_details?: string | null
           infectious_diseases?: string | null
+          insurance_card_back_url?: string | null
+          insurance_card_front_url?: string | null
           insurance_information?: string | null
           intervention_barriers?: string | null
           intervention_type_preference?: string | null
