@@ -340,7 +340,10 @@ const AdminDashboard = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => generateAssessmentPdf(assessment as any)}
+                      onClick={async () => {
+                        toast({ title: "Generating PDF...", description: "Please wait while insurance card images are being fetched." });
+                        await generateAssessmentPdf(assessment as any);
+                      }}
                     >
                       <Download className="w-4 h-4 mr-1" /> Download PDF
                     </Button>

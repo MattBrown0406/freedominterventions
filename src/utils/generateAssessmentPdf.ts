@@ -1,5 +1,46 @@
 import jsPDF from "jspdf";
 import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+
+// Helper to fetch image and convert to base64
+const fetchImageAsBase64 = async (url: string): Promise<string | null> => {
+  try {
+    // Extract the file path from the full URL
+    const urlObj = new URL(url);
+    const pathMatch = urlObj.pathname.match(/\/storage\/v1\/object\/(?:public|sign)\/insurance-cards\/(.+)/);
+    
+    if (!pathMatch) {
+      console.error("Could not parse storage path from URL:", url);
+      return null;
+    }
+    
+    const filePath = decodeURIComponent(pathMatch[1]);
+    
+    // Download the file from Supabase storage
+    const { data, error } = await supabase.storage
+      .from('insurance-cards')
+      .download(filePath);
+    
+    if (error || !data) {
+      console.error("Error downloading insurance card:", error);
+      return null;
+    }
+    
+    // Convert blob to base64
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        resolve(base64);
+      };
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(data);
+    });
+  } catch (err) {
+    console.error("Error fetching image:", err);
+    return null;
+  }
+};
 
 interface SubstanceEntry {
   substance: string;
@@ -294,7 +335,7 @@ const DSM_CRITERIA_LABELS: Record<string, string> = {
   "Has your loved one experienced legal problems as a result of their substance use?": "Legal problems",
 };
 
-export const generateAssessmentPdf = (assessment: Assessment): void => {
+export const generateAssessmentPdf = async (assessment: Assessment): Promise<void> => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const margin = 15;
@@ -918,6 +959,100 @@ export const generateAssessmentPdf = (assessment: Assessment): void => {
   yPos += 6;
   doc.setFont("helvetica", "italic");
   doc.text(assessment.family_signature || "[Not provided]", margin + 5, yPos);
+
+  // ========== INSURANCE CARD APPENDIX ==========
+  if (assessment.insurance_card_front_url || assessment.insurance_card_back_url) {
+    doc.addPage();
+    yPos = 15;
+    
+    // Appendix header
+    doc.setFillColor(30, 41, 59);
+    doc.rect(0, 0, pageWidth, 25, "F");
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(255, 255, 255);
+    doc.text("APPENDIX: Insurance Card Images", pageWidth / 2, 16, { align: "center" });
+    
+    yPos = 35;
+    
+    // Fetch and add front card
+    if (assessment.insurance_card_front_url) {
+      const frontBase64 = await fetchImageAsBase64(assessment.insurance_card_front_url);
+      if (frontBase64) {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(51, 51, 51);
+        doc.text("Insurance Card - FRONT", margin, yPos);
+        yPos += 5;
+        
+        try {
+          // Add the image - standard insurance card is roughly 3.375" x 2.125" (credit card size)
+          // Scale to fit page width while maintaining aspect ratio
+          const imgWidth = contentWidth;
+          const imgHeight = imgWidth * 0.63; // Approximate aspect ratio of insurance card
+          doc.addImage(frontBase64, 'JPEG', margin, yPos, imgWidth, imgHeight);
+          yPos += imgHeight + 10;
+        } catch (imgError) {
+          console.error("Error adding front card image:", imgError);
+          doc.setFontSize(9);
+          doc.setTextColor(150, 150, 150);
+          doc.text("[Image could not be loaded]", margin, yPos);
+          yPos += 10;
+        }
+      } else {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(51, 51, 51);
+        doc.text("Insurance Card - FRONT", margin, yPos);
+        yPos += 5;
+        doc.setFontSize(9);
+        doc.setTextColor(150, 150, 150);
+        doc.text("[Image could not be retrieved]", margin, yPos);
+        yPos += 10;
+      }
+    }
+    
+    // Fetch and add back card
+    if (assessment.insurance_card_back_url) {
+      // Check if we need a new page
+      if (yPos > 180) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      const backBase64 = await fetchImageAsBase64(assessment.insurance_card_back_url);
+      if (backBase64) {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(51, 51, 51);
+        doc.text("Insurance Card - BACK", margin, yPos);
+        yPos += 5;
+        
+        try {
+          const imgWidth = contentWidth;
+          const imgHeight = imgWidth * 0.63;
+          doc.addImage(backBase64, 'JPEG', margin, yPos, imgWidth, imgHeight);
+          yPos += imgHeight + 10;
+        } catch (imgError) {
+          console.error("Error adding back card image:", imgError);
+          doc.setFontSize(9);
+          doc.setTextColor(150, 150, 150);
+          doc.text("[Image could not be loaded]", margin, yPos);
+          yPos += 10;
+        }
+      } else {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(51, 51, 51);
+        doc.text("Insurance Card - BACK", margin, yPos);
+        yPos += 5;
+        doc.setFontSize(9);
+        doc.setTextColor(150, 150, 150);
+        doc.text("[Image could not be retrieved]", margin, yPos);
+        yPos += 10;
+      }
+    }
+  }
 
   // ========== FOOTER ON ALL PAGES ==========
   const totalPages = doc.getNumberOfPages();
