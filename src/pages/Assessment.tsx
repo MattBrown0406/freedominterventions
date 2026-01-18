@@ -748,6 +748,33 @@ const Assessment = () => {
                       backUrl={formData.insuranceCardBackUrl}
                       onUpload={handleInputChange}
                     />
+
+                    {/* Treatment Budget */}
+                    <div className="mt-6 space-y-3">
+                      <div>
+                        <Label className="text-base font-semibold">Treatment Budget (If Uninsured or Underinsured)</Label>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          The out-of-pocket cost of treatment centers can be significant. If your loved one doesn't have 
+                          health insurance or has limited coverage, please indicate what range of out-of-pocket expense 
+                          best represents your budget. This will ensure I'm recommending treatment options that are both 
+                          therapeutically appropriate for your loved one and financially appropriate for your family.
+                        </p>
+                      </div>
+                      <Select value={formData.budgetForTreatment} onValueChange={(v) => handleInputChange("budgetForTreatment", v)}>
+                        <SelectTrigger className="w-full md:w-[300px]">
+                          <SelectValue placeholder="Select budget range" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="10000-15000">$10,000 - $15,000</SelectItem>
+                          <SelectItem value="15000-20000">$15,000 - $20,000</SelectItem>
+                          <SelectItem value="20000-30000">$20,000 - $30,000</SelectItem>
+                          <SelectItem value="30000-40000">$30,000 - $40,000</SelectItem>
+                          <SelectItem value="40000-50000">$40,000 - $50,000</SelectItem>
+                          <SelectItem value="50000+">$50,000+ (typical for 90-day programs)</SelectItem>
+                          <SelectItem value="not-applicable">Not Applicable - Have Insurance</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </CardContent>
                 </Card>
               )}
