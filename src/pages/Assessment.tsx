@@ -501,8 +501,15 @@ const Assessment = () => {
     "Consequences & Planning"
   ];
 
-  const nextSection = () => setCurrentSection(prev => Math.min(prev + 1, totalSections));
-  const prevSection = () => setCurrentSection(prev => Math.max(prev - 1, 1));
+  const nextSection = () => {
+    setCurrentSection(prev => Math.min(prev + 1, totalSections));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const prevSection = () => {
+    setCurrentSection(prev => Math.max(prev - 1, 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
