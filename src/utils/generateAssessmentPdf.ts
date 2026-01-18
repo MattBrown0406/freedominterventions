@@ -68,6 +68,9 @@ interface Assessment {
   veteran_status: string | null;
   primary_language: string | null;
   ethnicity: string | null;
+  insurance_card_front_url: string | null;
+  insurance_card_back_url: string | null;
+  state_medicaid: string | null;
   
   // Substance History
   primary_substances: string | null;
@@ -471,6 +474,33 @@ export const generateAssessmentPdf = (assessment: Assessment): void => {
   addField("Veteran Status", assessment.veteran_status);
   addField("Primary Language", assessment.primary_language);
   addField("Ethnicity", assessment.ethnicity);
+  
+  // Insurance & Budget Information
+  addDivider();
+  addSubHeader("Insurance & Treatment Budget");
+  addYesNoField("State Medicaid", assessment.state_medicaid);
+  if (assessment.insurance_card_front_url) {
+    addField("Insurance Card (Front)", "Uploaded - see attached");
+  }
+  if (assessment.insurance_card_back_url) {
+    addField("Insurance Card (Back)", "Uploaded - see attached");
+  }
+  addField("Insurance Information", assessment.insurance_information);
+  
+  // Format budget for display
+  const budgetLabels: Record<string, string> = {
+    "10000-15000": "$10,000 - $15,000",
+    "15000-20000": "$15,000 - $20,000",
+    "20000-30000": "$20,000 - $30,000",
+    "30000-40000": "$30,000 - $40,000",
+    "40000-50000": "$40,000 - $50,000",
+    "50000+": "$50,000+ (typical for 90-day programs)",
+    "not-applicable": "Not Applicable - Has Insurance"
+  };
+  const budgetDisplay = assessment.budget_for_treatment 
+    ? budgetLabels[assessment.budget_for_treatment] || assessment.budget_for_treatment
+    : null;
+  addField("Treatment Budget", budgetDisplay);
 
   // ========== SECTION 3: SUBSTANCE USE HISTORY ==========
   addSectionHeader("Substance Use History", [220, 38, 38]);
