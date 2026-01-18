@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-react";
 import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION, PHYSICAL_WITHDRAWAL_SYMPTOMS, PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS } from "@/components/assessment/types";
+import InsuranceCardUpload from "@/components/assessment/InsuranceCardUpload";
 
 interface TreatmentEntry {
   programName: string;
@@ -739,6 +740,14 @@ const Assessment = () => {
                         <div className="flex items-center space-x-2"><RadioGroupItem value="active" id="vet-active" /><Label htmlFor="vet-active" className="font-normal">Active Duty</Label></div>
                       </RadioGroup>
                     </div>
+
+                    {/* Insurance Card Upload */}
+                    <Separator className="my-6" />
+                    <InsuranceCardUpload
+                      frontUrl={formData.insuranceCardFrontUrl}
+                      backUrl={formData.insuranceCardBackUrl}
+                      onUpload={handleInputChange}
+                    />
                   </CardContent>
                 </Card>
               )}
