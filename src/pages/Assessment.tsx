@@ -89,6 +89,7 @@ const Assessment = () => {
     primaryLanguage: "",
     insuranceCardFrontUrl: "",
     insuranceCardBackUrl: "",
+    stateMedicaid: "",
 
     // Section 3: Substance History
     primarySubstances: "",
@@ -748,6 +749,18 @@ const Assessment = () => {
                       backUrl={formData.insuranceCardBackUrl}
                       onUpload={handleInputChange}
                     />
+
+                    {/* State Medicaid Checkbox */}
+                    <div className="flex items-center space-x-2 mt-4">
+                      <Checkbox
+                        id="stateMedicaid"
+                        checked={formData.stateMedicaid === "yes"}
+                        onCheckedChange={(checked) => handleInputChange("stateMedicaid", checked ? "yes" : "no")}
+                      />
+                      <Label htmlFor="stateMedicaid" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Individual has insurance funded by State Medicaid
+                      </Label>
+                    </div>
 
                     {/* Treatment Budget */}
                     <div className="mt-6 space-y-3">
