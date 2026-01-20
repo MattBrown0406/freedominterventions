@@ -916,6 +916,7 @@ export type Database = {
     }
     Functions: {
       check_assessment_access_rate: { Args: never; Returns: boolean }
+      check_bookings_access_rate: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
