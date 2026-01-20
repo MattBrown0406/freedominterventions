@@ -845,29 +845,47 @@ export type Database = {
         Row: {
           approved: boolean | null
           city: string
+          company: string | null
           created_at: string
           first_name: string
           id: string
           last_initial: string
+          last_name: string | null
+          profession: string | null
+          rating: number
           review_text: string
+          reviewer_type: string
+          state: string | null
         }
         Insert: {
           approved?: boolean | null
           city: string
+          company?: string | null
           created_at?: string
           first_name: string
           id?: string
           last_initial: string
+          last_name?: string | null
+          profession?: string | null
+          rating?: number
           review_text: string
+          reviewer_type?: string
+          state?: string | null
         }
         Update: {
           approved?: boolean | null
           city?: string
+          company?: string | null
           created_at?: string
           first_name?: string
           id?: string
           last_initial?: string
+          last_name?: string | null
+          profession?: string | null
+          rating?: number
           review_text?: string
+          reviewer_type?: string
+          state?: string | null
         }
         Relationships: []
       }
