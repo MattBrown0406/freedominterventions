@@ -259,11 +259,11 @@ serve(async (req) => {
 
     console.log(`Assessment saved successfully with ID: ${data.id}`);
 
-    // Send email notification via Resend API
+    // Send email notification via SendGrid API
     try {
-      const resendApiKey = Deno.env.get("RESEND_API_KEY");
-      if (resendApiKey) {
-        console.log("Sending assessment notification via Resend");
+      const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
+      if (sendgridApiKey) {
+        console.log("Sending assessment notification via SendGrid");
 
         // Parse withdrawal symptoms if present
         let withdrawalInfo = "None reported";
@@ -408,29 +408,30 @@ serve(async (req) => {
           </html>
         `;
 
-        const emailResponse = await fetch("https://api.resend.com/emails", {
+        const emailSubject = `${isHighUrgency ? "⚠️ URGENT: " : ""}New Assessment: ${assessmentData.loved_one_name} (${assessmentData.severity_level || "Unassessed"})`;
+
+        const emailResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${resendApiKey}`,
+            Authorization: `Bearer ${sendgridApiKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Freedom Interventions <notifications@freedominterventions.com>",
-            to: ["matt@freedominterventions.com"],
-            subject: `${isHighUrgency ? "⚠️ URGENT: " : ""}New Assessment: ${assessmentData.loved_one_name} (${assessmentData.severity_level || "Unassessed"})`,
-            html: emailHtml,
+            personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
+            from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
+            subject: emailSubject,
+            content: [{ type: "text/html", value: emailHtml }],
           }),
         });
 
         if (emailResponse.ok) {
-          const emailResult = await emailResponse.json();
-          console.log("Email sent successfully via Resend:", emailResult);
+          console.log("Email sent successfully via SendGrid");
         } else {
           const errorText = await emailResponse.text();
-          console.error("Resend API error:", errorText);
+          console.error("SendGrid API error:", errorText);
         }
       } else {
-        console.log("RESEND_API_KEY not configured, skipping email notification");
+        console.log("SENDGRID_API_KEY not configured, skipping email notification");
       }
     } catch (emailError) {
       console.error("Email notification failed:", emailError);
