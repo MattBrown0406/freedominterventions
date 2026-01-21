@@ -364,3 +364,155 @@ export const AggregateRatingSchema = ({
     </Helmet>
   );
 };
+
+// Speakable Schema for AI/Voice assistants
+export const SpeakableSchema = ({
+  name,
+  description,
+  url,
+  speakableSelectors,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  speakableSelectors?: string[];
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: name,
+    description: description,
+    url: url,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: speakableSelectors || ["h1", "h2", ".speakable-content"],
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Freedom Interventions",
+      url: "https://freedominterventions.com",
+    },
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
+// Location FAQ Schema for state/city pages
+export const LocationFAQSchema = ({ 
+  location, 
+  locationType = "state" 
+}: { 
+  location: string; 
+  locationType?: "state" | "city" | "province";
+}) => {
+  const faqs = [
+    {
+      question: `What is a professional intervention in ${location}?`,
+      answer: `A professional intervention is a structured, compassionate conversation facilitated by a trained interventionist to help someone in ${location} struggling with addiction accept treatment. The process includes family preparation, development of an intervention strategy, facilitated conversation, and immediate treatment placement if accepted.`,
+    },
+    {
+      question: `How much does addiction intervention cost in ${location}?`,
+      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (503) 836-2136 for a confidential consultation.`,
+    },
+    {
+      question: `What is the success rate for interventions in ${location}?`,
+      answer: `Professional interventions have a 90%+ success rate in getting individuals to accept treatment when conducted properly. Key factors include proper family preparation, unified messaging, pre-arranged treatment, and professional facilitation.`,
+    },
+    {
+      question: `How quickly can an intervention be arranged in ${location}?`,
+      answer: `In crisis situations, interventions can be arranged within 24-72 hours. Standard preparation typically takes 1-2 weeks for optimal results. Freedom Interventions serves all of ${location} and can coordinate treatment placement nationwide.`,
+    },
+    {
+      question: `What types of addiction does Freedom Interventions address in ${location}?`,
+      answer: `Freedom Interventions addresses all substance use disorders including alcohol addiction, opioid and fentanyl addiction, methamphetamine addiction, cocaine addiction, prescription drug misuse, and co-occurring mental health disorders throughout ${location}.`,
+    },
+  ];
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
+// How-To Schema for intervention process
+export const HowToSchema = () => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Conduct a Professional Addiction Intervention",
+    description: "Step-by-step guide to planning and conducting a professional intervention for someone struggling with addiction.",
+    totalTime: "P14D",
+    estimatedCost: {
+      "@type": "MonetaryAmount",
+      currency: "USD",
+      value: "Varies - Free consultation available",
+    },
+    step: [
+      {
+        "@type": "HowToStep",
+        name: "Contact a Professional Interventionist",
+        text: "Call Freedom Interventions at (503) 836-2136 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
+        url: "https://freedominterventions.com/#booking",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Family Assessment and Preparation",
+        text: "Work with the interventionist to gather information, identify participating family members, and educate everyone about addiction and the intervention process.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Develop Impact Statements",
+        text: "Each family member writes a letter expressing love, specific examples of how addiction has affected them, and a request for the person to accept treatment.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Arrange Treatment in Advance",
+        text: "Research and secure a treatment placement before the intervention. The interventionist helps identify appropriate facilities and verify insurance coverage.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Establish Boundaries and Consequences",
+        text: "Family members decide what boundaries they will implement if treatment is refused. These are shared during the intervention.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Conduct the Intervention",
+        text: "The interventionist facilitates the meeting where family members share their statements. The goal is for the person to accept treatment immediately.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Transport to Treatment",
+        text: "If treatment is accepted, the person is transported directly to the treatment facility. Bags should be packed in advance.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Family Follow-Up",
+        text: "Continue working with the interventionist and engage in family recovery resources. Healing is a process for the entire family.",
+      },
+    ],
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};

@@ -16,6 +16,7 @@ interface SEOHeadProps {
   modifiedTime?: string;
   twitterCreator?: string;
   section?: string;
+  aiDescription?: string; // Extended description for AI crawlers
 }
 
 const SEOHead = ({
@@ -34,6 +35,7 @@ const SEOHead = ({
   modifiedTime,
   twitterCreator = "@freedominterventions",
   section,
+  aiDescription,
 }: SEOHeadProps) => {
   const fullTitle = title.includes("Freedom Interventions")
     ? title
@@ -43,6 +45,9 @@ const SEOHead = ({
   const truncatedDescription = description.length > 160 
     ? description.substring(0, 157) + "..."
     : description;
+
+  // Extended description for AI - can be longer and more detailed
+  const extendedAiDescription = aiDescription || `${description} Freedom Interventions provides professional addiction intervention services with over 20 years of experience. Call (503) 836-2136 for a free consultation. Serving all 50 US states and Canadian provinces 24/7.`;
 
   // Generate image alt text if not provided
   const ogImageAlt = imageAlt || `${title} - Freedom Interventions addiction intervention services`;
@@ -57,6 +62,14 @@ const SEOHead = ({
       {canonical && <link rel="canonical" href={canonical} />}
       {noindex && <meta name="robots" content="noindex, nofollow" />}
       {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+
+      {/* AI/LLM Extended Description - not truncated */}
+      <meta name="ai:description" content={extendedAiDescription} />
+      <meta name="llm:description" content={extendedAiDescription} />
+      
+      {/* AI Context Links */}
+      <link rel="ai-context" href="https://freedominterventions.com/llms.txt" />
+      <link rel="ai-context-full" href="https://freedominterventions.com/llms-full.txt" />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
