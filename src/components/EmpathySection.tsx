@@ -1,5 +1,6 @@
 import { Heart, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const EmpathySection = () => {
   return (
@@ -40,10 +41,10 @@ const EmpathySection = () => {
 
           {/* CTA */}
           <Button asChild size="lg" className="font-semibold">
-            <a href="tel:+15418386009">
+            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: 'empathy_section' }}>
               <Phone className="h-4 w-4" />
               Let's Talk — Free & Confidential
-            </a>
+            </TrackedPhoneLink>
           </Button>
 
           <p className="text-sm text-muted-foreground mt-4">
