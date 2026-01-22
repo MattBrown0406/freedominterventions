@@ -8,11 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image, Download } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image, Download, MessageSquare } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import BlogImageManager from "@/components/admin/BlogImageManager";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
+import TestimonialManager from "@/components/admin/TestimonialManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -253,6 +254,10 @@ const AdminDashboard = () => {
               <FileText className="w-4 h-4" />
               Assessments
             </TabsTrigger>
+            <TabsTrigger value="testimonials" className="gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Testimonials
+            </TabsTrigger>
             <TabsTrigger value="blog-images" className="gap-2">
               <Image className="w-4 h-4" />
               Blog Images
@@ -371,6 +376,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="blog-images">
               <BlogImageManager />
+            </TabsContent>
+
+            <TabsContent value="testimonials">
+              <TestimonialManager />
             </TabsContent>
           </Tabs>
       </main>
