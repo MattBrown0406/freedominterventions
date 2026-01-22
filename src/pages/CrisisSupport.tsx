@@ -57,10 +57,10 @@ const CrisisSupport = () => {
               Professional interventionists specialize in guiding families through addiction crises like jail stays, hospital visits, emergencies, and self-harm risks, turning chaos into pathways for recovery.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+15038362136">
+              <a href="tel:+15418386009">
                 <Button variant="default" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call Now: (503) 836-2136
+                  Call Now: (541) 838-6009
                 </Button>
               </a>
               <Link to="/#booking">
@@ -240,10 +240,10 @@ const CrisisSupport = () => {
                 Don't wait for another crisis. Contact us today to discuss how we can help your family navigate this difficult time and find a path to recovery.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="tel:+15038362136">
+                <a href="tel:+15418386009">
                   <Button variant="default" size="lg" className="w-full sm:w-auto">
                     <Phone className="w-5 h-5 mr-2" />
-                    Call (503) 836-2136
+                    Call (541) 838-6009
                   </Button>
                 </a>
                 <Link to="/#booking">

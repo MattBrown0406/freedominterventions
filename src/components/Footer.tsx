@@ -37,9 +37,9 @@ const Footer = () => {
               Guiding families toward hope and recovery with compassionate, professional intervention services.
             </p>
             <div className="space-y-2 pt-2">
-              <a href="tel:+15038362136" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base">
+              <a href="tel:+15418386009" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base">
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                <span>(503) 836-2136</span>
+                <span>(541) 838-6009</span>
               </a>
               <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base min-w-0">
                 <Mail className="w-4 h-4 flex-shrink-0" />

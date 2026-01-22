@@ -64,9 +64,9 @@ const Idaho = () => {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg">
-              <a href="tel:+15038362136">
+              <a href="tel:+15418386009">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (503) 836-2136
+                Call (541) 838-6009
               </a>
             </Button>
           </div>
@@ -260,7 +260,7 @@ const Idaho = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:+15038362136">
+              <a href="tel:+15418386009">
                 <Phone className="mr-2 h-5 w-5" />
                 Call Now
               </a>
