@@ -215,9 +215,9 @@ const Utah = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:+15038362136">
+              <a href="tel:+15418386009">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (503) 836-2136
+                Call (541) 838-6009
               </a>
             </Button>
           </div>

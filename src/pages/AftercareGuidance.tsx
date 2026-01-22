@@ -163,9 +163,9 @@ const AftercareGuidance = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="gap-2">
-                <a href="tel:+15038362136">
+                <a href="tel:+15418386009">
                   <Phone className="w-5 h-5" />
-                  Call (503) 836-2136
+                  Call (541) 838-6009
                 </a>
               </Button>
             </div>

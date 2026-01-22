@@ -40,7 +40,7 @@ const EmpathySection = () => {
 
           {/* CTA */}
           <Button asChild size="lg" className="font-semibold">
-            <a href="tel:+15038362136">
+            <a href="tel:+15418386009">
               <Phone className="h-4 w-4" />
               Let's Talk — Free & Confidential
             </a>

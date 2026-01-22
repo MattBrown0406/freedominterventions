@@ -168,7 +168,7 @@ const PartyWreckersPodcast = () => {
                 <p className="text-muted-foreground mb-6">
                   If you need help with a loved one struggling with addiction, we're here for you.
                 </p>
-                <a href="tel:+15038362136">
+                <a href="tel:+15418386009">
                   <Button variant="hero" size="lg">
                     <Phone className="w-4 h-4 mr-2" />
                     Call Us Now

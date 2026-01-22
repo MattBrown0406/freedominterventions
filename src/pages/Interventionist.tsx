@@ -67,7 +67,7 @@ const Interventionist = () => {
                       Schedule a Consultation
                     </Button>
                   </a>
-                  <a href="tel:+15038362136">
+                  <a href="tel:+15418386009">
                     <Button variant="outline" size="lg" className="w-full">
                       <Phone className="mr-2 h-4 w-4" />
                       Call Now
