@@ -13,7 +13,7 @@ export const OrganizationSchema = () => {
     image: "https://freedominterventions.com/favicon.jpeg",
     description:
       "Professional addiction intervention services helping families guide loved ones toward recovery. Over 20 years of experience with 1000+ families helped.",
-    telephone: "+1-503-836-2136",
+    telephone: "+1-541-838-6009",
     email: "matt@freedominterventions.com",
     foundingDate: "2004",
     founder: {
@@ -92,7 +92,7 @@ export const LocalBusinessSchema = ({ location, state }: { location: string; sta
     "@type": "LocalBusiness",
     name: `Freedom Interventions - ${location}`,
     description: `Professional addiction intervention services in ${location}, ${state}. Helping families guide loved ones toward recovery.`,
-    telephone: "+1-503-836-2136",
+    telephone: "+1-541-838-6009",
     email: "matt@freedominterventions.com",
     url: "https://freedominterventions.com",
     image: "https://freedominterventions.com/favicon.jpeg",
@@ -311,7 +311,7 @@ export const ServiceSchema = ({
       "@type": "ProfessionalService",
       name: "Freedom Interventions",
       url: "https://freedominterventions.com",
-      telephone: "+1-503-836-2136",
+      telephone: "+1-541-838-6009",
       email: "matt@freedominterventions.com",
     },
     areaServed: [
@@ -348,7 +348,7 @@ export const AggregateRatingSchema = ({
     "@type": "ProfessionalService",
     name: "Freedom Interventions",
     url: "https://freedominterventions.com",
-    telephone: "+1-503-836-2136",
+    telephone: "+1-541-838-6009",
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: ratingValue,
@@ -416,7 +416,7 @@ export const LocationFAQSchema = ({
     },
     {
       question: `How much does addiction intervention cost in ${location}?`,
-      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (503) 836-2136 for a confidential consultation.`,
+      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (541) 838-6009 for a confidential consultation.`,
     },
     {
       question: `What is the success rate for interventions in ${location}?`,
@@ -469,7 +469,7 @@ export const HowToSchema = () => {
       {
         "@type": "HowToStep",
         name: "Contact a Professional Interventionist",
-        text: "Call Freedom Interventions at (503) 836-2136 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
+        text: "Call Freedom Interventions at (541) 838-6009 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
         url: "https://freedominterventions.com/#booking",
       },
       {

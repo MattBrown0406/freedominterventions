@@ -29,9 +29,9 @@ const Mississippi = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:503-836-2136">
+                <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (503) 836-2136
+                  Call (541) 838-6009
                 </a>
               </Button>
             </div>
@@ -134,9 +134,9 @@ const Mississippi = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:503-836-2136">
+              <a href="tel:541-838-6009">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (503) 836-2136
+                Call (541) 838-6009
               </a>
             </Button>
           </div>
