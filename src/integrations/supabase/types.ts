@@ -841,6 +841,51 @@ export type Database = {
         }
         Relationships: []
       }
+      call_analytics: {
+        Row: {
+          created_at: string
+          device_type: string | null
+          id: string
+          metadata: Json | null
+          page_path: string
+          page_url: string
+          phone_number: string
+          referrer: string | null
+          screen_height: number | null
+          screen_width: number | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          metadata?: Json | null
+          page_path: string
+          page_url: string
+          phone_number?: string
+          referrer?: string | null
+          screen_height?: number | null
+          screen_width?: number | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          metadata?: Json | null
+          page_path?: string
+          page_url?: string
+          phone_number?: string
+          referrer?: string | null
+          screen_height?: number | null
+          screen_width?: number | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       family_reviews: {
         Row: {
           approved: boolean | null

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.png";
+import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,12 +39,12 @@ const Navbar = () => {
                 {link.name}
               </a>
             ))}
-            <a href="tel:+15418386009">
+            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: 'navbar_desktop' }}>
               <Button variant="hero" size="default">
                 <Phone className="w-4 h-4 mr-2" />
                 Get Help Now
               </Button>
-            </a>
+            </TrackedPhoneLink>
           </div>
 
           {/* Mobile Menu Button */}
@@ -78,12 +79,12 @@ const Navbar = () => {
                 <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 w-auto" />
                 <span className="font-lobster">The Party Wreckers Podcast</span>
               </a>
-              <a href="tel:+15418386009">
+              <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: 'navbar_mobile' }}>
                 <Button variant="hero" size="default" className="mt-2">
                   <Phone className="w-4 h-4 mr-2" />
                   Get Help Now
                 </Button>
-              </a>
+              </TrackedPhoneLink>
             </div>
           </div>
         )}

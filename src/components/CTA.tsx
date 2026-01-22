@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
 import CallbackRequestDialog from "./CallbackRequestDialog";
+import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const CTA = () => {
   return (
@@ -21,7 +22,7 @@ const CTA = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="tel:+15418386009">
+            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: 'cta_section' }}>
               <Button 
                 variant="secondary" 
                 size="xl" 
@@ -30,7 +31,7 @@ const CTA = () => {
                 <Phone className="w-5 h-5" />
                 Call Now: (541) 838-6009
               </Button>
-            </a>
+            </TrackedPhoneLink>
             <CallbackRequestDialog>
               <Button 
                 variant="outline" 

@@ -1,6 +1,7 @@
 import { Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
+import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Footer = () => {
   const footerLinks = {
@@ -37,10 +38,10 @@ const Footer = () => {
               Guiding families toward hope and recovery with compassionate, professional intervention services.
             </p>
             <div className="space-y-2 pt-2">
-              <a href="tel:+15418386009" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base">
+              <TrackedPhoneLink phoneNumber="+15418386009" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base" metadata={{ location: 'footer' }}>
                 <Phone className="w-4 h-4 flex-shrink-0" />
                 <span>(541) 838-6009</span>
-              </a>
+              </TrackedPhoneLink>
               <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base min-w-0">
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">matt@freedominterventions.com</span>
