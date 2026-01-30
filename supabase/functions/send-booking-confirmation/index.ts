@@ -244,10 +244,40 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
+    // Send confirmation email to customer
     await sendEmail(
       customerEmail,
       emailSubject,
       emailHtml
+    );
+
+    // Send notification email to Matt
+    const adminNotificationHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #1e40af;">New Booking ${isReschedule ? '(Rescheduled)' : 'Received'}</h1>
+        
+        <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
+          <p><strong>Booking ID:</strong> ${bookingId}</p>
+          <p><strong>Client Name:</strong> ${customerName}</p>
+          <p><strong>Client Email:</strong> ${customerEmail}</p>
+          <p><strong>Type:</strong> ${appointmentType}</p>
+          <p><strong>Date:</strong> ${formattedDate}</p>
+          <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
+        </div>
+        
+        <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #1e40af; margin-top: 0;">Zoom Meeting</h2>
+          <p><a href="${joinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Join Zoom Meeting</a></p>
+          <p style="margin-top: 15px; font-size: 14px; color: #666;">Meeting ID: ${meetingId}</p>
+        </div>
+      </div>
+    `;
+
+    await sendEmail(
+      "matt@freedominterventions.com",
+      `New ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} Booking - ${customerName}`,
+      adminNotificationHtml
     );
 
     console.log("Email sent successfully");
