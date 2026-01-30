@@ -111,11 +111,13 @@ export const ReviewSubmissionForm = () => {
         insertData.state = state.trim();
       }
 
-      const { error } = await supabase
-        .from("family_reviews")
-        .insert(insertData);
+      // Use edge function for rate limiting and notifications
+      const { data, error } = await supabase.functions.invoke('submit-testimonial', {
+        body: insertData
+      });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
       setSubmittedReview(reviewText.trim());
       setIsSubmitted(true);
