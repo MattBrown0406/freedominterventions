@@ -15,6 +15,8 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
+import LeadMagnetPopup from "@/components/LeadMagnetPopup";
+import LeadMagnetBanner from "@/components/LeadMagnetBanner";
 
 const Index = () => {
   return (
@@ -34,6 +36,7 @@ const Index = () => {
         <Services />
         <SignsSection />
         <TestimonialHighlight />
+        <LeadMagnetBanner />
         <ProcessOverview />
         <UrgencyStats />
         <ResourceBanner />
@@ -43,6 +46,7 @@ const Index = () => {
         <CTA />
       </main>
       <Footer />
+      <LeadMagnetPopup />
     </div>
   );
 };
