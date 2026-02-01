@@ -175,9 +175,9 @@ const handler = async (req: Request): Promise<Response> => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        personalizations: [{ to: [{ email: cleanEmail, name: cleanName }] }],
+        personalizations: [{ to: [{ email: cleanEmail }] }],
         from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-        subject: "Your Intervention Planning Checklist",
+        subject: `${cleanName}, your intervention checklist is ready`,
         content: [{ type: "text/html", value: emailHtml }],
       }),
     });
