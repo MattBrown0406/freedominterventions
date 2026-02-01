@@ -130,7 +130,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <TawkToChat />
+      {/* <TawkToChat /> */}
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
