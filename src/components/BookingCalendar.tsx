@@ -175,7 +175,7 @@ export const BookingCalendar = () => {
           customerPhone: customerInfo.phone || null,
           bookingDate,
           bookingTime: selectedTime,
-          durationMinutes: 30,
+          durationMinutes: 15,
         }
       });
 
@@ -187,7 +187,7 @@ export const BookingCalendar = () => {
       toast.success("Consultation booked successfully!");
 
       // Send confirmation email with Zoom link
-      await sendBookingConfirmation(data.booking.id, 'consultation', bookingDate, selectedTime, 30);
+      await sendBookingConfirmation(data.booking.id, 'consultation', bookingDate, selectedTime, 15);
     } catch (error: any) {
       console.error('Booking error:', error);
       toast.error(error.message || "Failed to book consultation. Please try again.");
@@ -354,7 +354,7 @@ export const BookingCalendar = () => {
                       <span className="text-lg font-semibold">Free Consultation</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      A 30-minute Zoom call. Not every family needs an intervention—we'll assess your situation and explore whether coaching can equip you with a strategy to move forward on your own.
+                      A 15-minute Zoom call. Not every family needs an intervention—we'll assess your situation and explore whether coaching can equip you with a strategy to move forward on your own.
                     </p>
                     <div className="text-2xl font-bold text-primary">Free</div>
                   </button>
@@ -564,7 +564,7 @@ export const BookingCalendar = () => {
                   </div>
 
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
-                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (30 min)' : 'Coaching Session (1 hour)'}</p>
+                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Coaching Session (1 hour)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                   </div>

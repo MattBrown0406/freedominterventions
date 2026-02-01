@@ -77,7 +77,7 @@ serve(async (req) => {
         if (!date || typeof date !== 'string') {
           throw new Error('Valid date is required');
         }
-        const slots = generateTimeSlots(date);
+        const slots = await generateTimeSlots(date, supabase);
         return new Response(JSON.stringify({ slots }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -374,11 +374,28 @@ serve(async (req) => {
   }
 });
 
-function generateTimeSlots(dateStr: string): string[] {
+async function generateTimeSlots(dateStr: string, supabase: any): Promise<string[]> {
   const slots: string[] = [];
   const date = new Date(dateStr);
+  const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
   
-  for (let hour = 9; hour < 19; hour++) {
+  // Fetch availability for this day of week
+  const { data: availability, error } = await supabase
+    .from('availability_settings')
+    .select('start_time, end_time, is_available')
+    .eq('day_of_week', dayOfWeek)
+    .single();
+  
+  if (error || !availability || !availability.is_available) {
+    // No availability for this day
+    return slots;
+  }
+  
+  // Parse start and end times
+  const startHour = parseInt(availability.start_time.split(':')[0]);
+  const endHour = parseInt(availability.end_time.split(':')[0]);
+  
+  for (let hour = startHour; hour < endHour; hour++) {
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
     slots.push(timeStr);
   }
