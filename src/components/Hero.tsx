@@ -54,7 +54,7 @@ const Hero = () => {
             <a href="#booking">
               <Button variant="hero" size="xl">
                 <Calendar className="w-5 h-5" />
-                Free Consultation
+                Book a Call Now
               </Button>
             </a>
             <a href="#services">
@@ -65,20 +65,24 @@ const Hero = () => {
             </a>
           </div>
 
-          {/* Trust indicators */}
+          {/* Trust badges */}
           <div 
-            className="flex flex-wrap items-center gap-6 md:gap-10 justify-center pt-8 animate-fade-up"
+            className="flex flex-wrap items-center gap-3 justify-center pt-6 animate-fade-up"
             style={{ animationDelay: "0.5s" }}
           >
-            <div className="text-center">
-              <p className="text-2xl md:text-3xl font-serif font-semibold text-foreground">1000+</p>
-              <p className="text-sm text-muted-foreground">Families Helped</p>
-            </div>
-            <div className="w-px h-12 bg-border hidden sm:block" />
-            <div className="text-center">
-              <p className="text-2xl md:text-3xl font-serif font-semibold text-foreground">20+</p>
-              <p className="text-sm text-muted-foreground">Years of Service</p>
-            </div>
+            {[
+              { icon: "✓", label: "Certified Intervention Professional (CIP)" },
+              { icon: "✓", label: "1,000+ Families Helped" },
+              { icon: "✓", label: "20+ Years Experience" },
+            ].map((badge) => (
+              <span
+                key={badge.label}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-foreground"
+              >
+                <span className="text-primary font-bold">{badge.icon}</span>
+                {badge.label}
+              </span>
+            ))}
           </div>
         </div>
       </div>
