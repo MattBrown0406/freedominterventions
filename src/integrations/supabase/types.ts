@@ -798,6 +798,7 @@ export type Database = {
           id: string
           notes: string | null
           payment_id: string | null
+          reminder_sent: boolean
           status: string
           updated_at: string
         }
@@ -814,6 +815,7 @@ export type Database = {
           id?: string
           notes?: string | null
           payment_id?: string | null
+          reminder_sent?: boolean
           status?: string
           updated_at?: string
         }
@@ -830,6 +832,7 @@ export type Database = {
           id?: string
           notes?: string | null
           payment_id?: string | null
+          reminder_sent?: boolean
           status?: string
           updated_at?: string
         }
