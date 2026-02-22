@@ -379,25 +379,49 @@ async function generateTimeSlots(dateStr: string, supabase: any): Promise<string
   const date = new Date(dateStr);
   const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
   
-  // Fetch availability for this day of week
-  const { data: availability, error } = await supabase
+  // 1. Fetch availability for this day of week
+  const { data: availability, error: availabilityError } = await supabase
     .from('availability_settings')
     .select('start_time, end_time, is_available')
     .eq('day_of_week', dayOfWeek)
     .single();
   
-  if (error || !availability || !availability.is_available) {
-    // No availability for this day
+  if (availabilityError || !availability || !availability.is_available) {
     return slots;
   }
   
-  // Parse start and end times
+  // 2. Fetch existing bookings for this specific date
+  const { data: existingBookings, error: bookingsError } = await supabase
+    .from('bookings')
+    .select('booking_time')
+    .eq('booking_date', dateStr)
+    .eq('status', 'confirmed');
+
+  if (bookingsError) {
+    console.error('Error fetching existing bookings:', bookingsError);
+    // Continue anyway, better to show possibly double-booked slots than none
+  }
+
+  // Create a set of taken times for fast lookup (normalize to HH:MM)
+  const takenSlots = new Set(
+    (existingBookings || []).map(b => {
+      // Postgres time might come back as "10:00:00"
+      const [h, m] = b.booking_time.split(':');
+      return `${h}:${m}`;
+    })
+  );
+  
+  // 3. Generate hourly slots based on availability settings
   const startHour = parseInt(availability.start_time.split(':')[0]);
   const endHour = parseInt(availability.end_time.split(':')[0]);
   
   for (let hour = startHour; hour < endHour; hour++) {
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-    slots.push(timeStr);
+    
+    // Only add if not already booked
+    if (!takenSlots.has(timeStr)) {
+      slots.push(timeStr);
+    }
   }
   
   return slots;
