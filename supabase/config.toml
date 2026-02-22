@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.send-lead-magnet]
 verify_jwt = false
+
+[functions.send-booking-reminder]
+verify_jwt = false
+
+[functions.admin-assessments]
+verify_jwt = false
