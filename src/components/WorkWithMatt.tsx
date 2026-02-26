@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Phone, Calendar, CheckCircle2, Shield, Users } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
+import { trackEvent } from "@/lib/analytics";
 
 const proofPoints = [
   "Certified Intervention Professional (CIP)",
@@ -60,13 +61,24 @@ const WorkWithMatt = () => {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button size="lg" className="gap-2" asChild>
+              <Button
+                size="lg"
+                className="gap-2"
+                asChild
+                onClick={() => trackEvent("cta_book_call", { location: "work_with_matt" })}
+              >
                 <a href="#booking">
                   <Calendar className="w-5 h-5" />
                   Schedule a Strategy Call
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="gap-2" asChild>
+              <Button
+                size="lg"
+                variant="outline"
+                className="gap-2"
+                asChild
+                onClick={() => trackEvent("cta_call", { location: "work_with_matt" })}
+              >
                 <a href="tel:541-838-6009">
                   <Phone className="w-5 h-5" />
                   Call (541) 838-6009

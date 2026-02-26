@@ -7,6 +7,7 @@ import SignsSection from "@/components/SignsSection";
 import TestimonialHighlight from "@/components/TestimonialHighlight";
 import ProcessOverview from "@/components/ProcessOverview";
 import UrgencyStats from "@/components/UrgencyStats";
+import SocialProof from "@/components/SocialProof";
 import ResourceBanner from "@/components/ResourceBanner";
 import ToolkitBanner from "@/components/ToolkitBanner";
 import About from "@/components/About";
@@ -37,6 +38,7 @@ const Index = () => {
         <Services />
         <SignsSection />
         <TestimonialHighlight />
+        <SocialProof />
         <LeadMagnetBanner />
         <ProcessOverview />
         <UrgencyStats />

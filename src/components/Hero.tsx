@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
+import { trackEvent } from "@/lib/analytics";
 
 const Hero = () => {
   return (
@@ -51,18 +52,28 @@ const Hero = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <a href="#booking">
-              <Button variant="hero" size="xl">
+            <Button
+              variant="hero"
+              size="xl"
+              asChild
+              onClick={() => trackEvent("cta_book_call", { location: "hero" })}
+            >
+              <a href="#booking">
                 <Calendar className="w-5 h-5" />
                 Book a Call Now
-              </Button>
-            </a>
-            <a href="#services">
-              <Button variant="hero-outline" size="xl">
+              </a>
+            </Button>
+            <Button
+              variant="hero-outline"
+              size="xl"
+              asChild
+              onClick={() => trackEvent("cta_learn_more", { location: "hero" })}
+            >
+              <a href="#services">
                 Learn More
                 <ArrowRight className="w-5 h-5" />
-              </Button>
-            </a>
+              </a>
+            </Button>
           </div>
 
           {/* Trust badges */}

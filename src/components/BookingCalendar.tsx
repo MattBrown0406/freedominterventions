@@ -10,6 +10,7 @@ import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard, Lo
 import { format } from "date-fns";
 import { SquareCardForm } from "./SquareCardForm";
 import { z } from "zod";
+import { trackEvent } from "@/lib/analytics";
 
 const SESSION_PRICE = 15000; // $150.00 in cents
 
@@ -185,6 +186,11 @@ export const BookingCalendar = () => {
       setBookingId(data.booking.id);
       setStep("confirmation");
       toast.success("Consultation booked successfully!");
+      trackEvent("booking_confirmed", {
+        booking_type: "consultation",
+        booking_date: bookingDate,
+        booking_time: selectedTime,
+      });
 
       // Send confirmation email with Zoom link
       await sendBookingConfirmation(data.booking.id, 'consultation', bookingDate, selectedTime, 15);
@@ -265,6 +271,12 @@ export const BookingCalendar = () => {
       setBookingId(booking?.id || null);
       setStep("confirmation");
       toast.success("Booking confirmed!");
+      trackEvent("booking_confirmed", {
+        booking_type: "coaching",
+        booking_date: bookingDate,
+        booking_time: selectedTime,
+        amount_cents: SESSION_PRICE,
+      });
 
       // Send confirmation email with Zoom link
       if (booking?.id) {
