@@ -10,6 +10,7 @@ import UrgencyStats from "@/components/UrgencyStats";
 import ResourceBanner from "@/components/ResourceBanner";
 import ToolkitBanner from "@/components/ToolkitBanner";
 import About from "@/components/About";
+import WorkWithMatt from "@/components/WorkWithMatt";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -42,6 +43,7 @@ const Index = () => {
         <ResourceBanner />
         <ToolkitBanner />
         <About />
+        <WorkWithMatt />
         <BookingCalendar />
         <CTA />
       </main>
