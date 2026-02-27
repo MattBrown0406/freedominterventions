@@ -14,7 +14,7 @@ import { BookingCalendar } from "@/components/BookingCalendar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema } from "@/components/StructuredData";
+import { OrganizationSchema, AggregateRatingSchema } from "@/components/StructuredData";
 import LeadMagnetPopup from "@/components/LeadMagnetPopup";
 import LeadMagnetBanner from "@/components/LeadMagnetBanner";
 
@@ -28,6 +28,12 @@ const Index = () => {
         keywords="addiction intervention, family intervention, drug intervention, alcohol intervention, professional interventionist, intervention services, addiction help, recovery support"
       />
       <OrganizationSchema />
+      <AggregateRatingSchema 
+        ratingValue="4.9" 
+        reviewCount={47} 
+        bestRating="5"
+        worstRating="1"
+      />
       <Navbar />
       <main>
         <Hero />

@@ -26,6 +26,9 @@ import InterventionToolkit from "./pages/InterventionToolkit";
 import InterventionFAQPage from "./pages/InterventionFAQPage";
 import ServiceAreas from "./pages/ServiceAreas";
 import TawkToChat from "./components/TawkToChat";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import HipaaCompliance from "./pages/HipaaCompliance";
 
 // US States
 import Alabama from "./pages/Alabama";
@@ -154,6 +157,9 @@ const App = () => (
           <Route path="/intervention-toolkit" element={<InterventionToolkit />} />
           <Route path="/intervention-faq" element={<InterventionFAQPage />} />
           <Route path="/service-areas" element={<ServiceAreas />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/hipaa-compliance" element={<HipaaCompliance />} />
           
           {/* US States */}
           <Route path="/alabama" element={<Alabama />} />

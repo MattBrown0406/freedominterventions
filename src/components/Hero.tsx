@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
+import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Hero = () => {
   return (
@@ -45,6 +46,28 @@ const Hero = () => {
           >
             When addiction takes hold, intervention offers a lifeline. Our compassionate team helps families navigate the path to recovery with dignity and care.
           </p>
+          
+          {/* Emergency Phone Number - Prominent for crisis situations */}
+          <div 
+            className="animate-fade-up"
+            style={{ animationDelay: "0.35s" }}
+          >
+            <TrackedPhoneLink 
+              phoneNumber="+15418386009" 
+              metadata={{ location: 'hero_emergency' }}
+              className="group"
+            >
+              <div className="inline-flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-xl border-2 border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="flex items-center justify-center w-10 h-10 bg-primary-foreground/20 rounded-full group-hover:bg-primary-foreground/30 transition-colors">
+                  <Phone className="w-5 h-5 animate-pulse" />
+                </div>
+                <div className="text-left">
+                  <div className="text-sm font-medium opacity-90">Crisis Support Available 24/7</div>
+                  <div className="text-xl font-bold">(541) 838-6009</div>
+                </div>
+              </div>
+            </TrackedPhoneLink>
+          </div>
           
           {/* CTAs */}
           <div 

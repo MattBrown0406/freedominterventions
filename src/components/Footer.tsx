@@ -19,9 +19,9 @@ const Footer = () => {
       { name: "Contact", href: "/contact", isRoute: true },
     ],
     legal: [
-      { name: "Privacy Policy", href: "#" },
-      { name: "Terms of Service", href: "#" },
-      { name: "HIPAA Compliance", href: "#" },
+      { name: "Privacy Policy", href: "/privacy-policy", isRoute: true },
+      { name: "Terms of Service", href: "/terms-of-service", isRoute: true },
+      { name: "HIPAA Compliance", href: "/hipaa-compliance", isRoute: true },
     ],
   };
 
@@ -105,12 +105,21 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    {link.name}
-                  </a>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                    >
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

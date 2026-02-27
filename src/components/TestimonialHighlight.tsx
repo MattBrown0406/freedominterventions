@@ -19,6 +19,10 @@ const TestimonialHighlight = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [aggregateRating, setAggregateRating] = useState<{
+    average: number;
+    count: number;
+  } | null>(null);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -30,6 +34,14 @@ const TestimonialHighlight = () => {
 
       if (!error && data && data.length > 0) {
         setTestimonials(data);
+        
+        // Calculate aggregate rating
+        const totalRating = data.reduce((sum, testimonial) => sum + testimonial.rating, 0);
+        const averageRating = totalRating / data.length;
+        setAggregateRating({
+          average: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+          count: data.length
+        });
       }
       setIsLoading(false);
     };
@@ -108,9 +120,33 @@ const TestimonialHighlight = () => {
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-3">
             Real Families, Real Recovery
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
             Every family's journey is unique, but hope is universal. Here's what families like yours have experienced.
           </p>
+          
+          {/* Aggregate Rating Display */}
+          {aggregateRating && (
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`w-5 h-5 ${
+                      star <= Math.round(aggregateRating.average) 
+                        ? "fill-yellow-400 text-yellow-400" 
+                        : "text-muted-foreground"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-lg font-semibold text-foreground">
+                {aggregateRating.average}
+              </span>
+              <span className="text-muted-foreground">
+                ({aggregateRating.count} {aggregateRating.count === 1 ? 'review' : 'reviews'})
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Carousel Container */}
