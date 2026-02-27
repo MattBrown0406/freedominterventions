@@ -61,7 +61,7 @@ const Hero = () => {
                 <div className="flex items-center justify-center w-10 h-10 bg-primary-foreground/20 rounded-full group-hover:bg-primary-foreground/30 transition-colors">
                   <Phone className="w-5 h-5 animate-pulse" />
                 </div>
-                <div className="text-left">
+                <div className="text-center">
                   <div className="text-sm font-medium opacity-90">Crisis Support Available 7 Days a Week</div>
                   <div className="text-xl font-bold">(541) 838-6009</div>
                 </div>
