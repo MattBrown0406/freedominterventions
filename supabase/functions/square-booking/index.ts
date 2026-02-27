@@ -404,7 +404,7 @@ async function generateTimeSlots(dateStr: string, supabase: any): Promise<string
 
   // Create a set of taken times for fast lookup (normalize to HH:MM)
   const takenSlots = new Set(
-    (existingBookings || []).map(b => {
+    (existingBookings || []).map((b: { booking_time: string }) => {
       // Postgres time might come back as "10:00:00"
       const [h, m] = b.booking_time.split(':');
       return `${h}:${m}`;
