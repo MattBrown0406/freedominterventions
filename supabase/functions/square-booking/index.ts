@@ -385,6 +385,35 @@ serve(async (req) => {
           // Don't fail the booking if Notion sync fails
         }
 
+        // Sync contact to Mailchimp (async, don't block response)
+        try {
+          const supabaseUrl2 = Deno.env.get('SUPABASE_URL')!;
+          const nameParts = (sanitizedData.customer_name || '').trim().split(/\s+/);
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+
+          const mcResponse = await fetch(`${supabaseUrl2}/functions/v1/add-to-mailchimp`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+            },
+            body: JSON.stringify({
+              email: sanitizedData.customer_email,
+              firstName,
+              lastName
+            })
+          });
+
+          if (mcResponse.ok) {
+            console.log('Successfully synced contact to Mailchimp');
+          } else {
+            console.error('Failed to sync to Mailchimp:', await mcResponse.text());
+          }
+        } catch (mcError) {
+          console.error('Error syncing to Mailchimp:', mcError);
+        }
+
         return new Response(JSON.stringify({ 
           success: true, 
           booking 
