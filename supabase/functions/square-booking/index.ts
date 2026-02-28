@@ -353,6 +353,38 @@ serve(async (req) => {
 
         console.log('Booking created successfully:', { bookingId: booking.id });
 
+        // Sync booking to Notion CRM (async, don't block response)
+        try {
+          const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+          const syncResponse = await fetch(`${supabaseUrl}/functions/v1/sync-booking-to-notion`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+            },
+            body: JSON.stringify({
+              customerName: sanitizedData.customer_name,
+              customerEmail: sanitizedData.customer_email,
+              customerPhone: sanitizedData.customer_phone,
+              bookingType: sanitizedData.booking_type,
+              bookingDate: sanitizedData.booking_date,
+              bookingTime: sanitizedData.booking_time,
+              durationMinutes: sanitizedData.duration_minutes,
+              paymentId: sanitizedData.payment_id,
+              amountCents: sanitizedData.amount_cents
+            })
+          });
+          
+          if (syncResponse.ok) {
+            console.log('Successfully synced booking to Notion CRM');
+          } else {
+            console.error('Failed to sync booking to Notion:', await syncResponse.text());
+          }
+        } catch (syncError) {
+          console.error('Error syncing booking to Notion:', syncError);
+          // Don't fail the booking if Notion sync fails
+        }
+
         return new Response(JSON.stringify({ 
           success: true, 
           booking 
