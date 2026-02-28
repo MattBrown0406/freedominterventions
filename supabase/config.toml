@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.admin-assessments]
 verify_jwt = false
+
+[functions.add-to-mailchimp]
+verify_jwt = false
