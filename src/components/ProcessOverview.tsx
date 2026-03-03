@@ -60,10 +60,6 @@ const ProcessOverview = () => {
                     <IconComponent className="h-8 w-8 text-primary-foreground" />
                   </div>
                   
-                  {/* Step Number Badge */}
-                  <div className="absolute top-0 right-1/2 translate-x-8 -translate-y-1 w-6 h-6 rounded-full bg-background border-2 border-primary flex items-center justify-center">
-                    <span className="text-xs font-bold text-primary">{step.number}</span>
-                  </div>
                   
                   {/* Content */}
                   <h3 className="font-semibold text-foreground mb-2">{step.title}</h3>
