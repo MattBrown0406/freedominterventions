@@ -90,9 +90,18 @@ const Navbar = () => {
         )}
       </div>
       
-      {/* Full-width border and Party Wreckers logo - hidden on mobile */}
+      {/* Full-width border and partner logos - hidden on mobile */}
       <div className="border-t border-border/50 hidden md:block">
-        <div className="container mx-auto px-6 py-1 flex justify-end">
+        <div className="container mx-auto px-6 py-1 flex justify-between items-center">
+          <a 
+            href="https://soberhelpline.com/monday-zoom-registration" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+          >
+            <span className="font-semibold">Sober Helpline</span>
+            <span className="text-muted-foreground">— Free Weekly Family Support Meetings</span>
+          </a>
           <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
             <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" />
             <span className="font-lobster text-sm md:text-base text-foreground">
