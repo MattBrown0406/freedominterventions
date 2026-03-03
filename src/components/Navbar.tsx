@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.png";
+import soberHelplineLogo from "@/assets/sober-helpline-logo.png";
 import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Navbar = () => {
@@ -99,7 +100,7 @@ const Navbar = () => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            <span className="font-semibold">Sober Helpline</span>
+            <img src={soberHelplineLogo} alt="Sober Helpline" className="h-8 md:h-10 w-auto" />
             <span className="text-muted-foreground">— Free Weekly Family Support Meetings</span>
           </a>
           <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
