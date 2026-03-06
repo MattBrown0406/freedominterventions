@@ -15,55 +15,55 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
   },
   "/testimonials": {
     title: "Intervention Success Stories & Testimonials | Freedom Interventions",
-    description: "Read real stories from families who found hope through professional addiction intervention. Over 1000 families helped with 90%+ success rate.",
+    description: "Real stories from families who found hope through professional intervention. Read testimonials from families Matt Brown has helped over 20+ years.",
   },
   "/assessment": {
     title: "Free Addiction Assessment | Freedom Interventions",
-    description: "Complete a confidential addiction assessment to help our team understand your situation. Professional guidance from an experienced interventionist.",
+    description: "Take our free addiction assessment to understand your situation. Confidential, no obligation. Get personalized guidance for your family's next steps.",
   },
   "/self-assessment": {
     title: "Addiction Self-Assessment Tool | Freedom Interventions",
-    description: "Take a free, confidential self-assessment to evaluate substance use concerns. Get immediate feedback and professional guidance. Call (541) 838-6009.",
+    description: "Confidential self-assessment for substance use. Answer honestly, get clarity on where you stand, and explore next steps.",
   },
   "/intervention-faq": {
     title: "Intervention FAQ — Common Questions Answered | Freedom Interventions",
-    description: "Answers to common questions about addiction interventions: cost, success rates, process, and what to expect. Free consultation: (541) 838-6009.",
+    description: "Common questions about addiction intervention answered. What to expect, how it works, success rates, costs, and how to get started.",
   },
   "/interventionist": {
     title: "About Matt Brown — Professional Interventionist | Freedom Interventions",
-    description: "Matt Brown is a professional interventionist with 20+ years experience and 22 years of personal recovery. Over 1,000 interventions conducted nationwide.",
+    description: "Meet Matt Brown — professional interventionist with 20+ years experience, 22 years of personal recovery, and over 1,000 interventions conducted.",
   },
   "/substance-guide": {
     title: "Substance Guide — Drug & Alcohol Information | Freedom Interventions",
-    description: "Comprehensive guide to substances of abuse including alcohol, opioids, fentanyl, methamphetamine, and more. Learn the signs and risks.",
+    description: "Comprehensive guide to substances of abuse: alcohol, opioids, methamphetamine, cocaine, benzodiazepines, and more. What families need to know.",
   },
   "/family-intervention": {
     title: "Family Intervention Services | Freedom Interventions",
-    description: "Professional family intervention services to help your loved one accept treatment. Compassionate, structured approach with 90%+ success rate.",
+    description: "How family intervention works: the process, preparation, what to expect, and why professional guidance dramatically improves outcomes.",
   },
   "/crisis-support": {
     title: "Crisis Support — Immediate Addiction Help | Freedom Interventions",
-    description: "24/7 crisis support for families dealing with addiction emergencies. Immediate professional guidance available. Call (541) 838-6009 now.",
+    description: "In crisis right now? Immediate resources and guidance for families facing an addiction emergency. You're not alone — help is available.",
   },
   "/aftercare-guidance": {
     title: "Aftercare Guidance — Post-Treatment Support | Freedom Interventions",
-    description: "Post-treatment aftercare guidance for lasting recovery. Sober living, support groups, and family recovery resources. Call (541) 838-6009.",
+    description: "Treatment is just the beginning. Aftercare guidance for families: what to expect, how to support recovery, and how to protect your own wellbeing.",
   },
   "/treatment-planning": {
     title: "Treatment Planning — Finding the Right Program | Freedom Interventions",
-    description: "Expert treatment planning to find the right rehab program. Detox, inpatient, outpatient, and sober living placement. Free consultation available.",
+    description: "Navigate the treatment process with confidence. How to find the right program, what to look for, and how to plan for your loved one's recovery.",
   },
   "/intervention-toolkit": {
     title: "Family Intervention Toolkit — Free Resources | Freedom Interventions",
-    description: "Free intervention toolkit with guides, checklists, and resources for families preparing for an addiction intervention. Download now.",
+    description: "Free intervention toolkit for families. Resources, worksheets, and guidance to help you prepare for a conversation about addiction.",
   },
   "/service-areas": {
     title: "Service Areas — Nationwide Intervention Services | Freedom Interventions",
-    description: "Professional addiction intervention services in all 50 US states and Canadian provinces. Find local intervention help. Call (541) 838-6009.",
+    description: "Freedom Interventions serves all 50 states and Canada. Professional addiction intervention services available wherever your family needs help.",
   },
   "/party-wreckers-podcast": {
     title: "The Party Wreckers Podcast | Freedom Interventions",
-    description: "Listen to The Party Wreckers Podcast — real conversations about addiction, recovery, and intervention with Matt Brown and guests.",
+    description: "The Party Wreckers Podcast — real conversations about addiction, intervention, and recovery with host Matt Brown.",
   },
   "/blog": {
     title: "Addiction Intervention Blog — Expert Insights | Freedom Interventions",
