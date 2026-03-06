@@ -26,6 +26,7 @@ import InterventionToolkit from "./pages/InterventionToolkit";
 import InterventionFAQPage from "./pages/InterventionFAQPage";
 import ServiceAreas from "./pages/ServiceAreas";
 import TawkToChat from "./components/TawkToChat";
+import DefaultSEO from "./components/DefaultSEO";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import HipaaCompliance from "./pages/HipaaCompliance";
@@ -136,6 +137,7 @@ const App = () => (
       {/* <TawkToChat /> */}
       <BrowserRouter>
         <ScrollToTop />
+        <DefaultSEO />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />

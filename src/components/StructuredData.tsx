@@ -4,78 +4,95 @@ import { Helmet } from "react-helmet";
 export const OrganizationSchema = () => {
   const schema = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "@id": "https://freedominterventions.com/#organization",
-    name: "Freedom Interventions",
-    alternateName: "Freedom Interventions LLC",
-    url: "https://freedominterventions.com",
-    logo: "https://freedominterventions.com/favicon.jpeg",
-    image: "https://freedominterventions.com/favicon.jpeg",
-    description:
-      "Professional addiction intervention services helping families guide loved ones toward recovery. Over 20 years of experience with 1000+ families helped.",
-    telephone: "+1-541-838-6009",
-    email: "matt@freedominterventions.com",
-    foundingDate: "2004",
-    founder: {
-      "@type": "Person",
-      name: "Matt Brown",
-      jobTitle: "Professional Interventionist",
-      description: "Professional interventionist since 2004 with over 20 years of experience",
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressRegion: "OR",
-      addressCountry: "US",
-    },
-    areaServed: [
-      { "@type": "Country", name: "United States" },
-      { "@type": "Country", name: "Canada" },
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://freedominterventions.com/#organization",
+        name: "Freedom Interventions",
+        alternateName: "Freedom Interventions LLC",
+        url: "https://freedominterventions.com",
+        logo: "https://freedominterventions.com/favicon.jpeg",
+        image: "https://freedominterventions.com/favicon.jpeg",
+        description:
+          "Professional addiction intervention services helping families guide loved ones toward recovery. Over 20 years of experience serving all 50 states and Canada.",
+        telephone: "+1-541-838-6009",
+        email: "matt@freedominterventions.com",
+        foundingDate: "2004",
+        founder: {
+          "@type": "Person",
+          name: "Matt Brown",
+          jobTitle: "Professional Interventionist",
+          description: "Drug & alcohol interventionist with over 20 years of experience and 22 years of personal recovery. Has conducted over 1,000 professional interventions.",
+          knowsAbout: ["Addiction Intervention", "Drug Intervention", "Alcohol Intervention", "Family Intervention", "Substance Abuse", "Recovery"],
+        },
+        address: {
+          "@type": "PostalAddress",
+          addressRegion: "OR",
+          addressCountry: "US",
+        },
+        areaServed: [
+          { "@type": "Country", name: "United States" },
+          { "@type": "Country", name: "Canada" },
+        ],
+        serviceType: [
+          "Addiction Intervention",
+          "Drug Intervention",
+          "Alcohol Intervention",
+          "Family Intervention",
+          "Crisis Intervention",
+          "Treatment Planning",
+        ],
+        priceRange: "$$$$",
+        openingHoursSpecification: {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          opens: "00:00",
+          closes: "23:59",
+        },
+        sameAs: [
+          "https://soberhelpline.com",
+          "https://nomoreenabling.com",
+          "https://partywreckers.com",
+        ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Intervention Services",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Free Consultation",
+                description: "Complimentary phone consultation to discuss your situation",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Family Intervention",
+                description: "Professional intervention services to help families guide loved ones to treatment",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Treatment Planning",
+                description: "Comprehensive treatment planning and placement services",
+              },
+            },
+          ],
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://freedominterventions.com/#website",
+        url: "https://freedominterventions.com",
+        name: "Freedom Interventions",
+        publisher: { "@id": "https://freedominterventions.com/#organization" },
+      },
     ],
-    serviceType: [
-      "Addiction Intervention",
-      "Family Intervention",
-      "Crisis Support",
-      "Treatment Planning",
-      "Aftercare Guidance",
-    ],
-    priceRange: "$$",
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "00:00",
-      closes: "23:59",
-    },
-    sameAs: [],
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Intervention Services",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Free Consultation",
-            description: "Complimentary phone consultation to discuss your situation",
-          },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Family Intervention",
-            description: "Professional intervention services to help families guide loved ones to treatment",
-          },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Treatment Planning",
-            description: "Comprehensive treatment planning and placement services",
-          },
-        },
-      ],
-    },
   };
 
   return (
