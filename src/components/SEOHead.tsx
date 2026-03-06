@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import { useLocation } from "react-router-dom";
 
 interface SEOHeadProps {
   title: string;
@@ -16,8 +17,10 @@ interface SEOHeadProps {
   modifiedTime?: string;
   twitterCreator?: string;
   section?: string;
-  aiDescription?: string; // Extended description for AI crawlers
+  aiDescription?: string;
 }
+
+const BASE_URL = "https://freedominterventions.com";
 
 const SEOHead = ({
   title,
@@ -25,7 +28,7 @@ const SEOHead = ({
   canonical,
   keywords,
   type = "website",
-  image = "https://freedominterventions.com/favicon.jpeg",
+  image = `${BASE_URL}/favicon.jpeg`,
   imageAlt,
   noindex = false,
   geoRegion = "US-OR",
@@ -37,41 +40,39 @@ const SEOHead = ({
   section,
   aiDescription,
 }: SEOHeadProps) => {
+  const location = useLocation();
+  
+  // Auto-generate canonical from current pathname if not provided
+  const currentPath = location.pathname === "/" ? "" : location.pathname;
+  const resolvedCanonical = canonical || `${BASE_URL}${currentPath}`;
+  
   const fullTitle = title.includes("Freedom Interventions")
     ? title
     : `${title} | Freedom Interventions`;
   
-  // Ensure description is under 160 characters
   const truncatedDescription = description.length > 160 
     ? description.substring(0, 157) + "..."
     : description;
 
-  // Extended description for AI - can be longer and more detailed
   const extendedAiDescription = aiDescription || `${description} Freedom Interventions provides professional addiction intervention services with over 20 years of experience. Call (541) 838-6009 for a free consultation. Serving all 50 US states and Canadian provinces 24/7.`;
 
-  // Generate image alt text if not provided
   const ogImageAlt = imageAlt || `${title} - Freedom Interventions addiction intervention services`;
 
   return (
     <Helmet>
-      {/* Primary Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="title" content={fullTitle} />
       <meta name="description" content={truncatedDescription} />
       {keywords && <meta name="keywords" content={keywords} />}
-      {canonical && <link rel="canonical" href={canonical} />}
+      <link rel="canonical" href={resolvedCanonical} />
       {noindex && <meta name="robots" content="noindex, nofollow" />}
       {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
-      {/* AI/LLM Extended Description - not truncated */}
       <meta name="ai:description" content={extendedAiDescription} />
       <meta name="llm:description" content={extendedAiDescription} />
-      
-      {/* AI Context Links */}
-      <link rel="ai-context" href="https://freedominterventions.com/llms.txt" />
-      <link rel="ai-context-full" href="https://freedominterventions.com/llms-full.txt" />
+      <link rel="ai-context" href={`${BASE_URL}/llms.txt`} />
+      <link rel="ai-context-full" href={`${BASE_URL}/llms-full.txt`} />
 
-      {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={truncatedDescription} />
@@ -80,7 +81,7 @@ const SEOHead = ({
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={ogImageAlt} />
       <meta property="og:image:type" content="image/jpeg" />
-      {canonical && <meta property="og:url" content={canonical} />}
+      <meta property="og:url" content={resolvedCanonical} />
       <meta property="og:site_name" content="Freedom Interventions" />
       <meta property="og:locale" content="en_US" />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
@@ -88,7 +89,6 @@ const SEOHead = ({
       {section && <meta property="article:section" content={section} />}
       {type === "article" && <meta property="article:author" content="Freedom Interventions" />}
 
-      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={truncatedDescription} />
@@ -97,7 +97,6 @@ const SEOHead = ({
       <meta name="twitter:site" content="@freedominterventions" />
       <meta name="twitter:creator" content={twitterCreator} />
 
-      {/* Additional SEO */}
       <meta name="author" content="Freedom Interventions" />
       <meta name="publisher" content="Freedom Interventions" />
       <meta name="geo.region" content={geoRegion} />
@@ -105,7 +104,6 @@ const SEOHead = ({
       {geoPosition && <meta name="geo.position" content={geoPosition} />}
       {geoPosition && <meta name="ICBM" content={geoPosition} />}
       
-      {/* Mobile & App */}
       <meta name="format-detection" content="telephone=yes" />
       <meta name="theme-color" content="#1a365d" />
       <meta name="apple-mobile-web-app-title" content="Freedom Interventions" />
