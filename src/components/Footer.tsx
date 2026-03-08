@@ -1,6 +1,7 @@
 import { Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
+import interventionistNetworkLogo from "@/assets/interventionist-network-logo.jpeg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Footer = () => {
@@ -45,6 +46,12 @@ const Footer = () => {
               <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base min-w-0">
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">matt@freedominterventions.com</span>
+              </a>
+            </div>
+            <div className="pt-4">
+              <p className="text-xs text-muted-foreground mb-2">Member of</p>
+              <a href="https://theinterventionistnetwork.com" target="_blank" rel="noopener noreferrer">
+                <img src={interventionistNetworkLogo} alt="The Interventionist Network" className="h-12 w-auto" />
               </a>
             </div>
           </div>
