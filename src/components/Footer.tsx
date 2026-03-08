@@ -1,6 +1,7 @@
 import { Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
+import interventionistNetworkLogo from "@/assets/interventionist-network-logo.jpeg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Footer = () => {
