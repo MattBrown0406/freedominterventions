@@ -48,6 +48,12 @@ const Footer = () => {
                 <span className="truncate">matt@freedominterventions.com</span>
               </a>
             </div>
+            <div className="pt-4">
+              <p className="text-xs text-muted-foreground mb-2">Member of</p>
+              <a href="https://theinterventionistnetwork.com" target="_blank" rel="noopener noreferrer">
+                <img src={interventionistNetworkLogo} alt="The Interventionist Network" className="h-12 w-auto" />
+              </a>
+            </div>
           </div>
 
           {/* Links */}
