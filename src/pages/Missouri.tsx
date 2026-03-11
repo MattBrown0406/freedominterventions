@@ -3,11 +3,39 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Missouri = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Missouri", href: "/missouri" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Missouri", url: "https://freedominterventions.com/missouri" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Missouri Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Missouri. Help your loved one recover from opioid, methamphetamine, and fentanyl addiction. Serving St. Louis, Kansas City, and all MO communities."
+        canonical="https://freedominterventions.com/missouri"
+        keywords="Missouri addiction intervention, St. Louis drug intervention, Kansas City family intervention, opioid crisis Missouri, addiction help MO"
+        geoRegion="US-MO"
+        geoPlacename="Missouri"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="St. Louis" state="MO" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -74,7 +102,10 @@ const Missouri = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Missouri has been significantly impacted by the opioid epidemic, with St. Louis and Kansas City areas seeing particularly high overdose rates. Fentanyl and methamphetamine drive the crisis.
+                Missouri has been significantly impacted by the opioid epidemic, with St. Louis and Kansas City areas seeing particularly high overdose rates. Fentanyl and methamphetamine drive the crisis. The state consistently ranks among the top states for overdose death rates, and the I-70 corridor has become a major drug trafficking route.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Rural Missouri communities face additional challenges with limited access to treatment facilities and long wait times for available beds. Professional intervention helps families cut through these barriers and find immediate solutions.
               </p>
             </div>
 
@@ -86,7 +117,7 @@ const Missouri = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists serve Missouri families across the state, connecting them with quality treatment resources in the Midwest region.
+                Professional interventionists serve Missouri families across the state, connecting them with quality treatment resources in the Midwest region. Whether your family is in Springfield, Columbia, or any community in between, a professional interventionist can coordinate the entire process from assessment through treatment placement.
               </p>
             </div>
 
@@ -98,7 +129,7 @@ const Missouri = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Intervention services include family education, treatment coordination, and aftercare planning for lasting recovery success.
+                Intervention services include family education, treatment coordination, and aftercare planning for lasting recovery success. Families learn how to set healthy boundaries, stop enabling behaviors, and create an environment that supports long-term sobriety.
               </p>
             </div>
 
@@ -110,7 +141,7 @@ const Missouri = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional intervention provides Missouri families with the structure and expertise needed to help loved ones break free from addiction.
+                Professional intervention provides Missouri families with the structure and expertise needed to help loved ones break free from addiction. The first step is always a free, confidential consultation where we assess your situation and develop a personalized plan.
               </p>
             </div>
 
@@ -143,6 +174,7 @@ const Missouri = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Missouri" locationType="state" />
       <Footer />
     </div>
   );

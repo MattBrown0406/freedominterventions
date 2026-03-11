@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
@@ -61,6 +61,71 @@ const Saskatchewan = () => {
                 </a>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto space-y-12">
+            
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Understanding Saskatchewan's Addiction Emergency
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Saskatchewan has experienced a staggering increase in overdose deaths as fentanyl and other synthetic opioids contaminate the drug supply. The province's overdose death rate has more than tripled in recent years, affecting families in every community — from downtown Saskatoon to remote northern villages.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Methamphetamine use has also surged across Saskatchewan, creating a dual crisis that strains the province's healthcare and treatment systems. Many families feel helpless as they watch loved ones spiral deeper into addiction while waiting months for treatment beds to become available.
+              </p>
+            </div>
+
+            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <Users className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Why Professional Intervention Works in Saskatchewan
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Professional intervention is not about forcing someone into treatment — it's about creating the conditions where they can make the choice to accept help. An interventionist guides the family through a structured process that removes barriers, addresses objections, and presents a clear path to recovery.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                For Saskatchewan families, this often means coordinating treatment options beyond the province's borders, where specialized programs can provide immediate admission and the specific level of care needed. A professional interventionist manages every logistical detail, from securing a treatment bed to arranging travel.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Heart className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Healing the Entire Family
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Addiction creates wounds throughout the family system. Parents lose sleep worrying. Siblings feel neglected. Spouses live in constant fear. Professional intervention addresses these dynamics by educating family members about the disease of addiction, teaching healthy boundary-setting, and connecting family members with their own support resources.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The intervention process itself is often healing for families, as it provides a structured opportunity to express love and concern in a way that the addicted person can actually hear. Many families describe the intervention as a turning point — not just for their loved one, but for the entire family.
+              </p>
+            </div>
+
+            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
+              <div className="flex items-center gap-3 mb-4">
+                <TrendingUp className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Your Family Deserves Help Now
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Don't wait for a crisis to escalate further. Saskatchewan families can access professional intervention support 24/7. A free, confidential consultation helps you understand your options and develop a plan tailored to your family's unique situation.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
