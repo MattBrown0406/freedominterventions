@@ -1,9 +1,9 @@
-import { Helmet } from "react-helmet";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
