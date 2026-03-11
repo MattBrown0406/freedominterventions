@@ -3,11 +3,39 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Montana = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Montana", href: "/montana" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Montana", url: "https://freedominterventions.com/montana" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Montana Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Montana. Help your loved one recover from methamphetamine, opioid, and alcohol addiction. Serving Billings, Missoula, Great Falls, and all MT communities."
+        canonical="https://freedominterventions.com/montana"
+        keywords="Montana addiction intervention, Billings drug intervention, Missoula family intervention, meth crisis Montana, addiction help MT"
+        geoRegion="US-MT"
+        geoPlacename="Montana"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Billings" state="MT" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -74,7 +102,10 @@ const Montana = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Montana's vast geography creates significant barriers to treatment access. Methamphetamine remains the primary drug threat, while opioids and fentanyl are increasingly present.
+                Montana's vast geography creates significant barriers to treatment access. Methamphetamine remains the primary drug threat, while opioids and fentanyl are increasingly present. Many Montana communities are hours from the nearest treatment facility, making it difficult for families to access the help they desperately need.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The state's Native American communities have been disproportionately affected by the addiction crisis, with overdose rates significantly higher than the national average. Cultural sensitivity and understanding of local resources are essential components of effective intervention in Montana.
               </p>
             </div>
 
@@ -86,7 +117,7 @@ const Montana = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists travel throughout Montana and coordinate with treatment centers across the state and region to find the best fit for each individual.
+                Professional interventionists travel throughout Montana and coordinate with treatment centers across the state and region to find the best fit for each individual. Whether your family is in Billings, Missoula, Helena, or a small ranching community, a professional interventionist can come to you and manage every aspect of the process.
               </p>
             </div>
 
@@ -98,7 +129,7 @@ const Montana = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                From initial consultation through aftercare, professional interventionists provide comprehensive support for Montana families facing addiction.
+                From initial consultation through aftercare, professional interventionists provide comprehensive support for Montana families facing addiction. This includes helping families understand the disease of addiction, preparing intervention letters, coordinating travel logistics for treatment, and providing ongoing guidance throughout the recovery journey.
               </p>
             </div>
 
@@ -110,7 +141,7 @@ const Montana = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Distance doesn't have to be a barrier. Professional interventionists help Montana families access quality treatment wherever it's available.
+                Distance doesn't have to be a barrier. Professional interventionists help Montana families access quality treatment wherever it's available. Your free, confidential consultation is just a phone call away.
               </p>
             </div>
 
@@ -143,6 +174,7 @@ const Montana = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Montana" locationType="state" />
       <Footer />
     </div>
   );

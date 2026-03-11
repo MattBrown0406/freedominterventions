@@ -3,11 +3,39 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Minnesota = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Minnesota", href: "/minnesota" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Minnesota", url: "https://freedominterventions.com/minnesota" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Minnesota Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Minnesota. Help your loved one recover from opioid, methamphetamine, and alcohol addiction. Serving Minneapolis, St. Paul, and all MN communities."
+        canonical="https://freedominterventions.com/minnesota"
+        keywords="Minnesota addiction intervention, Minneapolis drug intervention, St. Paul family intervention, opioid crisis Minnesota, addiction help MN"
+        geoRegion="US-MN"
+        geoPlacename="Minnesota"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Minneapolis" state="MN" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -74,7 +102,10 @@ const Minnesota = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Minnesota has experienced rising overdose deaths, with fentanyl and methamphetamine driving the increase. The Twin Cities and rural areas alike face significant challenges.
+                Minnesota has experienced rising overdose deaths, with fentanyl and methamphetamine driving the increase. The Twin Cities and rural areas alike face significant challenges. Synthetic opioids have become the leading cause of overdose fatalities across the state, while methamphetamine continues to devastate communities from Duluth to Rochester.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The state's strong tradition of quality healthcare and treatment programs provides hope, but families often struggle to navigate the complex system of care options available to them. Professional intervention bridges this gap by providing expert guidance during the most critical moments.
               </p>
             </div>
 
@@ -86,7 +117,7 @@ const Minnesota = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Interventionists familiar with Minnesota's treatment landscape help families create effective plans, leveraging the state's quality treatment resources.
+                Interventionists familiar with Minnesota's treatment landscape help families create effective plans, leveraging the state's quality treatment resources. Minnesota is home to some of the nation's most respected treatment centers, and a professional interventionist knows which programs best match each individual's unique needs.
               </p>
             </div>
 
@@ -98,7 +129,7 @@ const Minnesota = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Intervention services include family education, treatment coordination, and aftercare support to help Minnesota families heal together.
+                Intervention services include family education, treatment coordination, and aftercare support to help Minnesota families heal together. Addiction affects every member of the family system, and lasting recovery requires addressing the needs of everyone involved — not just the person struggling with substance use.
               </p>
             </div>
 
@@ -110,7 +141,7 @@ const Minnesota = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional intervention gives Minnesota families the tools and guidance needed to help loved ones find lasting recovery.
+                Professional intervention gives Minnesota families the tools and guidance needed to help loved ones find lasting recovery. Whether your family is in the Twin Cities metro area, the Iron Range, or anywhere else in the state, help is available 24/7.
               </p>
             </div>
 
@@ -143,6 +174,7 @@ const Minnesota = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Minnesota" locationType="state" />
       <Footer />
     </div>
   );

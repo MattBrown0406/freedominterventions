@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar } from "lucide-react";
+import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
@@ -61,6 +61,71 @@ const Manitoba = () => {
                 </a>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto space-y-12">
+            
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  The Scope of Manitoba's Addiction Crisis
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Manitoba has seen a dramatic increase in substance-related deaths over the past several years. Winnipeg's inner city has been especially hard hit, with fentanyl and methamphetamine dominating the illicit drug supply. The toxic drug crisis has spread beyond urban centers into Brandon, Thompson, and rural communities throughout the province.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Indigenous communities in Manitoba face disproportionately high rates of substance use disorder, compounded by systemic barriers to treatment access and historical trauma. Families in these communities deserve culturally sensitive support and professional guidance through the intervention and recovery process.
+              </p>
+            </div>
+
+            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <Users className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  How Professional Intervention Helps Manitoba Families
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                A professional interventionist brings structure, expertise, and compassion to one of the most difficult conversations a family can have. For Manitoba families, this means having someone who understands addiction as a medical disease — not a moral failing — and who can guide the family through a proven process designed to motivate their loved one to accept treatment.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Interventionists coordinate every aspect of the process: preparing family members, identifying appropriate treatment programs, arranging travel logistics, and providing ongoing support throughout the recovery journey. Whether your loved one needs detox, residential treatment, or a specialized program for co-occurring mental health conditions, a professional interventionist ensures the right level of care is in place before the intervention begins.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Heart className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Supporting the Whole Family
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Addiction doesn't just affect the person using substances — it impacts every member of the family. Professional intervention services include education about the disease of addiction, guidance on setting healthy boundaries, and support for family members dealing with their own trauma, codependency, and burnout.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Manitoba families often try everything they can think of before reaching out for professional help: pleading, threatening, bargaining, and monitoring. When these approaches don't work, an interventionist provides a structured alternative that addresses the root issues and creates real accountability for change.
+              </p>
+            </div>
+
+            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
+              <div className="flex items-center gap-3 mb-4">
+                <TrendingUp className="h-8 w-8 text-primary" />
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                  Take the First Step Today
+                </h2>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                If your Manitoba family is struggling with a loved one's addiction, you don't have to face this alone. A free, confidential consultation is the first step toward understanding your options and developing a plan that gives your loved one the best chance at lasting recovery.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>

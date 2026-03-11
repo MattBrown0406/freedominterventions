@@ -3,11 +3,39 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Nebraska = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Nebraska", href: "/nebraska" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Nebraska", url: "https://freedominterventions.com/nebraska" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Nebraska Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Nebraska. Help your loved one recover from methamphetamine, opioid, and alcohol addiction. Serving Omaha, Lincoln, and all NE communities."
+        canonical="https://freedominterventions.com/nebraska"
+        keywords="Nebraska addiction intervention, Omaha drug intervention, Lincoln family intervention, meth crisis Nebraska, addiction help NE"
+        geoRegion="US-NE"
+        geoPlacename="Nebraska"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Omaha" state="NE" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -74,7 +102,10 @@ const Nebraska = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Nebraska has seen rising overdose deaths, with methamphetamine and fentanyl driving the increase. Both Omaha and rural communities face significant challenges.
+                Nebraska has seen rising overdose deaths, with methamphetamine and fentanyl driving the increase. Both Omaha and rural communities face significant challenges. The state's position along major interstate corridors makes it vulnerable to drug trafficking, and synthetic opioids have dramatically increased the danger of the street drug supply.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Alcohol addiction also remains a persistent challenge across Nebraska, often overlooked because of its legal status and cultural acceptance. Many families don't recognize the severity of alcohol use disorder until a crisis forces the issue.
               </p>
             </div>
 
@@ -86,7 +117,7 @@ const Nebraska = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists serve Nebraska families across the state, connecting them with quality treatment resources throughout the Midwest.
+                Professional interventionists serve Nebraska families across the state, connecting them with quality treatment resources throughout the Midwest. With deep knowledge of regional treatment options, interventionists match each individual with the program best suited to their specific substance use history, mental health needs, and personal circumstances.
               </p>
             </div>
 
@@ -98,7 +129,7 @@ const Nebraska = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Intervention services include family education, treatment coordination, and ongoing support to help Nebraska families heal together.
+                Intervention services include family education, treatment coordination, and ongoing support to help Nebraska families heal together. Addiction is a family disease, and professional intervention addresses the entire family system — helping everyone involved move from crisis to recovery.
               </p>
             </div>
 
@@ -110,7 +141,7 @@ const Nebraska = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional intervention gives Nebraska families the tools and guidance needed to help loved ones find lasting recovery.
+                Professional intervention gives Nebraska families the tools and guidance needed to help loved ones find lasting recovery. A free, confidential phone consultation is your first step toward getting your family the help it needs.
               </p>
             </div>
 
@@ -143,6 +174,7 @@ const Nebraska = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Nebraska" locationType="state" />
       <Footer />
     </div>
   );

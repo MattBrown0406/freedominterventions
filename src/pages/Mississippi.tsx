@@ -3,11 +3,39 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import LocationLinks from "@/components/LocationLinks";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const Mississippi = () => {
+  const breadcrumbItems = [
+    { name: "Service Areas", href: "/service-areas" },
+    { name: "Mississippi", href: "/mississippi" }
+  ];
+
+  const breadcrumbSchemaItems = [
+    { name: "Home", url: "https://freedominterventions.com" },
+    { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+    { name: "Mississippi", url: "https://freedominterventions.com/mississippi" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Mississippi Addiction Intervention Services | Freedom Interventions"
+        description="Professional addiction intervention services in Mississippi. Help your loved one recover from opioid, methamphetamine, and alcohol addiction. Serving Jackson, Gulfport, and all MS communities."
+        canonical="https://freedominterventions.com/mississippi"
+        keywords="Mississippi addiction intervention, Jackson drug intervention, Gulfport family intervention, opioid crisis Mississippi, addiction help MS"
+        geoRegion="US-MS"
+        geoPlacename="Mississippi"
+      />
+      <OrganizationSchema />
+      <LocalBusinessSchema location="Jackson" state="MS" />
+      <BreadcrumbSchema items={breadcrumbSchemaItems} />
+
       <Navbar />
+      <BreadcrumbNav items={breadcrumbItems} />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -74,7 +102,10 @@ const Mississippi = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Mississippi has seen rising overdose deaths as fentanyl infiltrates the drug supply. Rural communities face particular challenges accessing treatment resources.
+                Mississippi has seen rising overdose deaths as fentanyl infiltrates the drug supply. Rural communities face particular challenges accessing treatment resources. The state's opioid prescription rate remains among the highest in the nation, creating a pipeline from prescription painkillers to illicit street drugs.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Methamphetamine also continues to pose a significant threat across the state, particularly in rural areas where law enforcement and treatment resources are stretched thin. Families in these communities often feel isolated and unsure where to turn for help.
               </p>
             </div>
 
@@ -86,7 +117,7 @@ const Mississippi = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Interventionists help Mississippi families create effective plans and connect with quality treatment programs throughout the state and region.
+                Interventionists help Mississippi families create effective plans and connect with quality treatment programs throughout the state and region. A professional interventionist brings expertise in navigating both in-state and out-of-state treatment options, ensuring your loved one receives the level of care they need.
               </p>
             </div>
 
@@ -98,7 +129,7 @@ const Mississippi = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                From intervention through aftercare, professional services support the entire recovery journey for Mississippi families.
+                From intervention through aftercare, professional services support the entire recovery journey for Mississippi families. This includes family education about addiction as a disease, boundary-setting guidance, and ongoing support as your loved one transitions through treatment and into sustained recovery.
               </p>
             </div>
 
@@ -110,7 +141,7 @@ const Mississippi = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional intervention provides Mississippi families with proven strategies for helping loved ones find recovery.
+                Professional intervention provides Mississippi families with proven strategies for helping loved ones find recovery. Distance and location are never barriers — we travel to families throughout the state and coordinate treatment placement nationwide.
               </p>
             </div>
 
@@ -143,6 +174,7 @@ const Mississippi = () => {
         </div>
       </section>
 
+      <LocationLinks currentLocation="Mississippi" locationType="state" />
       <Footer />
     </div>
   );

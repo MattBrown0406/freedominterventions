@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, CheckCircle, CalendarIcon, Clock, Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 
 type Step = 'lookup' | 'select-date' | 'select-time' | 'confirmation';
 
@@ -153,6 +154,11 @@ const Reschedule = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       
+      <SEOHead
+        title="Reschedule Booking | Freedom Interventions"
+        description="Reschedule your consultation appointment with Freedom Interventions. Enter your booking ID and email to select a new date and time."
+        noindex={true}
+      />
       <main className="flex-1 py-16 px-4">
         <div className="container mx-auto max-w-lg">
           <Card className="border-primary/20 shadow-xl">
