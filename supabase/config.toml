@@ -38,3 +38,6 @@ verify_jwt = false
 
 [functions.add-to-mailchimp]
 verify_jwt = false
+
+[functions.generate-sitemap]
+verify_jwt = false

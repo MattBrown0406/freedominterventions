@@ -130,6 +130,35 @@ export default {
     const url = new URL(request.url);
     const userAgent = request.headers.get('user-agent') || '';
 
+    // Serve dynamic sitemap from edge function
+    if (url.pathname === '/sitemap.xml') {
+      try {
+        const sitemapResponse = await fetch(
+          `${SUPABASE_URL}/functions/v1/generate-sitemap`,
+          {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+          }
+        );
+        if (sitemapResponse.ok) {
+          const xml = await sitemapResponse.text();
+          return new Response(xml, {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/xml; charset=utf-8',
+              'Cache-Control': 'public, max-age=3600',
+            },
+          });
+        }
+      } catch (e) {
+        console.error('Sitemap proxy error:', e);
+      }
+      // Fall through to origin if edge function fails
+      return fetch(request);
+    }
+
     // Only intercept /blog/* paths
     if (!url.pathname.startsWith('/blog/')) {
       return fetch(request);

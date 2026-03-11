@@ -1,9 +1,9 @@
-import { Helmet } from "react-helmet";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,30 +70,18 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{post.title} | Freedom Interventions Blog</title>
-        <meta name="description" content={post.excerpt} />
-        <link rel="canonical" href={`https://freedominterventions.com/blog/${post.slug}`} />
-        <meta name="keywords" content={`${post.category}, addiction intervention, family support, recovery`} />
-        <meta name="robots" content="index, follow, max-image-preview:large" />
-        {/* Open Graph */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.excerpt} />
-        <meta property="og:url" content={`https://freedominterventions.com/blog/${post.slug}`} />
-        <meta property="og:image" content={imageUrl} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:site_name" content="Freedom Interventions" />
-        <meta property="article:published_time" content={post.published_at || post.created_at} />
-        <meta property="article:modified_time" content={post.updated_at} />
-        <meta property="article:section" content={post.category} />
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={post.excerpt} />
-        <meta name="twitter:image" content={imageUrl} />
-      </Helmet>
+      <SEOHead
+        title={post.title}
+        description={post.excerpt}
+        canonical={`https://freedominterventions.com/blog/${post.slug}`}
+        type="article"
+        image={imageUrl}
+        imageAlt={`${post.title} - Freedom Interventions blog`}
+        keywords={`${post.category}, addiction intervention, family support, recovery`}
+        publishedTime={post.published_at || post.created_at}
+        modifiedTime={post.updated_at}
+        section={post.category}
+      />
       <ArticleSchema 
         title={post.title}
         description={post.excerpt}
