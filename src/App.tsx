@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import FloatingContactForm from "@/components/FloatingContactForm";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -138,6 +139,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <DefaultSEO />
+        <FloatingContactForm />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
