@@ -139,6 +139,7 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <DefaultSEO />
+        <FloatingContactForm />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
