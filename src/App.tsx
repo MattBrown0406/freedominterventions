@@ -136,7 +136,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       {/* <TawkToChat /> */}
-      <BrowserRouter>
+       <BrowserRouter>
+        <TrailingSlashRedirect />
         <ScrollToTop />
         <DefaultSEO />
         <FloatingContactForm />

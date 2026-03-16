@@ -43,8 +43,10 @@ const SEOHead = ({
   const location = useLocation();
   
   // Auto-generate canonical from current pathname if not provided
-  const currentPath = location.pathname === "/" ? "" : location.pathname;
-  const resolvedCanonical = canonical || `${BASE_URL}${currentPath}`;
+  // Normalize: strip trailing slashes and ensure lowercase
+  const rawPath = location.pathname === "/" ? "" : location.pathname.replace(/\/+$/, "");
+  const normalizedPath = rawPath.toLowerCase();
+  const resolvedCanonical = canonical || `${BASE_URL}${normalizedPath}`;
   
   const fullTitle = title.includes("Freedom Interventions")
     ? title
