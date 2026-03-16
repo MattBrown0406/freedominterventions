@@ -28,6 +28,7 @@ import InterventionFAQPage from "./pages/InterventionFAQPage";
 import ServiceAreas from "./pages/ServiceAreas";
 import TawkToChat from "./components/TawkToChat";
 import DefaultSEO from "./components/DefaultSEO";
+import TrailingSlashRedirect from "./components/TrailingSlashRedirect";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import HipaaCompliance from "./pages/HipaaCompliance";
