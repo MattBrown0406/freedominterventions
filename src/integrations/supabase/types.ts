@@ -919,6 +919,57 @@ export type Database = {
         }
         Relationships: []
       }
+      case_documents: {
+        Row: {
+          ai_summary: string | null
+          client_name: string
+          created_at: string
+          doc_type: string
+          file_path: string | null
+          file_size: number | null
+          file_url: string | null
+          id: string
+          mime_type: string | null
+          notes: string | null
+          notion_case_id: string
+          title: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          client_name: string
+          created_at?: string
+          doc_type: string
+          file_path?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          mime_type?: string | null
+          notes?: string | null
+          notion_case_id: string
+          title: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          ai_summary?: string | null
+          client_name?: string
+          created_at?: string
+          doc_type?: string
+          file_path?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          mime_type?: string | null
+          notes?: string | null
+          notion_case_id?: string
+          title?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
       family_reviews: {
         Row: {
           approved: boolean | null
