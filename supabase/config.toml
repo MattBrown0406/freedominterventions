@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.generate-sitemap]
 verify_jwt = false
+
+[functions.case-documents]
+verify_jwt = false
