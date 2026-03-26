@@ -13,10 +13,10 @@ const NewMexico = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="New Mexico Addiction Intervention Services"
-        description="Professional intervention services for New Mexico families. Expert interventionists help loved ones find treatment across the Land of Enchantment."
+        title="Addiction Intervention Specialist in New Mexico | Freedom Interventions"
+        description="New Mexico families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of New Mexico. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/new-mexico"
-        keywords="New Mexico intervention, addiction help NM, interventionist Albuquerque, drug intervention Santa Fe, Las Cruces addiction help"
+        keywords="intervention specialist New Mexico, addiction intervention New Mexico, drug intervention New Mexico, Albuquerque addiction intervention, New Mexico interventionist, Santa Fe drug intervention"
         geoRegion="US-NM"
         geoPlacename="New Mexico"
       />

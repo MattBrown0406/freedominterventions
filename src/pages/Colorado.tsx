@@ -12,10 +12,10 @@ const Colorado = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Colorado Addiction Intervention Services | Freedom Interventions"
-        description="Colorado faces rising overdose deaths from fentanyl and methamphetamine. Professional interventionists help families guide loved ones toward evidence-based treatment."
+        title="Addiction Intervention Specialist in Colorado | Freedom Interventions"
+        description="Colorado families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Colorado. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/colorado"
-        keywords="Colorado addiction intervention, Denver intervention services, Colorado fentanyl crisis, Boulder drug intervention"
+        keywords="intervention specialist Colorado, addiction intervention Colorado, drug intervention Colorado, family intervention Colorado, Denver addiction intervention, Colorado Springs intervention services, Boulder drug intervention, Colorado interventionist"
         geoRegion="US-CO"
         geoPlacename="Colorado"
       />

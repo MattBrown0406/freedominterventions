@@ -13,10 +13,10 @@ const Texas = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Texas Addiction Intervention Services | Freedom Interventions"
-        description="Texas faces an unprecedented addiction crisis with over 5,800 overdose deaths in 2023. Professional interventionists help families navigate fentanyl, methamphetamine, and alcohol addiction."
+        title="Addiction Intervention Specialist in Texas | Freedom Interventions"
+        description="Texas families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Texas. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/texas"
-        keywords="Texas addiction intervention, Dallas intervention services, Houston drug intervention, Austin family intervention, Texas fentanyl crisis"
+        keywords="intervention specialist Texas, addiction intervention Texas, drug intervention Texas, Houston addiction intervention, Dallas intervention services, Austin drug intervention, San Antonio interventionist, Texas interventionist"
         geoRegion="US-TX"
         geoPlacename="Texas"
       />

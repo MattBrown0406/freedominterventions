@@ -158,6 +158,16 @@ import NovaScotia from "./pages/NovaScotia";
 import NewBrunswick from "./pages/NewBrunswick";
 import NewfoundlandLabrador from "./pages/NewfoundlandLabrador";
 import PrinceEdwardIsland from "./pages/PrinceEdwardIsland";
+import ColoradoSpringsColorado from "./pages/ColoradoSpringsColorado";
+import AuroraColorado from "./pages/AuroraColorado";
+import FortCollinsColorado from "./pages/FortCollinsColorado";
+import AlbuquerqueNewMexico from "./pages/AlbuquerqueNewMexico";
+import SantaFeNewMexico from "./pages/SantaFeNewMexico";
+import LasCrucesNewMexico from "./pages/LasCrucesNewMexico";
+import SanAntonioTexas from "./pages/SanAntonioTexas";
+import FortWorthTexas from "./pages/FortWorthTexas";
+import ElPasoTexas from "./pages/ElPasoTexas";
+import PlanoTexas from "./pages/PlanoTexas";
 
 const queryClient = new QueryClient();
 
@@ -280,6 +290,16 @@ const App = () => (
           <Route path="/mesa-arizona" element={<MesaArizona />} />
           <Route path="/chandler-arizona" element={<ChandlerArizona />} />
           <Route path="/denver-colorado" element={<DenverColorado />} />
+          <Route path="/colorado-springs-colorado" element={<ColoradoSpringsColorado />} />
+          <Route path="/aurora-colorado" element={<AuroraColorado />} />
+          <Route path="/fort-collins-colorado" element={<FortCollinsColorado />} />
+          <Route path="/albuquerque-new-mexico" element={<AlbuquerqueNewMexico />} />
+          <Route path="/santa-fe-new-mexico" element={<SantaFeNewMexico />} />
+          <Route path="/las-cruces-new-mexico" element={<LasCrucesNewMexico />} />
+          <Route path="/san-antonio-texas" element={<SanAntonioTexas />} />
+          <Route path="/fort-worth-texas" element={<FortWorthTexas />} />
+          <Route path="/el-paso-texas" element={<ElPasoTexas />} />
+          <Route path="/plano-texas" element={<PlanoTexas />} />
           <Route path="/chicago-illinois" element={<ChicagoIllinois />} />
           <Route path="/minneapolis-minnesota" element={<MinneapolisMinnesota />} />
           <Route path="/kansas-city-missouri" element={<KansasCityMissouri />} />
