@@ -198,7 +198,8 @@ Deno.serve(async (req) => {
       "Unknown action. Use /upload (POST), /list (GET), /download (GET), /delete (DELETE)",
       404
     );
-  } catch (e) {
-    return error(`Unexpected error: ${e.message}`, 500);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    return error(`Unexpected error: ${message}`, 500);
   }
 });
