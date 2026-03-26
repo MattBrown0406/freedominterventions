@@ -1,253 +1,497 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Users, ArrowRight } from "lucide-react";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  Users,
+  Heart,
+  ClipboardList,
+  PhoneCall,
+  ChevronDown,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import familyBanner from "@/assets/family-intervention-banner.jpg";
+import { useState } from "react";
+import oregonCrisisBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { BreadcrumbSchema, FAQSchema, OrganizationSchema, ServiceSchema } from "@/components/StructuredData";
-import OptimizedImage from "@/components/OptimizedImage";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceSchema,
+  FAQSchema,
+} from "@/components/StructuredData";
+
+const faqs = [
+  {
+    question: "What is a family intervention?",
+    answer:
+      "A family intervention is a carefully planned, structured conversation where loved ones come together — guided by a professional interventionist — to confront a person's substance use, describe the real impact it's had on everyone, and present a clear path to treatment. It is not an ambush. Done right, it is an act of love with a plan attached.",
+  },
+  {
+    question: "How much does a family intervention cost?",
+    answer:
+      "Intervention fees vary based on location, complexity, and travel. The free consultation is always the first step — from there Matt will give you a straightforward breakdown of cost. Most families find that the cost of one professional intervention is far less than another year of crisis, legal fees, medical bills, or funeral expenses.",
+  },
+  {
+    question: "Should I attempt an intervention without a professional?",
+    answer:
+      "You can, but it rarely ends well. Without a guide, family emotions take over, the person gets defensive or manipulative, and the conversation collapses — often damaging relationships and making future attempts harder. A professional keeps the process on track, neutralizes manipulation, and dramatically increases the odds of a yes.",
+  },
+  {
+    question: "What happens if they refuse treatment?",
+    answer:
+      "Refusal is not the end. Matt prepares families for this possibility. The boundaries you set during the intervention don't disappear if they say no — they remain in place. That ongoing pressure, combined with the removal of enabling, often moves someone to accept help days or weeks later. The intervention plants a seed. The boundaries water it.",
+  },
+  {
+    question: "What's the difference between an intervention and an ultimatum?",
+    answer:
+      "An ultimatum is a threat. An intervention is a structured offer. The difference is preparation, tone, and follow-through. A well-executed intervention presents consequences as logical outcomes of choices — not punishments — and pairs them with a concrete treatment offer ready to act on immediately. The goal is to open a door, not slam one.",
+  },
+  {
+    question: "How long does the intervention process take?",
+    answer:
+      "The initial consultation is typically 30–60 minutes. Family preparation usually takes one or two sessions over a few days. The intervention itself often lasts 1–3 hours. Matt stays involved through the treatment entry process and beyond to ensure follow-through. This isn't a one-call fix — it's a supported process.",
+  },
+  {
+    question: "Can an intervention work if the family is divided?",
+    answer:
+      "A divided family is the most common situation Matt works with. Part of the preparation process is aligning the family around a common goal and message — even when members disagree on approach, history, or blame. You don't need a perfect family. You need a clear plan and someone to facilitate it.",
+  },
+  {
+    question: "What substances or behaviors can be addressed?",
+    answer:
+      "Matt works with all substance use disorders: alcohol, opioids, methamphetamine, cocaine, benzodiazepines, marijuana, and poly-drug use. He also addresses process addictions like gambling and prescription drug misuse. If someone you love is destroying their life and your family because of a substance or compulsive behavior, an intervention can help.",
+  },
+];
+
+const signs = [
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Missed work, lost jobs, or declining performance that gets explained away repeatedly",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Hidden bottles, pills, or paraphernalia discovered in the home or car",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Chronic lying, broken promises, and manipulation around substance use",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Financial problems: borrowed money, unexplained withdrawals, unpaid bills",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Visible health decline: weight loss, skin changes, erratic sleep, neglected hygiene",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Withdrawal from family, friends, and activities they used to love",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Prior treatment attempts that ended in relapse or early departure",
+  },
+  {
+    icon: <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />,
+    text: "Legal problems, DUIs, domestic incidents, or close calls that get minimized",
+  },
+];
+
+const steps = [
+  {
+    number: "01",
+    icon: <PhoneCall className="h-6 w-6 text-primary" aria-hidden="true" />,
+    title: "Free Consultation",
+    description:
+      "You call or schedule online. Matt listens. No scripts, no sales pitch. He asks questions, gets honest about what he's hearing, and tells you exactly what's realistic. This call alone changes how most families see their situation.",
+  },
+  {
+    number: "02",
+    icon: <Users className="h-6 w-6 text-primary" aria-hidden="true" />,
+    title: "Family Preparation",
+    description:
+      "Matt works with the family in advance — not to rehearse a script, but to align everyone around a clear message, establish firm boundaries, and prepare for every possible response. The family that walks into the intervention is not the same family that called for help.",
+  },
+  {
+    number: "03",
+    icon: <Heart className="h-6 w-6 text-primary" aria-hidden="true" />,
+    title: "The Intervention",
+    description:
+      "A structured, facilitated conversation. Each family member speaks directly, honestly, and without blame. Matt guides the room, keeps it on track, neutralizes manipulation, and presents the treatment option. The goal is a yes — and a bed ready that day.",
+  },
+  {
+    number: "04",
+    icon: <ClipboardList className="h-6 w-6 text-primary" aria-hidden="true" />,
+    title: "Aftercare & Follow-Through",
+    description:
+      "Matt doesn't disappear when the person says yes. He stays involved through treatment entry, communicates with the family, and supports the follow-through on boundaries. Recovery is a process — the intervention is the beginning, not the finish line.",
+  },
+];
+
+const differentiators = [
+  {
+    type: "not",
+    icon: <XCircle className="h-7 w-7 text-destructive" aria-hidden="true" />,
+    title: "Not a Surprise Ambush",
+    description:
+      "The TV-style intervention where a dozen people are hiding in the living room is not what Matt does. That approach triggers defensiveness, destroys trust, and rarely works. Matt's method is structured and dignified — your loved one walks into a conversation, not a trap.",
+  },
+  {
+    type: "not",
+    icon: <XCircle className="h-7 w-7 text-destructive" aria-hidden="true" />,
+    title: "Not About Judgment or Shame",
+    description:
+      "Addiction is a medical illness with a spiritual dimension — not a moral failure, not a choice, not something to be humiliated out of someone. If shame worked, they'd already be sober. Matt's process is built on honesty and love, not punishment.",
+  },
+  {
+    type: "not",
+    icon: <XCircle className="h-7 w-7 text-destructive" aria-hidden="true" />,
+    title: "Not a Pitch for One Treatment Center",
+    description:
+      "Matt is not a referral agent. He doesn't get paid by treatment centers to steer your family anywhere. He helps you identify the right fit based on the person's needs, your family's situation, and what's actually available — then he helps execute the plan.",
+  },
+  {
+    type: "is",
+    icon: <CheckCircle className="h-7 w-7 text-primary" aria-hidden="true" />,
+    title: "Family-Led, Professionally Guided",
+    description:
+      "You know your loved one. Matt knows the process. Together, the family delivers the message — Matt makes sure it lands. The intervention belongs to your family; he's there to make it work.",
+  },
+  {
+    type: "is",
+    icon: <CheckCircle className="h-7 w-7 text-primary" aria-hidden="true" />,
+    title: "Dignity-Preserving",
+    description:
+      "The goal is treatment acceptance, not emotional destruction. Even when delivering hard truths and firm consequences, Matt maintains an environment of respect. People are more likely to say yes when they feel heard, not cornered.",
+  },
+  {
+    type: "is",
+    icon: <CheckCircle className="h-7 w-7 text-primary" aria-hidden="true" />,
+    title: "Outcome-Focused",
+    description:
+      "This isn't therapy for the family. It's a strategic process with one primary outcome: getting your loved one into treatment. Every preparation session, every word choice, every boundary set — it all points toward that goal.",
+  },
+];
+
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-border rounded-xl overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between px-6 py-5 text-left bg-card hover:bg-accent/30 transition-colors"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+      >
+        <span className="font-semibold text-foreground pr-4">{question}</span>
+        <ChevronDown
+          className={`h-5 w-5 text-muted-foreground flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <div className="px-6 py-5 bg-background border-t border-border">
+          <p className="text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const breadcrumbItems = [
+  { name: "Home", href: "/" },
+  { name: "Family Intervention Services", href: "/family-intervention" },
+];
 
 const FamilyIntervention = () => {
-  const faqs = [
-    {
-      question: "What is a family intervention?",
-      answer: "A family intervention is a carefully planned conversation where family members and others outline the impact of substance use and present a concrete treatment option to a loved one struggling with addiction.",
-    },
-    {
-      question: "Why is family unity important in an intervention?",
-      answer: "Unity reduces the chances of manipulation and ensures the person struggling receives one clear, consistent message rather than conflicting ones. It also protects relatives' emotional health.",
-    },
-    {
-      question: "What are healthy boundaries in addiction intervention?",
-      answer: "Healthy boundaries are clear limits that protect relatives' safety and emotional health while encouraging responsibility. They include decisions about what behaviors are acceptable and what support the family will provide.",
-    },
-    {
-      question: "What is enabling and how do I stop it?",
-      answer: "Enabling includes rescuing a loved one from consequences, covering for them, giving money, or tolerating unsafe behavior. Stopping enabling means agreeing as a family to only support recovery, not the addiction.",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Family Intervention Services | Freedom Interventions"
-        description="Learn how family unity, healthy boundaries, and ending enabling behaviors are essential for successful addiction intervention. Professional guidance for families nationwide."
+        title="Family Intervention Services | Certified Interventionist | Freedom Interventions"
+        description="Hire a certified family interventionist with 20+ years experience. Matt Brown helps families plan and execute successful drug & alcohol interventions nationwide. Free consultation. (541) 838-6009."
+        keywords="family intervention, family intervention services, hire an interventionist, drug intervention, alcohol intervention, how to stage an intervention, intervention specialist, certified interventionist, family intervention cost, what happens during an intervention"
         canonical="https://freedominterventions.com/family-intervention"
-        keywords="family intervention, addiction intervention, family unity, enabling behaviors, intervention process, family boundaries, addiction support"
       />
       <OrganizationSchema />
       <ServiceSchema
         name="Family Intervention Services"
-        description="Professional family intervention services helping families unite with healthy boundaries to guide loved ones toward addiction recovery."
+        description="Certified interventionist Matt Brown helps families plan and execute successful drug and alcohol interventions nationwide. 20+ years experience. Free consultation available."
         url="https://freedominterventions.com/family-intervention"
         serviceType="Family Intervention"
       />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com/" },
-          { name: "Family Intervention", url: "https://freedominterventions.com/family-intervention" },
+          { name: "Family Intervention Services", url: "https://freedominterventions.com/family-intervention" },
         ]}
       />
       <FAQSchema faqs={faqs} />
+
       <Navbar />
-      
-      {/* Banner Image */}
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
-        <OptimizedImage 
-          src={familyBanner} 
-          alt="Family holding hands in unity during addiction intervention support" 
-          className="w-full h-full"
-          priority={true}
+      <BreadcrumbNav items={breadcrumbItems} />
+
+      {/* Hero Banner */}
+      <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden mt-28 md:mt-32">
+        <img
+          src={oregonCrisisBanner}
+          alt="Family seeking addiction intervention help — Freedom Interventions"
+          className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>
-      
-      <main>
-        {/* Hero Section */}
-        <section className="py-12 md:py-16 bg-card">
-          <div className="container mx-auto px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <Users className="h-4 w-4" aria-hidden="true" />
-                Family Intervention Services
-              </div>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                The Importance of Family Unity in Addiction Intervention
-              </h1>
-              <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
-                Family unity is one of the most powerful forces in addiction intervention, especially when it is grounded in clear boundaries, an end to enabling, and a shared commitment to recovery.
-              </p>
+
+      {/* Hero Section */}
+      <section className="py-12 md:py-20 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
+              <Users className="h-4 w-4" aria-hidden="true" />
+              Certified Interventionist — 20+ Years Experience
             </div>
-          </div>
-        </section>
-
-        {/* Main Content */}
-        <section className="py-16 md:py-24">
-          <div className="container mx-auto px-6">
-            <div className="max-w-3xl mx-auto prose prose-lg">
-              
-              {/* Why Family Unity Matters */}
-              <article className="mb-12">
-                <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                  Why Family Unity Matters
-                </h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    Addiction is often called a "family disease" because it reshapes roles, trust, and communication for everyone under the same roof, not just the person using substances. When family members present a united front in an intervention, they replace chaos and mixed messages with clarity, consistency, and emotional safety for everyone involved.
-                  </p>
-                  <p>
-                    Unity also reduces the chances that one relative will be manipulated, guilt-tripped, or pressured into secret deals that undermine the plan. When each member agrees on the same boundaries, consequences, and expectations, the person struggling with addiction receives one clear message instead of several conflicting ones.
-                  </p>
-                </div>
-              </article>
-
-              {/* Intervention, Not Confrontation */}
-              <article className="mb-12">
-                <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                  Intervention, Not Confrontation
-                </h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    An effective addiction intervention is less about "ambushing" a loved one and more about offering a structured, loving invitation to change. Health organizations describe interventions as carefully planned conversations where family and others outline the impact of substance use and present a concrete treatment option. Doing this as a unified family lowers defensiveness, because the focus stays on concern, safety, and solutions rather than blame or shaming.
-                  </p>
-                  <p>
-                    Planning together beforehand—with a professional interventionist—helps each person decide what they want to say, what they are willing to change, and what support they can realistically offer. That preparation turns raw emotion into a coherent message that is easier for a loved one to hear, even if they initially resist.
-                  </p>
-                </div>
-              </article>
-
-              {/* Boundaries as an Act of Love */}
-              <article className="mb-12">
-                <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                  Boundaries as an Act of Love
-                </h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    Healthy boundaries are the backbone of a united family intervention. Treatment and family-support resources consistently stress that clear limits protect relatives' safety and emotional health while encouraging responsibility in the person with addiction. Boundaries answer questions like: What will we no longer pay for? What behavior will we no longer allow in the home? What needs to change for us to stay involved?
-                  </p>
-                  <aside className="bg-accent/50 border border-border rounded-xl p-6 my-8">
-                    <p className="text-foreground italic">
-                      One helpful way to picture this is to imagine your family as a castle. The castle walls and moat are your boundaries: they protect what is precious inside, while the drawbridge represents the choices you make about who is allowed in, under what conditions, and for how long. Without boundaries, the drawbridge is always down, and addiction can march in and out at all hours, draining your energy, finances, and peace; with healthy boundaries, the family still welcomes connection, but no longer allows destructive behavior to storm the castle.
-                    </p>
-                  </aside>
-                  <p>
-                    Far from being cruel or cold, boundaries are a form of "love with limits." Clinical guidance on addiction recovery shows that when families consistently follow through on reasonable limits, they reduce chaos, lower resentment, and make ongoing substance use less comfortable and less sustainable. Just like a well-kept castle, the goal is not to shut everyone out, but to protect the people inside so real healing and recovery can take place.
-                  </p>
-                </div>
-              </article>
-
-              {/* Ending Enabling and Codependency */}
-              <article className="mb-12">
-                <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                  Ending Enabling and Codependency
-                </h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    Unity also matters because many families are caught in patterns of enabling without realizing it. Enabling includes rescuing a loved one from consequences, covering for them at work, repeatedly giving money, or tolerating unsafe behavior at home in the hope that things will eventually improve. These actions are often driven by fear and love, but they unintentionally shield addiction from reality.
-                  </p>
-                  <p>
-                    Family programs point out that when relatives agree to stop enabling together, the person with addiction can no longer "split" the family—turning to the softest member for money, housing, or excuses. Replacing enabling with consistent, recovery-focused support sends a unified message: <strong className="text-foreground">"We love you deeply, but we will no longer support the addiction. We will only support recovery."</strong>
-                  </p>
-                </div>
-              </article>
-
-              {/* Supporting Long-Term Recovery */}
-              <article className="mb-12">
-                <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                  Supporting Long-Term Recovery
-                </h2>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    Family unity should not end when the intervention is over; it needs to continue into treatment and beyond. Studies and treatment providers repeatedly note that when families stay involved—through family therapy, education groups, and ongoing communication—clients are more likely to complete treatment and maintain sobriety. In these settings, relatives learn about addiction as a chronic medical condition, develop healthier communication skills, and heal their own trauma and resentment.
-                  </p>
-                  <p>
-                    Unified families also create safer home environments after treatment by maintaining the same boundaries and expectations they agreed on during the intervention. This can look like removing substances from the home, aligning on consequences for relapse, encouraging meeting attendance, and checking in regularly without micromanaging. Over time, these shared practices turn the family from a crisis-driven system into a recovery-oriented one.
-                  </p>
-                </div>
-              </article>
-
-              {/* Practical Steps */}
-              <article className="mb-12">
-                <h2 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                  Practical Steps for Families
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  To build unity around an intervention and beyond, families can:
-                </p>
-                <div className="space-y-4">
-                  <div className="flex gap-4 p-4 bg-card rounded-lg border border-border/50">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary font-semibold text-sm">1</span>
-                    </div>
-                    <p className="text-muted-foreground">
-                      <strong className="text-foreground">Meet privately</strong> (with a professional) to clarify shared goals, boundaries, and treatment options before speaking with their loved one.
-                    </p>
-                  </div>
-                  <div className="flex gap-4 p-4 bg-card rounded-lg border border-border/50">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary font-semibold text-sm">2</span>
-                    </div>
-                    <p className="text-muted-foreground">
-                      <strong className="text-foreground">Learn the difference</strong> between support and enabling through family education programs, Al-Anon or Nar-Anon, and family workshops offered by treatment centers.
-                    </p>
-                  </div>
-                  <div className="flex gap-4 p-4 bg-card rounded-lg border border-border/50">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary font-semibold text-sm">3</span>
-                    </div>
-                    <p className="text-muted-foreground">
-                      <strong className="text-foreground">Commit to consistent follow-through</strong> on agreed boundaries, even when emotions run high or guilt appears.
-                    </p>
-                  </div>
-                  <div className="flex gap-4 p-4 bg-card rounded-lg border border-border/50">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary font-semibold text-sm">4</span>
-                    </div>
-                    <p className="text-muted-foreground">
-                      <strong className="text-foreground">Participate in ongoing family therapy</strong> and support groups to repair relationships and reinforce recovery-focused patterns at home.
-                    </p>
-                  </div>
-                </div>
-              </article>
-
-              {/* Closing */}
-              <aside className="bg-primary/5 border border-primary/20 rounded-xl p-8 text-center">
-                <p className="text-foreground text-lg leading-relaxed">
-                  When families stand together around clear boundaries, a refusal to enable, and a shared vision of recovery, an intervention becomes more than a single event. It becomes the starting point for a new, healthier way of relating—one where <strong>unity, not addiction, defines the family</strong>.
-                </p>
-              </aside>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-16 md:py-24 bg-card">
-          <div className="container mx-auto px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-6">
-                Ready to Take the First Step?
-              </h2>
-              <p className="text-muted-foreground text-lg mb-8">
-                Our team is here to guide your family through the intervention process with compassion and expertise.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              Family Intervention Services: How to Help a Loved One Accept Treatment
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
+              Matt Brown has spent more than two decades sitting with families in crisis — families who have tried everything, been lied to, and are exhausted. He knows what works. If someone you love is destroying their life with drugs or alcohol, a professionally guided intervention is often the turning point that changes everything.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
                 <Link to="/#booking">
-                  <Button variant="hero" size="lg">
-                    Schedule a Consultation
-                    <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                  </Button>
+                  <Calendar className="mr-2 h-5 w-5" aria-hidden="true" />
+                  Schedule Free Consultation
                 </Link>
-                <a href="tel:+15418386009">
-                  <Button variant="outline" size="lg">
-                    Call (541) 838-6009
-                  </Button>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:541-838-6009">
+                  <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
+                  Call (541) 838-6009
                 </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What Is a Family Intervention */}
+      <section className="py-16 md:py-24 bg-card" id="what-is-a-family-intervention">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+              What Is a Family Intervention?
+            </h2>
+            <div className="space-y-5 text-muted-foreground leading-relaxed">
+              <p>
+                A family intervention is a planned, structured conversation — not a confrontation — in which the people who love someone struggling with addiction come together to deliver a clear, unified message: <em>we see what's happening, we refuse to keep enabling it, and we have a path forward ready right now.</em>
+              </p>
+              <p>
+                Forget what you've seen on television. The surprise ambush with people hiding behind furniture, tearful meltdowns, and dramatic ultimatums — that model is not what professional intervention looks like. What actually works is preparation. Every participant knows what they're going to say. The treatment option is lined up in advance. The boundaries are real. And a trained interventionist is there to keep the conversation on track.
+              </p>
+              <p>
+                The purpose of an intervention is not to punish, humiliate, or manipulate someone into compliance. It's to close the gap between the life a person is living and the life they know, somewhere underneath the addiction, they want. Addiction is a chronic medical illness — but people do recover. Most people who enter treatment don't go because they suddenly wanted to. They go because the people in their lives finally stopped making addiction comfortable and started making recovery possible.
+              </p>
+              <p>
+                Matt Brown's approach is grounded in 20+ years of field experience, clinical training, and a personal history in recovery. He has guided hundreds of families through this process. He doesn't sell false hope — he gives you an honest assessment and a real plan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Signs It's Time */}
+      <section className="py-16 md:py-24 bg-background" id="signs-its-time">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-destructive" aria-hidden="true" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mt-1">
+                Signs It's Time for an Intervention
+              </h2>
+            </div>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Most families wait too long. They tell themselves it's a phase, that their loved one will hit bottom on their own, that they don't want to make things worse. Meanwhile the problem grows. If you're seeing multiple signs below, you're not imagining things — and waiting is not a strategy.
+            </p>
+            <ul className="space-y-4">
+              {signs.map((sign, idx) => (
+                <li key={idx} className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border/50">
+                  <span className="flex-shrink-0 mt-0.5">{sign.icon}</span>
+                  <span className="text-muted-foreground leading-relaxed">{sign.text}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-muted-foreground leading-relaxed">
+              You don't need to check every box. If you're reading this page, something is wrong — and that's enough reason to make one phone call.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How the Process Works */}
+      <section className="py-16 md:py-24 bg-card" id="how-the-process-works">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-center">
+              How the Process Works
+            </h2>
+            <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto leading-relaxed">
+              A professional intervention isn't a single event. It's a process with four distinct phases — each one designed to increase the chances your loved one says yes and follows through on treatment.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              {steps.map((step) => (
+                <div
+                  key={step.number}
+                  className="bg-background rounded-2xl border border-border p-7 flex flex-col gap-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="text-4xl font-bold text-primary/20 font-mono leading-none">
+                      {step.number}
+                    </div>
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                      {step.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground">{step.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What Makes Matt's Approach Different */}
+      <section className="py-16 md:py-24 bg-background" id="matts-approach">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-center">
+              What Makes Matt's Approach Different
+            </h2>
+            <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto leading-relaxed">
+              Not all intervention services are built the same. Here's what Matt's process is — and what it isn't.
+            </p>
+
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-destructive uppercase tracking-wider mb-4 px-1">
+                What This Is NOT
+              </h3>
+              <div className="grid md:grid-cols-3 gap-6 mb-10">
+                {differentiators
+                  .filter((d) => d.type === "not")
+                  .map((d, idx) => (
+                    <div key={idx} className="bg-destructive/5 border border-destructive/20 rounded-2xl p-6">
+                      <div className="mb-3">{d.icon}</div>
+                      <h4 className="font-bold text-foreground mb-2">{d.title}</h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{d.description}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 px-1">
+                What This IS
+              </h3>
+              <div className="grid md:grid-cols-3 gap-6">
+                {differentiators
+                  .filter((d) => d.type === "is")
+                  .map((d, idx) => (
+                    <div key={idx} className="bg-primary/5 border border-primary/20 rounded-2xl p-6">
+                      <div className="mb-3">{d.icon}</div>
+                      <h4 className="font-bold text-foreground mb-2">{d.title}</h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{d.description}</p>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 md:py-24 bg-card" id="faq">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-center">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-muted-foreground text-center mb-10 leading-relaxed">
+              Families come to Matt with a lot of questions — and he gives them straight answers. Here are the ones he hears most often.
+            </p>
+            <div className="space-y-3">
+              {faqs.map((faq, idx) => (
+                <FAQItem key={idx} question={faq.question} answer={faq.answer} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* State Internal Links */}
+      <section className="py-16 bg-background" id="service-areas">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Intervention Services by State
+            </h2>
+            <p className="text-muted-foreground mb-10 leading-relaxed">
+              Matt travels nationwide. Wherever your family is, he can help. See state-specific resources and information below.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { name: "Oregon", href: "/oregon" },
+                { name: "California", href: "/california" },
+                { name: "Washington", href: "/washington" },
+                { name: "Texas", href: "/texas" },
+                { name: "Colorado", href: "/colorado" },
+                { name: "Florida", href: "/florida" },
+              ].map((state) => (
+                <Link
+                  key={state.href}
+                  to={state.href}
+                  className="flex items-center justify-center gap-2 px-5 py-4 bg-card border border-border rounded-xl hover:bg-accent/40 hover:border-primary/40 transition-colors font-medium text-foreground"
+                >
+                  {state.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-16 md:py-24 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Your Family Has Waited Long Enough
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed text-lg">
+              The free consultation costs you nothing. It takes 30 minutes. And it will give you more clarity on your situation than most families get in years of managing on their own. Call now or schedule online — Matt picks up the phone.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                <Link to="/#booking">
+                  <Calendar className="mr-2 h-5 w-5" aria-hidden="true" />
+                  Schedule Free Consultation
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:541-838-6009">
+                  <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
+                  Call (541) 838-6009
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );
