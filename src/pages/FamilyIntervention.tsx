@@ -434,34 +434,44 @@ const FamilyIntervention = () => {
         </div>
       </section>
 
-      {/* State Internal Links */}
+      {/* State Internal Links — All 50 States by Region */}
       <section className="py-16 bg-background" id="service-areas">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Intervention Services by State
-            </h2>
-            <p className="text-muted-foreground mb-10 leading-relaxed">
-              Matt travels nationwide. Wherever your family is, he can help. See state-specific resources and information below.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                { name: "Oregon", href: "/oregon" },
-                { name: "California", href: "/california" },
-                { name: "Washington", href: "/washington" },
-                { name: "Texas", href: "/texas" },
-                { name: "Colorado", href: "/colorado" },
-                { name: "Florida", href: "/florida" },
-              ].map((state) => (
-                <Link
-                  key={state.href}
-                  to={state.href}
-                  className="flex items-center justify-center gap-2 px-5 py-4 bg-card border border-border rounded-xl hover:bg-accent/40 hover:border-primary/40 transition-colors font-medium text-foreground"
-                >
-                  {state.name}
-                </Link>
-              ))}
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
+                <MapPin className="w-4 h-4" />
+                Nationwide Coverage
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Addiction Intervention Services in All 50 States
+              </h2>
+              <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                Matt travels nationwide to help families in crisis. Select your state below for location-specific intervention resources, local treatment options, and state addiction statistics.
+              </p>
             </div>
+
+            {Object.entries(usRegions).map(([region, stateNames]) => (
+              <div key={region} className="mb-8">
+                <h3 className="text-lg font-semibold text-foreground mb-3 border-b border-border pb-2">
+                  {region}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {usStates
+                    .filter((s) => stateNames.includes(s.name))
+                    .map((state) => (
+                      <Link
+                        key={state.slug}
+                        to={`/${state.slug}`}
+                        className="flex items-center justify-center gap-1.5 px-4 py-3 bg-card border border-border rounded-lg hover:bg-accent/40 hover:border-primary/40 transition-colors text-sm font-medium text-foreground"
+                      >
+                        <span className="text-muted-foreground text-xs">{state.abbreviation}</span>
+                        {state.name}
+                      </Link>
+                    ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
