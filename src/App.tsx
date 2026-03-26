@@ -108,6 +108,12 @@ import MiamiFlorida from "./pages/MiamiFlorida";
 import NashvilleTennessee from "./pages/NashvilleTennessee";
 import IndianapolisIndiana from "./pages/IndianapolisIndiana";
 import SpokaneWashington from "./pages/SpokaneWashington";
+import TacomaWashington from "./pages/TacomaWashington";
+import BellevueWashington from "./pages/BellevueWashington";
+import EverettWashington from "./pages/EverettWashington";
+import OlympiaWashington from "./pages/OlympiaWashington";
+import YakimaWashington from "./pages/YakimaWashington";
+import VancouverWashington from "./pages/VancouverWashington";
 import BendOregon from "./pages/BendOregon";
 import SalemOregon from "./pages/SalemOregon";
 import MedfordOregon from "./pages/MedfordOregon";
@@ -248,6 +254,12 @@ const App = () => (
           <Route path="/nashville-tennessee" element={<NashvilleTennessee />} />
           <Route path="/indianapolis-indiana" element={<IndianapolisIndiana />} />
           <Route path="/spokane-washington" element={<SpokaneWashington />} />
+          <Route path="/tacoma-washington" element={<TacomaWashington />} />
+          <Route path="/bellevue-washington" element={<BellevueWashington />} />
+          <Route path="/everett-washington" element={<EverettWashington />} />
+          <Route path="/olympia-washington" element={<OlympiaWashington />} />
+          <Route path="/yakima-washington" element={<YakimaWashington />} />
+          <Route path="/vancouver-washington" element={<VancouverWashington />} />
           <Route path="/bend-oregon" element={<BendOregon />} />
           <Route path="/salem-oregon" element={<SalemOregon />} />
           <Route path="/medford-oregon" element={<MedfordOregon />} />

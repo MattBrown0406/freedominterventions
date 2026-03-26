@@ -13,10 +13,10 @@ const Washington = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Washington State Addiction Intervention Services | Freedom Interventions"
-        description="Washington State grapples with a severe addiction epidemic, recording 3,600 drug overdose deaths. Professional interventionists help families navigate fentanyl and meth addiction."
+        title="Addiction Intervention Specialist in Washington State | Freedom Interventions"
+        description="Washington families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Washington. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/washington"
-        keywords="Washington addiction intervention, Seattle intervention services, Washington fentanyl crisis, Spokane drug intervention"
+        keywords="intervention specialist Washington state, addiction intervention Washington, drug intervention Washington state, family intervention Washington, Washington interventionist, professional intervention services Washington, Seattle addiction intervention, Spokane drug intervention, Tacoma intervention services"
         geoRegion="US-WA"
         geoPlacename="Washington"
       />
