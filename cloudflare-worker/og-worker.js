@@ -14,6 +14,200 @@
  * 7. That's it! Social shares will now show your domain.
  */
 
+// Oregon location pages metadata for search engine pre-rendering
+const LOCATION_META = {
+  '/oregon': {
+    title: 'Addiction Intervention Specialist in Oregon | Freedom Interventions',
+    description: 'Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/oregon',
+    city: 'Oregon',
+    state: 'Oregon',
+  },
+  '/portland-oregon': {
+    title: 'Addiction Intervention Services in Portland, Oregon | Freedom Interventions',
+    description: 'Portland families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Multnomah County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/portland-oregon',
+    city: 'Portland',
+    state: 'Oregon',
+  },
+  '/eugene-oregon': {
+    title: 'Addiction Intervention Services in Eugene, Oregon | Freedom Interventions',
+    description: 'Eugene families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Lane County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/eugene-oregon',
+    city: 'Eugene',
+    state: 'Oregon',
+  },
+  '/bend-oregon': {
+    title: 'Bend Oregon Addiction Intervention Services | Freedom Interventions',
+    description: 'Professional addiction intervention services in Bend, Oregon. Help your loved one find recovery from opioid, alcohol, and methamphetamine addiction. Free consultations available.',
+    canonical: 'https://freedominterventions.com/bend-oregon',
+    city: 'Bend',
+    state: 'Oregon',
+  },
+  '/salem-oregon': {
+    title: 'Addiction Intervention Services in Salem, Oregon | Freedom Interventions',
+    description: 'Salem families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Marion County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/salem-oregon',
+    city: 'Salem',
+    state: 'Oregon',
+  },
+  '/medford-oregon': {
+    title: 'Addiction Intervention Services in Medford, Oregon | Freedom Interventions',
+    description: 'Medford families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Jackson County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/medford-oregon',
+    city: 'Medford',
+    state: 'Oregon',
+  },
+  '/hillsboro-oregon': {
+    title: 'Addiction Intervention Services in Hillsboro, Oregon | Freedom Interventions',
+    description: 'Hillsboro families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/hillsboro-oregon',
+    city: 'Hillsboro',
+    state: 'Oregon',
+  },
+  '/beaverton-oregon': {
+    title: 'Addiction Intervention Services in Beaverton, Oregon | Freedom Interventions',
+    description: 'Beaverton families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/beaverton-oregon',
+    city: 'Beaverton',
+    state: 'Oregon',
+  },
+  '/gresham-oregon': {
+    title: 'Addiction Intervention Services in Gresham, Oregon | Freedom Interventions',
+    description: 'Gresham families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Multnomah County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/gresham-oregon',
+    city: 'Gresham',
+    state: 'Oregon',
+  },
+  '/corvallis-oregon': {
+    title: 'Addiction Intervention Services in Corvallis, Oregon | Freedom Interventions',
+    description: 'Corvallis families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Benton County. Free consultation. (541) 838-6009.',
+    canonical: 'https://freedominterventions.com/corvallis-oregon',
+    city: 'Corvallis',
+    state: 'Oregon',
+  },
+};
+
+// Search engine bot detection (distinct from social crawlers)
+const SEARCH_CRAWLER_USER_AGENTS = [
+  'Googlebot',
+  'Googlebot-Mobile',
+  'Googlebot-Image',
+  'bingbot',
+  'DuckDuckBot',
+  'Baiduspider',
+  'YandexBot',
+  'Slurp',
+  'AhrefsBot',
+  'SemrushBot',
+  'MJ12bot',
+];
+
+function isSearchCrawler(userAgent) {
+  if (!userAgent) return false;
+  const ua = userAgent.toLowerCase();
+  return SEARCH_CRAWLER_USER_AGENTS.some(bot => ua.includes(bot.toLowerCase()));
+}
+
+function generateLocationHtml(meta) {
+  const { title, description, canonical, city, state } = meta;
+  const safeTitle = escapeHtml(title);
+  const safeDesc = escapeHtml(description);
+  const safeCity = escapeHtml(city);
+  const safeState = escapeHtml(state);
+
+  const localBusinessSchema = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'Freedom Interventions',
+    description: `Professional addiction intervention services in ${city}, ${state}.`,
+    url: canonical,
+    telephone: '+15418386009',
+    areaServed: {
+      '@type': 'Place',
+      name: `${city}, ${state}`,
+    },
+    founder: {
+      '@type': 'Person',
+      name: 'Matt Brown',
+      jobTitle: 'Certified Intervention Specialist',
+    },
+    priceRange: 'Contact for pricing',
+    serviceType: 'Addiction Intervention Services',
+  });
+
+  const breadcrumbSchema = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://freedominterventions.com' },
+      { '@type': 'ListItem', position: 2, name: 'Service Areas', item: 'https://freedominterventions.com/service-areas' },
+      { '@type': 'ListItem', position: 3, name: state === 'Oregon' && city !== 'Oregon' ? state : city, item: state === 'Oregon' && city !== 'Oregon' ? 'https://freedominterventions.com/oregon' : canonical },
+      ...(city !== 'Oregon' ? [{ '@type': 'ListItem', position: 4, name: city, item: canonical }] : []),
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${safeTitle}</title>
+  <meta name="description" content="${safeDesc}">
+  <link rel="canonical" href="${canonical}">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:title" content="${safeTitle}">
+  <meta property="og:description" content="${safeDesc}">
+  <meta property="og:site_name" content="Freedom Interventions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${safeTitle}">
+  <meta name="twitter:description" content="${safeDesc}">
+
+  <!-- Structured Data: LocalBusiness -->
+  <script type="application/ld+json">${localBusinessSchema}</script>
+
+  <!-- Structured Data: BreadcrumbList -->
+  <script type="application/ld+json">${breadcrumbSchema}</script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="https://freedominterventions.com">Freedom Interventions</a> &rsaquo;
+      <a href="https://freedominterventions.com/service-areas">Service Areas</a> &rsaquo;
+      ${city !== 'Oregon' ? `<a href="https://freedominterventions.com/oregon">Oregon</a> &rsaquo;` : ''}
+      <span>${safeCity}</span>
+    </nav>
+  </header>
+  <main>
+    <h1>${safeTitle}</h1>
+    <p>${safeDesc}</p>
+    <section>
+      <h2>Professional Addiction Intervention in ${safeCity}, ${safeState}</h2>
+      <p>Matt Brown is a certified intervention specialist with over 20 years of experience helping families throughout ${safeState} navigate addiction crises. Freedom Interventions provides compassionate, evidence-based intervention services with a 90%+ success rate for treatment entry.</p>
+      <p>If your family is facing a substance use crisis in ${safeCity}, do not wait. Professional intervention dramatically increases the likelihood of your loved one accepting treatment and achieving lasting recovery.</p>
+      <h2>Why Choose a Professional Interventionist?</h2>
+      <ul>
+        <li>Certified, experienced intervention specialist with 20+ years in ${safeState}</li>
+        <li>Evidence-based ARISE and CRAFT intervention models</li>
+        <li>Pre-arranged treatment placement before the intervention</li>
+        <li>Comprehensive family coaching to end enabling behaviors</li>
+        <li>Ongoing aftercare coordination for sustained recovery</li>
+        <li>Free initial consultation &mdash; no commitment required</li>
+      </ul>
+      <h2>Contact Freedom Interventions</h2>
+      <p>Call us now at <a href="tel:+15418386009">(541) 838-6009</a> for a free, confidential consultation. We serve ${safeCity} and all of ${safeState}.</p>
+      <p><a href="https://freedominterventions.com/#booking">Schedule your free consultation online</a></p>
+    </section>
+  </main>
+</body>
+</html>`;
+}
+
 const SUPABASE_URL = 'https://rizfkjgwhcpwiryyqejx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpemZramd3aGNwd2lyeXlxZWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2NTA1NTQsImV4cCI6MjA4MDIyNjU1NH0.7FENiqyiZCFTXJWzlNpxu7Jtf0JROfJAK44oAWHZeH4';
 const SITE_URL = 'https://freedominterventions.com';
@@ -159,7 +353,27 @@ export default {
       return fetch(request);
     }
 
-    // Only intercept /blog/* paths
+    // Handle Oregon location pages for search crawlers
+    const locationMeta = LOCATION_META[url.pathname];
+    if (locationMeta && isSearchCrawler(userAgent)) {
+      console.log(`Search crawler detected for location page: ${url.pathname}`);
+      try {
+        const html = generateLocationHtml(locationMeta);
+        return new Response(html, {
+          status: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'public, max-age=86400',
+            'X-Prerendered': 'true',
+          },
+        });
+      } catch (error) {
+        console.error('Location prerender error:', error);
+        return fetch(request);
+      }
+    }
+
+    // Only intercept /blog/* paths for OG tags
     if (!url.pathname.startsWith('/blog/')) {
       return fetch(request);
     }

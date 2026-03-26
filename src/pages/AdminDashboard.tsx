@@ -15,6 +15,7 @@ import BlogImageManager from "@/components/admin/BlogImageManager";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
 import TestimonialManager from "@/components/admin/TestimonialManager";
 import AvailabilityManager from "@/components/admin/AvailabilityManager";
+import CaseDocumentsManager from "@/components/admin/CaseDocumentsManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -272,6 +273,10 @@ const AdminDashboard = () => {
               <Image className="w-4 h-4" />
               Blog Images
             </TabsTrigger>
+            <TabsTrigger value="case-documents" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Case Docs
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="assessments">
@@ -394,6 +399,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="testimonials">
               <TestimonialManager />
+            </TabsContent>
+
+            <TabsContent value="case-documents">
+              <CaseDocumentsManager />
             </TabsContent>
           </Tabs>
       </main>

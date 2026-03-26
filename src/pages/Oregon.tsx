@@ -13,10 +13,10 @@ const Oregon = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Oregon Addiction Intervention Services"
-        description="Oregon faces a persistent addiction epidemic. Professional interventionists help families navigate fentanyl, methamphetamine, and alcohol addiction treatment."
+        title="Addiction Intervention Specialist in Oregon | Freedom Interventions"
+        description="Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/oregon"
-        keywords="Oregon addiction intervention, Portland intervention services, Oregon fentanyl crisis, Oregon drug treatment"
+        keywords="intervention specialist Oregon, addiction intervention Oregon, drug intervention Oregon, alcohol intervention Oregon, family intervention Oregon, Oregon interventionist, professional intervention services Oregon, Portland addiction intervention, Salem drug intervention"
         geoRegion="US-OR"
         geoPlacename="Oregon"
       />

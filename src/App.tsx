@@ -109,6 +109,12 @@ import NashvilleTennessee from "./pages/NashvilleTennessee";
 import IndianapolisIndiana from "./pages/IndianapolisIndiana";
 import SpokaneWashington from "./pages/SpokaneWashington";
 import BendOregon from "./pages/BendOregon";
+import SalemOregon from "./pages/SalemOregon";
+import MedfordOregon from "./pages/MedfordOregon";
+import HillsboroOregon from "./pages/HillsboroOregon";
+import BeavertonOregon from "./pages/BeavertonOregon";
+import GreshamOregon from "./pages/GreshamOregon";
+import CorvallisOregon from "./pages/CorvallisOregon";
 import PhiladelphiaPennsylvania from "./pages/PhiladelphiaPennsylvania";
 import BaltimoreMaryland from "./pages/BaltimoreMaryland";
 import AnchorageAlaska from "./pages/AnchorageAlaska";
@@ -243,6 +249,12 @@ const App = () => (
           <Route path="/indianapolis-indiana" element={<IndianapolisIndiana />} />
           <Route path="/spokane-washington" element={<SpokaneWashington />} />
           <Route path="/bend-oregon" element={<BendOregon />} />
+          <Route path="/salem-oregon" element={<SalemOregon />} />
+          <Route path="/medford-oregon" element={<MedfordOregon />} />
+          <Route path="/hillsboro-oregon" element={<HillsboroOregon />} />
+          <Route path="/beaverton-oregon" element={<BeavertonOregon />} />
+          <Route path="/gresham-oregon" element={<GreshamOregon />} />
+          <Route path="/corvallis-oregon" element={<CorvallisOregon />} />
           <Route path="/philadelphia-pennsylvania" element={<PhiladelphiaPennsylvania />} />
           <Route path="/baltimore-maryland" element={<BaltimoreMaryland />} />
           <Route path="/anchorage-alaska" element={<AnchorageAlaska />} />
