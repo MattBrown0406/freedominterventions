@@ -126,11 +126,11 @@ const InterventionFAQ = () => {
               <HelpCircle className="w-4 h-4" />
               Frequently Asked Questions
             </div>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-              Intervention FAQ & Myth-Busting
-            </h2>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
+              Family Intervention FAQ & Myth-Busting
+            </h1>
             <p className="text-lg text-muted-foreground">
-              Clear Answers to the Questions Families Are Afraid to Ask
+              Clear Answers to the Family Intervention Questions Families Are Afraid to Ask
             </p>
           </div>
 
@@ -163,7 +163,7 @@ const InterventionFAQ = () => {
           {/* Final Thought */}
           <div className="mt-12 bg-primary/5 border border-primary/20 rounded-xl p-8">
             <h3 className="text-xl font-serif font-semibold text-foreground mb-4 text-center">
-              Final Thought for Families
+              Final Thought for Families Considering a Family Intervention
             </h3>
             <p className="text-muted-foreground text-center mb-4">
               If you are reading these questions, it likely means:
@@ -182,7 +182,7 @@ const InterventionFAQ = () => {
           <div className="mt-10 bg-card border border-border rounded-xl p-8 text-center">
             <div className="inline-flex items-center gap-2 text-primary mb-4">
               <MessageCircle className="w-5 h-5" />
-              <span className="font-medium">Next Step</span>
+              <span className="font-medium">Your Next Step in the Family Intervention Process</span>
             </div>
             <p className="text-muted-foreground mb-6">
               If these answers reflect your situation, a confidential consultation can help you determine 

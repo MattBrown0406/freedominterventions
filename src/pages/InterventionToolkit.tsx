@@ -22,10 +22,10 @@ const InterventionToolkit = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Intervention Planning Toolkit"
-        description="A step-by-step guide for families preparing for change. Learn what intervention planning involves, common mistakes to avoid, and when professional help is needed."
+        title="Family Intervention Planning Guide: Step-by-Step | Freedom Interventions"
+        description="A complete family intervention planning guide. Learn the process, avoid common mistakes, and know when to bring in a professional. Free consultation: (541) 838-6009."
         canonical="https://freedominterventions.com/intervention-toolkit"
-        keywords="intervention planning guide, family intervention toolkit, addiction intervention steps, intervention preparation"
+        keywords="family intervention planning, intervention guide, how to plan an intervention, intervention steps, family intervention checklist, intervention mistakes, when to hire interventionist"
       />
       <OrganizationSchema />
       <Navbar />
@@ -41,10 +41,10 @@ const InterventionToolkit = () => {
                 Family Planning Resource
               </div>
               <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">
-                The Intervention Planning Toolkit
+                The Family Intervention Planning Guide
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                A Step-by-Step Guide for Families Preparing for Change
+                A Step-by-Step Family Intervention Planning Resource for Families Preparing for Change
               </p>
             </div>
           </div>
@@ -91,6 +91,24 @@ const InterventionToolkit = () => {
           </div>
         </section>
 
+        {/* Family Intervention Internal Link */}
+        <section className="py-8 bg-primary/5 border-y border-primary/10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-foreground">Ready to plan a family intervention?</p>
+                <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect when you hire a professional.</p>
+              </div>
+              <Link to="/family-intervention" className="shrink-0">
+                <Button variant="outline" className="gap-2 whitespace-nowrap">
+                  <Users className="h-4 w-4" />
+                  Family Intervention Services
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Section 1 */}
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-6">
@@ -100,7 +118,7 @@ const InterventionToolkit = () => {
                   <Target className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
-                  Section 1: What an Intervention Is—and What It Is Not
+                  Section 1: What a Family Intervention Is—and What It Is Not
                 </h2>
               </div>
               
@@ -401,7 +419,7 @@ const InterventionToolkit = () => {
                   <XCircle className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
-                  Section 7: Common Planning Mistakes Families Make
+                  Section 7: Common Family Intervention Planning Mistakes Families Make
                 </h2>
               </div>
 
@@ -440,7 +458,7 @@ const InterventionToolkit = () => {
                   <Users className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
-                  Section 8: When Professional Intervention Is Warranted
+                  Section 8: When Professional Family Intervention Is Warranted
                 </h2>
               </div>
 

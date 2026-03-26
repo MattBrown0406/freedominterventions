@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import InterventionFAQ from "@/components/InterventionFAQ";
 import SEOHead from "@/components/SEOHead";
 import { FAQSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Users } from "lucide-react";
 
 const InterventionFAQPage = () => {
   const faqItems = [
@@ -35,22 +38,40 @@ const InterventionFAQPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Intervention FAQ & Myth-Busting | Freedom Interventions"
-        description="Clear answers to questions families ask about addiction intervention. Dispelling myths and providing clinical guidance for families considering an intervention."
+        title="Family Intervention FAQ: Your Questions Answered | Freedom Interventions"
+        description="Everything families ask about addiction intervention. How it works, what it costs, what to say, and what happens if they refuse. Free consultation: (541) 838-6009."
         canonical="https://freedominterventions.com/intervention-faq"
-        keywords="intervention FAQ, addiction intervention questions, intervention myths, family intervention guide"
+        keywords="family intervention FAQ, intervention questions, how does an intervention work, intervention cost, what to say in an intervention, if they refuse treatment, family intervention process"
       />
       <OrganizationSchema />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Intervention FAQ", url: "https://freedominterventions.com/intervention-faq" },
+          { name: "Family Intervention FAQ", url: "https://freedominterventions.com/intervention-faq" },
         ]}
       />
       <FAQSchema faqs={faqItems} />
       <Navbar />
       
       <main>
+        {/* Family Intervention Internal Link Card */}
+        <section className="py-8 bg-primary/5 border-b border-primary/10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-foreground">Ready to plan a family intervention?</p>
+                <p className="text-sm text-muted-foreground">Learn about our family intervention services — what to expect, how it works, and how we can help.</p>
+              </div>
+              <Link to="/family-intervention" className="shrink-0">
+                <Button variant="outline" className="gap-2 whitespace-nowrap">
+                  <Users className="h-4 w-4" />
+                  Family Intervention Services
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <InterventionFAQ />
       </main>
       

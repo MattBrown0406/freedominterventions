@@ -146,6 +146,12 @@ import KnoxvilleTennessee from "./pages/KnoxvilleTennessee";
 import ColumbusOhio from "./pages/ColumbusOhio";
 import OmahaNebraska from "./pages/OmahaNebraska";
 import OklahomaCityOklahoma from "./pages/OklahomaCityOklahoma";
+
+// Hawaii Islands
+import OahuHawaii from "./pages/OahuHawaii";
+import MauiHawaii from "./pages/MauiHawaii";
+import BigIslandHawaii from "./pages/BigIslandHawaii";
+import KauaiHawaii from "./pages/KauaiHawaii";
 import WichitaKansas from "./pages/WichitaKansas";
 import OverlandParkKansas from "./pages/OverlandParkKansas";
 import TopekaKansas from "./pages/TopekaKansas";
@@ -333,6 +339,12 @@ const App = () => (
           <Route path="/columbus-ohio" element={<ColumbusOhio />} />
           <Route path="/omaha-nebraska" element={<OmahaNebraska />} />
           <Route path="/oklahoma-city-oklahoma" element={<OklahomaCityOklahoma />} />
+          
+          {/* Hawaii Islands */}
+          <Route path="/oahu-hawaii" element={<OahuHawaii />} />
+          <Route path="/maui-hawaii" element={<MauiHawaii />} />
+          <Route path="/big-island-hawaii" element={<BigIslandHawaii />} />
+          <Route path="/kauai-hawaii" element={<KauaiHawaii />} />
           <Route path="/wichita-kansas" element={<WichitaKansas />} />
           <Route path="/overland-park-kansas" element={<OverlandParkKansas />} />
           <Route path="/topeka-kansas" element={<TopekaKansas />} />
