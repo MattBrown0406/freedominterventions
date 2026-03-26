@@ -13,8 +13,8 @@ const Idaho = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Idaho Addiction Intervention Services | Freedom Interventions"
-        description="Idaho has a growing drug crisis with 386 overdose deaths in 2023. Professional interventionists achieve 80-90% success in securing treatment entry for families."
+        title="Addiction Intervention Specialist in Idaho | Freedom Interventions"
+        description="Idaho families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Idaho. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/idaho"
         keywords="Idaho addiction intervention, Boise intervention services, Idaho fentanyl crisis, Coeur d'Alene drug intervention"
         geoRegion="US-ID"

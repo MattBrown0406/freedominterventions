@@ -13,8 +13,8 @@ const Nevada = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Nevada Addiction Intervention Services | Freedom Interventions"
-        description="Nevada contends with an acute substance use crisis with 1,352 drug overdose deaths in 2023. Expert intervention services for Las Vegas, Reno, and throughout Nevada."
+        title="Addiction Intervention Specialist in Nevada | Freedom Interventions"
+        description="Nevada families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Nevada. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/nevada"
         keywords="Nevada addiction intervention, Las Vegas intervention services, Reno drug intervention, Nevada fentanyl crisis"
         geoRegion="US-NV"

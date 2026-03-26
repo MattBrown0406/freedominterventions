@@ -105,6 +105,16 @@ import DallasTexas from "./pages/DallasTexas";
 import LasVegasNevada from "./pages/LasVegasNevada";
 import SaltLakeCityUtah from "./pages/SaltLakeCityUtah";
 import BoiseIdaho from "./pages/BoiseIdaho";
+import NampaIdaho from "./pages/NampaIdaho";
+import MeridianIdaho from "./pages/MeridianIdaho";
+import ProvoUtah from "./pages/ProvoUtah";
+import OgdenUtah from "./pages/OgdenUtah";
+import HendersonNevada from "./pages/HendersonNevada";
+import RenoNevada from "./pages/RenoNevada";
+import TucsonArizona from "./pages/TucsonArizona";
+import ScottsdaleArizona from "./pages/ScottsdaleArizona";
+import MesaArizona from "./pages/MesaArizona";
+import ChandlerArizona from "./pages/ChandlerArizona";
 import DenverColorado from "./pages/DenverColorado";
 import ChicagoIllinois from "./pages/ChicagoIllinois";
 import MinneapolisMinnesota from "./pages/MinneapolisMinnesota";
@@ -259,6 +269,16 @@ const App = () => (
           <Route path="/las-vegas-nevada" element={<LasVegasNevada />} />
           <Route path="/salt-lake-city-utah" element={<SaltLakeCityUtah />} />
           <Route path="/boise-idaho" element={<BoiseIdaho />} />
+          <Route path="/nampa-idaho" element={<NampaIdaho />} />
+          <Route path="/meridian-idaho" element={<MeridianIdaho />} />
+          <Route path="/provo-utah" element={<ProvoUtah />} />
+          <Route path="/ogden-utah" element={<OgdenUtah />} />
+          <Route path="/henderson-nevada" element={<HendersonNevada />} />
+          <Route path="/reno-nevada" element={<RenoNevada />} />
+          <Route path="/tucson-arizona" element={<TucsonArizona />} />
+          <Route path="/scottsdale-arizona" element={<ScottsdaleArizona />} />
+          <Route path="/mesa-arizona" element={<MesaArizona />} />
+          <Route path="/chandler-arizona" element={<ChandlerArizona />} />
           <Route path="/denver-colorado" element={<DenverColorado />} />
           <Route path="/chicago-illinois" element={<ChicagoIllinois />} />
           <Route path="/minneapolis-minnesota" element={<MinneapolisMinnesota />} />

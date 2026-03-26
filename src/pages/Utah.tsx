@@ -13,8 +13,8 @@ const Utah = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Utah Addiction Intervention Services | Freedom Interventions"
-        description="Utah confronts a persistent substance use crisis with 606 drug overdose deaths in 2023. Professional interventionists help families navigate fentanyl and opioid addiction."
+        title="Addiction Intervention Specialist in Utah | Freedom Interventions"
+        description="Utah families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Utah. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/utah"
         keywords="Utah addiction intervention, Salt Lake City intervention services, Utah fentanyl crisis, Provo drug intervention"
         geoRegion="US-UT"

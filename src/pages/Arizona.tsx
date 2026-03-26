@@ -13,8 +13,8 @@ const Arizona = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Arizona Addiction Intervention Services | Freedom Interventions"
-        description="Arizona faces a serious substance use crisis with rising overdose rates. Professional interventionists provide families with structured, compassionate strategies."
+        title="Addiction Intervention Specialist in Arizona | Freedom Interventions"
+        description="Arizona families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Arizona. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/arizona"
         keywords="Arizona addiction intervention, Phoenix intervention services, Tucson drug intervention, Arizona fentanyl crisis"
         geoRegion="US-AZ"
