@@ -2,12 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, Users} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 
+import { Button } from "@/components/ui/button";
 const Blog = () => {
   const { data: blogPosts, isLoading } = useQuery({
     queryKey: ["blog-posts"],
@@ -132,6 +133,25 @@ const Blog = () => {
           </div>
         </div>
       </section>
+
+      {/* Family Intervention Link */}
+      <section className="py-8 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
+              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+            </div>
+            <Link to="/family-intervention" className="shrink-0">
+              <Button variant="outline" className="gap-2 whitespace-nowrap">
+                <Users className="h-4 w-4" />
+                Family Intervention Services
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
 
       <Footer />
     </div>

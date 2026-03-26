@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { BreadcrumbSchema } from "@/components/StructuredData";
 
+import { Users } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -295,6 +298,25 @@ const TermsOfService = () => {
           </div>
         </div>
       </main>
+
+      {/* Family Intervention Link */}
+      <section className="py-8 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
+              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+            </div>
+            <Link to="/family-intervention" className="shrink-0">
+              <Button variant="outline" className="gap-2 whitespace-nowrap">
+                <Users className="h-4 w-4" />
+                Family Intervention Services
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
 
       <Footer />
     </div>

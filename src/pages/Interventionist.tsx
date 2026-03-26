@@ -1,11 +1,12 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { MapPin, Globe, Phone } from "lucide-react";
+import { MapPin, Globe, Phone, Users } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
 import SEOHead from "@/components/SEOHead";
 import { PersonSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
+import { Link } from "react-router-dom";
 
 const Interventionist = () => {
   const calculateYearsSober = () => {
@@ -26,10 +27,10 @@ const Interventionist = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Meet Matt Brown - Professional Interventionist | Freedom Interventions"
-        description={`Matt Brown is a professional interventionist since 2004 with over ${yearsSober} years of sobriety. Based in Oregon, serving families nationwide and internationally with compassionate addiction intervention services.`}
+        title="Matt Brown — Certified Family Intervention Specialist | Freedom Interventions"
+        description={`Matt Brown is a certified family intervention specialist with 20+ years experience and ${yearsSober} years sobriety. Helping families nationwide plan and execute successful interventions. Free consultation: (541) 838-6009.`}
         canonical="https://freedominterventions.com/interventionist"
-        keywords="Matt Brown interventionist, professional interventionist, addiction interventionist Oregon, certified interventionist, family intervention specialist"
+        keywords="certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
       <PersonSchema />
       <BreadcrumbSchema
@@ -79,17 +80,17 @@ const Interventionist = () => {
               {/* Bio Column */}
               <div className="space-y-6">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
-                  Meet Your Interventionist
+                  Meet Your Certified Family Intervention Specialist
                 </h1>
                 <p className="text-2xl md:text-3xl font-serif text-primary">Matt Brown</p>
                 
                 <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
-                  Professional Interventionist Since 2004
+                  Certified Family Intervention Specialist Since 2004
                 </div>
 
                 <div className="space-y-6 text-muted-foreground leading-relaxed">
                   <p>
-                    I have been a professional interventionist since 2004, and over the past two decades I've had the privilege of walking alongside hundreds of families during some of the most difficult moments of their lives. While every intervention follows a proven, ethical structure, no two families are the same. Each approach is carefully tailored to the individual, the family system, and the realities they are facing.
+                    I have been a certified family intervention specialist since 2004, and over the past two decades I've had the privilege of walking alongside hundreds of families during some of the most difficult moments of their lives. As a certified interventionist, I work with each family to build a plan that is ethical, structured, and tailored to the specific dynamics at play. No two families are the same — and no two interventions should be either.
                   </p>
 
                   <p>
@@ -105,7 +106,7 @@ const Interventionist = () => {
                   </p>
 
                   <p>
-                    That lived experience shapes everything I do today. For more than {yearsSober} years, I've helped families learn how to stop carrying the burden alone, how to engage their loved one without enabling, and how to create the conditions where real change becomes possible. I believe deeply that recovery is not only possible—but sustainable—when families are supported, educated, and guided with clarity and compassion.
+                    That lived experience shapes everything I do today. For more than {yearsSober} years as a family intervention specialist, I've helped families learn how to stop carrying the burden alone, how to engage their loved one without enabling, and how to create the conditions where real change becomes possible. I believe deeply that recovery is not only possible—but sustainable—when families are supported, educated, and guided with clarity and compassion.
                   </p>
 
                   <p>
@@ -123,6 +124,25 @@ const Interventionist = () => {
           </div>
         </section>
       </main>
+
+      {/* Family Intervention CTA */}
+      <section className="py-8 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-foreground">Learn about our Family Intervention Services →</p>
+              <p className="text-sm text-muted-foreground">Understand what to expect when working with a certified family intervention specialist.</p>
+            </div>
+            <Link to="/family-intervention" className="shrink-0">
+              <Button variant="outline" className="gap-2 whitespace-nowrap">
+                <Users className="h-4 w-4" />
+                Family Intervention Services
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );
