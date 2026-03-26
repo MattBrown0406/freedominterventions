@@ -12,9 +12,11 @@ import {
   ClipboardList,
   PhoneCall,
   ChevronDown,
+  MapPin,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { usStates, usRegions } from "@/data/locations";
 import oregonCrisisBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
