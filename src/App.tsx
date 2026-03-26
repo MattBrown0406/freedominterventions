@@ -91,6 +91,14 @@ import SeattleWashington from "./pages/SeattleWashington";
 import EugeneOregon from "./pages/EugeneOregon";
 import SanFranciscoCalifornia from "./pages/SanFranciscoCalifornia";
 import LosAngelesCalifornia from "./pages/LosAngelesCalifornia";
+import SacramentoCalifornia from "./pages/SacramentoCalifornia";
+import OaklandCalifornia from "./pages/OaklandCalifornia";
+import SanJoseCalifornia from "./pages/SanJoseCalifornia";
+import LongBeachCalifornia from "./pages/LongBeachCalifornia";
+import PasadenaCalifornia from "./pages/PasadenaCalifornia";
+import OrangeCountyCalifornia from "./pages/OrangeCountyCalifornia";
+import AnaheimCalifornia from "./pages/AnaheimCalifornia";
+import IrvineCalifornia from "./pages/IrvineCalifornia";
 import PhoenixArizona from "./pages/PhoenixArizona";
 import AustinTexas from "./pages/AustinTexas";
 import DallasTexas from "./pages/DallasTexas";
@@ -237,6 +245,14 @@ const App = () => (
           <Route path="/eugene-oregon" element={<EugeneOregon />} />
           <Route path="/san-francisco-california" element={<SanFranciscoCalifornia />} />
           <Route path="/los-angeles-california" element={<LosAngelesCalifornia />} />
+          <Route path="/sacramento-california" element={<SacramentoCalifornia />} />
+          <Route path="/oakland-california" element={<OaklandCalifornia />} />
+          <Route path="/san-jose-california" element={<SanJoseCalifornia />} />
+          <Route path="/long-beach-california" element={<LongBeachCalifornia />} />
+          <Route path="/pasadena-california" element={<PasadenaCalifornia />} />
+          <Route path="/orange-county-california" element={<OrangeCountyCalifornia />} />
+          <Route path="/anaheim-california" element={<AnaheimCalifornia />} />
+          <Route path="/irvine-california" element={<IrvineCalifornia />} />
           <Route path="/phoenix-arizona" element={<PhoenixArizona />} />
           <Route path="/austin-texas" element={<AustinTexas />} />
           <Route path="/dallas-texas" element={<DallasTexas />} />

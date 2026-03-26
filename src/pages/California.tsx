@@ -13,10 +13,10 @@ const California = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="California Addiction Intervention Services | Freedom Interventions"
-        description="California faces the nation's most severe addiction crisis with over 9,000 overdose deaths annually. Professional interventionists provide families with structured, compassionate strategies."
+        title="Addiction Intervention Specialist in California | Freedom Interventions"
+        description="California families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of California. Free consultation. Call (541) 838-6009."
         canonical="https://freedominterventions.com/california"
-        keywords="California addiction intervention, Los Angeles intervention services, San Francisco drug intervention, California fentanyl crisis"
+        keywords="intervention specialist California, addiction intervention California, drug intervention California, family intervention California, California interventionist, Los Angeles addiction intervention, San Francisco drug intervention, Sacramento intervention services, Orange County interventionist"
         geoRegion="US-CA"
         geoPlacename="California"
       />
