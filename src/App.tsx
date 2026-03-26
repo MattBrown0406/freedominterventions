@@ -146,6 +146,9 @@ import KnoxvilleTennessee from "./pages/KnoxvilleTennessee";
 import ColumbusOhio from "./pages/ColumbusOhio";
 import OmahaNebraska from "./pages/OmahaNebraska";
 import OklahomaCityOklahoma from "./pages/OklahomaCityOklahoma";
+import WichitaKansas from "./pages/WichitaKansas";
+import OverlandParkKansas from "./pages/OverlandParkKansas";
+import TopekaKansas from "./pages/TopekaKansas";
 
 // Canadian Provinces
 import BritishColumbia from "./pages/BritishColumbia";
@@ -330,6 +333,9 @@ const App = () => (
           <Route path="/columbus-ohio" element={<ColumbusOhio />} />
           <Route path="/omaha-nebraska" element={<OmahaNebraska />} />
           <Route path="/oklahoma-city-oklahoma" element={<OklahomaCityOklahoma />} />
+          <Route path="/wichita-kansas" element={<WichitaKansas />} />
+          <Route path="/overland-park-kansas" element={<OverlandParkKansas />} />
+          <Route path="/topeka-kansas" element={<TopekaKansas />} />
           
           {/* Canadian Provinces */}
           <Route path="/british-columbia" element={<BritishColumbia />} />
