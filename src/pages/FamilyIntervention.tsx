@@ -34,12 +34,12 @@ const faqs = [
   {
     question: "How much does a family intervention cost?",
     answer:
-      "Intervention fees vary based on location, complexity, and travel. The free consultation is always the first step — from there Matt will give you a straightforward breakdown of cost. Most families find that the cost of one professional intervention is far less than another year of crisis, legal fees, medical bills, or funeral expenses.",
+      "A professionally led family intervention typically costs between $7,500 and $9,500, plus travel expenses depending on your location. However, Matt believes every family deserves to be educated before making that investment. Before recommending a full intervention, Matt offers one-on-one coaching sessions at $150 per hour to walk your family through the intervention process — including how to set boundaries, structure the conversation, and present a treatment plan. Many families find they are equipped to lead the intervention themselves after coaching. If your family determines that a professionally facilitated intervention is the right next step, that decision is always yours to make — fully informed and without pressure.",
   },
   {
     question: "Should I attempt an intervention without a professional?",
     answer:
-      "You can, but it rarely ends well. Without a guide, family emotions take over, the person gets defensive or manipulative, and the conversation collapses — often damaging relationships and making future attempts harder. A professional keeps the process on track, neutralizes manipulation, and dramatically increases the odds of a yes.",
+      "Sometimes, yes — absolutely. Whether a family-led intervention is appropriate depends on several factors, including family dynamics, the quality of relationships involved, any previous attempts to intervene, the severity of substance use, and financial considerations. The best first step is to book a coaching session with Matt, where he will guide you through the complete intervention process — from preparation and boundary-setting to scripting the conversation and arranging treatment options. After the session, you can evaluate your family's readiness with honest eyes and decide whether you feel confident facilitating the intervention yourselves or whether professional guidance would improve the outcome.",
   },
   {
     question: "What happens if they refuse treatment?",
