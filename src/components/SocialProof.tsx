@@ -1,27 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Quote, Mic, PlayCircle, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { testimonials } from "@/data/testimonials";
 
-const storyHighlights = [
-  {
-    quote:
-      "Matt educated us, aligned our family, and guided an intervention that got our daughter into long-term care the same day.",
-    family: "Cheryl, Oregon",
-    outcome: "She has stayed engaged in treatment and we have a united boundary plan for when she comes home.",
-  },
-  {
-    quote:
-      "We were walking on eggshells for years. The process Matt led gave us a calm script, consequences, and the courage to follow through.",
-    family: "John & Emily, Utah",
-    outcome: "Their loved one accepted help and the home is finally stable and honest again.",
-  },
-  {
-    quote:
-      "Our son kept manipulating every family member. Matt neutralized the chaos and made sure we moved as one voice.",
-    family: "Angie, Washington",
-    outcome: "He is now in sober living while the family works a parallel recovery plan.",
-  },
-];
+const storyHighlights = testimonials.slice(0, 3).map((testimonial) => ({
+  quote: testimonial.quote,
+  family: `${testimonial.author}, ${testimonial.location}`,
+  outcome: "Families emphasized aligned boundaries, honest communication, and relief after stepping into a plan.",
+}));
 
 const proofMetrics = [
   { label: "Families guided", value: "1,000+" },

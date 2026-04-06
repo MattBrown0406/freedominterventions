@@ -71,3 +71,24 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+---
+
+## Analytics & Environment configuration
+
+1. Copy `.env.example` to `.env` (local) or add the same key via Lovable → Project Settings → Secrets.
+2. Provide your GA4 measurement ID as `VITE_GA_MEASUREMENT_ID`. Without it the analytics helper safely no-ops.
+3. Deploy/build again so Vite embeds the value.
+
+Events currently emitted:
+
+| Event name            | Fires when                                      | Params |
+|-----------------------|-------------------------------------------------|--------|
+| `cta_book_call`       | Primary calendar CTA is clicked (hero, Work With Matt) | `location`
+| `cta_learn_more`      | Secondary CTA in hero                          | `location`
+| `cta_call`            | “Call (541) 838-6009” buttons                   | `location`
+| `cta_view_testimonials` | “Read more family wins” button in Social Proof | `location`
+| `resource_click`      | Podcast/toolkit/testimonial resource links     | `location`, `label`
+| `booking_confirmed`   | Consultation or coaching slot reaches confirmation | `booking_type`, `booking_date`, `booking_time`, `amount_cents`
+
+Add Hotjar/CallRail/etc. the same way (new env keys + script tag in `index.html` or a dedicated component) once IDs are ready.
