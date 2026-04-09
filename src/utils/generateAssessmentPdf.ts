@@ -435,21 +435,58 @@ export const generateAssessmentPdf = async (assessment: Assessment): Promise<voi
     yPos += 4;
   };
 
-  // ========== HEADER ==========
+  // ========== HEADER WITH LOGO ==========
+  const headerHeight = 48;
   doc.setFillColor(30, 41, 59);
-  doc.rect(0, 0, pageWidth, 35, "F");
-  
-  doc.setFontSize(20);
+  doc.rect(0, 0, pageWidth, headerHeight, "F");
+
+  // Try to load the logo
+  try {
+    const logoImg = new Image();
+    logoImg.crossOrigin = "anonymous";
+    const logoLoaded = await new Promise<boolean>((resolve) => {
+      logoImg.onload = () => resolve(true);
+      logoImg.onerror = () => resolve(false);
+      logoImg.src = new URL("/favicon.jpeg", window.location.origin).href;
+    });
+    if (logoLoaded) {
+      const canvas = document.createElement("canvas");
+      canvas.width = logoImg.naturalWidth;
+      canvas.height = logoImg.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(logoImg, 0, 0);
+      const logoBase64 = canvas.toDataURL("image/jpeg");
+      const logoSize = 18;
+      doc.addImage(logoBase64, "JPEG", margin, 4, logoSize, logoSize);
+    }
+  } catch {
+    // Logo failed to load — continue without it
+  }
+
+  // Title text (offset right to leave room for logo)
+  doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.text("COMPREHENSIVE FAMILY ASSESSMENT", pageWidth / 2, 14, { align: "center" });
-  
+  doc.text("COMPREHENSIVE FAMILY ASSESSMENT", pageWidth / 2 + 8, 12, { align: "center" });
+
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text("Freedom Interventions | Confidential Clinical Document", pageWidth / 2, 22, { align: "center" });
-  doc.text(`Generated: ${format(new Date(), "MMMM d, yyyy 'at' h:mm a")}`, pageWidth / 2, 28, { align: "center" });
-  
-  yPos = 42;
+  doc.text("Freedom Interventions | Confidential Clinical Document", pageWidth / 2 + 8, 19, { align: "center" });
+  doc.text(`Generated: ${format(new Date(), "MMMM d, yyyy 'at' h:mm a")}`, pageWidth / 2 + 8, 25, { align: "center" });
+
+  // Contact info bar
+  doc.setFillColor(45, 55, 72);
+  doc.rect(0, 30, pageWidth, 18, "F");
+  doc.setFontSize(9);
+  doc.setTextColor(200, 210, 230);
+  doc.text("Questions about this assessment?  Contact Matt Brown", margin + 2, 38);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.text("503-836-2136  |  matt@freedominterventions.com", margin + 2, 44);
+  doc.setFont("helvetica", "normal");
+  doc.text("freedominterventions.com", pageWidth - margin - 2, 44, { align: "right" });
+
+  yPos = headerHeight + 7;
 
   // ========== QUICK SUMMARY BOX ==========
   const severityColor: [number, number, number] = assessment.severity_level === "Severe" 
