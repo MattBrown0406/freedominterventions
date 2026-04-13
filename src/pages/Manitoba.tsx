@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const Manitoba = () => {
         keywords="Manitoba addiction intervention, Winnipeg drug intervention, Manitoba family intervention, opioid crisis Manitoba, addiction help Manitoba Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Manitoba" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Manitoba"
+        url="https://freedominterventions.com/manitoba"
+        description="Professional addiction intervention services in Manitoba, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Winnipeg and all Manitoba communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

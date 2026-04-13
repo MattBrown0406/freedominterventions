@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -31,7 +31,11 @@ const Montana = () => {
         geoPlacename="Montana"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Billings" state="MT" />
+      <ServiceAreaSchema
+        areaName="Montana"
+        url="https://freedominterventions.com/montana"
+        description="Professional addiction intervention services in Montana. Help your loved one recover from methamphetamine, opioid, and alcohol addiction. Serving Billings, Missoula, Great Falls, and all MT communities."
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
 
       <Navbar />

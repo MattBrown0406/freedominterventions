@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const Saskatchewan = () => {
         keywords="Saskatchewan addiction intervention, Regina drug intervention, Saskatoon family intervention, opioid crisis Saskatchewan, addiction help Saskatchewan Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Saskatchewan" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Saskatchewan"
+        url="https://freedominterventions.com/saskatchewan"
+        description="Professional addiction intervention services in Saskatchewan, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Regina, Saskatoon, and all Saskatchewan communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

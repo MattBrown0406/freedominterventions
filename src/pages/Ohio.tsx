@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const Ohio = () => {
         geoPlacename="Ohio"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Columbus" state="OH" />
+      <ServiceAreaSchema
+        areaName="Ohio"
+        url="https://freedominterventions.com/ohio"
+        description="Ohio has been devastated by the opioid epidemic with over 5,000 annual overdose deaths. Professional interventionists help families throughout the Buckeye State."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

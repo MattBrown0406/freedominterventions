@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, TrendingUp, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const NorthDakota = () => {
         geoPlacename="North Dakota"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Fargo" state="ND" />
+      <ServiceAreaSchema
+        areaName="North Dakota"
+        url="https://freedominterventions.com/north-dakota"
+        description="North Dakota faces unique addiction challenges with methamphetamine and opioids devastating rural communities. Professional interventionists help families find treatment solutions."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

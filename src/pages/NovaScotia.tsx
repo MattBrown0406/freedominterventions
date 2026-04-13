@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const NovaScotia = () => {
         keywords="Nova Scotia addiction intervention, Halifax drug intervention, Nova Scotia family intervention, opioid crisis Nova Scotia, addiction help Nova Scotia Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Nova Scotia" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Nova Scotia"
+        url="https://freedominterventions.com/nova-scotia"
+        description="Professional addiction intervention services in Nova Scotia, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Halifax and all Nova Scotia communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

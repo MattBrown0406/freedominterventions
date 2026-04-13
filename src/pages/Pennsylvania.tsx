@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Pennsylvania = () => {
   return (
@@ -20,7 +20,11 @@ const Pennsylvania = () => {
         geoPlacename="Pennsylvania"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Philadelphia" state="PA" />
+      <ServiceAreaSchema
+        areaName="Pennsylvania"
+        url="https://freedominterventions.com/pennsylvania"
+        description="Pennsylvania has one of the highest overdose death rates in the nation. Professional interventionists help families navigate treatment options throughout the Keystone State."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

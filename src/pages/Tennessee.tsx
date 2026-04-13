@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Tennessee = () => {
   return (
@@ -20,7 +20,11 @@ const Tennessee = () => {
         geoPlacename="Tennessee"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Nashville" state="TN" />
+      <ServiceAreaSchema
+        areaName="Tennessee"
+        url="https://freedominterventions.com/tennessee"
+        description="Tennessee ranks among the top states for overdose deaths with over 3,800 annual fatalities. Professional interventionists help Volunteer State families guide loved ones to recovery."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, TrendingUp, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const NewYork = () => {
         geoPlacename="New York"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="New York City" state="NY" />
+      <ServiceAreaSchema
+        areaName="New York"
+        url="https://freedominterventions.com/new-york"
+        description="New York faces severe opioid and fentanyl challenges with thousands of annual overdose deaths. Professional interventionists help Empire State families navigate addiction and find recovery."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

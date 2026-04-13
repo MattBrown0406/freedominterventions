@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, FAQSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, FAQSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Hawaii = () => {
   const breadcrumbItems = [
@@ -73,7 +73,11 @@ const Hawaii = () => {
         keywords="intervention specialist Hawaii, addiction intervention Hawaii, drug intervention Hawaii, Hawaii interventionist, Oahu intervention, Maui intervention, Big Island addiction help, family intervention Hawaii"
         canonical="https://freedominterventions.com/hawaii"
       />
-      <LocalBusinessSchema location="Hawaii" state="Hawaii" />
+      <ServiceAreaSchema
+        areaName="Hawaii"
+        url="https://freedominterventions.com/hawaii"
+        description="Hawaii families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Hawaii including Oahu, Maui, Big Island & Kauai. Free consultation. Call (541) 838-6009."
+      />
       <OrganizationSchema />
       <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       <FAQSchema faqs={hawaiiFAQs} />

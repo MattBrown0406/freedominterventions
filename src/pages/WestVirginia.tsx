@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const WestVirginia = () => {
   return (
@@ -20,7 +20,11 @@ const WestVirginia = () => {
         geoPlacename="West Virginia"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Charleston" state="WV" />
+      <ServiceAreaSchema
+        areaName="West Virginia"
+        url="https://freedominterventions.com/west-virginia"
+        description="West Virginia has the nation's highest overdose death rate at 81.4 per 100,000. Professional interventionists help Mountain State families navigate this devastating crisis."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

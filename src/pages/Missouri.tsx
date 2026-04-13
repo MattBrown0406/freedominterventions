@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -31,7 +31,11 @@ const Missouri = () => {
         geoPlacename="Missouri"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="St. Louis" state="MO" />
+      <ServiceAreaSchema
+        areaName="Missouri"
+        url="https://freedominterventions.com/missouri"
+        description="Professional addiction intervention services in Missouri. Help your loved one recover from opioid, methamphetamine, and fentanyl addiction. Serving St. Louis, Kansas City, and all MO communities."
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
 
       <Navbar />

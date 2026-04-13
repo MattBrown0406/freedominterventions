@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -31,7 +31,11 @@ const Minnesota = () => {
         geoPlacename="Minnesota"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Minneapolis" state="MN" />
+      <ServiceAreaSchema
+        areaName="Minnesota"
+        url="https://freedominterventions.com/minnesota"
+        description="Professional addiction intervention services in Minnesota. Help your loved one recover from opioid, methamphetamine, and alcohol addiction. Serving Minneapolis, St. Paul, and all MN communities."
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
 
       <Navbar />

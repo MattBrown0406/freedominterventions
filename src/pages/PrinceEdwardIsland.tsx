@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const PrinceEdwardIsland = () => {
         keywords="PEI addiction intervention, Charlottetown drug intervention, Prince Edward Island family intervention, opioid crisis PEI, addiction help PEI Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Prince Edward Island" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Prince Edward Island"
+        url="https://freedominterventions.com/prince-edward-island"
+        description="Professional addiction intervention services in Prince Edward Island, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Charlottetown and all PEI communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

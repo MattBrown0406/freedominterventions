@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const SouthDakota = () => {
   return (
@@ -20,7 +20,11 @@ const SouthDakota = () => {
         geoPlacename="South Dakota"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="South Dakota" state="SD" />
+      <ServiceAreaSchema
+        areaName="South Dakota"
+        url="https://freedominterventions.com/south-dakota"
+        description="Professional intervention services for South Dakota families. Expert interventionists help loved ones find treatment across the Mount Rushmore State. Meth and fentanyl crisis support."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

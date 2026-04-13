@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const NewHampshire = () => {
         geoPlacename="New Hampshire"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Manchester" state="NH" />
+      <ServiceAreaSchema
+        areaName="New Hampshire"
+        url="https://freedominterventions.com/new-hampshire"
+        description="New Hampshire has one of the highest overdose death rates in New England. Professional interventionists help families navigate addiction crisis in the Granite State."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

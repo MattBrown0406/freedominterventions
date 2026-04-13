@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, Scale } from 
 import { Link } from "react-router-dom";
 import floridaBanner from "@/assets/florida-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -21,7 +21,11 @@ const Florida = () => {
         geoPlacename="Florida"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Miami" state="FL" />
+      <ServiceAreaSchema
+        areaName="Florida"
+        url="https://freedominterventions.com/florida"
+        description="Florida families often ask how to navigate addiction crises, treatment options, and when the Marchman Act or Baker Act may be relevant. Freedom Interventions provides professional guidance and treatment planning statewide."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

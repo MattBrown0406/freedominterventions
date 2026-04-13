@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, TrendingUp, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const NorthCarolina = () => {
         geoPlacename="North Carolina"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Charlotte" state="NC" />
+      <ServiceAreaSchema
+        areaName="North Carolina"
+        url="https://freedominterventions.com/north-carolina"
+        description="North Carolina faces rising overdose deaths with fentanyl driving the crisis. Professional interventionists help families find treatment pathways throughout the Tar Heel State."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

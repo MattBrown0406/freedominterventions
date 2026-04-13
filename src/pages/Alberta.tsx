@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const Alberta = () => {
         keywords="Alberta addiction intervention, Calgary drug intervention, Edmonton family intervention, fentanyl crisis Alberta, addiction help Alberta Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Alberta" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Alberta"
+        url="https://freedominterventions.com/alberta"
+        description="Professional addiction intervention services in Alberta, Canada. Help your loved one recover from fentanyl, opioid, and alcohol addiction. Serving Calgary, Edmonton, and all Alberta communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

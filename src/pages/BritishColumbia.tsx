@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import britishColumbiaBanner from "@/assets/british-columbia-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -21,7 +21,12 @@ const BritishColumbia = () => {
         geoPlacename="British Columbia"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Vancouver" state="BC" />
+      <ServiceAreaSchema
+        areaName="British Columbia"
+        url="https://freedominterventions.com/british-columbia"
+        description="British Columbia continues to face Canada's deadliest toxic drug crisis with over 2,500 lives lost annually. Professional interventionists help BC families find recovery."
+        country="CA"
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

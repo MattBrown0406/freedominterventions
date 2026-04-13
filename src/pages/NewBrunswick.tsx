@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const NewBrunswick = () => {
         keywords="New Brunswick addiction intervention, Saint John drug intervention, Moncton family intervention, opioid crisis New Brunswick, addiction help NB Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="New Brunswick" state="Canada" />
+      <ServiceAreaSchema
+        areaName="New Brunswick"
+        url="https://freedominterventions.com/new-brunswick"
+        description="Professional addiction intervention services in New Brunswick, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Saint John, Moncton, Fredericton, and all NB communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import idahoBanner from "@/assets/idaho-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -21,7 +21,11 @@ const Idaho = () => {
         geoPlacename="Idaho"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Boise" state="ID" />
+      <ServiceAreaSchema
+        areaName="Idaho"
+        url="https://freedominterventions.com/idaho"
+        description="Idaho families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Idaho. Free consultation. Call (541) 838-6009."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

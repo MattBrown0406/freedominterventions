@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const Ontario = () => {
         keywords="Ontario addiction intervention, Toronto drug intervention, Ottawa family intervention, opioid crisis Ontario, addiction help Ontario Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Ontario" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Ontario"
+        url="https://freedominterventions.com/ontario"
+        description="Professional addiction intervention services in Ontario, Canada. Help your loved one find recovery from opioid, alcohol, and fentanyl addiction. Serving Toronto, Ottawa, and all Ontario communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

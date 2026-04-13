@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, Users} from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const NewfoundlandLabrador = () => {
         keywords="Newfoundland addiction intervention, St Johns drug intervention, Labrador family intervention, opioid crisis Newfoundland, addiction help NL Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Newfoundland and Labrador" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Newfoundland & Labrador"
+        url="https://freedominterventions.com/newfoundland-labrador"
+        description="Professional addiction intervention services in Newfoundland and Labrador, Canada. Help your loved one find recovery from opioid and drug addiction. Serving St. John's and all NL communities."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

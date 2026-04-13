@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema, SpeakableSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, LocationFAQSchema, SpeakableSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -21,7 +21,11 @@ const Oregon = () => {
         geoPlacename="Oregon"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Portland" state="OR" />
+      <ServiceAreaSchema
+        areaName="Oregon"
+        url="https://freedominterventions.com/oregon"
+        description="Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 838-6009."
+      />
       <LocationFAQSchema location="Oregon" locationType="state" />
       <SpeakableSchema 
         name="Oregon Addiction Intervention Services"

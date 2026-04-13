@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const RhodeIsland = () => {
   return (
@@ -20,7 +20,11 @@ const RhodeIsland = () => {
         geoPlacename="Rhode Island"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Rhode Island" state="RI" />
+      <ServiceAreaSchema
+        areaName="Rhode Island"
+        url="https://freedominterventions.com/rhode-island"
+        description="Professional intervention services for Rhode Island families. Expert interventionists help loved ones find treatment in the Ocean State. Fentanyl crisis support available."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

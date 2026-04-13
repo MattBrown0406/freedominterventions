@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, LocalBusinessSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 
@@ -29,7 +29,12 @@ const Quebec = () => {
         keywords="Quebec addiction intervention, Montreal drug intervention, Quebec City family intervention, opioid crisis Quebec, addiction help Quebec Canada"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Quebec" state="Canada" />
+      <ServiceAreaSchema
+        areaName="Quebec"
+        url="https://freedominterventions.com/quebec"
+        description="Professional addiction intervention services in Quebec, Canada. Help your loved one find recovery from opioid and drug addiction. Serving Montreal, Quebec City, and all Quebec communities. Bilingual services available."
+        country="CA"
+      />
       <BreadcrumbSchema items={breadcrumbSchemaItems} />
       
       <Navbar />

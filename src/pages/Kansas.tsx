@@ -7,7 +7,7 @@ import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, FAQSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, FAQSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Kansas = () => {
   const breadcrumbItems = [
@@ -68,7 +68,11 @@ const Kansas = () => {
         keywords="intervention specialist Kansas, addiction intervention Kansas, drug intervention Kansas, Kansas interventionist, Wichita intervention, Kansas City intervention, fentanyl Kansas, meth Kansas"
         canonical="https://freedominterventions.com/kansas"
       />
-      <LocalBusinessSchema location="Kansas" state="Kansas" />
+      <ServiceAreaSchema
+        areaName="Kansas"
+        url="https://freedominterventions.com/kansas"
+        description="Kansas families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Kansas. Free consultation. Call (541) 838-6009."
+      />
       <OrganizationSchema />
       <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       <FAQSchema faqs={kansasFAQs} />

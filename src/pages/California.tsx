@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import californiaBanner from "@/assets/california-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -21,7 +21,11 @@ const California = () => {
         geoPlacename="California"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Los Angeles" state="CA" />
+      <ServiceAreaSchema
+        areaName="California"
+        url="https://freedominterventions.com/california"
+        description="California families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of California. Free consultation. Call (541) 838-6009."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

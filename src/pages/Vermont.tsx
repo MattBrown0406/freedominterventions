@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Vermont = () => {
   return (
@@ -20,7 +20,11 @@ const Vermont = () => {
         geoPlacename="Vermont"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Burlington" state="VT" />
+      <ServiceAreaSchema
+        areaName="Vermont"
+        url="https://freedominterventions.com/vermont"
+        description="Vermont faces rising overdose deaths with fentanyl driving the crisis. Professional interventionists help Green Mountain State families guide loved ones toward recovery."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

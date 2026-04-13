@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const Colorado = () => {
         geoPlacename="Colorado"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Denver" state="CO" />
+      <ServiceAreaSchema
+        areaName="Colorado"
+        url="https://freedominterventions.com/colorado"
+        description="Colorado families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Colorado. Free consultation. Call (541) 838-6009."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

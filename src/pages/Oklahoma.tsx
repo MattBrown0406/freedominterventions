@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const Oklahoma = () => {
         geoPlacename="Oklahoma"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Oklahoma City" state="OK" />
+      <ServiceAreaSchema
+        areaName="Oklahoma"
+        url="https://freedominterventions.com/oklahoma"
+        description="Professional intervention services for Oklahoma families. Expert interventionists help loved ones find treatment across the Sooner State. Meth and opioid crisis support."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

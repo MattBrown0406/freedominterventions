@@ -7,7 +7,7 @@ import newMexicoBanner from "@/assets/new-mexico-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const NewMexico = () => {
   return (
@@ -21,7 +21,11 @@ const NewMexico = () => {
         geoPlacename="New Mexico"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="New Mexico" state="NM" />
+      <ServiceAreaSchema
+        areaName="New Mexico"
+        url="https://freedominterventions.com/new-mexico"
+        description="New Mexico families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of New Mexico. Free consultation. Call (541) 838-6009."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Wisconsin = () => {
   return (
@@ -20,7 +20,11 @@ const Wisconsin = () => {
         geoPlacename="Wisconsin"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Wisconsin" state="WI" />
+      <ServiceAreaSchema
+        areaName="Wisconsin"
+        url="https://freedominterventions.com/wisconsin"
+        description="Professional intervention services for Wisconsin families. Expert interventionists help loved ones find treatment across the Badger State. Opioid and alcohol crisis support."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

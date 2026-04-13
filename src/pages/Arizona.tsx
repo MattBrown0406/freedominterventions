@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import arizonaBanner from "@/assets/arizona-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -21,7 +21,11 @@ const Arizona = () => {
         geoPlacename="Arizona"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Phoenix" state="AZ" />
+      <ServiceAreaSchema
+        areaName="Arizona"
+        url="https://freedominterventions.com/arizona"
+        description="Arizona families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Arizona. Free consultation. Call (541) 838-6009."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

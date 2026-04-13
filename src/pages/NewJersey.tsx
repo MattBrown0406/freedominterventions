@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, CheckCircle, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -20,7 +20,11 @@ const NewJersey = () => {
         geoPlacename="New Jersey"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Newark" state="NJ" />
+      <ServiceAreaSchema
+        areaName="New Jersey"
+        url="https://freedominterventions.com/new-jersey"
+        description="New Jersey faces one of the nation's highest overdose death rates with over 3,000 annual fatalities. Professional interventionists help families navigate the fentanyl crisis."
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },

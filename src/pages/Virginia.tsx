@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const Virginia = () => {
   return (
@@ -20,7 +20,11 @@ const Virginia = () => {
         geoPlacename="Virginia"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="Virginia" state="VA" />
+      <ServiceAreaSchema
+        areaName="Virginia"
+        url="https://freedominterventions.com/virginia"
+        description="Professional intervention services for Virginia families. Expert interventionists help loved ones find treatment across the Commonwealth. Fentanyl crisis support available."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },

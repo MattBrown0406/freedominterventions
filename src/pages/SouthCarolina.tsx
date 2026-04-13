@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
 
 const SouthCarolina = () => {
   return (
@@ -20,7 +20,11 @@ const SouthCarolina = () => {
         geoPlacename="South Carolina"
       />
       <OrganizationSchema />
-      <LocalBusinessSchema location="South Carolina" state="SC" />
+      <ServiceAreaSchema
+        areaName="South Carolina"
+        url="https://freedominterventions.com/south-carolina"
+        description="Professional intervention services for South Carolina families. Expert interventionists help loved ones find treatment across the Palmetto State."
+      />
       <BreadcrumbSchema items={[
         { name: "Home", url: "https://freedominterventions.com" },
         { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
