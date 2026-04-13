@@ -32,14 +32,26 @@ const Hero = () => {
           </div>
 
 
-          {/* Headline */}
-          <h1 
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-semibold text-foreground leading-tight text-balance animate-fade-up"
+          {/* Hope Statement */}
+          <p 
+            className="text-xl md:text-2xl lg:text-3xl font-serif text-primary font-medium italic animate-fade-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            "There is always hope for recovery—and for your family."
+          </p>
+
+          {/* Name and Certification */}
+          <div 
+            className="space-y-1 animate-fade-up"
             style={{ animationDelay: "0.2s" }}
           >
-            Matt Brown, 
-            <span className="block text-primary">Certified Intervention Professional</span>
-          </h1>
+            <h1 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
+              Matt Brown, <span className="text-primary">CIP</span>
+            </h1>
+            <p className="text-sm md:text-base text-muted-foreground">
+              Certified Intervention Professional
+            </p>
+          </div>
           
           {/* Subheadline */}
           <p 
@@ -96,7 +108,7 @@ const Hero = () => {
             style={{ animationDelay: "0.5s" }}
           >
             {[
-              { icon: "✓", label: "Certified Intervention Professional (CIP)" },
+              { icon: "✓", label: "CIP Certified" },
               { icon: "✓", label: "20+ Years Experience" },
               { icon: "✓", label: "Direct Family Guidance Into Treatment" },
             ].map((badge) => (
