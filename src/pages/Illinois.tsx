@@ -1,65 +1,125 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "Illinois families are often dealing with fentanyl, opioids, alcohol, meth, or cocaine in situations that keep getting more dangerous while everyone argues about what to do next.",
+  "In Chicagoland there may be plenty of treatment options on paper, but volume does not create clarity. Families still need help choosing a real plan and moving fast.",
+  "Across downstate Illinois, families may be balancing urgency with distance, limited local options, financial strain, and the exhaustion that comes from carrying the whole problem in silence.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family aligned before the intervention",
+    description:
+      "Matt helps the family stop improvising, stop sending mixed messages, and stop letting addiction use division to stay in control.",
+  },
+  {
+    title: "Builds the treatment plan before the pressure moment",
+    description:
+      "Detox, residential care, outpatient options, transport, and fallback plans are handled ahead of time so the conversation can lead somewhere real.",
+  },
+  {
+    title: "Leads a direct, compassionate intervention",
+    description:
+      "The goal is not drama. The goal is clarity, urgency, and a unified family message that opens the door to treatment.",
+  },
+  {
+    title: "Helps the family hold structure afterward",
+    description:
+      "If your loved one accepts help, the family needs follow-through. If your loved one refuses, the family still needs a plan strong enough to hold.",
+  },
+];
+
+const illinoisSituations = [
+  "A son or daughter caught in fentanyl, prescription drug misuse, stimulant use, or repeated relapse",
+  "A spouse or partner whose drinking or drug use is destabilizing the home, finances, and trust",
+  "A family in Chicago, the collar counties, central Illinois, or downstate that cannot get on the same page about what needs to happen",
+  "A loved one cycling through ER visits, arrests, treatment promises, or periods of seeming stability that never last",
+  "Parents or siblings worn down by rescuing, money leaks, manipulation, and constant fear of the next call",
+  "A situation where everyone knows waiting is not working, but nobody has built a plan strong enough to replace it",
+];
 
 const Illinois = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Illinois Addiction Intervention Services | Freedom Interventions"
-        description="Illinois faces severe challenges with opioid and fentanyl addiction. Professional interventionists help Chicago and statewide families navigate recovery."
+        title="Addiction Intervention Services in Illinois | Freedom Interventions"
+        description="Illinois families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Illinois prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/illinois"
-        keywords="Illinois addiction intervention, Chicago intervention services, Illinois opioid crisis, Cook County drug intervention"
+        keywords="Illinois addiction intervention, Illinois interventionist, Chicago drug intervention, Illinois family intervention, fentanyl help Illinois"
         geoRegion="US-IL"
         geoPlacename="Illinois"
       />
       <OrganizationSchema />
       <ServiceAreaSchema
         areaName="Illinois"
+        areaType="AdministrativeArea"
         url="https://freedominterventions.com/illinois"
-        description="Illinois faces severe challenges with opioid and fentanyl addiction. Professional interventionists help Chicago and statewide families navigate recovery."
+        description="Professional addiction intervention services for families across Illinois, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="Illinois" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
           { name: "Illinois", url: "https://freedominterventions.com/illinois" },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Illinois", href: "/illinois" },
-      ]} />
-      
-      <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Illinois", href: "/illinois" },
+        ]}
+      />
+
+      <section className="pt-20 md:pt-24 pb-16 bg-gradient-to-b from-primary/10 to-background">
+        <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
-              Illinois Addiction Crisis
-            </span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Illinois Addiction Crisis: Professional Intervention Services for Families
+            <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+              Illinois Intervention Services
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              When Addiction Keeps the Whole Family Reacting, Structure Has to
+              Take Over
             </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Illinois faces severe challenges with opioid and fentanyl addiction, particularly in the Chicago metropolitan area. Professional interventionists help families navigate these complex situations.
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
+              Matt Brown works with families across Illinois to prepare the
+              intervention, line up treatment, and replace confusion, fear, and
+              repeated rescue with a clear next step.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+              <Button asChild size="lg">
+                <Link to="/#contact">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Schedule a Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:+15418386009">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (541) 838-6009
                 </a>
@@ -69,103 +129,179 @@ const Illinois = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">3,000+</div>
-              <div className="text-sm text-muted-foreground">Annual Overdose Deaths</div>
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Escalating Risk
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Fentanyl and polysubstance use have raised the stakes for
+                Illinois families who are already worn down by crisis after
+                crisis.
+              </p>
             </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Urban and Downstate
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                From Chicago and the suburbs to central and southern Illinois,
+                the logistics may differ, but the family exhaustion is usually
+                the same.
+              </p>
             </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">600K+</div>
-              <div className="text-sm text-muted-foreground">Residents Affected</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</div>
-              <div className="text-sm text-muted-foreground">Support Available</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the old cycle of panic and rescue gets replaced
+                with structure.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Illinois's Opioid Emergency
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Illinois has experienced record overdose deaths, with fentanyl now involved in the majority of fatalities. Cook County and the greater Chicago area have been hit particularly hard.
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Illinois Families Usually Reach Out After They Have Carried the
+                Problem Too Long
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Most families do not start with an intervention. They start with
+                warnings, promises, money, damage control, late-night fear, and
+                constant debates about whether the next move should be patience,
+                pressure, or one more chance.
               </p>
-            </div>
-
-            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Statewide Intervention Services
-                </h2>
-              </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists serve families throughout Illinois, from Chicago to rural communities, connecting them with appropriate treatment resources across the state and region.
+                By the time they call, the real problem is usually bigger than
+                the substance alone. The family has been pulled into reaction
+                mode, and addiction has been setting the pace for far too long.
               </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Heart className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Complete Family Support
-                </h2>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Intervention services include family education, crisis management, treatment placement, and aftercare coordination for lasting recovery success.
-              </p>
-            </div>
+            </section>
 
-            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Take Action Now
-                </h2>
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention is not an emotional ambush. It is a process
+                that gets the family coordinated, gets treatment prepared, and
+                creates a direct path out of the chaos you are already living
+                in.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="text-muted-foreground leading-relaxed">
-                With fentanyl claiming lives daily across Illinois, families cannot afford to wait. Professional intervention provides the best path to treatment.
-              </p>
-            </div>
+            </section>
 
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Illinois Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {illinoisSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps asking whether it is finally time to do
+                  something different, that usually means the current approach
+                  has already run out.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just to Get a Yes. The Goal Is to Stop Letting
+                Addiction Run the Family.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Treatment entry matters, but the bigger shift is that the family
+                stops organizing itself around fear, bargaining, and emergency
+                management.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is a family that becomes clear, prepared,
+                and no longer willing to protect addiction from consequences.
+              </p>
+            </section>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Hope for Illinois Families
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With an Illinois Intervention?
           </h2>
-          <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Professional intervention services offer Illinois families a proven path to help loved ones find recovery. Contact us today.
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, disappearance, arrest, or family collapse to make the
+            decision for you. Get clarity now, while there is still room to act
+            deliberately.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
-                <Phone className="mr-2 h-5 w-5" />
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -173,13 +309,17 @@ const Illinois = () => {
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -190,7 +330,6 @@ const Illinois = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="Illinois" locationType="state" />
 

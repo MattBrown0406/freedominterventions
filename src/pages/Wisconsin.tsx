@@ -1,21 +1,71 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
+
+const pressurePoints = [
+  "Wisconsin families are often dealing with both alcohol and drug addiction at the same time, which can make the crisis harder to name and easier to normalize for too long.",
+  "From Milwaukee and Madison to Green Bay and smaller communities, the pattern is the same: the family keeps adapting to chaos while the addiction keeps asking for more.",
+  "By the time most families call, they have already tried talking, threatening, rescuing, covering bills, or waiting for a wake-up call that never seems to hold for long.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family aligned before the intervention",
+    description:
+      "When one person is minimizing the drinking, one is panicking about the drugs, and one is trying to keep peace at all costs, addiction has too much room to keep operating. Matt helps the family unify first.",
+  },
+  {
+    title: "Builds the treatment plan before the pressure moment",
+    description:
+      "Detox, residential care, alcohol treatment, outpatient options, transport, and fallback plans are worked through in advance so the intervention leads somewhere real.",
+  },
+  {
+    title: "Leads a direct, compassionate intervention",
+    description:
+      "The goal is not to shame your loved one. The goal is to tell the truth clearly, break through denial, and present treatment in a way the family can stand behind.",
+  },
+  {
+    title: "Helps the family hold structure afterward",
+    description:
+      "If your loved one accepts help, the family needs structure. If your loved one refuses help, the family still needs structure. That is how the old pattern finally starts to break.",
+  },
+];
+
+const wisconsinSituations = [
+  "A son or daughter bouncing between alcohol misuse, pills, fentanyl, or meth and repeated crisis",
+  "A spouse or partner whose drinking or drug use is destabilizing the whole household",
+  "A family that keeps normalizing serious alcohol abuse until the danger becomes impossible to ignore",
+  "Parents exhausted by financial help, lies, emotional volatility, and repeated rescue",
+  "A loved one who agrees they need help in theory, but never follows through in practice",
+  "A situation where the family knows it cannot keep doing this another six months",
+];
 
 const Wisconsin = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Wisconsin Addiction Intervention Services | Freedom Interventions"
-        description="Professional intervention services for Wisconsin families. Expert interventionists help loved ones find treatment across the Badger State. Opioid and alcohol crisis support."
+        title="Addiction Intervention Services in Wisconsin | Freedom Interventions"
+        description="Wisconsin families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Wisconsin prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/wisconsin"
-        keywords="Wisconsin intervention, addiction help WI, interventionist Milwaukee, drug intervention Madison, Green Bay addiction help, Wisconsin opioid crisis"
+        keywords="Wisconsin addiction intervention, Wisconsin interventionist, Milwaukee drug intervention, Madison intervention services, family intervention Wisconsin"
         geoRegion="US-WI"
         geoPlacename="Wisconsin"
       />
@@ -23,165 +73,254 @@ const Wisconsin = () => {
       <ServiceAreaSchema
         areaName="Wisconsin"
         url="https://freedominterventions.com/wisconsin"
-        description="Professional intervention services for Wisconsin families. Expert interventionists help loved ones find treatment across the Badger State. Opioid and alcohol crisis support."
+        description="Professional addiction intervention services for families across Wisconsin, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
-      <BreadcrumbSchema items={[
-        { name: "Home", url: "https://freedominterventions.com" },
-        { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-        { name: "Wisconsin", url: "https://freedominterventions.com/wisconsin" }
-      ]} />
-      
+      <LocationFAQSchema location="Wisconsin" locationType="state" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "Wisconsin",
+            url: "https://freedominterventions.com/wisconsin",
+          },
+        ]}
+      />
+
       <Navbar />
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Wisconsin", href: "/wisconsin" }
-      ]} />
-      
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Wisconsin", href: "/wisconsin" },
+        ]}
+      />
+
       <section className="pt-8 pb-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">Wisconsin Addiction Crisis</span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6">Wisconsin's Addiction Crisis: Professional Intervention Services</h1>
-            <p className="text-lg text-muted-foreground mb-8">Wisconsin faces a dual crisis of opioids and alcohol addiction. Professional interventionists help families find treatment solutions across the Badger State.</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
-              <Button asChild variant="outline" size="lg"><a href="tel:541-838-6009"><Phone className="mr-2 h-5 w-5" />Call (541) 838-6009</a></Button>
+            <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+              Wisconsin Intervention Services
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              When Addiction and Alcohol Abuse Have Become the Family&apos;s
+              Normal, It Is Time to Interrupt the Pattern
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+              Matt Brown works with families across Wisconsin to prepare the
+              intervention, coordinate treatment, and stop the cycle of chaos,
+              enabling, and repeated crisis.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-lg" asChild>
+                <Link to="/#contact">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Schedule a Consultation
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg" asChild>
+                <a href="tel:+15418386009">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call (541) 838-6009
+                </a>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">1,627</div>
-              <p className="text-sm text-muted-foreground">Drug Overdose Deaths (2022)</p>
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Alcohol and Drug Risk
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                In Wisconsin, alcohol problems are often minimized until they
+                have already done serious damage. Add fentanyl or pills to the
+                picture and the stakes rise even faster.
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <p className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</p>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Statewide Pattern
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Urban or rural, the pattern is familiar: the family keeps making
+                room for the addiction while hoping the next promise will be the
+                one that changes things.
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">350K+</div>
-              <p className="text-sm text-muted-foreground">Residents with SUD</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</div>
-              <p className="text-sm text-muted-foreground">Crisis Support Available</p>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and everyone understands how to stop reinforcing the
+                problem.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <AlertTriangle className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">Wisconsin's Dual Addiction Crisis</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Wisconsin faces unique challenges with both opioid addiction and one of the nation's highest rates of alcohol abuse. The state consistently ranks among the top for binge drinking, with alcohol-related deaths exceeding 3,000 annually.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Simultaneously, fentanyl has transformed the opioid crisis. Overdose deaths have increased 400% since 2015, with synthetic opioids now involved in over 70% of fatal overdoses across the state.
-                </p>
-                <p className="text-muted-foreground">
-                  From Milwaukee to Madison, rural communities to urban centers, addiction has touched every corner of Wisconsin. Professional intervention offers families a proven path forward.
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Wisconsin Families Usually Call After They Have Tried to Keep
+                the Situation Manageable for Too Long
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Most families do not call at the beginning. They call after the
+                drinking has escalated, the drug use has become impossible to
+                ignore, the money problems have piled up, or the family has been
+                through one too many emergencies.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                In Wisconsin, alcohol misuse can stay hidden behind cultural
+                normalization longer than families expect. That often means they
+                call later than they should, after the addiction has already
+                reorganized the whole family around itself.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention is not just about getting someone to agree
+                that there is a problem. It is about changing the structure that
+                has allowed the problem to keep going.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Wisconsin Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {wisconsinSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps saying, “We can&apos;t keep doing this,”
+                  that is usually the moment to stop waiting and start planning.
                 </p>
               </div>
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <Users className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">Impact on Wisconsin Families</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Over 350,000 Wisconsinites struggle with substance use disorders. Many families normalize heavy drinking due to cultural acceptance, making it harder to recognize when use crosses into addiction.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Wisconsin's strong family and community ties can be both a strength and a challenge. While support networks exist, enabling behaviors often develop as families try to protect their loved ones.
-                </p>
-                <p className="text-muted-foreground">
-                  Professional intervention helps families break these patterns, set healthy boundaries, and guide their loved one toward treatment with compassion and clarity.
-                </p>
-              </div>
-            </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Sobriety Talk. The Goal Is a Different
+                Family System.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A treatment yes matters. But if the family goes back to
+                minimizing, rescuing, and mixed messages, addiction gets another
+                easy path back into the system.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: your loved one gets a real chance
+                to accept help, and the family stops reinforcing the problem in
+                the name of keeping the peace.
+              </p>
+            </section>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <Heart className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">How We Help Wisconsin Families</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Freedom Interventions serves families throughout Wisconsin, from the shores of Lake Michigan to the forests of the Northwoods. We understand Wisconsin's culture and communities.
-                </p>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    Specialized expertise in both alcohol and opioid intervention
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    In-person interventions available throughout Wisconsin
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    Connections to quality treatment centers matched to individual needs
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    Family education and ongoing recovery support
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <TrendingUp className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">A Path Forward</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Recovery is possible for your loved one. Professional intervention creates a breakthrough moment where change becomes possible, supported by immediate access to appropriate treatment.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Our interventionists have helped families across Wisconsin find hope. Whether the struggle is alcohol, opioids, or both, we provide the expertise and compassion needed.
-                </p>
-                <p className="text-muted-foreground">
-                  Don't let another day pass. The sooner you act, the more options your loved one will have for recovery.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Hope for Wisconsin Families</h2>
-          <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">From Milwaukee to Madison, families across Wisconsin have found hope through professional intervention. Your family can too.</p>
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a Wisconsin Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, DUI, disappearance, or family collapse to force the decision.
+            Get clarity now, while the family still has room to act.
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"><a href="tel:541-838-6009"><Phone className="mr-2 h-5 w-5" />Call (541) 838-6009</a></Button>
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
+              </a>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -193,7 +332,6 @@ const Wisconsin = () => {
         </div>
       </section>
 
-      
       <LocationLinks currentLocation="Wisconsin" locationType="state" />
       <Footer />
     </div>

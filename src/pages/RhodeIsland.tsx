@@ -1,21 +1,71 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
+
+const pressurePoints = [
+  "Rhode Island may be small, but families here are dealing with the same high-stakes reality as anywhere else: fentanyl, alcohol, cocaine, and pills can push a situation from manageable to dangerous very quickly.",
+  "In a close-knit state, many families spend too long trying to keep the problem private. By the time they call, everyone is worn down and the addiction has already shaped the whole household.",
+  "Even when treatment is geographically close, families still need help getting aligned, choosing the right level of care, and holding boundaries once pressure starts.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family unified before the intervention",
+    description:
+      "Most failed interventions are not failures of love. They are failures of preparation. Matt helps the family get clear, consistent, and ready before the conversation begins.",
+  },
+  {
+    title: "Builds the treatment plan in advance",
+    description:
+      "Detox, residential care, outpatient options, transport, and fallback plans are lined up ahead of time so the intervention does not stall out in uncertainty.",
+  },
+  {
+    title: "Leads a calm, direct intervention",
+    description:
+      "The work is not about theatrics. It is about telling the truth, breaking through denial, and giving your loved one a genuine opening into treatment.",
+  },
+  {
+    title: "Helps the family stay consistent afterward",
+    description:
+      "If your loved one accepts treatment, the family needs structure. If your loved one refuses treatment, the family still needs structure. That is how change becomes real.",
+  },
+];
+
+const rhodeIslandSituations = [
+  "A son or daughter cycling through relapse, overdose scares, and treatment promises that do not last",
+  "A spouse or partner whose drinking or drug use is destabilizing the home",
+  "A family trapped in secrecy, enabling, and repeated crisis management",
+  "A loved one whose behavior has become more volatile, manipulative, or unsafe",
+  "A family that cannot agree on whether to get tougher, stay patient, or stop rescuing",
+  "A situation that feels one bad night away from tragedy",
+];
 
 const RhodeIsland = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Rhode Island Addiction Intervention Services | Freedom Interventions"
-        description="Professional intervention services for Rhode Island families. Expert interventionists help loved ones find treatment in the Ocean State. Fentanyl crisis support available."
+        title="Addiction Intervention Services in Rhode Island | Freedom Interventions"
+        description="Rhode Island families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Rhode Island prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/rhode-island"
-        keywords="Rhode Island intervention, addiction help RI, interventionist Providence, drug intervention Rhode Island, fentanyl crisis RI"
+        keywords="Rhode Island addiction intervention, Rhode Island interventionist, Providence drug intervention, family intervention Rhode Island, Rhode Island intervention services"
         geoRegion="US-RI"
         geoPlacename="Rhode Island"
       />
@@ -23,165 +73,254 @@ const RhodeIsland = () => {
       <ServiceAreaSchema
         areaName="Rhode Island"
         url="https://freedominterventions.com/rhode-island"
-        description="Professional intervention services for Rhode Island families. Expert interventionists help loved ones find treatment in the Ocean State. Fentanyl crisis support available."
+        description="Professional addiction intervention services for families across Rhode Island, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
-      <BreadcrumbSchema items={[
-        { name: "Home", url: "https://freedominterventions.com" },
-        { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-        { name: "Rhode Island", url: "https://freedominterventions.com/rhode-island" }
-      ]} />
-      
+      <LocationFAQSchema location="Rhode Island" locationType="state" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "Rhode Island",
+            url: "https://freedominterventions.com/rhode-island",
+          },
+        ]}
+      />
+
       <Navbar />
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Rhode Island", href: "/rhode-island" }
-      ]} />
-      
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Rhode Island", href: "/rhode-island" },
+        ]}
+      />
+
       <section className="pt-8 pb-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">Rhode Island Addiction Crisis</span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6">Rhode Island's Addiction Crisis: Professional Intervention Services</h1>
-            <p className="text-lg text-muted-foreground mb-8">Rhode Island has one of the nation's highest overdose death rates. Professional interventionists help families save lives across the Ocean State.</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
-              <Button asChild variant="outline" size="lg"><a href="tel:541-838-6009"><Phone className="mr-2 h-5 w-5" />Call (541) 838-6009</a></Button>
+            <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+              Rhode Island Intervention Services
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              When Addiction Has the Family Stuck in Fear and Rescue Mode, It Is
+              Time for a Clear Plan
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+              Matt Brown works with families across Rhode Island to prepare the
+              intervention, coordinate treatment, and stop the cycle of chaos,
+              secrecy, and repeated crisis.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-lg" asChild>
+                <Link to="/#contact">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Schedule a Consultation
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg" asChild>
+                <a href="tel:+15418386009">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call (541) 838-6009
+                </a>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">435</div>
-              <p className="text-sm text-muted-foreground">Drug Overdose Deaths (2022)</p>
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                No Room for Complacency
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                In Rhode Island, fentanyl has made the consequences of waiting
+                much more severe. Families rarely regret acting too early.
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <p className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</p>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Close-Knit, Still Complicated
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Even in a small state, addiction isolates families. Privacy,
+                shame, and mixed messages can keep everyone stuck longer than
+                they should be.
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">73K+</div>
-              <p className="text-sm text-muted-foreground">Residents with SUD</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</div>
-              <p className="text-sm text-muted-foreground">Crisis Support Available</p>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the old crisis-response pattern is replaced with
+                structure.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <AlertTriangle className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">Rhode Island's Overdose Emergency</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Despite its small size, Rhode Island consistently ranks among states with the highest overdose death rates per capita. With over 40 deaths per 100,000 residents, the crisis touches nearly every community.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Fentanyl has transformed the crisis—now involved in over 85% of overdose deaths. The state's urban areas, particularly Providence, have been hit hardest, but no community is unaffected.
-                </p>
-                <p className="text-muted-foreground">
-                  Rhode Island has responded with progressive harm reduction policies, but families still need professional support to help loved ones accept treatment.
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Rhode Island Families Usually Call After They Have Tried to Hold
+                This Together on Their Own
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Families almost never call at the first warning sign. They call
+                after the overdoses, the broken promises, the financial rescue,
+                the disappearances, the emotional blowups, or the treatment talk
+                that never turns into follow-through.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The problem is not just the substance use. It is that the family
+                has usually been pushed into reaction mode. Everyone cares, but
+                not everyone is doing the same thing. That confusion is exactly
+                where addiction keeps surviving.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention changes the structure around the addiction.
+                The family gets clear. Treatment gets lined up. Boundaries stop
+                being vague threats and start becoming real decisions.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Rhode Island Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {rhodeIslandSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family is waiting for one final sign that it is time
+                  to act, be careful. In addiction, the next sign is often a lot
+                  more painful than the last one.
                 </p>
               </div>
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <Users className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">Impact on Rhode Island Families</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  In Rhode Island's close-knit communities, addiction's impact is felt deeply. Over 73,000 residents struggle with substance use disorders—roughly 7% of the population.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Many families have lost loved ones to overdose or watched helplessly as addiction destroyed relationships, careers, and health. The grief and frustration can be overwhelming.
-                </p>
-                <p className="text-muted-foreground">
-                  Professional intervention offers a structured path forward, helping families move from chaos to clarity and creating the conditions for lasting recovery.
-                </p>
-              </div>
-            </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment. The Goal Is to End the
+                Family&apos;s Chaos Pattern.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Treatment matters. But if the family keeps operating in fear,
+                confusion, and mixed messages, addiction will keep trying to
+                re-enter through the same openings it used before.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: your loved one is given a real
+                path into help, and the family stops protecting the addiction
+                from the consequences that might finally force change.
+              </p>
+            </section>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <Heart className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">How We Help Rhode Island Families</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Freedom Interventions serves families throughout Rhode Island, from Providence to Newport, Warwick to Woonsocket. Our interventionists understand the unique dynamics of this tight-knit state.
-                </p>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    In-person interventions anywhere in Rhode Island
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    Access to treatment centers throughout New England and nationwide
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    Insurance verification and treatment financing guidance
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary font-bold">•</span>
-                    Ongoing family support and recovery coaching
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <TrendingUp className="h-8 w-8 text-primary" />
-                  <h2 className="text-2xl font-bold">A Path Forward</h2>
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  Recovery is happening across Rhode Island. Despite the severity of the crisis, thousands of residents are living in long-term recovery, rebuilding their lives and relationships.
-                </p>
-                <p className="text-muted-foreground mb-4">
-                  Professional intervention creates the breakthrough moment that many families have been waiting for. With immediate treatment placement and ongoing support, change is possible.
-                </p>
-                <p className="text-muted-foreground">
-                  If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. With fentanyl involved, the sooner families have a clear plan, the more options they have.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Hope for Rhode Island Families</h2>
-          <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">Families across Rhode Island have found hope through professional intervention. Your loved one's recovery journey can begin today.</p>
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a Rhode Island Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, legal crisis, disappearance, or family collapse to decide for
+            you. Get clarity now, while the family still has room to act.
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"><a href="tel:541-838-6009"><Phone className="mr-2 h-5 w-5" />Call (541) 838-6009</a></Button>
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
+              </a>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -193,7 +332,6 @@ const RhodeIsland = () => {
         </div>
       </section>
 
-      
       <LocationLinks currentLocation="Rhode Island" locationType="state" />
       <Footer />
     </div>

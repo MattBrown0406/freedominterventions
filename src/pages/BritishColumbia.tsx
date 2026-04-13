@@ -1,80 +1,130 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import britishColumbiaBanner from "@/assets/british-columbia-banner.jpg";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "British Columbia families are often dealing with a situation that has already become more dangerous than it looks from the outside because the drug supply is so unpredictable.",
+  "The province offers more treatment pathways than some regions, but that does not make decisions easier. Families still need clarity about level of care, timing, and whether travel is the better option.",
+  "By the time most families call, they are not just tired. They are scared, divided, and increasingly aware that waiting may not be survivable.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family organized before the intervention",
+    description:
+      "Matt helps the family move out of chaos and into a shared plan with clear roles, boundaries, and a unified message.",
+  },
+  {
+    title: "Builds the treatment path before the confrontation",
+    description:
+      "Detox, residential care, outpatient options, transport, and contingencies are handled before the family sits down with their loved one.",
+  },
+  {
+    title: "Leads a calm, direct intervention",
+    description:
+      "The point is not to overwhelm your loved one. The point is to tell the truth clearly and make the path into treatment real.",
+  },
+  {
+    title: "Helps the family stay consistent afterward",
+    description:
+      "If the loved one accepts help, the family needs structure. If the loved one refuses, the family still needs structure. That consistency matters.",
+  },
+];
+
+const commonSituations = [
+  "A son or daughter disappearing into fentanyl use, overdose scares, or repeated treatment starts that do not hold",
+  "A spouse or partner whose drinking or drug use is destabilizing the home while everybody tries to manage it quietly",
+  "A family in Vancouver, Victoria, Kelowna, Surrey, or a smaller BC community that cannot agree on the next right move",
+  "A loved one whose behavior has become more volatile, deceptive, or dangerous",
+  "A family trying to choose between public options, private care, local treatment, or travel out of province",
+  "A situation where the fear of waiting is starting to outweigh the fear of acting",
+];
 
 const BritishColumbia = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="British Columbia Addiction Intervention Services | Freedom Interventions"
-        description="British Columbia continues to face Canada's deadliest toxic drug crisis with over 2,500 lives lost annually. Professional interventionists help BC families find recovery."
+        title="Addiction Intervention Services in British Columbia | Freedom Interventions"
+        description="British Columbia families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across British Columbia prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/british-columbia"
-        keywords="British Columbia addiction intervention, Vancouver intervention services, BC drug crisis, fentanyl crisis BC, addiction help Vancouver"
+        keywords="British Columbia addiction intervention, BC interventionist, Vancouver drug intervention, Victoria family intervention, British Columbia alcohol intervention"
         geoRegion="CA-BC"
         geoPlacename="British Columbia"
       />
       <OrganizationSchema />
       <ServiceAreaSchema
         areaName="British Columbia"
+        areaType="AdministrativeArea"
         url="https://freedominterventions.com/british-columbia"
-        description="British Columbia continues to face Canada's deadliest toxic drug crisis with over 2,500 lives lost annually. Professional interventionists help BC families find recovery."
+        description="Professional addiction intervention services for families across British Columbia, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
         country="CA"
       />
+      <LocationFAQSchema location="British Columbia" locationType="province" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-          { name: "British Columbia", url: "https://freedominterventions.com/british-columbia" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "British Columbia",
+            url: "https://freedominterventions.com/british-columbia",
+          },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "British Columbia", href: "/british-columbia" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={britishColumbiaBanner} 
-            alt="British Columbia mountains and forests symbolizing hope and recovery" 
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "British Columbia", href: "/british-columbia" },
+        ]}
+      />
+
+      <section className="pt-20 pb-16 bg-gradient-to-b from-primary/10 to-background">
+        <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
-              British Columbia Addiction Crisis
-            </span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              British Columbia's Addiction Crisis: How Professional Interventionists Offer Families a Lifeline
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              British Columbia continues to face Canada's deadliest toxic drug crisis, with over 2,500 lives lost annually to overdoses. The province has declared a public health emergency since 2016, as fentanyl and other toxic substances devastate communities from Vancouver to remote regions.
+            <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+              British Columbia Intervention Services
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              When the Toxic Drug Crisis Has the Whole Family on Edge, You Need
+              More Than Another Promise
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Matt Brown works with families across British Columbia to prepare
+              the intervention, coordinate treatment, and stop the cycle of
+              panic, rescuing, and repeated crisis.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-lg" asChild>
+                <Link to="/#contact">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Schedule a Consultation
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
-                  <Phone className="mr-2 h-5 w-5" />
+              <Button size="lg" variant="outline" className="text-lg" asChild>
+                <a href="tel:+15418386009">
+                  <Phone className="w-5 h-5 mr-2" />
                   Call (541) 838-6009
                 </a>
               </Button>
@@ -83,188 +133,180 @@ const BritishColumbia = () => {
         </div>
       </section>
 
-      {/* Key Statistics */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">2,500+</div>
-              <div className="text-sm text-muted-foreground">Annual Overdose Deaths</div>
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Toxic Supply
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                In British Columbia, fentanyl and other contaminants have made
+                the margin for error brutally small for families waiting on a
+                wake-up call.
+              </p>
             </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Province-Wide Pressure
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                From Metro Vancouver and Vancouver Island to the Interior and
+                northern communities, families are trying to act before the next
+                crisis turns fatal.
+              </p>
             </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">225K</div>
-              <div className="text-sm text-muted-foreground">British Columbians Affected</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">85%</div>
-              <div className="text-sm text-muted-foreground">Deaths Involve Fentanyl</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the boundaries are strong enough to hold after the
+                first pushback.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scope of BC's Addiction Challenges */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  The Scope of British Columbia's Addiction Challenges
-                </h2>
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                British Columbia Families Usually Call After They Have Tried
+                Everything Except Structure
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                By the time a family reaches out, they have usually already
+                spent months, sometimes years, trying to manage the situation
+                privately. They have covered bills, cleaned up messes, absorbed
+                lies, believed promises, feared the worst, and argued about what
+                to do next.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Across British Columbia, families are often balancing the danger
+                of the toxic drug supply with hard decisions about local care,
+                private options, and when travel makes more sense.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <p className="text-muted-foreground leading-relaxed">
-                British Columbia has been at the epicenter of Canada's opioid crisis since declaring a public health emergency in April 2016. The toxic drug supply—primarily fentanyl and its analogues—has claimed over 14,000 lives since then. In 2023 alone, more than 2,500 British Columbians died from toxic drug poisoning, making it the leading cause of unnatural death in the province.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                The crisis affects all demographics and regions. While the Downtown Eastside of Vancouver remains heavily impacted, overdose deaths have spread throughout the province—to suburban communities, northern regions, and Vancouver Island. Approximately 85% of deaths involve fentanyl, often mixed with other substances like benzodiazepines, making the drug supply increasingly unpredictable and deadly.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Despite innovative harm reduction measures like safe injection sites and naloxone distribution, treatment access remains challenging. Wait times for publicly funded treatment can extend weeks or months, and many families struggle to navigate the complex healthcare system while watching their loved ones suffer.
-              </p>
-            </div>
+            </section>
 
-            {/* Why Families Need Intervention Support Now */}
-            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Why Families Need Intervention Support Now
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Addiction tears apart BC families daily. Parents watch children disappear into Vancouver's streets; spouses hide their partner's drug use from employers; siblings deplete savings trying to help. The toxic drug supply means every use could be fatal—families live in constant fear of the phone call that never comes.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists bring structure and expertise to this chaos. Unlike family confrontations that often backfire, trained interventionists use evidence-based methods like ARISE and CRAFT that achieve significantly higher treatment entry rates. They understand BC's treatment landscape—from private facilities in the Okanagan to publicly funded programs in the Lower Mainland—and can navigate the system quickly when lives hang in the balance.
-              </p>
-            </div>
-
-            {/* How Interventionists Tailor Solutions */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Heart className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  How Interventionists Tailor Solutions for BC Families
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Every BC family's situation is unique. An interventionist begins with comprehensive assessment—understanding the person's substance use history, mental health conditions, previous treatment attempts, and family dynamics. This allows for a customized approach that addresses root causes, not just symptoms.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                In British Columbia, interventionists leverage the province's treatment continuum: medical detox at facilities like Creekside Withdrawal Management, residential treatment at centres like Together We Can or Last Door, and robust aftercare through community programs. They also understand the unique challenges of BC's geography—connecting remote families with virtual support or arranging travel to appropriate facilities.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                The intervention itself is carefully planned and rehearsed. Families learn to communicate love while establishing firm boundaries. The person struggling with addiction is given a clear path to treatment, often with transportation arranged and a bed waiting. This removes barriers that often prevent people from accepting help in their moment of clarity.
-              </p>
-            </div>
-
-            {/* Proven Benefits and Real Impact */}
-            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Proven Benefits and Real Impact
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. Studies show significantly higher of intervention participants agree to treatment, compared to less than 30% without professional guidance. More importantly, the structured approach helps maintain recovery—families learn to support without enabling, and individuals enter treatment with a clear plan.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                In BC's deadly drug environment, speed matters. Interventionists can mobilize within 24-48 hours, arranging assessments, securing treatment beds, and coordinating travel. This rapid response can mean the difference between life and death when every day increases overdose risk.
-              </p>
-            </div>
-
-            {/* Barriers and Why Earlier Planning Helps */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Barriers and Why Earlier Planning Helps
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                BC families face unique challenges: long public treatment waitlists, limited options in rural communities, and a drug supply that grows more toxic each year. Many families hesitate, hoping their loved one will choose recovery on their own—but with fentanyl contaminating virtually all street drugs, waiting can be fatal.
+                A real intervention is not a dramatic confrontation for its own
+                sake. It is a structured process that gets the family clear,
+                gets treatment options ready, and creates a real path out of the
+                cycle you are already stuck in.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in British Columbia Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {commonSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps asking how bad it needs to get before you
+                  intervene, British Columbia is not a good place to keep
+                  testing that question.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment Entry. The Goal Is to Stop
+                Protecting the Addiction.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A treatment yes matters. But if the family goes back to
+                confusion, mixed messages, and panic-based decisions, the
+                addiction will keep trying to return through the same openings.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                The financial investment in professional intervention pales compared to the costs of continued addiction—not just the potential loss of life, but healthcare expenses, legal fees, lost employment, and family trauma. Intervention is an investment in your family's future.
+                The stronger outcome is a family system that has changed, one
+                that tells the truth, holds the line, and no longer keeps the
+                addiction comfortable.
               </p>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in British Columbia
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation using clinical criteria to determine appropriate level of care.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">BC Treatment Navigation</h3>
-                    <p className="text-muted-foreground">Deep knowledge of BC's treatment landscape, from Vancouver to the Interior to Vancouver Island.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Rapid Response</h3>
-                    <p className="text-muted-foreground">24-48 hour mobilization when the toxic drug supply makes every day dangerous.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Family Healing</h3>
-                    <p className="text-muted-foreground">Guidance for the whole family to break enabling patterns and rebuild healthy relationships.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Long-term recovery support including AA/NA, counselling, and sober living arrangements.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            </section>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            A Path Forward for British Columbia Families
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a British Columbia Intervention?
           </h2>
-          <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            BC's toxic drug crisis has claimed more than 14,000 lives since 2016. Professional intervention offers a structured, compassionate path to treatment. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
-          </p>
-          <p className="text-xl font-semibold mb-8">
-            Hope starts with one structured step—yours.
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, disappearance, or psychiatric crash to decide for you. Get
+            clarity now, while the family still has room to act deliberately.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
-                <Phone className="mr-2 h-5 w-5" />
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -272,13 +314,17 @@ const BritishColumbia = () => {
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -290,8 +336,10 @@ const BritishColumbia = () => {
         </div>
       </section>
 
-
-      <LocationLinks currentLocation="British Columbia" locationType="province" />
+      <LocationLinks
+        currentLocation="British Columbia"
+        locationType="province"
+      />
 
       <Footer />
     </div>

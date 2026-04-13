@@ -1,21 +1,71 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, CheckCircle, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "New Jersey families are dealing with fentanyl, cocaine, alcohol, pills, and polysubstance use in a densely populated state where the crisis can stay hidden until it suddenly turns lethal.",
+  "From Newark and Jersey City to the suburbs and the shore, families run into the same pattern: too much fear, too many opinions, and no shared plan strong enough to interrupt the addiction.",
+  "Many families have already spent months cycling between rescue, anger, guilt, and false hope before they realize they need professional structure, not another emotional conversation.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family out of chaos and onto the same page",
+    description:
+      "Before anyone confronts your loved one, Matt helps the family stop sending mixed messages and start acting with clarity, consistency, and real backbone.",
+  },
+  {
+    title: "Builds the treatment path before the intervention",
+    description:
+      "Detox, residential care, outpatient options, insurance realities, transport, and contingency plans are addressed ahead of time so the intervention does not collapse into confusion.",
+  },
+  {
+    title: "Leads a calm, direct intervention",
+    description:
+      "The goal is not to overpower your loved one. The goal is to tell the truth clearly, present treatment, and make it obvious the family is no longer going to keep addiction comfortable.",
+  },
+  {
+    title: "Helps the family stay steady afterward",
+    description:
+      "If your loved one accepts help, structure matters. If your loved one refuses help, structure still matters. The family has to stop living at the mercy of the next crisis.",
+  },
+];
+
+const newJerseySituations = [
+  "A son or daughter cycling through fentanyl use, treatment attempts, and relapse",
+  "A spouse or partner whose drinking, cocaine use, or pills are destabilizing the household",
+  "A family exhausted by secrecy, money leaks, emotional whiplash, and repeated rescue",
+  "A loved one who promises treatment whenever things get bad, then disappears once the pressure lifts",
+  "A family split between tough love, fear, denial, and panic",
+  "A situation where the overdose risk feels too high to keep waiting",
+];
 
 const NewJersey = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="New Jersey Addiction Intervention Services | Freedom Interventions"
-        description="New Jersey faces one of the nation's highest overdose death rates with over 3,000 annual fatalities. Professional interventionists help families navigate the fentanyl crisis."
+        title="Addiction Intervention Services in New Jersey | Freedom Interventions"
+        description="New Jersey families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across New Jersey prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/new-jersey"
-        keywords="New Jersey addiction intervention, Newark intervention services, Jersey City drug intervention, New Jersey fentanyl crisis, opioid intervention NJ"
+        keywords="New Jersey addiction intervention, New Jersey interventionist, Newark drug intervention, Jersey City intervention services, family intervention New Jersey"
         geoRegion="US-NJ"
         geoPlacename="New Jersey"
       />
@@ -23,42 +73,239 @@ const NewJersey = () => {
       <ServiceAreaSchema
         areaName="New Jersey"
         url="https://freedominterventions.com/new-jersey"
-        description="New Jersey faces one of the nation's highest overdose death rates with over 3,000 annual fatalities. Professional interventionists help families navigate the fentanyl crisis."
+        description="Professional addiction intervention services for families across New Jersey, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="New Jersey" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-          { name: "New Jersey", url: "https://freedominterventions.com/new-jersey" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "New Jersey",
+            url: "https://freedominterventions.com/new-jersey",
+          },
         ]}
       />
-      
-      <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "New Jersey", href: "/new-jersey" },
-      ]} />
 
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
+      <Navbar />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "New Jersey", href: "/new-jersey" },
+        ]}
+      />
+
+      <section className="pt-8 pb-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-6">
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 max-w-4xl">
-            New Jersey's Addiction Crisis: Professional Interventionists as Strategic Allies for Families
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mb-8">
-            With over 3,000 overdose deaths annually and one of the nation's highest per capita rates, New Jersey families face an urgent crisis. Professional interventionists provide the expertise needed to guide loved ones toward recovery.
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+              New Jersey Intervention Services
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              When Addiction Keeps Pulling the Family Into Crisis, You Need a
+              Plan With Real Structure
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+              Matt Brown works with families across New Jersey to prepare the
+              intervention, coordinate treatment, and stop the cycle of chaos,
+              secrecy, and repeated emergency.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-lg" asChild>
+                <Link to="/#contact">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Schedule a Consultation
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg" asChild>
+                <a href="tel:+15418386009">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call (541) 838-6009
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Fast Escalation
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                In New Jersey, fentanyl has erased much of the margin for error.
+                Families who think they still have time are often taking a much
+                bigger gamble than they realize.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Dense, Complicated, Urgent
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                New Jersey families often have treatment options nearby, but too
+                many options without clear guidance can still leave everyone
+                stuck.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                logistics are ready, and the first round of pushback does not
+                send everyone back into chaos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                New Jersey Families Usually Reach Out After the Situation Has
+                Been Bad for Longer Than Anyone Wants to Admit
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Families rarely call at the beginning. They call after the lies,
+                the overdose scares, the failed treatment attempts, the money
+                problems, the disappearing acts, and the family arguments have
+                already stacked up.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                What keeps the problem going is not a lack of love. It is a lack
+                of unified structure. One person wants consequences, another
+                wants patience, and another is too scared to upset the person
+                using. Addiction knows how to survive that kind of split.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A good intervention does not rely on emotion, guilt, or a
+                perfect speech. It relies on preparation, treatment readiness,
+                and the family finally acting like a team.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in New Jersey Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {newJerseySituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family is asking whether this has become serious
+                  enough, it probably has. The more the pattern repeats, the
+                  less wise it is to keep waiting for the person using to solve
+                  it alone.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment Entry. The Goal Is to Stop
+                Feeding the Addiction.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A treatment yes matters. But if the family returns to fear,
+                rescuing, and inconsistent boundaries, addiction gets welcomed
+                right back into the same system.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is a different family structure, one that
+                tells the truth, holds the line, and no longer protects the
+                addiction from consequences.
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a New Jersey Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, arrest, disappearance, or collapse at home to force the
+            decision. Get clarity now, while the family still has room to act.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg" className="text-lg">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg">
+            <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -66,201 +313,17 @@ const NewJersey = () => {
         </div>
       </section>
 
-      {/* Key Statistics */}
-      <section className="py-12 bg-card">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center p-6 rounded-lg bg-destructive/10 border border-destructive/20">
-              <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">3,046</div>
-              <div className="text-sm text-muted-foreground">Overdose Deaths (2022)</div>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-primary/10 border border-primary/20">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">33.1</div>
-              <div className="text-sm text-muted-foreground">Deaths per 100K (vs 21.4 US)</div>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-secondary/50 border border-border">
-              <Users className="h-8 w-8 text-secondary-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">700K+</div>
-              <div className="text-sm text-muted-foreground">Residents with SUD</div>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-accent/50 border border-accent">
-              <Heart className="h-8 w-8 text-accent-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">85%</div>
-              <div className="text-sm text-muted-foreground">Fentanyl-Involved Deaths</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scope of Crisis */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                The Scope of New Jersey's Addiction Crisis
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  New Jersey confronts one of America's most severe addiction crises, with an overdose death rate exceeding the national average by 55%. In 2022 alone, 3,046 New Jersey residents died from drug overdoses, representing a mortality rate of 33.1 per 100,000—compared to the U.S. average of 21.4.
-                </p>
-                <p>
-                  Fentanyl has transformed the landscape, now involved in approximately 85% of all overdose deaths. The synthetic opioid has infiltrated the heroin supply and increasingly appears in counterfeit prescription pills, making every use potentially lethal. Cocaine and methamphetamine deaths have also surged, often involving fentanyl contamination.
-                </p>
-                <p>
-                  Urban centers like Newark, Camden, Paterson, and Trenton face concentrated impacts, though suburban and rural communities have not been spared. The crisis touches every demographic, from teenagers experimenting with pills to professionals hiding functional addiction.
-                </p>
-              </div>
-            </div>
-
-            {/* Treatment Gap */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                New Jersey's Treatment Landscape
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Despite significant state investments in addiction treatment, a substantial treatment gap persists. Approximately 700,000 New Jersey residents struggle with substance use disorder, yet only a fraction receive adequate care. Wait times for detox beds can extend weeks, and many insurance barriers remain.
-                </p>
-                <p>
-                  New Jersey has implemented progressive policies including expanded Medicaid coverage for addiction treatment, naloxone distribution programs, and recovery high schools. However, these resources often go underutilized because families don't know how to access them or their loved ones refuse help.
-                </p>
-              </div>
-            </div>
-
-            {/* Family Impact */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                How Addiction Impacts New Jersey Families
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Families across New Jersey endure the secondary trauma of watching loved ones descend into addiction. DUI arrests, job losses, broken relationships, and the constant fear of overdose create overwhelming stress. Many families exhaust themselves through repeated rescue attempts that only enable continued use.
-                </p>
-                <p>
-                  Without professional guidance, family-led interventions often break down into arguments, mixed messages, or delayed follow-through. Well-meaning attempts often devolve into arguments, driving the addicted person further into isolation. Professional interventionists help families avoid these pitfalls while dramatically improving treatment acceptance rates to significantly higher.
-                </p>
-              </div>
-            </div>
-
-            {/* Role of Interventionists */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                How Professional Interventionists Help New Jersey Families
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Interventionists bring specialized training and experience to what families often approach with emotion alone. They conduct comprehensive assessments using ASAM criteria to determine the appropriate level of care—whether medical detox, residential treatment, intensive outpatient, or medication-assisted treatment.
-                </p>
-                <p>
-                  For New Jersey families, interventionists navigate the complex treatment landscape, identifying programs that accept specific insurance plans and have immediate availability. They coordinate with facilities throughout the state and beyond, arranging transport and ensuring seamless admission.
-                </p>
-                <p>
-                  The intervention itself is carefully structured. Family members prepare impact statements expressing love and concern without blame. Clear boundaries are established, and the interventionist facilitates the conversation to prevent derailment. When the loved one agrees to treatment—as they do significantly higher of the time with professional guidance—the transition happens immediately.
-                </p>
-              </div>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in New Jersey
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation to determine the most appropriate level of care based on medical criteria and individual circumstances.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Navigation</h3>
-                    <p className="text-muted-foreground">Expert guidance through New Jersey's treatment system, including facilities in Newark, Princeton, Bergen County, and beyond.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Fentanyl Crisis Expertise</h3>
-                    <p className="text-muted-foreground">Specialized understanding of the dangers posed by fentanyl and appropriate medical interventions for safe detoxification.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Insurance Coordination</h3>
-                    <p className="text-muted-foreground">Help navigating insurance coverage, including New Jersey Medicaid and private plans, to maximize treatment options.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Coordination of ongoing support including therapy, medication-assisted treatment, sober living, and family counseling.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Path Forward */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                A Path Toward Hope and Recovery
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  New Jersey's addiction crisis demands professional response. The state's high overdose rate means every day without treatment carries serious risk. Professional interventionists offer families the expertise, structure, and compassion needed to break through denial and facilitate treatment acceptance.
-                </p>
-                <p>
-                  Recovery is possible. Thousands of New Jersey residents have found sobriety through proper treatment, and families can be restored. The first step is reaching out for professional guidance. Contact us today for a confidential consultation about how intervention can help your family.
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Schedule Free Consultation for Your New Jersey Family
-          </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="text-lg">
-              <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Consultation
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
-                Call Now
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -271,7 +334,6 @@ const NewJersey = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="New Jersey" locationType="state" />
 

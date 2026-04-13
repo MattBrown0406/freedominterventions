@@ -1,21 +1,71 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, TrendingUp, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "New York families call from Manhattan, Long Island, Buffalo, Westchester, and small upstate towns, but the family pattern is the same: the addiction keeps escalating while everyone around it keeps reacting.",
+  "In a state this large, treatment options can be both abundant and overwhelming. Families do not just need a list of programs. They need a plan that matches the real level of risk and resistance.",
+  "Fentanyl, alcohol, cocaine, pills, and meth may show up differently, but the family cost is familiar: fear, secrecy, manipulation, financial drain, and constant uncertainty about what happens next.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family unified before anyone confronts your loved one",
+    description:
+      "When one person is rescuing, one is angry, and one is minimizing, the conversation is already in trouble. Matt helps the family get aligned first.",
+  },
+  {
+    title: "Builds the treatment plan before the intervention",
+    description:
+      "Detox, residential care, outpatient options, transport, and backup plans are handled in advance so the intervention leads somewhere real instead of falling apart in the moment.",
+  },
+  {
+    title: "Leads a direct, compassionate intervention",
+    description:
+      "The goal is not to shame your loved one. The goal is to break through denial, present the truth clearly, and offer a real path into treatment.",
+  },
+  {
+    title: "Helps the family hold the structure afterward",
+    description:
+      "Whether your loved one accepts help or refuses it, the family needs a plan it can actually maintain. That is where real change starts to stick.",
+  },
+];
+
+const newYorkSituations = [
+  "A young adult bouncing between fentanyl scares, treatment starts, and repeated relapse",
+  "A spouse or partner whose drinking, cocaine use, or pills are quietly destabilizing the family",
+  "A family worn down by money requests, lies, disappearances, and emotional whiplash",
+  "A loved one who looks functional to the outside world but is unraveling in private",
+  "A family trying to decide between local treatment, travel, or a more structured placement elsewhere",
+  "A situation that feels too volatile to keep handling without help",
+];
 
 const NewYork = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="New York Addiction Intervention Services | Freedom Interventions"
-        description="New York faces severe opioid and fentanyl challenges with thousands of annual overdose deaths. Professional interventionists help Empire State families navigate addiction and find recovery."
+        title="Addiction Intervention Services in New York | Freedom Interventions"
+        description="New York families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across New York prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/new-york"
-        keywords="New York addiction intervention, NYC intervention services, New York opioid crisis, Long Island drug intervention, Buffalo addiction help, Albany intervention"
+        keywords="New York addiction intervention, New York interventionist, NYC drug intervention, Long Island intervention services, family intervention New York"
         geoRegion="US-NY"
         geoPlacename="New York"
       />
@@ -23,162 +73,256 @@ const NewYork = () => {
       <ServiceAreaSchema
         areaName="New York"
         url="https://freedominterventions.com/new-york"
-        description="New York faces severe opioid and fentanyl challenges with thousands of annual overdose deaths. Professional interventionists help Empire State families navigate addiction and find recovery."
+        description="Professional addiction intervention services for families across New York, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="New York" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-          { name: "New York", url: "https://freedominterventions.com/new-york" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "New York",
+            url: "https://freedominterventions.com/new-york",
+          },
         ]}
       />
       <Navbar />
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "New York", href: "/new-york" },
-      ]} />
-      
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "New York", href: "/new-york" },
+        ]}
+      />
+
       <section className="pt-8 pb-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">New York Addiction Crisis</span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6">New York's Addiction Crisis: Professional Intervention Services</h1>
-            <p className="text-lg text-muted-foreground mb-8">New York State has one of the highest overdose death tolls in the nation. Professional interventionists help families across the Empire State find pathways to treatment and recovery.</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
-              <Button asChild variant="outline" size="lg"><a href="tel:541-838-6009"><Phone className="mr-2 h-5 w-5" />Call (541) 838-6009</a></Button>
+            <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+              New York Intervention Services
+            </p>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              When Addiction Is Controlling the Family, You Need More Than One
+              More Emotional Conversation
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+              Matt Brown works with families across New York to prepare the
+              intervention, coordinate treatment, and stop the cycle of chaos,
+              rescue, and relapse.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="text-lg" asChild>
+                <Link to="/#contact">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Schedule a Consultation
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg" asChild>
+                <a href="tel:+15418386009">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call (541) 838-6009
+                </a>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Key Statistics */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            <div className="bg-background p-6 rounded-lg shadow-sm text-center">
-              <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-1">5,800+</div>
-              <div className="text-sm text-muted-foreground">Annual Overdose Deaths</div>
-            </div>
-            <div className="bg-background p-6 rounded-lg shadow-sm text-center">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-1">29.8</div>
-              <div className="text-sm text-muted-foreground">Deaths per 100K Residents</div>
-            </div>
-            <div className="bg-background p-6 rounded-lg shadow-sm text-center">
-              <Users className="h-8 w-8 text-secondary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-1">1.5M+</div>
-              <div className="text-sm text-muted-foreground">Residents with SUD</div>
-            </div>
-            <div className="bg-background p-6 rounded-lg shadow-sm text-center">
-              <Heart className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-1">80%+</div>
-              <div className="text-sm text-muted-foreground">Opioid-Related Deaths</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Understanding New York's Addiction Epidemic</h2>
-              <p className="text-muted-foreground mb-4">
-                New York State faces one of the nation's most severe addiction crises. While New York City captures headlines, the epidemic impacts every region—from Long Island to Buffalo, from the Hudson Valley to the Adirondacks.
-              </p>
-              <p className="text-muted-foreground">
-                Fentanyl has transformed the crisis, with the synthetic opioid now present in the majority of overdose deaths. The state's diverse population and geography create unique challenges for treatment access and intervention.
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                High Stakes
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                In New York, fentanyl and polysubstance use have made the cost
+                of delay much higher. Families who wait for certainty often end
+                up waiting through another crisis.
               </p>
             </div>
-
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">The Treatment Landscape</h2>
-              <p className="text-muted-foreground mb-4">
-                New York has extensive treatment resources, but navigating the system is overwhelming for most families. Wait times, insurance barriers, and quality variations make finding appropriate care difficult.
-              </p>
-              <p className="text-muted-foreground">
-                Professional interventionists help families cut through the complexity and find treatment that matches their loved one's specific needs.
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Big State, Same Pattern
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Urban, suburban, or rural, the problem is not just access to
+                treatment. It is getting the family clear enough to act in a way
+                addiction cannot keep manipulating.
               </p>
             </div>
-
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">How Addiction Affects New York Families</h2>
-              <p className="text-muted-foreground mb-4">
-                The impact of addiction reverberates through families across the state:
-              </p>
-              <ul className="list-disc list-inside text-muted-foreground space-y-2 mb-4">
-                <li>High cost of living compounded by addiction-related financial losses</li>
-                <li>Family relationships strained or destroyed</li>
-                <li>Children growing up with addicted parents</li>
-                <li>Loss of promising careers and opportunities</li>
-                <li>Communities grappling with overdose deaths</li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">The Role of a Professional Interventionist</h2>
-              <p className="text-muted-foreground mb-4">
-                Professional intervention provides structure and expertise for families in crisis:
-              </p>
-              <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>Pre-intervention family education and preparation</li>
-                <li>Strategic planning tailored to your situation</li>
-                <li>Facilitated intervention conversation</li>
-                <li>Treatment matching and placement coordination</li>
-                <li>Ongoing family support throughout recovery</li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Why New York Families Choose Professional Help</h2>
-              <p className="text-muted-foreground mb-4">
-                Families across New York seek intervention assistance when:
-              </p>
-              <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>Previous attempts to help have failed</li>
-                <li>The family can't agree on an approach</li>
-                <li>Overdose risk is escalating</li>
-                <li>They need help navigating treatment options</li>
-                <li>Their loved one refuses to acknowledge the problem</li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">A Path Forward for Empire State Families</h2>
-              <p className="text-muted-foreground mb-4">
-                Recovery is possible for New York families. Whether you're in Manhattan or a small upstate town, professional intervention can help your family take the first steps toward healing.
-              </p>
-              <p className="text-muted-foreground">
-                A free consultation helps you understand your options and develop a plan that works for your unique circumstances.
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and everyone understands what happens if the answer is
+                yes and what happens if the answer is no.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Hope for New York Families</h2>
-          <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-            Don't let another day pass without taking action. Professional intervention can be the turning point your family needs.
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                New York Families Usually Call After They Have Tried Everything
+                Except Real Structure
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                By the time a family reaches out, they have usually already done
+                a lot. They have paid bills, cleaned up messes, absorbed lies,
+                tried ultimatums, softened ultimatums, and argued over what the
+                next right move should be.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The problem is not that the family does not care enough. The
+                problem is that addiction is stronger than scattered effort.
+                Without structure, the family keeps reacting while addiction
+                keeps controlling the pace.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention is not a dramatic event for its own sake. It
+                is a process that gets the family unified, gets treatment lined
+                up, and creates a clear path out of the cycle you are already
+                trapped in.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in New York Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {newYorkSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps wondering whether it is finally time to
+                  intervene, it usually is. Families rarely regret acting too
+                  soon. They often regret giving addiction one more month to set
+                  the terms.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just to Get a Yes. The Goal Is a Different
+                Family System.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Treatment entry matters. But if the family goes back to fear,
+                confusion, and mixed messages, addiction will try to reoccupy
+                the same space it held before.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: your loved one gets a real chance
+                to accept help, and the family stops protecting the addiction
+                from its consequences. That is how momentum shifts.
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a New York Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, arrest, disappearance, or family collapse to make the
+            decision for you. Get a clear assessment and a real plan.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"><a href="tel:541-838-6009"><Phone className="mr-2 h-5 w-5" />Call Now</a></Button>
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
+              </a>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -189,7 +333,6 @@ const NewYork = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="New York" locationType="state" />
       <Footer />

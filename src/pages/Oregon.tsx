@@ -1,22 +1,73 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, LocationFAQSchema, SpeakableSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  LocationFAQSchema,
+  SpeakableSchema,
+  ServiceAreaSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "Oregon families are often dealing with fentanyl, meth, alcohol, and polysubstance use in a system that still feels patchy, confusing, and inconsistent from one community to the next.",
+  "Policy shifts and public debate do not change what families live with at home: chaos, fear, money problems, and the exhausting feeling that everyone is reacting while the addiction keeps advancing.",
+  "In both Portland and smaller communities across the state, the pattern is familiar. Families wait, hope, rescue, argue, and then call when they realize the structure at home has to change.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family aligned before the intervention",
+    description:
+      "Most families are divided by the time they reach out. One person is rescuing, another is angry, another is frozen, and the addiction is using all of it. Matt helps the family get clear and unified first.",
+  },
+  {
+    title: "Builds the treatment plan before the pressure moment",
+    description:
+      "Detox, residential care, outpatient options, sober living, transport, and backup plans are handled ahead of time so the intervention leads somewhere real.",
+  },
+  {
+    title: "Leads a direct, compassionate intervention",
+    description:
+      "The goal is not to create drama. The goal is to tell the truth, present treatment clearly, and make it obvious the family is no longer going to keep addiction comfortable.",
+  },
+  {
+    title: "Helps the family stay consistent after the intervention",
+    description:
+      "If your loved one accepts help, the family needs structure. If your loved one refuses help, the family still needs structure. That is where the old cycle starts to break.",
+  },
+];
+
+const oregonSituations = [
+  "A loved one cycling through fentanyl, meth, alcohol, or mixed-substance use with no lasting follow-through",
+  "A family exhausted by overdose scares, jail calls, money drains, and constant emotional whiplash",
+  "A spouse or partner whose drinking or drug use is destabilizing the home while everyone keeps trying to manage around it",
+  "A family in Portland, Eugene, Bend, Medford, Salem, or a rural Oregon community that cannot agree on what should happen next",
+  "A loved one who keeps promising treatment, then backing out once the pressure eases",
+  "A situation where the family knows another six months of this could end badly",
+];
 
 const Oregon = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Specialist in Oregon | Freedom Interventions"
-        description="Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 838-6009."
+        title="Addiction Intervention Services in Oregon | Freedom Interventions"
+        description="Oregon families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Oregon prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/oregon"
-        keywords="intervention specialist Oregon, addiction intervention Oregon, drug intervention Oregon, alcohol intervention Oregon, family intervention Oregon, Oregon interventionist, professional intervention services Oregon, Portland addiction intervention, Salem drug intervention"
+        keywords="Oregon addiction intervention, Oregon interventionist, Portland drug intervention, Oregon family intervention, alcohol intervention Oregon"
         geoRegion="US-OR"
         geoPlacename="Oregon"
       />
@@ -24,10 +75,10 @@ const Oregon = () => {
       <ServiceAreaSchema
         areaName="Oregon"
         url="https://freedominterventions.com/oregon"
-        description="Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services for families across Oregon, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
       <LocationFAQSchema location="Oregon" locationType="state" />
-      <SpeakableSchema 
+      <SpeakableSchema
         name="Oregon Addiction Intervention Services"
         description="Professional addiction intervention services in Oregon helping families navigate treatment options."
         url="https://freedominterventions.com/oregon"
@@ -35,241 +86,57 @@ const Oregon = () => {
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
           { name: "Oregon", url: "https://freedominterventions.com/oregon" },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Oregon", href: "/oregon" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={oregonBanner} 
-            alt="Oregon landscape with mountains and forest path symbolizing hope and recovery" 
-            className="w-full h-full object-cover"
-          />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Oregon", href: "/oregon" },
+        ]}
+      />
+
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${oregonBanner})` }}
+        >
+          <div className="absolute inset-0 bg-foreground/65" />
         </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
-              Oregon Addiction Crisis
-            </span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Oregon's Addiction Crisis: How Professional Interventionists Offer Families a Lifeline
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Oregon faces a persistent addiction epidemic, with overdose deaths reaching 1,833 in 2023—a 33% surge from the prior year—driven by fentanyl, methamphetamine, and polysubstance use. While preliminary 2024 data shows a promising 22% drop to 1,480 deaths, rates remain far above pre-pandemic levels.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Statistics */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">1,833</div>
-              <div className="text-sm text-muted-foreground">Overdose Deaths in 2023</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">330K</div>
-              <div className="text-sm text-muted-foreground">Oregonians Affected</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">10%</div>
-              <div className="text-sm text-muted-foreground">Currently Receiving Help</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scope of Oregon's Addiction Challenges */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  The Scope of Oregon's Addiction Challenges
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Oregon's addiction rates have long outpaced national averages. In 2020, the state held the second-highest substance use disorder prevalence, leading in methamphetamine and prescription opioid misuse while ranking low in treatment availability. Fentanyl has intensified the crisis: from 223 overdose deaths in 2020 to 843 in 2022, comprising 65.5% of all fatalities that year. Communities of color and rural areas bear disproportionate burdens, with 53% of 2023 deaths involving opioids and stimulants combined.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Measure 110, passed in 2020 to decriminalize small drug amounts and fund treatment, faced implementation hurdles. By 2025, recriminalization efforts yielded 9,893 possession-related arrests from September 2024 to August 2025, but only 48% program completion among 1,727 deflected individuals. Overdose trends mirror national declines due to naloxone distribution and supply shifts, yet Oregon lost three lives daily on average in recent years. WalletHub ranks the state third for drug use and addiction, highlighting gaps in prevention and access.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Treatment infrastructure lags: a 49% statewide gap in substance use disorder services persists despite $400 million in Behavioral Health Recovery Network (BHRN) investments funding detox, housing, and outreach for 300,000 encounters. Public providers show varied success—engagement rates near 90-100%, but completion often 40-70%—exacerbating family desperation as only 10% of those needing help receive it.
-              </p>
-            </div>
-
-            {/* Why Families Need Intervention Support Now */}
-            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Why Families Need Intervention Support Now
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Addiction devastates Oregon families, turning homes into emotional battlegrounds amid jail stints, overdoses, and financial ruin. Without guidance, relatives enable unwittingly—covering arrests, bailing out, or delaying confrontation—prolonging suffering as seen in post-Measure 110 chaos. DIY interventions fail 70-more often when families are prepared due to denial, manipulation, and lack of aftercare planning.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Enter professional interventionists: certified experts who customize compassionate, evidence-based processes. Unlike ad-hoc family talks, they use models like ARISE or CRAFT, yielding 64-90% treatment entry rates by unifying family messages, dismantling enabling, and pre-arranging placements. In Oregon's resource-strapped landscape, they bridge gaps to vetted providers like Serenity Lane or BestCare.
-              </p>
-            </div>
-
-            {/* How Interventionists Tailor Solutions */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Heart className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  How Interventionists Tailor Solutions for Oregon Families
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Interventionists start with confidential family consultations, assessing addiction severity via ASAM criteria and mapping local crises like Portland's fentanyl emergency or rural meth surges. They educate on Oregon's continuum—detox at facilities like Recovery Works NW, inpatient at CODA, outpatient/IOP statewide, and sober living via BHRN-funded homes—ensuring seamless transitions.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Planning involves rehearsed interventions: families share impacts lovingly, backed by consequences (e.g., no funds without treatment) and immediate transport to programs. Success hinges on personalization—addressing co-occurring mental health, common in Oregon's high dual-diagnosis rates. Post-intervention, they oversee aftercare: AA/NA attendance, therapy, and family sessions, slashing relapse by aligning with state resources like deflection programs.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Oregon-specific expertise shines: navigating Measure 110 fallout, leveraging $1.1 billion funding requests amid shortages, and targeting hotspots like Multnomah County's 533% fentanyl death rise (2018-2022). Providers like Teras Intervention report stronger engagement, proving viability amid 330,000 affected residents.
-              </p>
-            </div>
-
-            {/* Proven Benefits and Real Impact */}
-            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Proven Benefits and Real Impact
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Data underscores efficacy: interventions boost treatment uptake significantly higher, with sustained sobriety via follow-up. In Oregon, where only 35,000 of 330,000 needing help access it, professionals cut delays that worsen outcomes. Families report restored unity—ending codependency, rebuilding trust—while individuals gain tools against fentanyl's grip.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Case in point: Central Oregon's BestCare tripled opioid referrals via BHRN, but interventions ensure entry before crises escalate. Nationally, CRAFT outperforms confrontation by 64%, adaptable to Oregon's meth-fentanyl mix.
-              </p>
-            </div>
-
-            {/* Barriers and Why Earlier Planning Helps */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Barriers and Why Earlier Planning Helps
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Challenges persist: waitlists, stigma, and uneven rural access hinder progress despite naloxone gains. Families delay, fearing resistance or costs—yet interventions avert costlier ER visits, jails, and losses, with ROI via lives saved.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Oregon's 2025 outlook: declining deaths signal hope, but sustained effort needed. Interventionists demystify options, from Coos County's outreach expansions to statewide peer supports.
-              </p>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in Oregon
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
-                    <p className="text-muted-foreground">Customized approaches that account for Oregon's unique resources, Measure 110 landscape, and regional factors.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
-                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
-                    <p className="text-muted-foreground">Guidance through Oregon's healthcare and legal systems, including deflection programs and OHA resources.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            A Path Forward for Oregon Families
-          </h2>
-          <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Oregon's addiction toll—1,833 lives lost in 2023 alone—demands action beyond policy fixes. Professional interventionists empower families, helping families turn panic into treatment action with a significantly higher chance of success. The sooner families have a clear plan, the more options they have.
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <p className="text-white/80 uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+            Oregon Intervention Services
           </p>
-          <p className="text-xl font-semibold mb-8">
-            Hope starts with one structured step—yours.
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            When Addiction Keeps Pulling the Family Into Chaos, Structure Has to
+            Lead
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Matt Brown works with families across Oregon to prepare the
+            intervention, coordinate treatment, and stop the cycle of panic,
+            rescuing, and repeated crisis.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
-                <Phone className="mr-2 h-5 w-5" />
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
+              asChild
+            >
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -277,13 +144,195 @@ const Oregon = () => {
         </div>
       </section>
 
-      {/* Family Intervention Link */}
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                1,833
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Oregon overdose deaths in 2023, a reminder that even when public
+                trends shift, families are still living with very real danger.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Uneven Systems
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Oregon families often face waitlists, mixed program quality, and
+                a treatment system that still takes work to navigate well.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the boundaries are strong enough to outlast the
+                first wave of resistance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Oregon Families Usually Call After They Have Tried Everything
+                Except a Real Structure
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                By the time a family reaches out, they have often already tried
+                private talks, money help, emotional appeals, treatment offers,
+                threats, softened threats, and one more promise to wait and see.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The problem is not a lack of love. The problem is that addiction
+                is stronger than scattered effort. Without structure, the family
+                keeps reacting while the addiction keeps controlling the pace.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention changes the structure around the addiction.
+                The family gets clear, treatment gets lined up, and vague
+                boundaries turn into decisions the family can actually hold.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Oregon Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {oregonSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps asking whether it is time to do something
+                  serious, it usually is. Families rarely regret acting too
+                  soon. They often regret waiting for one more disaster to make
+                  the decision for them.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment Entry. The Goal Is a Different
+                Family System.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Treatment entry matters. But if the family returns to the same
+                fear, confusion, and emergency-based decision making, the
+                addiction will try to retake the same space.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: your loved one is given a real
+                opportunity to accept help, and the family stops protecting the
+                addiction from its consequences. That is where real momentum
+                starts.
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With an Oregon Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose,
+            disappearance, arrest, or family collapse to force the decision. Get
+            clarity now, while the family still has room to act deliberately.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -294,7 +343,6 @@ const Oregon = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="Oregon" locationType="state" />
 

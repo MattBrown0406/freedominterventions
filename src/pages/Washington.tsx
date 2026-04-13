@@ -1,22 +1,72 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, Target, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import washingtonBanner from "@/assets/washington-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "Washington families are often dealing with fentanyl, meth, alcohol, and polysubstance use in both urban overdose zones and rural areas with fewer supports.",
+  "Seattle, Tacoma, Spokane, and smaller communities may look different on the surface, but the family pattern is the same: fear, enabling, divided messages, and growing exhaustion.",
+  "When the crisis keeps repeating, the family usually does not need more information nearly as much as it needs a structure strong enough to stop reacting and start leading.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family unified before the intervention",
+    description:
+      "Most families reach out when everyone is pulling in a different direction. Matt helps the family get aligned so addiction is no longer using division as cover.",
+  },
+  {
+    title: "Builds the treatment plan before the conversation",
+    description:
+      "Detox, residential care, outpatient options, sober living, transport, and backup plans are handled in advance so the intervention has somewhere concrete to go.",
+  },
+  {
+    title: "Leads a calm, direct intervention",
+    description:
+      "The goal is not a dramatic scene. The goal is to tell the truth clearly, present treatment immediately, and make it obvious the family is serious now.",
+  },
+  {
+    title: "Helps the family hold the line after the intervention",
+    description:
+      "If your loved one accepts help, the family needs structure. If your loved one refuses help, the family still needs structure. That is how the leverage becomes real.",
+  },
+];
+
+const washingtonSituations = [
+  "A son or daughter moving between fentanyl, meth, pills, alcohol, and repeated crises",
+  "A spouse or partner whose addiction is destabilizing the home while still appearing functional to outsiders",
+  "A family exhausted by overdose scares, legal trouble, paranoia, and emotional whiplash",
+  "A loved one who keeps promising treatment but backs out as soon as the pressure eases",
+  "A family in Seattle, Tacoma, Spokane, Vancouver, or a smaller community that cannot agree on the next move",
+  "A situation that already feels one bad night away from tragedy",
+];
 
 const Washington = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Specialist in Washington State | Freedom Interventions"
-        description="Washington families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Washington. Free consultation. Call (541) 838-6009."
+        title="Addiction Intervention Services in Washington | Freedom Interventions"
+        description="Washington families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Washington prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/washington"
-        keywords="intervention specialist Washington state, addiction intervention Washington, drug intervention Washington state, family intervention Washington, Washington interventionist, professional intervention services Washington, Seattle addiction intervention, Spokane drug intervention, Tacoma intervention services"
+        keywords="Washington addiction intervention, Washington interventionist, Seattle drug intervention, Spokane intervention services, family intervention Washington"
         geoRegion="US-WA"
         geoPlacename="Washington"
       />
@@ -24,243 +74,66 @@ const Washington = () => {
       <ServiceAreaSchema
         areaName="Washington"
         url="https://freedominterventions.com/washington"
-        description="Washington families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Washington. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services for families across Washington, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="Washington" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-          { name: "Washington", url: "https://freedominterventions.com/washington" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "Washington",
+            url: "https://freedominterventions.com/washington",
+          },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Washington", href: "/washington" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={washingtonBanner} 
-            alt="Washington State landscape with Mount Rainier and evergreen forests symbolizing hope" 
-            className="w-full h-full object-cover"
-          />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Washington", href: "/washington" },
+        ]}
+      />
+
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${washingtonBanner})` }}
+        >
+          <div className="absolute inset-0 bg-foreground/65" />
         </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
-              Washington Addiction Crisis
-            </span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Washington's Addiction Crisis: How Professional Interventionists Empower Families
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Washington State grapples with a severe addiction epidemic, recording 3,600 drug overdose deaths from May 2023 to April 2024—a 14% increase year-over-year despite a national 10% decline—fueled by fentanyl (58% of cases in 2023), methamphetamine, and polysubstance use.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Statistics */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">3,600</div>
-              <div className="text-sm text-muted-foreground">Overdose Deaths (2023-24)</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">$2.54B</div>
-              <div className="text-sm text-muted-foreground">Annual Crisis Cost</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Needing Help Go Unserved</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scale of Washington's Substance Use Challenges */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  The Scale of Washington's Substance Use Challenges
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Washington ranks high in illicit drug use, with 22.72% of those 12+ reporting past-month use (1.49 million people), led by marijuana (33.72% among 18-25-year-olds) and surging fentanyl—from 9% of crime lab cases in 2020 to 58% in 2023, while heroin dropped to 5%. Opioid death rates climbed from 9.6 per 100,000 in 2020 to 20.5 in 2021, with meth deaths rising from 83 (2008) to 364 (2016). Substance use disorders affect 22.44% of young adults, far above national averages, hitting rural counties like Spokane (52% primary meth users) hardest.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Youth trends alarm: 9.60% of 12-17-year-olds use illicit drugs monthly, with alcohol-attributable deaths averaging 1,127 yearly (2015-2019), including 289 suicides. Racial disparities persist—Native Americans face top overdose rates—while economic fallout burdens workplaces with absenteeism and safety risks. State responses include community outreach expansions and rehab investments, but access lags, with only 38,086 treatment admissions in 2010 despite poly-substance dominance (e.g., 51% female amphetamine cases).
-              </p>
-            </div>
-
-            {/* Family Struggles in Washington's Overdose Hotspots */}
-            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Family Struggles in Washington's Overdose Hotspots
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Addiction fractures Washington families, from Seattle's urban fentanyl waves to Eastern Washington's meth strongholds, leading to ER overloads, jail cycles, and eroded trust. Families often enable through bailouts or denial, delaying help as DIY efforts fail 70-80% amid resistance. With 90% untreated despite need, relatives face isolation without structured support.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists—certified via models like ARISE or CRAFT—change this, unifying families for 64-90% acceptance rates by customizing plans to Washington's realities: fentanyl risks, meth co-use, and youth vulnerabilities.
-              </p>
-            </div>
-
-            {/* Interventionists' Tailored Approach */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Target className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Interventionists' Tailored Approach for Washington Families
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Interventionists initiate with discreet assessments using ASAM criteria, pinpointing needs amid state trends like fentanyl-meth mixes (under 50% meth lab cases in 2022 but persistent). They educate on Washington's continuum: detox at centers like Crestview Recovery, inpatient statewide, IOP/outpatient via DOH resources, and sober living bridges.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Rehearsed interventions feature impact letters, firm boundaries (e.g., no housing sans treatment), and instant transport to vetted programs like Northpoint Washington. Personalization addresses dual-diagnosis (common in high illicit use states) and regional issues—urban outreach for King County, rural transport for Spokane. Post-event, they coordinate aftercare: AA/NA, therapy, family sessions, leveraging state dashboards for monitoring.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                In Washington, experts navigate policy shifts like expanded community campaigns and $2.54B crisis costs, pre-arranging amid waitlists to avert tragedies.
-              </p>
-            </div>
-
-            {/* Evidence of Impact and Success Stories */}
-            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Evidence of Impact and Success Stories
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Interventions elevate uptake significantly higher, with follow-up curbing relapse in resource-scarce settings. Washington's context amplifies value: where poly-substance admissions dominate (e.g., 10,960 alcohol+drug in 2010), pros dismantle enabling, boosting completion. Families regain stability—ending codependency—while data shows social support halves risks.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Local wins: Crestview's community ties triple referrals; statewide, interventions adapt CRAFT for 64% superiority over confrontation.
-              </p>
-            </div>
-
-            {/* Overcoming Barriers */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Overcoming Barriers in the Evergreen State
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Stigma, rural gaps, and youth highs (3.46% illicit disorders 12-17) hinder access, yet interventions cut delays fueling 14% overdose spikes. Costs offset via prevented $929M mortality, with ROI in lives restored.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                2025 trends: fentanyl persists, but public involvement grows via education boards.
-              </p>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in Washington
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
-                    <p className="text-muted-foreground">Customized approaches that account for Washington's unique resources, regional factors, and fentanyl-meth challenges.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
-                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
-                    <p className="text-muted-foreground">Guidance through Washington's healthcare and legal systems, including DOH resources and community programs.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Hope Through Intervention in Washington
-          </h2>
-          <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Washington's 3,600 recent overdose deaths signal urgency beyond stats—fentanyl, meth, and youth use demand family action. Professional interventionists deliver 90% pathways to treatment, turning despair into recovery amid state resources.
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <p className="text-white/80 uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+            Washington Intervention Services
           </p>
-          <p className="text-xl font-semibold mb-8">
-            Don't delay another ER visit or loss. One call ignites change.
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            When Addiction Keeps Escalating, the Family Needs a Plan Stronger
+            Than Fear
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Matt Brown works with families across Washington to prepare the
+            intervention, coordinate treatment, and stop the cycle of chaos,
+            rescuing, and repeated crisis.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
-                <Phone className="mr-2 h-5 w-5" />
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
+              asChild
+            >
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -268,13 +141,197 @@ const Washington = () => {
         </div>
       </section>
 
-      {/* Family Intervention Link */}
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                3,600
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Recent overdose deaths in Washington, reflecting a crisis that
+                remains severe even when national trends move the other way.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Statewide Pressure
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                From dense urban corridors to rural counties, families are
+                dealing with the same deeper problem: addiction has taken over
+                the structure of the home.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the enabling pattern is being replaced with clear
+                boundaries.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Washington Families Usually Call After the Crisis Has Been
+                Running the House for Too Long
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Most families do not call at the beginning. They call after the
+                overdoses, disappearances, treatment failures, money problems,
+                and emotional exhaustion have already piled up.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The family may look different from the outside depending on
+                where they live, but the inside pattern is familiar. Everyone
+                cares. Nobody is steady. The addiction keeps driving the tempo.
+                That is why the family needs structure before the next crisis
+                decides things for them.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A good intervention does not depend on one emotional moment. It
+                depends on preparation, treatment planning, and the family
+                finally acting like a team instead of a collection of worried
+                individuals.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Washington Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {washingtonSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps asking whether this is finally serious
+                  enough to intervene, the safer assumption is that it is.
+                  Families usually wait longer than they should, not shorter.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just to Get a Yes. The Goal Is to Stop Feeding
+                the Addiction.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A treatment yes matters. But if the family goes back to
+                rescuing, mixed messages, and fear-based decisions, the
+                addiction gets invited right back into the same system.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is a different family structure, one that
+                tells the truth, holds the line, and no longer keeps addiction
+                protected from consequences.
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a Washington Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose,
+            arrest, disappearance, or family collapse to make the decision for
+            you. Get a clear assessment and a real plan now.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -285,7 +342,6 @@ const Washington = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="Washington" locationType="state" />
 

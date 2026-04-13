@@ -1,22 +1,74 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+  Scale,
+} from "lucide-react";
 import floridaBanner from "@/assets/florida-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "Florida families are often dealing with addiction and mental health instability at the same time, which means the crisis can move quickly from chaos to genuine danger.",
+  "The state has a huge treatment marketplace, but volume does not equal clarity. Families still need help choosing what is real, what is appropriate, and what can happen fast.",
+  "When the situation keeps escalating, families start asking whether the Marchman Act or Baker Act applies. Those can matter, but they work best inside a larger treatment and intervention plan.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family organized before anyone confronts your loved one",
+    description:
+      "Most families reach out after months of fear, rescuing, and argument. Matt helps everyone get aligned so the addiction is no longer controlling the family through division.",
+  },
+  {
+    title: "Builds the treatment plan before the intervention",
+    description:
+      "Detox, residential care, outpatient options, transport, and backup plans are worked out ahead of time so the conversation leads somewhere real.",
+  },
+  {
+    title: "Helps families understand where legal tools may fit",
+    description:
+      "If the family is considering the Marchman Act or Baker Act, Matt helps them understand when those options may be relevant and when local legal or court guidance should be part of the next step.",
+  },
+  {
+    title:
+      "Leads a direct, compassionate intervention and helps the family hold the line",
+    description:
+      "The goal is not drama. It is clarity, treatment entry, and a family system that stops protecting the addiction from consequences afterward.",
+  },
+];
+
+const floridaSituations = [
+  "A son or daughter caught in fentanyl, cocaine, meth, alcohol, or prescription drug chaos",
+  "A spouse or partner whose drinking or drug use is destabilizing the home, finances, and safety",
+  "A family split between enabling, tough love, fear, and confusion about what to do next",
+  "A loved one cycling through ER visits, arrests, psychiatric crises, or repeated treatment promises",
+  "A situation where the family is asking whether the Marchman Act or Baker Act should be considered",
+  "A family that knows waiting for one more crisis is no longer a serious plan",
+];
 
 const Florida = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Florida Addiction Intervention Services | Marchman & Baker Acts | Freedom Interventions"
-        description="Florida families often ask how to navigate addiction crises, treatment options, and when the Marchman Act or Baker Act may be relevant. Freedom Interventions provides professional guidance and treatment planning statewide."
+        title="Addiction Intervention Services in Florida | Freedom Interventions"
+        description="Florida families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Florida prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/florida"
-        keywords="Florida addiction intervention, Miami intervention services, Marchman Act, Baker Act, Florida drug intervention, Tampa addiction help"
+        keywords="Florida addiction intervention, Florida interventionist, Marchman Act, Baker Act, Miami drug intervention, Florida family intervention"
         geoRegion="US-FL"
         geoPlacename="Florida"
       />
@@ -24,52 +76,63 @@ const Florida = () => {
       <ServiceAreaSchema
         areaName="Florida"
         url="https://freedominterventions.com/florida"
-        description="Florida families often ask how to navigate addiction crises, treatment options, and when the Marchman Act or Baker Act may be relevant. Freedom Interventions provides professional guidance and treatment planning statewide."
+        description="Professional addiction intervention services for families across Florida, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="Florida" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
           { name: "Florida", url: "https://freedominterventions.com/florida" },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Florida", href: "/florida" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={floridaBanner} 
-            alt="Florida coastal landscape with palm trees and lighthouse symbolizing hope and recovery" 
-            className="w-full h-full object-cover"
-          />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Florida", href: "/florida" },
+        ]}
+      />
+
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${floridaBanner})` }}
+        >
+          <div className="absolute inset-0 bg-foreground/65" />
         </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-6">
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 max-w-4xl">
-            Florida Addiction Intervention Services and Family Guidance
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mb-8">
-            Florida families face serious addiction and mental health crises every day. Matt Brown helps families understand their options, build a treatment plan, and use tools like the Marchman Act or Baker Act appropriately when those options fit the situation.
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <p className="text-white/80 uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+            Florida Intervention Services
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg" className="text-lg">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            When Addiction and Crisis Keep Taking Over, the Family Needs More
+            Than Hope
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Matt Brown works with families across Florida to prepare the
+            intervention, coordinate treatment, and decide whether tools like
+            the Marchman Act or Baker Act belong in the plan.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg">
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
+              asChild
+            >
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -77,246 +140,211 @@ const Florida = () => {
         </div>
       </section>
 
-      {/* Key Statistics */}
-      <section className="py-12 bg-card">
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center p-6 rounded-lg bg-destructive/10 border border-destructive/20">
-              <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">7,220</div>
-              <div className="text-sm text-muted-foreground">Overdose Deaths in 2023</div>
+          <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                7,220
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Florida overdose deaths in 2023, a reminder that waiting for the
+                next wake-up call is a dangerous gamble.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-primary/10 border border-primary/20">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">38,000+</div>
-              <div className="text-sm text-muted-foreground">DUI-Related Crashes (2021)</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Scale className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Legal Tools
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The Marchman Act and Baker Act can matter in the right cases,
+                but families still need a bigger intervention and treatment
+                strategy around them.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-secondary/50 border border-border">
-              <Users className="h-8 w-8 text-secondary-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">80,000</div>
-              <div className="text-sm text-muted-foreground">Floridians Need Treatment</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Too Many Options
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Florida has plenty of programs, but families still need help
+                finding the right level of care instead of getting sold
+                something that does not fit.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-accent/50 border border-accent">
-              <Heart className="h-8 w-8 text-accent-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">Prepared Families</div>
-              <div className="text-sm text-muted-foreground">Better Treatment Outcomes</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the old rescue pattern is being replaced with
+                structure.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-16">
+      <section className="py-16 md:py-24">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Magnitude */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Magnitude of Florida's Substance Use Challenges
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Florida Families Usually Reach Out After the Situation Has
+                Already Become Dangerous
               </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Florida continues to face serious overdose, alcohol misuse, and treatment-access challenges. South Florida has been hit hard by fentanyl and cocaine contamination, Central Florida continues to see methamphetamine and prescription drug misuse, and many parts of North Florida still struggle with treatment access.
-                </p>
-                <p>
-                  Alcohol also remains a major issue for Florida families, especially when repeated DUI arrests, crashes, job instability, and untreated mental health concerns start stacking up around the addiction.
-                </p>
-                <p>
-                  Even with many treatment programs across the state, families still run into waitlists, uneven quality, and confusion about what level of care actually fits the situation.
-                </p>
-              </div>
-            </div>
-
-            {/* Familial Strain */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Familial Strain Amid Legal and Health Crises
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Substance use disorders put Florida families under constant pressure, from overdose scares and psychiatric crises to arrests, financial chaos, and broken trust. Well-intentioned enabling, like paying bail, covering up consequences, or avoiding hard conversations, often keeps the cycle going.
-                </p>
-                <p>
-                  A professional intervention gives families structure, preparation, and a coordinated next step instead of another round of arguments, fear, or mixed messages.
-                </p>
-              </div>
-            </div>
-
-            {/* Marchman and Baker Acts */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <Scale className="h-8 w-8 text-primary" />
-                <h2 className="font-serif text-3xl font-bold text-foreground">
-                  Florida's Involuntary Treatment Statutes
-                </h2>
-              </div>
-              <div className="prose prose-lg text-muted-foreground space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">The Marchman Act (Chapter 397)</h3>
-                  <p>
-                    The Marchman Act allows families to pursue involuntary assessment and stabilization for someone whose substance use has made them unable to make safe decisions. The exact process varies by county, and families usually need to show clear evidence that the person is impaired and at risk.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">The Baker Act (Chapter 394)</h3>
-                  <p>
-                    The Baker Act applies to acute mental health crises, including situations where addiction is happening alongside dangerous psychiatric symptoms. It is different from the Marchman Act and is generally used when there is a serious concern about immediate safety and mental health instability.
-                  </p>
-                </div>
-                <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-                  <h4 className="font-semibold text-foreground mb-2">How Interventionists Help with These Acts</h4>
-                  <p className="text-sm">
-                    Florida families often ask about the Marchman Act and Baker Act. Matt can help you understand when those options may apply, what the process generally looks like, and when working with a local attorney or court advocate makes sense. These are tools families should know about, but they work best as part of a broader intervention strategy, not as a standalone approach.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Strategic Interventions */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Interventionists' Strategic Interventions in Florida
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Using ASAM criteria and real-world family dynamics, Matt helps determine what level of care makes sense, whether that is detox, residential treatment, partial hospitalization, intensive outpatient care, or sober living after primary treatment.
-                </p>
-                <p>
-                  The process includes family preparation, clear communication, appropriate boundaries, treatment coordination, and transportation planning when needed. After the intervention, families also need a follow-through plan that may include therapy, family recovery work, and ongoing accountability.
-                </p>
-                <p>
-                  When families are considering court-based options, local legal guidance and county-specific procedures matter. Matt's role is to help the family make a sound plan and coordinate with the right professionals when those steps are needed.
-                </p>
-              </div>
-            </div>
-
-            {/* Empirical Efficacy */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Empirical Efficacy and Familial Restoration
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. Just as important, the process helps the family stop reacting emotionally and start responding with consistency.
-                </p>
-                <p>
-                  That combination of preparation, leverage, and immediate next steps often changes the trajectory faster than families expect.
-                </p>
-              </div>
-            </div>
-
-            {/* Structural Impediments */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Addressing Florida's Structural Impediments
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Florida families also deal with practical barriers, including long distances, fragmented systems, uneven treatment quality, and the confusion of sorting legal, clinical, and family issues all at once.
-                </p>
-                <p>
-                  Even where statewide numbers improve, individual families still need a workable plan for the person right in front of them.
-                </p>
-              </div>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in Florida
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                By the time a family calls, they have usually already spent
+                months managing fallout. They have covered bills, softened
+                consequences, tried to calm the chaos, feared overdose, dealt
+                with psychiatric volatility, and argued about whether the next
+                move should be patience, pressure, or legal action.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                In Florida, the exact substance pattern may differ from family
+                to family, but the deeper pattern is the same. Everyone is
+                scared. Nobody agrees. The addiction keeps setting the pace.
+                That is why the family needs structure before the next crisis
+                chooses for them.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
                   </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
-                    <p className="text-muted-foreground">Customized approaches that account for Florida's unique legal frameworks, regional resources, and cultural factors.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
-                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
-                    <p className="text-muted-foreground">Guidance on how Marchman Act and Baker Act options may fit into a broader intervention plan, and when to involve local legal counsel or court advocates.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
+            </section>
 
-            {/* Pathways */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Pathways to Recovery in the Sunshine State
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
               </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Florida families need clear guidance, not pressure or false promises. With the right preparation and treatment plan, an intervention can create a real turning point.
-                </p>
-                <p>
-                  If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention is not a dramatic confrontation. It is a
+                process that gets the family aligned, gets treatment lined up,
+                and creates leverage strong enough to interrupt the addiction
+                pattern.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Florida Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {floridaSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family is already asking whether this has become a
+                  Marchman Act question, a Baker Act question, or an immediate
+                  intervention question, the safer assumption is that the
+                  situation already deserves serious action.
                 </p>
               </div>
-            </div>
+            </section>
 
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment Entry. The Goal Is a Family That
+                Stops Feeding the Crisis.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A yes to treatment matters. But if the family keeps operating in
+                panic, denial, and mixed messages, the addiction will keep
+                trying to reclaim the same territory.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: the loved one is given a real path
+                into help, and the family stops organizing itself around the
+                addiction. That is where lasting change begins.
+              </p>
+            </section>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 bg-primary/5">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Schedule Free Consultation for Your Florida Family
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a Florida Intervention?
           </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. We can help you think through treatment options and whether Marchman Act or Baker Act steps should be part of the plan.
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose,
+            arrest, psychiatric emergency, or family collapse to force the
+            decision. Get a clear assessment and a real plan now.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="text-lg">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+            <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
-                Call Now
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
               </a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -327,7 +355,6 @@ const Florida = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="Florida" locationType="state" />
 
