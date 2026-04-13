@@ -1,22 +1,72 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import californiaBanner from "@/assets/california-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "In California, families call from every kind of environment, affluent neighborhoods, college towns, rural communities, and major cities, but the pattern is the same: the addiction keeps escalating while the family keeps trying to contain it.",
+  "Fentanyl has made the margin for error much smaller. Families who once thought they had time now realize one relapse, one counterfeit pill, or one weekend gone sideways can change everything.",
+  "The size of California creates another problem: there are plenty of treatment options, but not all of them are good fits. Families need clarity, not a random list of rehabs.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family aligned before anyone confronts your loved one",
+    description:
+      "When a family is split between rescuing, threatening, minimizing, and panicking, the conversation is usually doomed before it starts. Matt helps the family get on the same page first.",
+  },
+  {
+    title: "Builds the treatment plan before the intervention",
+    description:
+      "Detox, residential care, outpatient options, transport, and fallback plans are addressed in advance so the intervention leads somewhere real instead of collapsing into arguments and indecision.",
+  },
+  {
+    title: "Leads a direct, compassionate intervention",
+    description:
+      "The goal is not drama. The goal is clarity. Your loved one hears the truth, sees that the family is united, and is presented with a real path into treatment.",
+  },
+  {
+    title: "Helps the family hold the line afterward",
+    description:
+      "If your loved one accepts help, the family needs structure. If your loved one refuses help, the family still needs structure. That is where change becomes real instead of temporary.",
+  },
+];
+
+const californiaSituations = [
+  "A young adult bouncing between fentanyl scares, treatment attempts, and disappearances",
+  "A spouse or partner whose drinking, pills, or cocaine use is destabilizing the home",
+  "A family exhausted by bailouts, money leaks, lies, and emotional whiplash",
+  "A loved one who keeps promising treatment but backs out the minute pressure eases",
+  "A family trying to choose between local California treatment, travel, or a higher-structure placement elsewhere",
+  "A situation that looks functional from the outside but is quietly collapsing inside the family",
+];
 
 const California = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Specialist in California | Freedom Interventions"
-        description="California families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of California. Free consultation. Call (541) 838-6009."
+        title="Addiction Intervention Services in California | Freedom Interventions"
+        description="California families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across California prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/california"
-        keywords="intervention specialist California, addiction intervention California, drug intervention California, family intervention California, California interventionist, Los Angeles addiction intervention, San Francisco drug intervention, Sacramento intervention services, Orange County interventionist"
+        keywords="California addiction intervention, California interventionist, Los Angeles drug intervention, Orange County intervention, family intervention California"
         geoRegion="US-CA"
         geoPlacename="California"
       />
@@ -24,52 +74,66 @@ const California = () => {
       <ServiceAreaSchema
         areaName="California"
         url="https://freedominterventions.com/california"
-        description="California families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of California. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services for families across California, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="California" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
-          { name: "California", url: "https://freedominterventions.com/california" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
+          {
+            name: "California",
+            url: "https://freedominterventions.com/california",
+          },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "California", href: "/california" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={californiaBanner} 
-            alt="California coastal landscape symbolizing hope and recovery" 
-            className="w-full h-full object-cover"
-          />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "California", href: "/california" },
+        ]}
+      />
+
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${californiaBanner})` }}
+        >
+          <div className="absolute inset-0 bg-foreground/65" />
         </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-6">
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 max-w-4xl">
-            California's Addiction Crisis: How Professional Interventionists Help Families
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mb-8">
-            California faces the nation's most severe addiction crisis with over 9,000 overdose deaths annually—more than any other state. Professional interventionists provide families with structured, compassionate strategies to guide loved ones toward recovery.
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <p className="text-white/80 uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+            California Intervention Services
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg" className="text-lg">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            When Addiction Is Running the Family, You Need Structure, Not
+            Another Round of Hope and Panic
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Matt Brown works with families across California to prepare the
+            intervention, coordinate treatment, and stop the cycle of chaos,
+            rescuing, and relapse.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg">
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
+              asChild
+            >
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -77,198 +141,202 @@ const California = () => {
         </div>
       </section>
 
-      {/* Key Statistics */}
-      <section className="py-12 bg-card">
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center p-6 rounded-lg bg-destructive/10 border border-destructive/20">
-              <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">9,000+</div>
-              <div className="text-sm text-muted-foreground">Annual Overdose Deaths</div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Statewide Pressure
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                California families are dealing with fentanyl, meth, alcohol,
+                prescription misuse, and the constant uncertainty of not knowing
+                what happens next.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-primary/10 border border-primary/20">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">9,050%</div>
-              <div className="text-sm text-muted-foreground">Fentanyl Death Rate Increase</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Too Many Options
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                California has a huge treatment market, but volume is not the
+                same as clarity. Families still need help choosing the right
+                level of care and the right next move.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-secondary/50 border border-border">
-              <Users className="h-8 w-8 text-secondary-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">53,000+</div>
-              <div className="text-sm text-muted-foreground">Nonfatal ER Overdoses</div>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-accent/50 border border-accent">
-              <Heart className="h-8 w-8 text-accent-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">19,335</div>
-              <div className="text-sm text-muted-foreground">Annual Alcohol Deaths</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, boundaries
+                are clear, and treatment logistics are handled before the
+                conversation begins.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-16">
+      <section className="py-16 md:py-24">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scope of Crisis */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                The Scope of California's Addiction Crisis
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                California Families Usually Call After They Have Tried
+                Everything Except Structure
               </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  California is currently grappling with a severe and complex addiction crisis, accounting for over 12% of all U.S. overdose fatalities. In 2023 alone, 7,560 Californians died from opioid-related overdoses, with the fentanyl death rate increasing dramatically from 0.2 per 100,000 population in 2013 to 18.3 in 2023.
-                </p>
-                <p>
-                  Methamphetamine and psychostimulant-related deaths have also surged, reflecting an evolving and multifaceted substance use landscape. Emergency departments recorded over 53,000 drug-related nonfatal overdoses, highlighting the ongoing pressure on healthcare resources.
-                </p>
-                <p>
-                  Alcohol-related harms remain significant as well. An estimated 19,335 annual alcohol-attributable deaths occurred between 2020 and 2021, with males representing the majority of these fatalities. These statistics illustrate the profound health and social impacts of substance use disorder across California, affecting individuals, families, and communities alike.
-                </p>
-              </div>
-            </div>
-
-            {/* Family Impact */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                How Addiction Impacts California Families
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  In the face of this public health crisis, families frequently confront the devastating effects of addiction within their homes. Substance use disorders often precipitate or coincide with legal problems, including DUI arrests and related fatalities, which have far-reaching emotional and financial consequences.
-                </p>
-                <p>
-                  Families may find themselves caught between wanting to help their loved ones and facing the seemingly insurmountable challenge of motivating them toward treatment. Without professional guidance, well-intentioned family efforts often fail against entrenched denial and resistance.
-                </p>
-              </div>
-            </div>
-
-            {/* Role of Interventionists */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                The Critical Role of Professional Interventionists
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Professional interventionists play a critical role in bridging this gap. They bring expertise in addiction and behavioral health, offering families structured, compassionate strategies to engage their loved ones in recovery. By assessing the individual's specific circumstances and tailoring approaches accordingly, interventionists significantly increase the likelihood of treatment entry and sustained engagement.
-                </p>
-                <p>
-                  California's diverse geography and population necessitate interventions customized to local resource availability and cultural factors. Interventionists coordinate with various treatment providers ranging from detoxification centers and inpatient rehabs to outpatient programs and sober living facilities, ensuring a continuum of care suited to each case.
-                </p>
-              </div>
-            </div>
-
-            {/* Comprehensive Support */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Comprehensive Support Through Complex Systems
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Interventionists facilitate seamless transitions by helping families and clients navigate complex healthcare and legal systems. They collaborate closely with treatment teams to plan aftercare, including therapy and support groups such as Alcoholics Anonymous or Narcotics Anonymous, which are critical components for long-term recovery.
-                </p>
-                <p>
-                  Given California's expansive opioid epidemic and the rise of synthetic drug use, timely intervention is pivotal. Interventionists can also assist families with navigating legal avenues related to addiction when resistance to treatment is present, including leveraging civil commitment laws that vary by county.
-                </p>
-              </div>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in California
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation of your loved one's specific circumstances using proven clinical criteria.</p>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                By the time a family reaches out, they have usually already
+                spent months trying to manage the situation privately. They have
+                covered rent, paid for treatment that did not stick, absorbed
+                lies, feared overdose, tried ultimatums, softened ultimatums,
+                and argued about what to do next.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The problem is not that the family does not care enough. The
+                problem is that addiction is stronger than scattered effort.
+                Without structure, the family keeps reacting while the addiction
+                keeps controlling the pace.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
                   </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
-                    <p className="text-muted-foreground">Customized approaches that account for California's diverse geography, resources, and cultural factors.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
-                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Legal Navigation</h3>
-                    <p className="text-muted-foreground">Guidance through complex healthcare and legal systems, including county-specific civil commitment options.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
+            </section>
 
-            {/* Path Forward */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                A Path Toward Hope and Recovery
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
               </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  For families confronting the challenges of addiction, seeking the guidance of a professional interventionist offers a path toward hope and recovery. Through expertise, empathy, and strategic planning, these specialists empower families to help their loved ones break free from substance use disorders, improving outcomes not just for individuals but for communities statewide.
-                </p>
-                <p>
-                  If your family is facing the difficulties posed by addiction, consider consulting with a professional interventionist who can provide personalized support and guidance tailored to California's unique challenges and resources. Recovery starts with a single, informed step.
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention is not a dramatic confrontation for its own
+                sake. It is a process that gets the family unified, gets
+                treatment lined up, and creates a clear path out of the cycle
+                you are already trapped in.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in California Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {californiaSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family is asking whether it is finally time to do
+                  something serious, it usually is. Families rarely call too
+                  early. Much more often, they call after the cost of waiting
+                  has already become obvious.
                 </p>
               </div>
-            </div>
+            </section>
 
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment Entry. The Goal Is a Different
+                Family System.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Treatment entry matters. But if the family goes right back to
+                fear, confusion, and mixed messages, the addiction will try to
+                reoccupy the same space it held before. Lasting change requires
+                a different structure inside the family, not just a different
+                promise from the person using.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: your loved one gets a real chance
+                to accept help, and the family stops protecting the addiction
+                from its consequences. That is how momentum shifts.
+              </p>
+            </section>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 bg-primary/5">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Schedule Free Consultation for Your California Family
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a California Intervention?
           </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention significantly increases the likelihood of treatment entry. Reach out today for a confidential consultation tailored to California's resources.
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, arrest, disappearance, or family collapse to make the
+            decision for you. Get a clear assessment and a real plan.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="text-lg">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+            <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
-                Call Now
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
               </a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -279,7 +347,6 @@ const California = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="California" locationType="state" />
 

@@ -1,22 +1,72 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import texasBanner from "@/assets/texas-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "Texas families often wait too long because the culture rewards privacy, toughness, and figuring it out yourself. By the time they call, the situation has usually already become dangerous.",
+  "The state is huge, which means treatment access can get messy fast. Urban families can feel overwhelmed by too many options, while rural families may feel like there are no workable options at all.",
+  "Fentanyl, meth, alcohol, and prescription misuse all show up differently, but the family pattern is the same: fear, mixed messages, financial chaos, and a growing sense that nothing is changing.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family out of reaction mode",
+    description:
+      "Before the intervention itself, Matt helps the family stop arguing, stop improvising, and stop sending mixed messages that addiction can keep exploiting.",
+  },
+  {
+    title: "Builds a treatment plan that fits the real situation",
+    description:
+      "That may mean local care, out-of-state placement, transport coordination, or a more structured setting than the family first assumed. The plan gets built before the pressure moment arrives.",
+  },
+  {
+    title: "Leads the intervention with clarity and backbone",
+    description:
+      "The point is not to overwhelm your loved one. The point is to tell the truth clearly, present treatment, and make it obvious the family is no longer going to keep the addiction comfortable.",
+  },
+  {
+    title: "Helps the family hold the structure after the intervention",
+    description:
+      "Whether your loved one accepts help or refuses it, the family needs a plan it can actually maintain. That is where real change starts to stick.",
+  },
+];
+
+const texasSituations = [
+  "A son or daughter moving between pills, fentanyl, meth, and disappearing for stretches of time",
+  "A spouse or partner whose drinking or cocaine use is destroying the home while still looking functional to the outside world",
+  "A family in Houston, Dallas, Austin, San Antonio, or a smaller town that cannot agree on whether to get tougher, stay patient, or do nothing",
+  "A rural family dealing with long distances, limited treatment access, and a loved one who refuses to leave familiar surroundings",
+  "A family that keeps paying, rescuing, smoothing things over, and then wondering why every crisis keeps repeating",
+  "A situation where one more overdose scare, arrest, or psychiatric break feels like it could end very badly",
+];
 
 const Texas = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Specialist in Texas | Freedom Interventions"
-        description="Texas families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Texas. Free consultation. Call (541) 838-6009."
+        title="Addiction Intervention Services in Texas | Freedom Interventions"
+        description="Texas families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Texas prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/texas"
-        keywords="intervention specialist Texas, addiction intervention Texas, drug intervention Texas, Houston addiction intervention, Dallas intervention services, Austin drug intervention, San Antonio interventionist, Texas interventionist"
+        keywords="Texas addiction intervention, Texas interventionist, Dallas drug intervention, Houston intervention services, family intervention Texas"
         geoRegion="US-TX"
         geoPlacename="Texas"
       />
@@ -24,246 +74,63 @@ const Texas = () => {
       <ServiceAreaSchema
         areaName="Texas"
         url="https://freedominterventions.com/texas"
-        description="Texas families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Texas. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services for families across Texas, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="Texas" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
           { name: "Texas", url: "https://freedominterventions.com/texas" },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Texas", href: "/texas" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={texasBanner} 
-            alt="Texas landscape with rolling hills and bluebonnets symbolizing a way forward" 
-            className="w-full h-full object-cover"
-          />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Texas", href: "/texas" },
+        ]}
+      />
+
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${texasBanner})` }}
+        >
+          <div className="absolute inset-0 bg-foreground/65" />
         </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">
-              Texas Addiction Crisis
-            </span>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Texas Addiction Crisis: How Professional Interventionists Offer Families a Lifeline
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Texas faces an unprecedented addiction crisis, with overdose deaths reaching over 5,800 in 2023—a dramatic increase driven by fentanyl, methamphetamine, and polysubstance use. From the border communities to the Dallas-Fort Worth metroplex, families across the Lone Star State need help now more than ever.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Statistics */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">5,800+</div>
-              <div className="text-sm text-muted-foreground">Overdose Deaths in 2023</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">2M+</div>
-              <div className="text-sm text-muted-foreground">Texans Affected by Addiction</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">75%</div>
-              <div className="text-sm text-muted-foreground">Fentanyl-Involved Deaths</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scope of Texas's Addiction Challenges */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  The Scope of Texas's Addiction Challenges
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Texas's sheer size and proximity to the Mexican border make it a major corridor for drug trafficking, flooding communities with fentanyl, methamphetamine, and cocaine. The state has seen a 300% increase in fentanyl-related deaths since 2019, with counterfeit pills claiming young lives at alarming rates. Major cities like Houston, Dallas, Austin, and San Antonio see thousands of overdose deaths annually.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Rural Texas communities face unique challenges: limited treatment options, long distances to facilities, and deep-rooted stigma around mental health and addiction. The oil field and agricultural industries have seen workers fall into addiction following injuries, often starting with prescription opioids before transitioning to illicit substances.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Despite being the second-largest state, Texas ranks low in treatment accessibility. Only about 10% of Texans needing substance use treatment receive it, creating a gap that professional interventionists help bridge by connecting families with appropriate care across the state and beyond.
-              </p>
-            </div>
-
-            {/* Why Families Need Intervention Support Now */}
-            <div className="space-y-6 bg-muted/30 p-8 rounded-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Why Texas Families Need Intervention Support Now
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Addiction tears through Texas families with devastating speed. Parents in suburban neighborhoods watch their children become addicted to pills bought on social media. Ranch families lose generations of workers to methamphetamine. Urban professionals hide cocaine and alcohol addictions until careers and marriages collapse.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Texas's culture of self-reliance and privacy often delays families from seeking help. Many attempt DIY interventions that fail due to denial, manipulation, or lack of immediate treatment options. Professional interventionists succeed significantly higher of the time by unifying family messages, pre-arranging treatment placement, and guiding the process with proven methodologies like ARISE and CRAFT.
-              </p>
-            </div>
-
-            {/* How Interventionists Tailor Solutions */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Heart className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  How Interventionists Tailor Solutions for Texas Families
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Interventionists begin with confidential family consultations, assessing addiction severity and mapping Texas's treatment landscape—from Houston's medical centers to Hill Country retreats and West Texas residential programs. We understand the specific challenges of fentanyl addiction, methamphetamine psychosis, and prescription opioid dependencies common in Texas.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Planning involves coordinating with treatment facilities, arranging immediate transport, and coaching families through the intervention conversation. We address co-occurring mental health conditions, common in Texas's high-stress industries, and ensure seamless transitions from detox through residential treatment to aftercare.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Texas-specific expertise matters: understanding the border region's unique drug supply, navigating limited rural resources, and connecting with faith-based programs that resonate with many Texas families. We help families in El Paso, Lubbock, Amarillo, and everywhere in between find appropriate, accessible treatment.
-              </p>
-            </div>
-
-            {/* Proven Benefits and Real Impact */}
-            <div className="space-y-6 bg-primary/5 p-8 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="h-8 w-8 text-primary" />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Proven Benefits and Real Impact
-                </h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Professional interventions dramatically increase the likelihood of treatment entry—from less than 30% for unguided family attempts to significantly higher with professional support. In Texas, where treatment access is limited and clarity matters due to fentanyl's lethality, this difference saves lives.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Families report restored relationships, ended enabling patterns, and hope restored after years of chaos. We've helped Texas families navigate everything from young adult heroin addiction to executive alcoholism, always with compassion and respect for family values.
-              </p>
-            </div>
-
-            {/* Barriers and Why Earlier Planning Helps */}
-            <div className="space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Barriers and Why Earlier Planning Helps
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Texas faces real barriers: treatment waitlists, insurance limitations, geographic challenges, and cultural stigma. But fentanyl has made waiting deadly—every day without intervention risks overdose. Professional interventionists know how to navigate these barriers, securing beds, coordinating logistics, and overcoming resistance.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                The Texas legislature has increased funding for treatment and harm reduction, but demand far outpaces supply. Interventionists help families access the best available resources, whether in-state or nationwide, ensuring your loved one gets the level of care they need.
-              </p>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in Texas
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation using proven clinical criteria to understand your loved one's specific needs.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
-                    <p className="text-muted-foreground">Customized approaches accounting for Texas's unique geography, resources, and family values.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
-                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living statewide and nationally.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Family Healing</h3>
-                    <p className="text-muted-foreground">Support for the whole family to end enabling patterns, establish boundaries, and begin recovery together.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Collaboration with treatment teams for ongoing therapy, 12-step participation, and long-term recovery support.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            A Path Forward for Texas Families
-          </h2>
-          <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Texas's addiction crisis claims over 5,800 lives annually—but recovery happens every day. Professional interventionists empower families, helping families turn panic into treatment action with a significantly higher chance of success. The sooner families have a clear plan, the more options they have.
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <p className="text-white/80 uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+            Texas Intervention Services
           </p>
-          <p className="text-xl font-semibold mb-8">
-            Hope starts with one structured step—yours.
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            When the Family Has Been Carrying the Addiction for Too Long, It Is
+            Time to Change the Structure
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Matt Brown works with families across Texas to prepare the
+            intervention, coordinate treatment, and stop the cycle of chaos,
+            secrecy, and repeated crisis.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
-                <Phone className="mr-2 h-5 w-5" />
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
+              asChild
+            >
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -271,13 +138,202 @@ const Texas = () => {
         </div>
       </section>
 
-      {/* Family Intervention Link */}
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                High Stakes
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                In Texas, families are dealing with fentanyl, meth, alcohol, and
+                polysubstance use in a state where distance, access, and timing
+                can all make a hard situation harder.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Big Geography
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Families may be choosing between local treatment, long travel,
+                out-of-state placement, or immediate transport from a crisis
+                situation. That needs planning, not guesswork.
+              </p>
+            </div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is aligned, treatment
+                is ready, and the boundaries are strong enough to survive the
+                first pushback.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Texas Families Usually Reach Out After the Situation Has Already
+                Gone Too Far
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Most families do not call at the first sign of trouble. They
+                call after the overdoses, the disappearances, the rehab
+                failures, the financial bleeding, the lies, the police
+                involvement, or the emotional exhaustion have already stacked
+                up.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                In Texas, the instinct to stay private and handle it internally
+                often keeps families stuck longer than they should be. By the
+                time they finally ask for help, the addiction has usually
+                trained everyone around it to adapt to chaos.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A good intervention does not depend on emotion, luck, or a
+                single perfect speech. It depends on structure, preparation, and
+                the family finally acting like a team instead of a collection of
+                worried individuals pulling in different directions.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Texas Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {texasSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps asking whether this is finally serious
+                  enough, it probably is. The more chaotic the pattern feels,
+                  the less wise it is to keep waiting for the person using to
+                  create the solution on their own.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just to Get a Yes. The Goal Is to Stop Feeding
+                the Problem.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                A treatment yes matters. But if the family goes back to the same
+                rescuing, fear-driven decisions, and inconsistent boundaries
+                afterward, the addiction gets invited right back into the
+                system.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is a different family structure, one that
+                tells the truth, holds the line, and no longer makes addiction
+                easier to continue. That is where real leverage comes from.
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-primary/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With a Texas Intervention?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, arrest, disappearance, or collapse at home to force the
+            decision. Get clarity now, while the family still has room to act
+            deliberately.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
+              <Link to="/#contact">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg" asChild>
+              <a href="tel:+15418386009">
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -288,7 +344,6 @@ const Texas = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="Texas" locationType="state" />
 

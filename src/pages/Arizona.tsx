@@ -1,22 +1,72 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Phone,
+  Calendar,
+  AlertTriangle,
+  Users,
+  Shield,
+  MapPin,
+} from "lucide-react";
 import arizonaBanner from "@/assets/arizona-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema } from "@/components/StructuredData";
+import {
+  OrganizationSchema,
+  BreadcrumbSchema,
+  ServiceAreaSchema,
+  LocationFAQSchema,
+} from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+
+const pressurePoints = [
+  "Arizona families are often dealing with fentanyl, meth, alcohol, and prescription misuse at the same time, which means the crisis rarely stays simple for long.",
+  "Phoenix-area families may have treatment options nearby, but they still need help choosing the right level of care. Families in smaller or more remote communities often feel isolated and overwhelmed much faster.",
+  "Because the problem can look manageable right up until it becomes dangerous, many families call only after the situation has already become more volatile than they wanted to admit.",
+];
+
+const whatMattDoes = [
+  {
+    title: "Gets the family organized before the intervention",
+    description:
+      "Most failed interventions are not failures of love. They are failures of preparation. Matt helps the family unify its message, define roles, and stop feeding the addiction through confusion or inconsistency.",
+  },
+  {
+    title: "Builds the treatment path before the confrontation",
+    description:
+      "Detox, residential care, outpatient options, transport, and contingency plans are handled in advance so the conversation has somewhere real to go.",
+  },
+  {
+    title: "Leads a calm, direct intervention",
+    description:
+      "The work is not about theatrics. It is about breaking through denial, telling the truth clearly, and giving your loved one a genuine opening into treatment.",
+  },
+  {
+    title: "Helps the family stay consistent afterward",
+    description:
+      "If the loved one accepts treatment, the family needs structure. If the loved one refuses treatment, the family still needs structure. Either way, the family has to stop living at the mercy of the next crisis.",
+  },
+];
+
+const arizonaSituations = [
+  "A son or daughter drifting between fentanyl use, meth use, and repeated treatment promises that never last",
+  "A spouse or partner whose drinking or drug use is destabilizing the home, work, and finances",
+  "A family that keeps trying to rescue, reason with, or financially protect someone who keeps spiraling",
+  "A loved one whose behavior has become more unpredictable, paranoid, or dangerous",
+  "A family in Phoenix, Tucson, Scottsdale, Mesa, or a smaller Arizona community that cannot agree on the next right move",
+  "A situation where the family knows it cannot keep doing this another six months",
+];
 
 const Arizona = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Specialist in Arizona | Freedom Interventions"
-        description="Arizona families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Arizona. Free consultation. Call (541) 838-6009."
+        title="Addiction Intervention Services in Arizona | Freedom Interventions"
+        description="Arizona families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Arizona prepare, intervene, and move loved ones toward treatment."
         canonical="https://freedominterventions.com/arizona"
-        keywords="Arizona addiction intervention, Phoenix intervention services, Tucson drug intervention, Arizona fentanyl crisis"
+        keywords="Arizona addiction intervention, Arizona interventionist, Phoenix drug intervention, family intervention Arizona, Tucson intervention services"
         geoRegion="US-AZ"
         geoPlacename="Arizona"
       />
@@ -24,52 +74,63 @@ const Arizona = () => {
       <ServiceAreaSchema
         areaName="Arizona"
         url="https://freedominterventions.com/arizona"
-        description="Arizona families facing addiction need expert help. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Arizona. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services for families across Arizona, including crisis stabilization, treatment planning, intervention facilitation, and aftercare guidance."
       />
+      <LocationFAQSchema location="Arizona" locationType="state" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
-          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          {
+            name: "Service Areas",
+            url: "https://freedominterventions.com/service-areas",
+          },
           { name: "Arizona", url: "https://freedominterventions.com/arizona" },
         ]}
       />
       <Navbar />
-      
-      <BreadcrumbNav items={[
-        { name: "Service Areas", href: "/service-areas" },
-        { name: "Arizona", href: "/arizona" },
-      ]} />
-      
-      {/* Banner Image */}
-      <section className="pt-20">
-        <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
-          <img 
-            src={arizonaBanner} 
-            alt="Arizona desert landscape symbolizing hope and recovery" 
-            className="w-full h-full object-cover"
-          />
+
+      <BreadcrumbNav
+        items={[
+          { name: "Service Areas", href: "/service-areas" },
+          { name: "Arizona", href: "/arizona" },
+        ]}
+      />
+
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${arizonaBanner})` }}
+        >
+          <div className="absolute inset-0 bg-foreground/65" />
         </div>
-      </section>
-      
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-6">
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 max-w-4xl">
-            Arizona's Addiction Crisis: How Professional Interventionists Support Families
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mb-8">
-            Arizona faces a serious substance use crisis with rising overdose rates and a 14% higher drug overdose death rate than the national average. Professional interventionists provide families with structured, compassionate strategies to guide loved ones toward recovery.
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <p className="text-white/80 uppercase tracking-[0.2em] text-sm md:text-base mb-4">
+            Arizona Intervention Services
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg" className="text-lg">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            When Addiction Keeps Escalating, the Family Needs a Clear Plan
+            Before the Next Crisis Hits
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            Matt Brown works with families across Arizona to prepare the
+            intervention, coordinate treatment, and stop the cycle of fear,
+            rescuing, and repeated relapse.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg">
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
+              asChild
+            >
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
+                <Phone className="w-5 h-5 mr-2" />
                 Call (541) 838-6009
               </a>
             </Button>
@@ -77,213 +138,200 @@ const Arizona = () => {
         </div>
       </section>
 
-      {/* Key Statistics */}
-      <section className="py-12 bg-card">
+      <section className="py-12 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center p-6 rounded-lg bg-destructive/10 border border-destructive/20">
-              <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">1,927</div>
-              <div className="text-sm text-muted-foreground">Opioid Deaths (2022)</div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <AlertTriangle className="w-8 h-8 text-destructive mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Fast Escalation
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Arizona families are increasingly dealing with fentanyl and meth
+                in combinations that make relapse and crisis far more dangerous
+                than they used to be.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-primary/10 border border-primary/20">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">60%</div>
-              <div className="text-sm text-muted-foreground">Fentanyl-Related Deaths</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <MapPin className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Urban and Remote
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Some families feel buried under too many options. Others feel
+                stranded by distance and access. Both need the same thing, a
+                clear, workable treatment path.
+              </p>
             </div>
-            <div className="text-center p-6 rounded-lg bg-secondary/50 border border-border">
-              <Users className="h-8 w-8 text-secondary-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">944K</div>
-              <div className="text-sm text-muted-foreground">Treatment Gap</div>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-accent/50 border border-accent">
-              <Heart className="h-8 w-8 text-accent-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">50%</div>
-              <div className="text-sm text-muted-foreground">Higher Alcohol Death Rate</div>
+            <div className="bg-card p-6 rounded-2xl border border-border/60 shadow-sm">
+              <Shield className="w-8 h-8 text-primary mb-4" />
+              <div className="text-3xl font-bold text-foreground mb-2">
+                Prepared Families
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interventions work better when the family is united, the
+                treatment plan is ready, and the old enabling patterns are
+                finally getting replaced with structure.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-16">
+      <section className="py-16 md:py-24">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto space-y-12">
-            
-            {/* Scope of Crisis */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                The Scope of Arizona's Addiction Crisis
+          <div className="max-w-4xl mx-auto space-y-14">
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Arizona Families Usually Call After the Situation Has Already
+                Been Bad for a While
               </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Arizona faces a serious substance use crisis marked by rising overdose and addiction rates. In 2022, the state recorded 1,927 opioid overdose deaths, slightly down from 2,019 in 2021, yet fentanyl remains the deadliest contributor, implicated in 60% of all drug-related deaths in 2024.
-                </p>
-                <p>
-                  The state grapples with a 14% higher drug overdose death rate than the national average, standing at 36 deaths per 100,000 residents, and nearly doubling since 2013. Arizona's major urban areas, such as Maricopa County (including Phoenix), show particularly high overdose rates—42 deaths per 100,000 residents—compared to the U.S. average.
-                </p>
-                <p>
-                  Youth substance use is also a growing concern. Over 7% of teenagers meet criteria for drug use disorder, though overall youth drug use is slightly below the national averages. Alcohol remains a significant factor, with Arizona showing 50% higher alcohol-attributable death rates than the U.S., driven by widespread binge drinking among adults (16.7%) and sustained concerns over DUI collisions.
-                </p>
-              </div>
-            </div>
-
-            {/* Treatment Gap */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                The Treatment Gap in Arizona
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Despite operating nearly 500 treatment facilities that serve more than 79,000 patients annually, Arizona suffers from a massive treatment gap: nearly 944,000 individuals in need of substance use treatment cannot access services. This gap exacerbates the strain on families struggling to guide their loved ones toward recovery.
-                </p>
-              </div>
-            </div>
-
-            {/* Family Impact */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                How Addiction Impacts Arizona Families
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Families often face overwhelming challenges when a loved one battles addiction, including repeated legal troubles such as DUIs, overdoses, and deteriorating relationships. Left to confront these issues alone, family efforts frequently fall short, with unplanned or unstructured interventions succeeding only 20-30% of the time.
-                </p>
-                <p>
-                  Professional interventionists provide critical expertise to bridge this gap. They offer structured, evidence-based guidance tailored to the individual and family, significantly improving the likelihood that the loved one will enter treatment and commit to recovery.
-                </p>
-              </div>
-            </div>
-
-            {/* Role of Interventionists */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                The Critical Role of Professional Interventionists
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Interventionists assess severity, coordinate with local treatment resources, and craft personalized intervention plans that consider Arizona's diverse population and geographic challenges. They conduct detailed assessments using medical criteria to identify the most appropriate level of care—detox, inpatient, outpatient, or sober living placement.
-                </p>
-                <p>
-                  They prepare families for intervention meetings with rehearsed communication strategies and clear boundary-setting, such as linking financial or housing support to treatment adherence. The interventionist often arranges immediate transport to treatment and coordinates post-intervention support including therapy and support group involvement like Alcoholics Anonymous or Narcotics Anonymous.
-                </p>
-                <p>
-                  Given Arizona's high rates of fentanyl and methamphetamine use plus the prevalence of alcohol-related DUIs, interventionists customize plans to handle these complex issues effectively. They also help families navigate insurance and healthcare system barriers, advocate with treatment centers, and maintain aftercare continuity to reduce relapse risk.
-                </p>
-              </div>
-            </div>
-
-            {/* Impact and Outcomes */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Impact and Outcomes
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Research shows that professional interventionists increase treatment entry rates to significantly higher, with appropriately supported individuals enjoying significantly better recovery outcomes. Social support and structured follow-up, which interventionists help establish, are vital to sustained sobriety.
-                </p>
-                <p>
-                  Families report improvements in communication, decreased enabling, and restored hope following professional-led interventions. Interventionists' tailored approaches also help reduce hospitalizations, legal issues, and other costs related to untreated addiction.
-                </p>
-              </div>
-            </div>
-
-            {/* Why Seek Help */}
-            <div className="bg-card border border-border rounded-xl p-8">
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                Why Seek Professional Intervention in Arizona
-              </h2>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Expert Assessment</h3>
-                    <p className="text-muted-foreground">Comprehensive evaluation using proven clinical criteria to identify the most appropriate level of care.</p>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Families almost never call at the first warning sign. They call
+                after the relapse, the ER visit, the DUI, the disappearing act,
+                the financial bleeding, the paranoia, the broken promises, or
+                the family split over what should happen next.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The deeper problem is not just the substance use. It is that the
+                family has usually been forced into reaction mode. Everybody
+                cares, but everybody is tired, divided, and trying something
+                different. That is exactly the kind of chaos addiction knows how
+                to survive.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {pressurePoints.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-border/50 bg-card p-6"
+                  >
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
                   </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Tailored Strategies</h3>
-                    <p className="text-muted-foreground">Customized approaches that account for Arizona's diverse population, geography, and unique challenges.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Treatment Coordination</h3>
-                    <p className="text-muted-foreground">Connections to detox centers, inpatient rehabs, outpatient programs, and sober living facilities statewide.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Insurance Navigation</h3>
-                    <p className="text-muted-foreground">Help navigating insurance barriers, healthcare systems, and identifying suitable local or out-of-state programs.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">5</div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Aftercare Planning</h3>
-                    <p className="text-muted-foreground">Coordination with treatment teams for ongoing therapy, AA/NA participation, and long-term recovery support.</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
+            </section>
 
-            {/* Path Forward */}
-            <div>
-              <h2 className="font-serif text-3xl font-bold text-foreground mb-6">
-                A Path Toward Hope and Recovery
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                What a Professional Intervention Changes
               </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  Arizona's escalating drug and alcohol crisis requires informed family action. Professional interventionists provide the skill, knowledge, and compassionate support to navigate this challenge successfully. By facilitating treatment entry and sustained recovery, interventionists help families save lives and rebuild futures.
-                </p>
-                <p>
-                  If you're facing these difficulties, reach out to a qualified interventionist today to begin the journey toward healing and hope.
+              <p className="text-muted-foreground leading-relaxed">
+                A real intervention changes the structure around the addiction.
+                The family gets clear. Treatment gets lined up. Boundaries stop
+                being vague threats and start becoming real decisions.
+              </p>
+              <div className="grid gap-6">
+                {whatMattDoes.map((item, index) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-border/60 bg-card p-6 md:p-8"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                Common Reasons Families in Arizona Reach Out
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {arizonaSituations.map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-3 rounded-xl border border-border/50 bg-background p-5"
+                  >
+                    <Users className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl bg-primary/5 border border-primary/10 p-6 md:p-8">
+                <p className="text-foreground text-lg leading-relaxed font-medium">
+                  If your family keeps asking whether this is finally serious
+                  enough to intervene, the safer assumption is that it is.
+                  Families rarely regret acting too soon. They often regret
+                  waiting for one more disaster to make the decision for them.
                 </p>
               </div>
-            </div>
+            </section>
 
+            <section className="space-y-6">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
+                The Goal Is Not Just Treatment. The Goal Is to End the
+                Family&apos;s Chaos Pattern.
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Treatment matters. But if the family keeps operating in fear,
+                confusion, and mixed messages, addiction will keep trying to
+                re-enter through the same openings it used before.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                The stronger outcome is this: your loved one is given a real
+                path into help, and the family stops protecting the addiction
+                from the consequences that might finally force change.
+              </p>
+            </section>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 bg-primary/5">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Schedule Free Consultation for Your Arizona Family
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Need Help With an Arizona Intervention?
           </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation tailored to Arizona's resources.
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            If the situation is escalating, do not wait for the next overdose
+            scare, legal crisis, disappearance, or family collapse to decide for
+            you. Get clarity now, while the family still has room to act
+            deliberately.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="text-lg">
+            <Button size="lg" className="text-lg" asChild>
               <Link to="/#contact">
-                <Calendar className="mr-2 h-5 w-5" />
-                Schedule Consultation
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule a Consultation
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+            <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+15418386009">
-                <Phone className="mr-2 h-5 w-5" />
-                Call Now
+                <Phone className="w-5 h-5 mr-2" />
+                Call (541) 838-6009
               </a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="font-semibold text-foreground">
+                Need help planning a family intervention?
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Learn how the process works, what to expect, and how families
+                prepare.
+              </p>
             </div>
             <Link to="/family-intervention" className="shrink-0">
               <Button variant="outline" className="gap-2 whitespace-nowrap">
@@ -294,7 +342,6 @@ const Arizona = () => {
           </div>
         </div>
       </section>
-
 
       <LocationLinks currentLocation="Arizona" locationType="state" />
 
