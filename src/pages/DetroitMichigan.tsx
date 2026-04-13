@@ -192,7 +192,7 @@ const DetroitMichigan = () => {
                     Just as Detroit is experiencing a renaissance, families can rebuild from addiction. The same resilience that sustained Detroiters through decades of decline can support recovery. The city has a strong 12-step community and growing recovery resources.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries extreme risk. Professional intervention can save your loved one's life and help your family begin its own comeback story.
+                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries extreme risk. Professional intervention can help your family create a turning point and begin healing.
                   </p>
                 </div>
               </div>

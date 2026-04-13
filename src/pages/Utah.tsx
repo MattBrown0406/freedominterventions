@@ -75,8 +75,8 @@ const Utah = () => {
             </div>
             <div className="bg-card p-6 rounded-xl shadow-sm border border-border text-center">
               <Shield className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-3xl font-bold text-primary mb-1">80-90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-3xl font-bold text-primary mb-1">significantly higher</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ const Utah = () => {
               Empirical Validation and Systemic Leverage
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Interventions amplify initiation 80-90%, attenuating relapse in underserved terrains. Utah's context—fentanyl outpacing opioid reductions—amplifies utility: professionals disrupt enabling, bridging 170,000 voids with 83-95% engagement; social networks halve recidivism.
+              Interventions amplify initiation significantly higher, attenuating relapse in underserved terrains. Utah's context—fentanyl outpacing opioid reductions—amplifies utility: professionals disrupt enabling, bridging 170,000 voids with stronger engagement; social networks halve recidivism.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-6">
               Targeted efforts triple referrals, aligning with gubernatorial mandates for data-driven prevention.
@@ -205,7 +205,7 @@ const Utah = () => {
             Get Help for Your Utah Family Today
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Don't wait for another crisis. Our intervention specialists serve families throughout Utah, from Salt Lake City to St. George.
+            If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our intervention specialists serve families throughout Utah, from Salt Lake City to St. George.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg" asChild>

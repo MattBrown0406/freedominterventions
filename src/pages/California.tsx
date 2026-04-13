@@ -236,7 +236,7 @@ const California = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your California Family
+            Schedule Free Consultation for Your California Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
             Professional intervention significantly increases the likelihood of treatment entry. Reach out today for a confidential consultation tailored to California's resources.

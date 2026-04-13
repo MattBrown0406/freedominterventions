@@ -365,7 +365,7 @@ export const BookingCalendar = () => {
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <DollarSign className="w-6 h-6 text-primary" />
-                      <span className="text-lg font-semibold">Coaching Session</span>
+                      <span className="text-lg font-semibold">Schedule Free Consultation</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
                       A 1-hour Zoom call with you and any concerned loved ones. This meeting is intended to give you an actionable plan to change your family's circumstances.
@@ -564,7 +564,7 @@ export const BookingCalendar = () => {
                   </div>
 
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
-                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Coaching Session (1 hour)'}</p>
+                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Coaching (1 hour)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                   </div>

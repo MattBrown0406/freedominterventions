@@ -153,7 +153,7 @@ const Vermont = () => {
                   The intervention process begins with comprehensive assessment to determine appropriate care level. The interventionist then prepares the family for a structured intervention—coaching on communication, establishing boundaries, and arranging immediate treatment placement when the loved one agrees.
                 </p>
                 <p>
-                  With professional guidance, interventions achieve 80-90% treatment acceptance rates, compared to 20-30% for family-led attempts. This dramatic improvement can mean the difference between continued crisis and the beginning of recovery.
+                  With professional guidance, interventions achieve significantly higher treatment acceptance rates, compared to 20-30% for family-led attempts. This dramatic improvement can mean the difference between continued crisis and the beginning of recovery.
                 </p>
               </div>
             </div>
@@ -225,10 +225,10 @@ const Vermont = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your Vermont Family
+            Schedule Free Consultation for Your Vermont Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to 80-90%. Reach out today for a confidential consultation.
+            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="text-lg">

@@ -57,7 +57,7 @@ const Oklahoma = () => {
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <p className="text-sm text-muted-foreground">Intervention Success Rate</p>
+              <p className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</p>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">260K+</div>
@@ -153,7 +153,7 @@ const Oklahoma = () => {
                   Professional intervention creates a breakthrough moment—a structured opportunity for your loved one to accept help with immediate treatment placement available.
                 </p>
                 <p className="text-muted-foreground">
-                  Don't wait for a tragedy to force action. Every day of active addiction carries risk. One call can start your family's journey toward healing.
+                  If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. One call can start your family's journey toward healing.
                 </p>
               </div>
             </div>

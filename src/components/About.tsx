@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import FeaturedArticleCarousel from "./FeaturedArticleCarousel";
 
 const features = [
-  "Certified Intervention Professionals (CIP)",
-  "Compassionate, judgment-free approach",
+  "Certified Intervention Professional (CIP)",
+  "Direct, judgment-free guidance from Matt",
   "Customized intervention strategies",
   "Coordination with treatment facilities",
 ];
@@ -32,15 +32,15 @@ const About = () => {
               About Freedom Interventions
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
-              Breaking the Chains of
-              <span className="block text-primary">Addiction Together</span>
+              A Clear Plan When
+              <span className="block text-primary">Nothing Else Has Worked</span>
             </h2>
             <div className="space-y-4 text-muted-foreground text-base md:text-lg leading-relaxed">
               <p>
-                At Freedom Interventions, we understand that watching a loved one struggle with addiction is one of life's greatest challenges. Our mission is to guide families through this difficult time with expertise, compassion, and unwavering support.
+                Watching a loved one disappear into addiction is brutal. Matt works directly with families to bring structure, clarity, and consistent, honest guidance to a situation that usually feels chaotic and exhausting.
               </p>
               <p>
-                We have helped over 1000 families in the course of over 20 years take the first steps towards recovery and healing.
+                Over more than 20 years, Matt has helped more than 1,000 families stop managing the chaos and start moving toward treatment. He believes addiction is a medical illness with a spiritual dimension, which means treatment has to address both the clinical reality and how a person is living.
               </p>
             </div>
             
@@ -56,7 +56,7 @@ const About = () => {
 
             <Link to="/interventionist">
               <Button variant="outline" size="lg">
-                Learn More About Us
+                Learn More About Matt
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>

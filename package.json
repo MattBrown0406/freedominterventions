@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-sitemap.js",
     "build": "vite build",
+    "postbuild": "react-snap",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -67,8 +70,15 @@
     "vaul": "^0.9.9",
     "zod": "^3.25.76"
   },
+  "reactSnap": {
+    "source": "dist",
+    "destination": "dist",
+    "include": ["/","/interventionist","/family-intervention","/crisis-support","/treatment-planning","/aftercare-guidance","/how-intervention-works","/when-is-it-time-for-an-intervention","/what-if-they-refuse-treatment","/what-makes-matt-different","/intervention-cost","/before-you-call","/testimonials","/contact","/party-wreckers-podcast","/blog","/assessment","/self-assessment","/substance-guide","/intervention-toolkit","/intervention-faq","/service-areas","/privacy-policy","/terms-of-service","/hipaa-compliance","/alabama","/alaska","/arizona","/arkansas","/california","/colorado","/connecticut","/delaware","/florida","/georgia","/hawaii","/idaho","/illinois","/indiana","/iowa","/kansas","/kentucky","/louisiana","/maine","/maryland","/massachusetts","/michigan","/minnesota","/mississippi","/missouri","/montana","/nebraska","/nevada","/new-hampshire","/new-jersey","/new-mexico","/new-york","/north-carolina","/north-dakota","/ohio","/oklahoma","/oregon","/pennsylvania","/rhode-island","/south-carolina","/south-dakota","/tennessee","/texas","/utah","/vermont","/virginia","/washington","/west-virginia","/wisconsin","/wyoming","/portland-oregon","/seattle-washington","/eugene-oregon","/san-francisco-california","/los-angeles-california","/sacramento-california","/oakland-california","/san-jose-california","/long-beach-california","/pasadena-california","/orange-county-california","/anaheim-california","/irvine-california","/phoenix-arizona","/austin-texas","/dallas-texas","/las-vegas-nevada","/salt-lake-city-utah","/boise-idaho","/nampa-idaho","/meridian-idaho","/provo-utah","/ogden-utah","/henderson-nevada","/reno-nevada","/tucson-arizona","/scottsdale-arizona","/mesa-arizona","/chandler-arizona","/denver-colorado","/colorado-springs-colorado","/aurora-colorado","/fort-collins-colorado","/albuquerque-new-mexico","/santa-fe-new-mexico","/las-cruces-new-mexico","/san-antonio-texas","/fort-worth-texas","/el-paso-texas","/plano-texas","/chicago-illinois","/minneapolis-minnesota","/kansas-city-missouri","/houston-texas","/new-orleans-louisiana","/detroit-michigan","/miami-florida","/nashville-tennessee","/indianapolis-indiana","/spokane-washington","/tacoma-washington","/bellevue-washington","/everett-washington","/olympia-washington","/yakima-washington","/vancouver-washington","/bend-oregon","/salem-oregon","/medford-oregon","/hillsboro-oregon","/beaverton-oregon","/gresham-oregon","/corvallis-oregon","/philadelphia-pennsylvania","/baltimore-maryland","/anchorage-alaska","/knoxville-tennessee","/columbus-ohio","/omaha-nebraska","/oklahoma-city-oklahoma","/oahu-hawaii","/maui-hawaii","/big-island-hawaii","/kauai-hawaii","/wichita-kansas","/overland-park-kansas","/topeka-kansas","/british-columbia","/alberta","/ontario","/quebec","/manitoba","/saskatchewan","/nova-scotia","/new-brunswick","/newfoundland-labrador","/prince-edward-island"],
+    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"]
+  },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
@@ -81,9 +91,11 @@
     "globals": "^15.15.0",
     "lovable-tagger": "^1.1.11",
     "postcss": "^8.5.6",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
-    "vite": "^5.4.19"
+    "vite": "^5.4.19",
+    "vite-plugin-prerender": "^1.0.8"
   }
 }

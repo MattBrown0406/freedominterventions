@@ -74,7 +74,7 @@ const Alberta = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">150K</div>
@@ -111,7 +111,7 @@ const Alberta = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists bring structure and expertise to families in crisis. Using evidence-based methods, trained interventionists achieve 70-90% treatment entry rates. They understand Alberta's treatment landscape and can navigate the system quickly when lives hang in the balance.
+                Professional interventionists bring structure and expertise to families in crisis. Using evidence-based methods, trained interventionists achieve significantly higher treatment entry rates. They understand Alberta's treatment landscape and can navigate the system quickly when lives hang in the balance.
               </p>
             </div>
           </div>
@@ -124,7 +124,7 @@ const Alberta = () => {
             A Path Forward for Alberta Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Don't wait for the next crisis. Professional intervention offers a structured, compassionate path to treatment. Contact us today for a free consultation.
+            If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Professional intervention offers a structured, compassionate path to treatment. Contact us today for a free consultation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">

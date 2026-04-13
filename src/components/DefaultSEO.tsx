@@ -27,7 +27,7 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
   },
   "/intervention-faq": {
     title: "Intervention FAQ — Common Questions Answered | Freedom Interventions",
-    description: "Common questions about addiction intervention answered. What to expect, how it works, success rates, costs, and how to get started.",
+    description: "Common questions about addiction intervention answered. What to expect, how it works, outcomes, costs, and how to get started.",
   },
   "/interventionist": {
     title: "About Matt Brown — Professional Interventionist | Freedom Interventions",
@@ -164,7 +164,7 @@ function getRouteMetadata(pathname: string): { title: string; description: strin
     const stateName = usStates[slug];
     return {
       title: `Addiction Intervention Services in ${stateName} | Freedom Interventions`,
-      description: `Professional drug & alcohol intervention services in ${stateName}. Over 20 years experience, 90%+ success rate. Free consultation: (541) 838-6009.`,
+      description: `Professional drug & alcohol intervention services in ${stateName}. Over 20 years experience helping families build clear treatment plans. Free consultation: (541) 838-6009.`,
     };
   }
 

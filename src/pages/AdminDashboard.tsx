@@ -12,6 +12,7 @@ import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, F
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import BlogImageManager from "@/components/admin/BlogImageManager";
+import BlogEditorialManager from "@/components/admin/BlogEditorialManager";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
 import TestimonialManager from "@/components/admin/TestimonialManager";
 import AvailabilityManager from "@/components/admin/AvailabilityManager";
@@ -273,6 +274,10 @@ const AdminDashboard = () => {
               <Image className="w-4 h-4" />
               Blog Images
             </TabsTrigger>
+            <TabsTrigger value="blog-editorial" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Blog Editorial
+            </TabsTrigger>
             <TabsTrigger value="case-documents" className="gap-2">
               <FileText className="w-4 h-4" />
               Case Docs
@@ -395,6 +400,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="blog-images">
               <BlogImageManager />
+            </TabsContent>
+
+            <TabsContent value="blog-editorial">
+              <BlogEditorialManager />
             </TabsContent>
 
             <TabsContent value="testimonials">

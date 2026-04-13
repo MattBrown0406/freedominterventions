@@ -138,7 +138,7 @@ const NewJersey = () => {
                   Families across New Jersey endure the secondary trauma of watching loved ones descend into addiction. DUI arrests, job losses, broken relationships, and the constant fear of overdose create overwhelming stress. Many families exhaust themselves through repeated rescue attempts that only enable continued use.
                 </p>
                 <p>
-                  Without professional guidance, family-led interventions succeed only 20-30% of the time. Well-meaning attempts often devolve into arguments, driving the addicted person further into isolation. Professional interventionists help families avoid these pitfalls while dramatically improving treatment acceptance rates to 80-90%.
+                  Without professional guidance, family-led interventions often break down into arguments, mixed messages, or delayed follow-through. Well-meaning attempts often devolve into arguments, driving the addicted person further into isolation. Professional interventionists help families avoid these pitfalls while dramatically improving treatment acceptance rates to significantly higher.
                 </p>
               </div>
             </div>
@@ -156,7 +156,7 @@ const NewJersey = () => {
                   For New Jersey families, interventionists navigate the complex treatment landscape, identifying programs that accept specific insurance plans and have immediate availability. They coordinate with facilities throughout the state and beyond, arranging transport and ensuring seamless admission.
                 </p>
                 <p>
-                  The intervention itself is carefully structured. Family members prepare impact statements expressing love and concern without blame. Clear boundaries are established, and the interventionist facilitates the conversation to prevent derailment. When the loved one agrees to treatment—as they do 80-90% of the time with professional guidance—the transition happens immediately.
+                  The intervention itself is carefully structured. Family members prepare impact statements expressing love and concern without blame. Clear boundaries are established, and the interventionist facilitates the conversation to prevent derailment. When the loved one agrees to treatment—as they do significantly higher of the time with professional guidance—the transition happens immediately.
                 </p>
               </div>
             </div>
@@ -228,10 +228,10 @@ const NewJersey = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your New Jersey Family
+            Schedule Free Consultation for Your New Jersey Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to 80-90%. Reach out today for a confidential consultation.
+            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="text-lg">

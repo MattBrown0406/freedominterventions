@@ -1,11 +1,72 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar } from "lucide-react";
+import { Phone, Calendar, ChevronDown, Home, Repeat, Users, ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import aftercareBanner from "@/assets/aftercare-guidance-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
+
+const faqs = [
+  {
+    question: "Why does aftercare matter so much if they already went to treatment?",
+    answer:
+      "Because treatment is the beginning, not the end. People leave treatment and go right back to the same stress, same people, same habits, and the same family system unless something changes. Aftercare is what helps recovery hold once the structure of treatment is gone.",
+  },
+  {
+    question: "What is the family's role while our loved one is in treatment?",
+    answer:
+      "The family's job is not to manage their emotions from afar or negotiate every discomfort away. The family's job is to learn, change its own patterns, stop rescuing, and get ready for what discharge will require. Matt helps families focus on their side of the street while treatment does its work.",
+  },
+  {
+    question: "What if they relapse after treatment?",
+    answer:
+      "Relapse is serious, but it does not mean all progress is lost. It does mean the family needs a plan instead of panic. Matt helps families prepare contingency steps in advance so they are not improvising if a relapse happens.",
+  },
+  {
+    question: "What do we do when they come home?",
+    answer:
+      "That depends on what home looks like and what level of accountability is needed. Sometimes coming home immediately is appropriate. Sometimes sober living, step-down care, curfews, drug testing, meeting attendance, or financial boundaries are necessary. Discharge should be planned, not assumed.",
+  },
+  {
+    question: "Can the family make recovery harder without meaning to?",
+    answer:
+      "Absolutely. Over-monitoring, rescuing, financial support without accountability, emotional reactivity, and pretending everything is fine can all undermine recovery. Families do not cause addiction, but they can either support recovery or keep old patterns alive.",
+  },
+  {
+    question: "What does Matt actually help with after treatment starts?",
+    answer:
+      "He helps the family stay grounded, prepare for discharge, identify what boundaries need to continue, think through relapse contingencies, and stay focused on long-term change instead of just celebrating that treatment began.",
+  },
+];
+
+const jumpLinks = [
+  { label: "Overview", href: "#overview" },
+  { label: "How It Works", href: "#process" },
+  { label: "What to Expect", href: "#what-to-expect" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Get Help", href: "#cta" },
+];
+
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border border-border rounded-xl overflow-hidden bg-card">
+      <button className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-accent/20 transition-colors" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="font-semibold text-foreground pr-4">{question}</span>
+        <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="px-6 py-5 border-t border-border bg-background">
+          <p className="text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const AftercareGuidance = () => {
   return (
@@ -23,154 +84,166 @@ const AftercareGuidance = () => {
         url="https://freedominterventions.com/aftercare-guidance"
         serviceType="Aftercare Support"
       />
+      <WebPageSchema
+        name="Aftercare Guidance for Lasting Recovery | Freedom Interventions"
+        description="Following aftercare recommendations prevents relapse after addiction treatment. Learn how AA meetings, therapy, and social support drive long-term recovery."
+        url="https://freedominterventions.com/aftercare-guidance"
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
           { name: "Aftercare Guidance", url: "https://freedominterventions.com/aftercare-guidance" },
         ]}
       />
+      <FAQSchema faqs={faqs} />
       <Navbar />
-      
-      {/* Hero Banner */}
+
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
-        <img
-          src={aftercareBanner}
-          alt="Peaceful path through a park symbolizing the journey of long-term recovery"
-          className="w-full h-full object-cover"
-        />
+        <OptimizedImage src={aftercareBanner} alt="Aftercare planning for life after treatment" className="w-full h-full" width={1920} height={1080} priority={true} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>
 
-      <main className="container mx-auto px-6 py-12 md:py-20">
-        <article className="max-w-4xl mx-auto">
-          <header className="mb-12">
-            <span className="text-accent font-medium text-sm uppercase tracking-wider">
-              Our Services
-            </span>
-            <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground">
-              The Critical Role of Aftercare in Preventing Relapse After Addiction Treatment
-            </h1>
-            <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-              Following aftercare recommendations upon discharge from treatment dramatically lowers relapse rates, with studies showing 40-60% of individuals relapsing without structured follow-up, compared to under 15% after five years of consistent adherence including AA meetings and social support. Interventionists collaborate with treatment teams to customize these plans, ensuring AA attendance, therapeutic services, and social connections drive long-term recovery.
-            </p>
-          </header>
-
-          <div className="prose prose-lg max-w-none">
-            <section className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-                High Relapse Risks Without Aftercare
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Relapse rates soar without aftercare: up to 85% within 30 days post-inpatient discharge and 40-75% within 3-6 months if plans are ignored. Individuals remitting without help face 60% relapse over 16 years, versus 43% for those in treatment or AA. Aftercare bridges this gap by reinforcing skills learned in treatment, countering triggers like stress or isolation that fuel 73% relapse in unsupported rehabs.
+      <main>
+        <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <span className="text-accent font-medium text-sm uppercase tracking-wider">Aftercare Guidance</span>
+              <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
+                Treatment Is the Beginning. What Happens After Discharge Matters Just as Much.
+              </h1>
+              <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Families often focus so hard on getting their loved one into treatment that they do not think seriously enough about what comes next. Matt helps families prepare for the part that happens after admission: family roles during treatment, discharge planning, relapse contingencies, and the family changes that have to happen if recovery is going to last.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Skipping recommendations leaves vulnerability to the "abstinence violation effect," where one slip spirals into full return without therapeutic intervention or peer accountability.
-              </p>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-                Essential AA Meeting Attendance
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Regular AA meeting attendance halves relapse risk, with frequent participants twice as likely to achieve one-year sobriety and showing 22% lower relapse when paired with treatment. Dose-response data confirms more meetings yield higher abstinence: weekly or greater attendance post-treatment correlates with significant reductions in use. AA provides spiritual structure, step work, and sponsorship vital for early recovery when isolation threatens 40-60% of discharges.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Interventionists embed AA schedules into discharge plans, verifying local meetings and sponsoring commitments to sustain momentum beyond treatment walls.
-              </p>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-                Therapeutic Services for Ongoing Healing
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Therapeutic services like outpatient counseling, IOP, and family therapy are non-negotiable, boosting treatment retention and self-efficacy while addressing co-occurring issues driving 45-56% relapse in first-year outpatients. Continued therapy teaches coping, reduces stress, and improves outcomes, with supported individuals reporting more abstinent days and quality of life.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Professionals recommend weekly sessions initially, tapering as stability grows, ensuring emotional tools endure life's pressures that undo 50% of untreated remitters.
-              </p>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-                The Social Component of Long-Term Recovery
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Social support is recovery's backbone: strong networks cut relapse by enhancing accountability, reducing distress, and expanding sober circles, with high AA involvement building quality friendships that predict sustained sobriety. Peer groups like AA or recovery homes foster belonging, where shared experiences lower use severity and boost well-being—unsupported recoverees face higher psychological strain.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Family involvement via Al-Anon strengthens communication, while community ties via sober living prevent isolation-fueled slips affecting 73% without post-discharge networks. Social bonds, more than willpower alone, drive 75% long-term AA attendance linked to abstinence.
-              </p>
-            </section>
-
-            <section className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-                Interventionist's Collaboration with Treatment Teams
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Experienced interventionists partner with discharge planners to tailor aftercare, reviewing progress notes to match needs like AA frequency or therapy intensity. They secure sober living placements, transportation to meetings, and family contracts enforcing attendance, monitoring compliance for 6-12 months to adjust for risks.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                This teamwork ensures seamless transitions, with interventionists mediating between teams and families to uphold recommendations, slashing readmission by aligning social, therapeutic, and 12-step elements.
-              </p>
-            </section>
-
-            <section className="mb-12 bg-card p-6 md:p-8 rounded-xl border border-border/50">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-6">
-                Practical Steps to Follow Aftercare
-              </h2>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Attend 90 AA meetings in 90 days minimum, tracking via apps or sponsors for accountability.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Schedule weekly therapy or IOP immediately post-discharge, prioritizing dual-diagnosis if needed.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Build social networks through sober living, AA home groups, and family support meetings.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-muted-foreground">Review plan monthly with interventionist and treatment team, documenting milestones and triggers.</span>
-                </li>
-              </ul>
-            </section>
-
-            <section className="mb-12">
-              <p className="text-lg text-foreground font-medium leading-relaxed">
-                Adhering to aftercare—AA meetings, therapy, and social support—transforms 40-60% relapse odds into lasting freedom, with interventionist oversight ensuring every detail supports the individual's path. Families united in this commitment rewrite outcomes from statistics to success stories.
-              </p>
-            </section>
-          </div>
-
-          {/* CTA Section */}
-          <div className="mt-16 p-8 md:p-12 bg-primary/5 rounded-2xl border border-primary/20 text-center">
-            <h3 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-              Ready to Plan for Lasting Recovery?
-            </h3>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Our experienced team works directly with treatment providers to create comprehensive aftercare plans that support long-term sobriety for your loved one.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="gap-2">
-                <Link to="/#contact">
-                  <Calendar className="w-5 h-5" />
-                  Schedule a Consultation
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="gap-2">
-                <a href="tel:+15418386009">
-                  <Phone className="w-5 h-5" />
-                  Call (541) 838-6009
-                </a>
-              </Button>
             </div>
           </div>
-        </article>
+        </section>
+
+        <section className="border-y border-border/60 bg-muted/20">
+          <div className="container mx-auto px-6 py-4">
+            <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto whitespace-nowrap [scrollbar-width:none]">
+              <span className="text-sm font-medium text-foreground shrink-0 py-2">Jump to section:</span>
+              {jumpLinks.map((link) => (
+                <a key={link.href} href={link.href} className="shrink-0 px-4 py-2 rounded-full border border-border bg-background text-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors">
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 md:py-20 bg-background">
+          <div className="container mx-auto px-6">
+            <article className="max-w-4xl mx-auto space-y-16">
+              <section id="overview" className="space-y-6">
+                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">What This Is</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Aftercare guidance is Matt helping the family think beyond the relief of treatment entry. The crisis may have slowed down, but the real work is now in front of everyone. If the family goes back to old patterns and the loved one walks back into the same environment without a plan, treatment progress can unravel fast.
+                </p>
+                <div className="bg-card rounded-2xl border border-border/60 p-6 md:p-8">
+                  <p className="text-foreground leading-relaxed font-medium">
+                    Addiction is a medical illness with a spiritual dimension. It requires clinical treatment and meaningful change in purpose, connection, and how the person lives. That includes the family system too. The addicted person is not the only one who has to change.
+                  </p>
+                </div>
+              </section>
+
+              <section id="process" className="space-y-6">
+                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">How It Works</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {[
+                    {
+                      icon: <Users className="w-5 h-5 text-primary" />,
+                      title: "Family role during treatment",
+                      body: "Matt helps families stop reacting to every call, every complaint, and every emotional swing. The family needs structure while treatment is doing its work.",
+                    },
+                    {
+                      icon: <Home className="w-5 h-5 text-primary" />,
+                      title: "Discharge planning",
+                      body: "Before anyone comes home, there should be a plan for housing, meetings, outpatient care, sober living if needed, transportation, money, and accountability.",
+                    },
+                    {
+                      icon: <Repeat className="w-5 h-5 text-primary" />,
+                      title: "Relapse contingency planning",
+                      body: "Families do better when they decide in advance what happens if recovery starts to slip. That removes panic and guesswork later.",
+                    },
+                    {
+                      icon: <ShieldCheck className="w-5 h-5 text-primary" />,
+                      title: "Ongoing family change",
+                      body: "Matt helps families look at enabling, rescuing, fear-driven decisions, and the patterns that made the old system unsustainable in the first place.",
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="bg-card rounded-2xl border border-border/50 p-6 md:p-8">
+                      <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center mb-4">{item.icon}</div>
+                      <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
+                      <p className="text-muted-foreground leading-relaxed">{item.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section id="what-to-expect" className="space-y-6">
+                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">What to Expect</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {[
+                    "Direct guidance on what the family should and should not be doing while their loved one is in treatment",
+                    "Preparation for the hard questions, including what if they relapse and what happens when they come home",
+                    "Clarity around discharge instead of vague optimism",
+                    "Support for creating boundaries that continue after treatment, not just during the crisis",
+                    "A stronger family system that is less reactive and less likely to slide back into enabling",
+                    "A real plan for the next 30, 60, and 90 days after discharge",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3 p-5 rounded-xl border border-border/50 bg-background">
+                      <ShieldCheck className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                      <p className="text-muted-foreground leading-relaxed">{item}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Most families underestimate this phase. The relief of treatment entry is real, but it can create false confidence. Sustainable recovery usually depends on what the family does during treatment and how well discharge is handled when the structure comes off.
+                </p>
+              </section>
+
+              <section className="space-y-6">
+                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">The Hard Truth Families Need to Hear</h2>
+                <div className="bg-primary/5 rounded-2xl p-6 md:p-8 border border-primary/10">
+                  <p className="text-foreground leading-relaxed mb-4">
+                    Treatment can save a life. It does not automatically rebuild one.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    If the family wants a different outcome, the family has to stop doing what kept the old system running. That might mean changing financial support, living arrangements, communication patterns, expectations, and how consequences are handled. Matt helps families do that with structure instead of shame.
+                  </p>
+                </div>
+              </section>
+
+              <section id="faq" className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">Frequently Asked Questions</h2>
+                {faqs.map((faq) => (
+                  <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
+                ))}
+              </section>
+
+              <section id="cta" className="bg-primary/5 rounded-2xl border border-primary/20 p-8 md:p-12 text-center">
+                <h3 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">Plan for What Happens After Treatment, Not Just How to Get There</h3>
+                <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                  If your loved one is in treatment now, about to discharge, or already starting to wobble, Matt can help your family build the next plan. This is where long-term recovery either gets stronger or starts slipping. Handle it on purpose.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild size="lg" className="gap-2">
+                    <Link to="/#contact">
+                      <Calendar className="w-5 h-5" />
+                      Schedule a Consultation
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="gap-2">
+                    <a href="tel:+15418386009">
+                      <Phone className="w-5 h-5" />
+                      Call (541) 838-6009
+                    </a>
+                  </Button>
+                </div>
+              </section>
+            </article>
+          </div>
+        </section>
       </main>
 
       <Footer />

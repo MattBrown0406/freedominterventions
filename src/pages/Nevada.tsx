@@ -102,13 +102,13 @@ const Nevada = () => {
                   <div className="text-sm text-muted-foreground">Adult Illicit Drug Use</div>
                 </div>
                 <div className="bg-background p-6 rounded-xl border border-border text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">90%+</div>
+                  <div className="text-4xl font-bold text-primary mb-2">Significantly Higher</div>
                   <div className="text-sm text-muted-foreground">Unmet Treatment Need</div>
                 </div>
               </div>
 
               <p>
-                Amid 21.6% substance use disorder rates (vs. 17.8% U.S.)—including 12.7% drug use disorder—over 90% unmet need burdens families, where interventionists achieve 80-90% treatment initiation efficacy.
+                Amid 21.6% substance use disorder rates (vs. 17.8% U.S.)—including 12.7% drug use disorder—significantly higher unmet need burdens families, where interventionists achieve significantly higher treatment initiation efficacy.
               </p>
             </div>
           </div>
@@ -160,7 +160,7 @@ const Nevada = () => {
               </p>
               
               <p>
-                <strong className="text-foreground">Interventionists furnish calibrated, empathetic frameworks</strong>, coalescing relatives for 80-90% acceptance via ASAM-aligned evaluations attuned to Nevada's fentanyl-meth-alcohol nexus.
+                <strong className="text-foreground">Interventionists furnish calibrated, empathetic frameworks</strong>, coalescing relatives for significantly higher acceptance via ASAM-aligned evaluations attuned to Nevada's fentanyl-meth-alcohol nexus.
               </p>
             </div>
           </div>
@@ -208,7 +208,7 @@ const Nevada = () => {
             
             <div className="prose prose-lg max-w-none text-muted-foreground space-y-6">
               <p>
-                Interventions elevate entry to 80-90%, curtailing relapse in resource-scarce milieus; social scaffolding halves recidivism. Nevada's context—opioid 123% ascent 2020-2023—magnifies import: experts sever enabling, spanning deficits with 83-95% engagement.
+                Interventions elevate entry to significantly higher, curtailing relapse in resource-scarce milieus; social scaffolding halves recidivism. Nevada's context—opioid 123% ascent 2020-2023—magnifies import: experts sever enabling, spanning deficits with stronger engagement.
               </p>
               
               <p>

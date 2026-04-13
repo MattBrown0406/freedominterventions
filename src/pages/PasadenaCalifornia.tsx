@@ -209,7 +209,7 @@ const PasadenaCalifornia = () => {
               Get Help for Your Pasadena Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve Pasadena and surrounding communities including Arcadia, Monrovia, San Marino, Alhambra, and the greater San Gabriel Valley.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve Pasadena and surrounding communities including Arcadia, Monrovia, San Marino, Alhambra, and the greater San Gabriel Valley.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

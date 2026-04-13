@@ -1,12 +1,103 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, AlertTriangle, Building2, Heart, Shield, ArrowRight } from "lucide-react";
+import { Phone, AlertTriangle, Shield, CheckCircle2, ArrowRight, ChevronDown, Siren, Users, ClipboardList } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import crisisBanner from "@/assets/crisis-support-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, BreadcrumbSchema, ServiceSchema } from "@/components/StructuredData";
+import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
+
+const faqs = [
+  {
+    question: "When is this a crisis situation?",
+    answer:
+      "If there is overdose risk, suicidal behavior, psychosis, violence, repeated ER visits, repeated arrests, or your loved one is so impaired that the situation is clearly escalating fast, treat it like a crisis. If someone is in immediate medical danger, call 911 first. Once the immediate emergency is addressed, Matt helps the family decide what happens next.",
+  },
+  {
+    question: "What does Matt do during an addiction crisis?",
+    answer:
+      "Matt helps the family slow down, assess the real level of risk, stop reactive decisions, and create a clear plan. That may include deciding who should be involved, what boundaries start now, what treatment options are realistic, and how to use the current crisis as the moment to move toward treatment instead of repeating the same cycle.",
+  },
+  {
+    question: "Should we bail them out, bring them home, or rescue them again?",
+    answer:
+      "Not automatically. Families often make expensive, emotional decisions in the middle of panic. Matt helps you separate immediate safety from enabling. Sometimes support is necessary. Sometimes rescue just resets the cycle. The key is making decisions that move the person toward treatment, not back into denial.",
+  },
+  {
+    question: "Can treatment be arranged quickly in a crisis?",
+    answer:
+      "Often, yes. If detox, residential treatment, psychiatric stabilization, or another level of care is needed, Matt helps identify realistic options quickly and prepares the family for admission, transportation, cost questions, and what to expect once the person says yes.",
+  },
+  {
+    question: "What if they calm down and say the crisis is over?",
+    answer:
+      "That is one of the biggest traps. A temporary calm period does not mean the problem is solved. Families often lose their leverage the moment the visible emergency passes. Matt helps you act while the reality is still clear, instead of waiting for the next overdose, arrest, or breakdown.",
+  },
+  {
+    question: "What happens after the immediate crisis?",
+    answer:
+      "The goal is not just surviving the incident. The goal is stabilization, treatment entry when appropriate, and a family plan that does not collapse the moment pressure eases. Matt stays focused on what comes next, including treatment placement, family communication, and boundaries after discharge or refusal.",
+  },
+];
+
+const jumpLinks = [
+  { label: "Overview", href: "#overview" },
+  { label: "How It Works", href: "#process" },
+  { label: "What to Expect", href: "#what-to-expect" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Get Help", href: "#cta" },
+];
+
+const steps = [
+  {
+    icon: <Phone className="w-5 h-5 text-primary" aria-hidden="true" />,
+    title: "Matt gets the full picture fast",
+    description:
+      "He asks direct questions about overdose risk, mental health symptoms, violence, access to substances, recent hospitalizations, legal issues, and what the family has already been doing. The point is clarity, not comfort.",
+  },
+  {
+    icon: <Shield className="w-5 h-5 text-primary" aria-hidden="true" />,
+    title: "He helps stabilize the family first",
+    description:
+      "Panic makes families reactive. Matt helps you stop arguing, stop negotiating in circles, and stop making decisions just to get through the next few hours. That stability is what allows a real plan to take shape.",
+  },
+  {
+    icon: <ClipboardList className="w-5 h-5 text-primary" aria-hidden="true" />,
+    title: "He builds the immediate action plan",
+    description:
+      "That may mean preparing for detox or psychiatric evaluation, deciding what support will and will not continue, identifying who needs to be involved, and organizing the next conversation so the crisis turns into treatment leverage instead of another reset.",
+  },
+  {
+    icon: <Users className="w-5 h-5 text-primary" aria-hidden="true" />,
+    title: "He guides the family through follow-through",
+    description:
+      "If your loved one accepts help, Matt helps the family move quickly. If they refuse, he helps the family hold boundaries so the crisis still becomes a turning point instead of wasted pain.",
+  },
+];
+
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="border border-border rounded-xl overflow-hidden bg-card">
+      <button
+        className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-accent/20 transition-colors"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+      >
+        <span className="font-semibold text-foreground pr-4">{question}</span>
+        <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="px-6 py-5 border-t border-border bg-background">
+          <p className="text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const CrisisSupport = () => {
   return (
@@ -24,37 +115,41 @@ const CrisisSupport = () => {
         url="https://freedominterventions.com/crisis-support"
         serviceType="Crisis Intervention"
       />
+      <WebPageSchema
+        name="Addiction Crisis Support | Freedom Interventions"
+        description="Professional interventionists help families navigate addiction crises including jail, hospital visits, overdoses, and self-harm. Get expert crisis support now."
+        url="https://freedominterventions.com/crisis-support"
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
           { name: "Crisis Support", url: "https://freedominterventions.com/crisis-support" },
         ]}
       />
+      <FAQSchema faqs={faqs} />
       <Navbar />
-      
-      {/* Banner Image */}
+
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
-        <OptimizedImage 
-          src={crisisBanner} 
-          alt="Lighthouse beacon cutting through storm clouds at dawn" 
+        <OptimizedImage
+          src={crisisBanner}
+          alt="Crisis support for families facing overdose risk, psychiatric instability, or an escalating addiction emergency"
           className="w-full h-full"
+          width={1920}
+          height={800}
           priority={true}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>
-      
-      {/* Hero Section */}
+
       <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="text-accent font-medium text-sm uppercase tracking-wider">
-              Crisis Support
-            </span>
+            <span className="text-accent font-medium text-sm uppercase tracking-wider">Crisis Support</span>
             <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-foreground leading-tight">
-              How Interventionists Help Families Navigate Addiction Crises
+              When Your Family Is in Active Crisis, You Need a Clear Plan, Not More Panic
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-              Professional interventionists specialize in guiding families through addiction crises like jail stays, hospital visits, emergencies, and self-harm risks, turning chaos into pathways for recovery.
+            <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              This service is for families dealing with immediate danger: overdose risk, self-harm threats, acute mental health breaks, repeated hospital visits, jail, or a situation that is getting worse fast. Matt works directly with families to slow the chaos down, assess what is real, and move the situation toward stabilization and treatment.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <a href="tel:+15418386009">
@@ -73,171 +168,94 @@ const CrisisSupport = () => {
         </div>
       </section>
 
-      {/* Main Content */}
+      <section className="border-y border-border/60 bg-muted/20">
+        <div className="container mx-auto px-6 py-4">
+          <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto whitespace-nowrap [scrollbar-width:none]">
+            <span className="text-sm font-medium text-foreground shrink-0 py-2">Jump to section:</span>
+            {jumpLinks.map((link) => (
+              <a key={link.href} href={link.href} className="shrink-0 px-4 py-2 rounded-full border border-border bg-background text-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors">
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            
-            {/* Introduction */}
-            <div className="prose prose-lg max-w-none mb-16">
+          <div className="max-w-4xl mx-auto space-y-16">
+            <section id="overview" className="space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Siren className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">What This Is</h2>
+              </div>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                By addressing enabling patterns and stabilizing acute situations, interventionists help loved ones accept treatment before tragedies escalate.
-              </p>
-            </div>
-
-            {/* Common Crises Section */}
-            <div className="mb-16">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-primary" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
-                  Common Addiction Crises Requiring Intervention
-                </h2>
-              </div>
-              <div className="pl-0 md:pl-15">
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  Addiction often spirals into crises that overwhelm families, including repeated jail time for DUIs or possession, emergency room overdoses, psychiatric hospital commitments, and self-harm attempts tied to substance-induced despair. These events signal that enabling—such as bailing out of jail or covering medical bills—has prolonged the problem rather than solving it.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  Interventionists step in during these high-stakes moments to assess risks, de-escalate tensions, and coordinate immediate safety measures like rapid evaluations or linkage to detox facilities. Their expertise prevents families from reacting impulsively, which can worsen outcomes.
-                </p>
-              </div>
-            </div>
-
-            {/* Jail and Legal Crises */}
-            <div className="mb-16">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <Building2 className="w-6 h-6 text-primary" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
-                  Jail and Legal Crises
-                </h2>
-              </div>
-              <div className="pl-0 md:pl-15">
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  Arrests represent a common crisis where interventionists shine, as jail stints for drug-related charges disrupt lives and highlight addiction's consequences without family enabling to soften the blow. Rather than posting bail repeatedly, interventionists help families use this as a "teachable moment" by planning structured conversations post-release that link freedom to treatment entry.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  They collaborate with legal systems to arrange court-mandated rehab, reducing recidivism and breaking cycles of incarceration fueled by untreated addiction. This approach shifts focus from punishment to recovery, protecting both the individual and family from ongoing legal emergencies.
-                </p>
-              </div>
-            </div>
-
-            {/* Hospital and Overdose Emergencies */}
-            <div className="mb-16">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-primary" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
-                  Hospital and Overdose Emergencies
-                </h2>
-              </div>
-              <div className="pl-0 md:pl-15">
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  Hospital crises, like overdose reversals or withdrawal seizures, demand swift action that interventionists provide through crisis stabilization techniques such as rapid assessments and safety planning. Families often enable by minimizing these events as "one-offs," but professionals educate them on the chronic risks and facilitate direct transfers to long-term care from the ER.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  In emergencies, interventionists ensure follow-up linkages to avoid the "revolving door" of readmissions, emphasizing that true recovery starts with ending financial or emotional bailouts. Their involvement cuts overdose fatalities by bridging acute care to sustained sobriety programs.
-                </p>
-              </div>
-            </div>
-
-            {/* Self-Harm and Mental Health Crises */}
-            <div className="mb-16">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <Shield className="w-6 h-6 text-primary" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
-                  Self-Harm and Mental Health Crises
-                </h2>
-              </div>
-              <div className="pl-0 md:pl-15">
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  Self-harm crises, including suicidal ideation amplified by drugs or alcohol, require immediate de-escalation and boundary-setting that families struggle to enforce alone. Interventionists use rapport-building and problem identification to stabilize the individual while teaching relatives to stop enabling behaviors like ignoring threats or providing cash for substances.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  They address codependency, helping loved ones recognize self-harm as an addiction symptom rather than isolated drama, paving the way for dual-diagnosis treatment. If the threats of self harm are more manipulative in nature, the interventionists can help to see through the emotion of the moment and identify the true nature of the threat. This unified front fosters recovery by replacing rescue missions with accountable support.
-                </p>
-              </div>
-            </div>
-
-            {/* Breaking Enabling Patterns */}
-            <div className="mb-16 bg-card rounded-2xl p-8 border border-border/50">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-6">
-                Breaking Enabling Patterns
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Enabling prolongs crises by shielding addicts from natural consequences, such as paying fines, hiding relapses, or tolerating chaos at home. Interventionists train families to establish firm boundaries—like no more money without treatment verification—creating discomfort that motivates change without cruelty.
+                Families usually call at this stage when they are terrified, exhausted, and no longer sure what is an emergency versus what is manipulation. They are asking questions like, "Do we bring him home?" "Do we pay for this again?" "Is she actually safe right now?" "What do we do tonight?"
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                By unifying family messages, they eliminate manipulation tactics, ensuring crises lead to intervention rather than repetition. This shift from enabling to empowerment is key to sustainable recovery.
+                Matt helps families separate panic from strategy. This is not therapy for the family. It is a direct, structured response to an unstable situation with one goal: protect safety, stop the cycle from resetting, and move the person toward appropriate help.
               </p>
-            </div>
+              <div className="bg-card rounded-2xl border border-border/60 p-6 md:p-8">
+                <p className="text-foreground leading-relaxed font-medium">
+                  Addiction is a medical illness with a spiritual dimension. It requires clinical treatment and meaningful change in purpose, connection, and how the person lives. In a crisis, both parts matter. Families need a medically sound next step and a plan that stops feeding the addiction.
+                </p>
+              </div>
+            </section>
 
-            {/* Path to Long-Term Recovery */}
-            <div className="mb-16">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-6">
-                Path to Long-Term Recovery
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Post-crisis, interventionists connect families to resources like family therapy, support groups, and medication-assisted treatment, boosting completion rates by 30% according to health data. They monitor progress, adjust plans for setbacks, and reinforce boundaries to prevent relapse triggers.
-              </p>
+            <section id="process" className="space-y-8">
+              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">How It Works</h2>
+              <div className="grid gap-6">
+                {steps.map((step) => (
+                  <div key={step.title} className="bg-card rounded-2xl border border-border/50 p-6 md:p-8">
+                    <div className="flex items-start gap-4">
+                      <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        {step.icon}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">{step.title}</h3>
+                        <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="what-to-expect" className="space-y-6">
+              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">What to Expect</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  "A calm, direct assessment of what is actually happening right now",
+                  "Guidance on whether the family should step in, step back, or hold a line",
+                  "Specific treatment planning if detox, residential care, or psychiatric stabilization is needed",
+                  "Preparation for what happens if your loved one agrees to help",
+                  "A boundary plan if your loved one refuses help",
+                  "Less chaos, less arguing, and more clarity about what the family will do next",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3 p-5 rounded-xl border border-border/50 bg-background">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-muted-foreground leading-relaxed">{item}</p>
+                  </div>
+                ))}
+              </div>
               <p className="text-muted-foreground leading-relaxed">
-                Ongoing involvement turns emergencies into turning points, where families learn addiction as a treatable disease requiring collective vigilance.
+                The best outcome is not just that everyone gets through the night. The best outcome is that the crisis becomes the point where the family stops managing addiction and starts moving toward treatment, accountability, and a different way forward.
               </p>
-            </div>
+            </section>
 
-            {/* Steps Families Can Take Now */}
-            <div className="bg-primary/5 rounded-2xl p-8 mb-16">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-6">
-                Steps Families Can Take Now
-              </h2>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <span className="text-muted-foreground">
-                    <strong className="text-foreground">Contact an interventionist immediately</strong> after any crisis like jail or hospital discharge for a safety assessment and action plan.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <span className="text-muted-foreground">
-                    <strong className="text-foreground">Attend Al-Anon or Nar-Anon</strong> to identify and stop enabling behaviors fueling emergencies.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <span className="text-muted-foreground">
-                    <strong className="text-foreground">Document incidents</strong> (self-harm threats, overdoses) to build a clear case for treatment during interventions.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <span className="text-muted-foreground">
-                    <strong className="text-foreground">Prepare consequences in advance</strong>, such as home eviction without sobriety proof, enforced consistently.
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <section id="faq" className="space-y-4">
+              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">Frequently Asked Questions</h2>
+              {faqs.map((faq) => (
+                <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
+              ))}
+            </section>
 
-            {/* Closing Statement */}
-            <div className="text-center mb-16">
-              <p className="text-lg text-foreground leading-relaxed font-medium">
-                Interventionists transform addiction crises into recovery opportunities by halting enabling, ensuring safety, and guiding families toward healing. Acting decisively ends the cycle of jail, hospitals, emergencies, and self-harm, replacing despair with hope.
-              </p>
-            </div>
-
-            {/* CTA */}
-            <div className="bg-card rounded-2xl p-8 md:p-12 text-center border border-border/50">
-              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">
-                Ready to Get Help?
-              </h2>
-              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Don't wait for another crisis. Contact us today to discuss how we can help your family navigate this difficult time and find a path to recovery.
+            <section id="cta" className="bg-card rounded-2xl p-8 md:p-12 text-center border border-border/50">
+              <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">If Things Are Escalating, Get Clarity Before the Next Crisis Hits</h2>
+              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                You do not need a dramatic speech. You need a plan. If your family is dealing with overdose risk, psychiatric instability, legal chaos, or a situation that is spinning faster than you can manage, call Matt. He will help you sort out what matters now and what the next move should be.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="tel:+15418386009">
@@ -249,11 +267,11 @@ const CrisisSupport = () => {
                 <Link to="/#booking">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto">
                     Schedule a Consultation
+                    <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
               </div>
-            </div>
-
+            </section>
           </div>
         </div>
       </section>

@@ -168,7 +168,7 @@ const LosAngelesCalifornia = () => {
                     <strong className="text-foreground">Entertainment Industry Experience:</strong> We've worked with families in the entertainment industry and understand the unique pressures and privacy requirements involved. Discretion is paramount, and we know how to conduct interventions that protect careers while saving lives.
                   </p>
                   <p>
-                    <strong className="text-foreground">Extensive Treatment Network:</strong> LA has world-class treatment facilities, and we know which programs work best for different situations. We also maintain relationships with excellent programs throughout the country for those who benefit from treatment away from home.
+                    <strong className="text-foreground">Extensive Treatment Network:</strong> LA has treatment facilities, and we know which programs work best for different situations. We also maintain relationships with excellent programs throughout the country for those who benefit from treatment away from home.
                   </p>
                   <p>
                     <strong className="text-foreground">Bilingual Services:</strong> We can communicate in Spanish—critical for serving LA's large Latino community. Si necesitan, les puedo comunicar en Español.
@@ -197,7 +197,7 @@ const LosAngelesCalifornia = () => {
                     Los Angeles has a strong recovery community and excellent treatment resources. From Malibu's luxury rehabs to community-based programs throughout the county, options exist for every situation. The key is getting your loved one to accept help—and that's where professional intervention makes the difference.
                   </p>
                   <p>
-                    The fentanyl crisis has made time more precious than ever. Each use carries the risk of being the last. If your loved one is struggling with addiction in Los Angeles, don't wait for the "right moment"—that moment is now.
+                    The fentanyl crisis has made time more precious than ever. Each use carries serious risk. If your loved one is struggling with addiction in Los Angeles, the sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>

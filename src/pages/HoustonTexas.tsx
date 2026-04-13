@@ -192,7 +192,7 @@ const HoustonTexas = () => {
                     Houston has a strong recovery community with meetings in English, Spanish, and other languages throughout the metro. The city's diversity means people in recovery can find community with others who share their background and understand their challenges.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. In Houston, cocaine and counterfeit pills increasingly contain fentanyl, making any illicit drug use potentially fatal. Professional intervention can save your loved one's life.
+                    The fentanyl crisis has made intervention more urgent than ever. In Houston, cocaine and counterfeit pills increasingly contain fentanyl, making any illicit drug use potentially fatal. Professional intervention can help your family create a real opening for treatment.
                   </p>
                 </div>
               </div>

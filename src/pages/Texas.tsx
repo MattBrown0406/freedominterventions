@@ -41,7 +41,7 @@ const Texas = () => {
         <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
           <img 
             src={texasBanner} 
-            alt="Texas landscape with rolling hills and bluebonnets symbolizing hope and the path to recovery" 
+            alt="Texas landscape with rolling hills and bluebonnets symbolizing a way forward" 
             className="w-full h-full object-cover"
           />
         </div>
@@ -88,7 +88,7 @@ const Texas = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">2M+</div>
@@ -138,7 +138,7 @@ const Texas = () => {
                 Addiction tears through Texas families with devastating speed. Parents in suburban neighborhoods watch their children become addicted to pills bought on social media. Ranch families lose generations of workers to methamphetamine. Urban professionals hide cocaine and alcohol addictions until careers and marriages collapse.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Texas's culture of self-reliance and privacy often delays families from seeking help. Many attempt DIY interventions that fail due to denial, manipulation, or lack of immediate treatment options. Professional interventionists succeed 80-90% of the time by unifying family messages, pre-arranging treatment placement, and guiding the process with proven methodologies like ARISE and CRAFT.
+                Texas's culture of self-reliance and privacy often delays families from seeking help. Many attempt DIY interventions that fail due to denial, manipulation, or lack of immediate treatment options. Professional interventionists succeed significantly higher of the time by unifying family messages, pre-arranging treatment placement, and guiding the process with proven methodologies like ARISE and CRAFT.
               </p>
             </div>
 
@@ -151,7 +151,7 @@ const Texas = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Interventionists begin with confidential family consultations, assessing addiction severity and mapping Texas's treatment landscape—from Houston's world-class medical centers to Hill Country retreats and West Texas residential programs. We understand the specific challenges of fentanyl addiction, methamphetamine psychosis, and prescription opioid dependencies common in Texas.
+                Interventionists begin with confidential family consultations, assessing addiction severity and mapping Texas's treatment landscape—from Houston's medical centers to Hill Country retreats and West Texas residential programs. We understand the specific challenges of fentanyl addiction, methamphetamine psychosis, and prescription opioid dependencies common in Texas.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Planning involves coordinating with treatment facilities, arranging immediate transport, and coaching families through the intervention conversation. We address co-occurring mental health conditions, common in Texas's high-stress industries, and ensure seamless transitions from detox through residential treatment to aftercare.
@@ -170,17 +170,17 @@ const Texas = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventions dramatically increase the likelihood of treatment entry—from less than 30% for unguided family attempts to over 90% with professional support. In Texas, where treatment access is limited and time is critical due to fentanyl's lethality, this difference saves lives.
+                Professional interventions dramatically increase the likelihood of treatment entry—from less than 30% for unguided family attempts to significantly higher with professional support. In Texas, where treatment access is limited and clarity matters due to fentanyl's lethality, this difference saves lives.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Families report restored relationships, ended enabling patterns, and hope restored after years of chaos. We've helped Texas families navigate everything from young adult heroin addiction to executive alcoholism, always with compassion and respect for family values.
               </p>
             </div>
 
-            {/* Barriers and Why Act Now */}
+            {/* Barriers and Why Earlier Planning Helps */}
             <div className="space-y-6">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Barriers and Why Act Now
+                Barriers and Why Earlier Planning Helps
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Texas faces real barriers: treatment waitlists, insurance limitations, geographic challenges, and cultural stigma. But fentanyl has made waiting deadly—every day without intervention risks overdose. Professional interventionists know how to navigate these barriers, securing beds, coordinating logistics, and overcoming resistance.
@@ -245,7 +245,7 @@ const Texas = () => {
             A Path Forward for Texas Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Texas's addiction crisis claims over 5,800 lives annually—but recovery happens every day. Professional interventionists empower families, transforming despair into decisive treatment entry with 90% efficacy. Don't wait for the next overdose or arrest.
+            Texas's addiction crisis claims over 5,800 lives annually—but recovery happens every day. Professional interventionists empower families, helping families turn panic into treatment action with a significantly higher chance of success. The sooner families have a clear plan, the more options they have.
           </p>
           <p className="text-xl font-semibold mb-8">
             Hope starts with one structured step—yours.

@@ -195,7 +195,7 @@ const OgdenUtah = () => {
                     Key local resources include McKay-Dee Hospital (medical care), Weber Human Services (community mental health), and Journey of Hope (residential treatment). We also connect families with statewide and national treatment resources when needed.
                   </p>
                   <p>
-                    Professional intervention is the single most effective action a family can take. Don't wait for the next crisis to reach out.
+                    Professional intervention can give families structure, leverage, and a real plan. When your family is ready to stop waiting and start moving, Matt is ready to help.
                   </p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const OgdenUtah = () => {
               Get Help for Your Weber County Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Weber County including Ogden, Roy, South Ogden, Washington Terrace, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Weber County including Ogden, Roy, South Ogden, Washington Terrace, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

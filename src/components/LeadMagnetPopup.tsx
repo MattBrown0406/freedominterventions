@@ -11,22 +11,25 @@ const LeadMagnetPopup = () => {
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (dismissed) return;
 
-    // Exit intent detection
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
     const handleMouseLeave = (e: MouseEvent) => {
+      if (isMobile) return;
       if (e.clientY <= 0) {
         setIsVisible(true);
         document.removeEventListener("mouseout", handleMouseLeave);
       }
     };
 
-    // Also show after 30 seconds
     const timer = setTimeout(() => {
       if (!localStorage.getItem(STORAGE_KEY)) {
         setIsVisible(true);
       }
-    }, 30000);
+    }, isMobile ? 30000 : 30000);
 
-    document.addEventListener("mouseout", handleMouseLeave);
+    if (!isMobile) {
+      document.addEventListener("mouseout", handleMouseLeave);
+    }
 
     return () => {
       document.removeEventListener("mouseout", handleMouseLeave);

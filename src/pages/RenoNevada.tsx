@@ -195,7 +195,7 @@ const RenoNevada = () => {
                     Key local resources include Renown Health (medical and behavioral health), Behavioral Health Services of Northern Nevada, and Step2 for women's residential treatment. We also connect families with national treatment resources when specialized care is needed.
                   </p>
                   <p>
-                    Professional intervention is the most effective tool available to families. Don't wait for the next crisis to call us.
+                    Professional intervention is one of the clearest tools available to families. When your family is ready to stop waiting and start moving, Matt is ready to help.
                   </p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const RenoNevada = () => {
               Get Help for Your Washoe County Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Washoe County including Reno, Sparks, Sun Valley, Spanish Springs, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Washoe County including Reno, Sparks, Sun Valley, Spanish Springs, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

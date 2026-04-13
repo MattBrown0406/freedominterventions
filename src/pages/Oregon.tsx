@@ -94,7 +94,7 @@ const Oregon = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">330K</div>
@@ -141,7 +141,7 @@ const Oregon = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Addiction devastates Oregon families, turning homes into emotional battlegrounds amid jail stints, overdoses, and financial ruin. Without guidance, relatives enable unwittingly—covering arrests, bailing out, or delaying confrontation—prolonging suffering as seen in post-Measure 110 chaos. DIY interventions fail 70-80% of the time due to denial, manipulation, and lack of aftercare planning.
+                Addiction devastates Oregon families, turning homes into emotional battlegrounds amid jail stints, overdoses, and financial ruin. Without guidance, relatives enable unwittingly—covering arrests, bailing out, or delaying confrontation—prolonging suffering as seen in post-Measure 110 chaos. DIY interventions fail 70-more often when families are prepared due to denial, manipulation, and lack of aftercare planning.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Enter professional interventionists: certified experts who customize compassionate, evidence-based processes. Unlike ad-hoc family talks, they use models like ARISE or CRAFT, yielding 64-90% treatment entry rates by unifying family messages, dismantling enabling, and pre-arranging placements. In Oregon's resource-strapped landscape, they bridge gaps to vetted providers like Serenity Lane or BestCare.
@@ -163,7 +163,7 @@ const Oregon = () => {
                 Planning involves rehearsed interventions: families share impacts lovingly, backed by consequences (e.g., no funds without treatment) and immediate transport to programs. Success hinges on personalization—addressing co-occurring mental health, common in Oregon's high dual-diagnosis rates. Post-intervention, they oversee aftercare: AA/NA attendance, therapy, and family sessions, slashing relapse by aligning with state resources like deflection programs.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Oregon-specific expertise shines: navigating Measure 110 fallout, leveraging $1.1 billion funding requests amid shortages, and targeting hotspots like Multnomah County's 533% fentanyl death rise (2018-2022). Providers like Teras Intervention report 83-95% engagement, proving viability amid 330,000 affected residents.
+                Oregon-specific expertise shines: navigating Measure 110 fallout, leveraging $1.1 billion funding requests amid shortages, and targeting hotspots like Multnomah County's 533% fentanyl death rise (2018-2022). Providers like Teras Intervention report stronger engagement, proving viability amid 330,000 affected residents.
               </p>
             </div>
 
@@ -176,17 +176,17 @@ const Oregon = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Data underscores efficacy: interventions boost treatment uptake 80-90%, with sustained sobriety via follow-up. In Oregon, where only 35,000 of 330,000 needing help access it, professionals cut delays that worsen outcomes. Families report restored unity—ending codependency, rebuilding trust—while individuals gain tools against fentanyl's grip.
+                Data underscores efficacy: interventions boost treatment uptake significantly higher, with sustained sobriety via follow-up. In Oregon, where only 35,000 of 330,000 needing help access it, professionals cut delays that worsen outcomes. Families report restored unity—ending codependency, rebuilding trust—while individuals gain tools against fentanyl's grip.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Case in point: Central Oregon's BestCare tripled opioid referrals via BHRN, but interventions ensure entry before crises escalate. Nationally, CRAFT outperforms confrontation by 64%, adaptable to Oregon's meth-fentanyl mix.
               </p>
             </div>
 
-            {/* Barriers and Why Act Now */}
+            {/* Barriers and Why Earlier Planning Helps */}
             <div className="space-y-6">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Barriers and Why Act Now
+                Barriers and Why Earlier Planning Helps
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 Challenges persist: waitlists, stigma, and uneven rural access hinder progress despite naloxone gains. Families delay, fearing resistance or costs—yet interventions avert costlier ER visits, jails, and losses, with ROI via lives saved.
@@ -251,7 +251,7 @@ const Oregon = () => {
             A Path Forward for Oregon Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Oregon's addiction toll—1,833 lives lost in 2023 alone—demands action beyond policy fixes. Professional interventionists empower families, transforming despair into decisive treatment entry with 90% efficacy. Don't wait for the next overdose or arrest.
+            Oregon's addiction toll—1,833 lives lost in 2023 alone—demands action beyond policy fixes. Professional interventionists empower families, helping families turn panic into treatment action with a significantly higher chance of success. The sooner families have a clear plan, the more options they have.
           </p>
           <p className="text-xl font-semibold mb-8">
             Hope starts with one structured step—yours.

@@ -48,7 +48,7 @@ const Arkansas = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">150K+</div>
@@ -86,7 +86,7 @@ const Arkansas = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Interventionists bring expertise in evidence-based methods that achieve high success rates. They understand Arkansas's unique challenges and work with families to create effective, compassionate intervention plans.
+                Interventionists bring expertise in evidence-based methods that achieve high outcomes. They understand Arkansas's unique challenges and work with families to create effective, compassionate intervention plans.
               </p>
             </div>
 
@@ -124,7 +124,7 @@ const Arkansas = () => {
             Arkansas Families Deserve Hope
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Professional intervention services have helped countless Arkansas families find the path to recovery. Take the first step today.
+            Professional intervention services have helped countless Arkansas families find a way forward. Take the first step today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">

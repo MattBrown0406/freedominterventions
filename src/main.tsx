@@ -8,3 +8,5 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </React.StrictMode>
 );
+
+document.dispatchEvent(new Event("render-event"));

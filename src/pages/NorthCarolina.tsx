@@ -159,7 +159,7 @@ const NorthCarolina = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Hope for North Carolina Families</h2>
           <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-            Don't wait for a crisis to become a tragedy. Take action today to help your loved one find recovery.
+            If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. A clear plan can help your loved one move toward recovery.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary"><Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link></Button>

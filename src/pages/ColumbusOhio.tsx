@@ -197,7 +197,7 @@ const ColumbusOhio = () => {
                     Despite Ohio's grim statistics, recovery is possible. Every day, people escape addiction and rebuild their lives. We've helped families throughout the Columbus metro guide their loved ones into treatment and witnessed remarkable transformations.
                   </p>
                   <p>
-                    Waiting is the most dangerous choice. With fentanyl present in virtually every street drug, every day without intervention is another day your loved one risks fatal overdose. If someone you love in Columbus is struggling, the time to act is now.
+                    Waiting is the most dangerous choice. With fentanyl present in virtually every street drug, every day without intervention is another day your loved one risks fatal overdose. If someone you love in Columbus is struggling, If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -214,7 +214,7 @@ const ColumbusOhio = () => {
               Get Help for Your Columbus Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Columbus and Central Ohio including Dublin, Westerville, Grove City, Reynoldsburg, Delaware, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Columbus and Central Ohio including Dublin, Westerville, Grove City, Reynoldsburg, Delaware, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

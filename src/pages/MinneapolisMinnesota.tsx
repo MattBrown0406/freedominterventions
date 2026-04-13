@@ -192,7 +192,7 @@ const MinneapolisMinnesota = () => {
                     The birthplace of modern addiction treatment maintains a strong recovery community. The Twin Cities have excellent 12-step meetings, sober living options, and peer support networks. Minnesota's emphasis on community can become a powerful asset in recovery.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries potentially fatal risk. Professional intervention can save your loved one's life.
+                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries potentially fatal risk. Professional intervention can help your family create a real opening for treatment.
                   </p>
                 </div>
               </div>

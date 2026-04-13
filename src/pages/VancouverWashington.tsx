@@ -192,7 +192,7 @@ const VancouverWashington = () => {
                     Recovery is possible even in the shadow of one of the nation's most visible fentanyl crises. We've helped Clark County families guide their loved ones out of addiction and into treatment that changes everything. The Portland metro's proximity isn't just a source of risk—it also means a rich network of treatment resources available to Vancouver families.
                   </p>
                   <p>
-                    Don't let the scale of the regional crisis make you feel helpless. Your family can act now, and professional intervention is the most effective first step. One call starts the process.
+                    Don't let the scale of the regional crisis make you feel helpless. The sooner families have a clear plan, the more options they have, and professional intervention can help create that plan.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const VancouverWashington = () => {
               Get Help for Your Vancouver WA Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for the next overdose or crisis. Our free, confidential consultation will help you understand your options. We serve all of Clark County including Vancouver, Camas, Washougal, Battle Ground, Ridgefield, and La Center.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options. We serve all of Clark County including Vancouver, Camas, Washougal, Battle Ground, Ridgefield, and La Center.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

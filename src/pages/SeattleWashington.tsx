@@ -194,10 +194,10 @@ const SeattleWashington = () => {
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Despite the grim statistics, we see recovery happen every day. Seattle has excellent treatment resources, strong recovery communities, and families who are willing to do the hard work of supporting their loved ones. With professional intervention guidance, the path to recovery becomes clear.
+                    Despite the grim statistics, we see recovery happen every day. Seattle has excellent treatment resources, strong recovery communities, and families who are willing to do the hard work of supporting their loved ones. With professional intervention guidance, the way forward becomes clear.
                   </p>
                   <p>
-                    The fentanyl crisis has made speed essential. Every day of active addiction carries life-threatening risks. If your loved one is struggling, the time to act is now—before another dose becomes their last.
+                    The fentanyl crisis has raised the stakes. Every day of active addiction carries serious risk. If your loved one is struggling, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>

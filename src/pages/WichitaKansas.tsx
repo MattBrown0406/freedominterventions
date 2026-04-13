@@ -257,7 +257,7 @@ const WichitaKansas = () => {
                     Recovery is happening in Wichita every day. People who were deep in meth addiction, who had burned bridges and exhausted their families, are now building back their lives. A professional intervention is often the turning point — the moment when the family stops enabling and the person struggling gets the clear message that treatment is the only path forward.
                   </p>
                   <p>
-                    Don't wait for the next arrest, the next overdose, the next hospital call. Call now. The consultation is free, confidential, and could be the most important call you make.
+                    If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. The consultation is free, confidential, and can help your family understand what to do next.
                   </p>
                 </div>
               </div>

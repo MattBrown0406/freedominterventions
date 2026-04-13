@@ -59,7 +59,7 @@ const PortlandOregon = () => {
               Portland's Addiction Crisis: Professional Intervention Services for Families in Need
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Portland faces an unprecedented addiction emergency. With overdose deaths reaching record highs and open-air drug markets affecting neighborhoods citywide, families need professional guidance now more than ever. Freedom Interventions provides compassionate, effective intervention services to help your loved one find the path to recovery.
+              Portland faces an unprecedented addiction emergency. With overdose deaths reaching record highs and open-air drug markets affecting neighborhoods citywide, families need professional guidance now more than ever. Freedom Interventions provides compassionate, effective intervention services to help your loved one find a way forward.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
@@ -197,7 +197,7 @@ const PortlandOregon = () => {
                     Despite the dire statistics, recovery is possible. Every week, we help Portland families guide their loved ones into treatment. We've worked with families from every corner of the metro area—from Forest Grove to Troutdale, from Vancouver to Oregon City—and seen remarkable transformations.
                   </p>
                   <p>
-                    The key is taking action before it's too late. Fentanyl has made the margin for error nearly nonexistent. What might have been a close call five years ago is now often fatal. If your loved one is struggling with addiction in Portland, the time to act is now.
+                    The key is taking action before it's too late. Fentanyl has made the margin for error nearly nonexistent. What might have been a close call five years ago is now often fatal. If your loved one is struggling with addiction in Portland, If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -214,7 +214,7 @@ const PortlandOregon = () => {
               Get Help for Your Portland Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all Portland metro areas including Beaverton, Tigard, Lake Oswego, Clackamas, Gresham, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all Portland metro areas including Beaverton, Tigard, Lake Oswego, Clackamas, Gresham, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

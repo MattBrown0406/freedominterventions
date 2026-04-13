@@ -189,7 +189,7 @@ const OlympiaWashington = () => {
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Recovery is possible—even in the most entrenched addiction situations. We've helped Thurston County families from Olympia to the most rural corners of the county guide their loved ones into treatment and witnessed remarkable transformations. The state capital may struggle with its addiction crisis at a policy level, but your family doesn't have to wait for systemic change. You can act now.
+                    Recovery is possible—even in the most entrenched addiction situations. We've helped Thurston County families from Olympia to the most rural corners of the county guide their loved ones into treatment and witnessed remarkable transformations. The state capital may struggle with its addiction crisis at a policy level, but your family doesn't have to wait for systemic change. You can The sooner families have a clear plan, the more options they have.
                   </p>
                   <p>
                     One call to Freedom Interventions starts a process that can change your family's trajectory entirely.
@@ -209,7 +209,7 @@ const OlympiaWashington = () => {
               Get Help for Your Olympia Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan. We serve all of Thurston County including Olympia, Lacey, Tumwater, Yelm, Tenino, and rural communities throughout the region.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan. We serve all of Thurston County including Olympia, Lacey, Tumwater, Yelm, Tenino, and rural communities throughout the region.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

@@ -5,30 +5,32 @@ const corsHeaders = {
 
 const SITE_URL = 'https://freedominterventions.com';
 
-// All static pages with their priorities and change frequencies
 const STATIC_PAGES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
-  { path: '/about', priority: '0.8', changefreq: 'monthly' },
-  { path: '/contact', priority: '0.8', changefreq: 'monthly' },
-  { path: '/blog', priority: '0.9', changefreq: 'daily' },
-  { path: '/services', priority: '0.8', changefreq: 'monthly' },
-  { path: '/family-intervention', priority: '0.8', changefreq: 'monthly' },
-  { path: '/treatment-planning', priority: '0.8', changefreq: 'monthly' },
-  { path: '/aftercare-guidance', priority: '0.8', changefreq: 'monthly' },
-  { path: '/crisis-support', priority: '0.8', changefreq: 'monthly' },
   { path: '/interventionist', priority: '0.8', changefreq: 'monthly' },
+  { path: '/family-intervention', priority: '0.9', changefreq: 'monthly' },
+  { path: '/crisis-support', priority: '0.9', changefreq: 'monthly' },
+  { path: '/treatment-planning', priority: '0.9', changefreq: 'monthly' },
+  { path: '/aftercare-guidance', priority: '0.9', changefreq: 'monthly' },
+  { path: '/how-intervention-works', priority: '0.9', changefreq: 'monthly' },
+  { path: '/when-is-it-time-for-an-intervention', priority: '0.8', changefreq: 'monthly' },
+  { path: '/what-if-they-refuse-treatment', priority: '0.8', changefreq: 'monthly' },
+  { path: '/what-makes-matt-different', priority: '0.8', changefreq: 'monthly' },
+  { path: '/intervention-cost', priority: '0.8', changefreq: 'monthly' },
+  { path: '/before-you-call', priority: '0.8', changefreq: 'monthly' },
   { path: '/testimonials', priority: '0.7', changefreq: 'monthly' },
-  { path: '/assessment', priority: '0.8', changefreq: 'monthly' },
-  { path: '/self-assessment', priority: '0.7', changefreq: 'monthly' },
+  { path: '/contact', priority: '0.8', changefreq: 'monthly' },
+  { path: '/party-wreckers-podcast', priority: '0.7', changefreq: 'weekly' },
+  { path: '/blog', priority: '0.8', changefreq: 'weekly' },
+  { path: '/assessment', priority: '0.6', changefreq: 'monthly' },
+  { path: '/self-assessment', priority: '0.6', changefreq: 'monthly' },
   { path: '/substance-guide', priority: '0.7', changefreq: 'monthly' },
-  { path: '/intervention-faq', priority: '0.7', changefreq: 'monthly' },
   { path: '/intervention-toolkit', priority: '0.7', changefreq: 'monthly' },
+  { path: '/intervention-faq', priority: '0.7', changefreq: 'monthly' },
   { path: '/service-areas', priority: '0.7', changefreq: 'monthly' },
-  { path: '/party-wreckers-podcast', priority: '0.6', changefreq: 'weekly' },
   { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
   { path: '/terms-of-service', priority: '0.3', changefreq: 'yearly' },
   { path: '/hipaa-compliance', priority: '0.3', changefreq: 'yearly' },
-  // US States
   { path: '/alabama', priority: '0.6', changefreq: 'monthly' },
   { path: '/alaska', priority: '0.6', changefreq: 'monthly' },
   { path: '/arizona', priority: '0.6', changefreq: 'monthly' },
@@ -79,42 +81,87 @@ const STATIC_PAGES = [
   { path: '/west-virginia', priority: '0.6', changefreq: 'monthly' },
   { path: '/wisconsin', priority: '0.6', changefreq: 'monthly' },
   { path: '/wyoming', priority: '0.6', changefreq: 'monthly' },
-  // Cities
-  { path: '/anchorage-alaska', priority: '0.6', changefreq: 'monthly' },
-  { path: '/austin-texas', priority: '0.6', changefreq: 'monthly' },
-  { path: '/baltimore-maryland', priority: '0.6', changefreq: 'monthly' },
-  { path: '/bend-oregon', priority: '0.6', changefreq: 'monthly' },
-  { path: '/boise-idaho', priority: '0.6', changefreq: 'monthly' },
-  { path: '/chicago-illinois', priority: '0.6', changefreq: 'monthly' },
-  { path: '/columbus-ohio', priority: '0.6', changefreq: 'monthly' },
-  { path: '/dallas-texas', priority: '0.6', changefreq: 'monthly' },
-  { path: '/denver-colorado', priority: '0.6', changefreq: 'monthly' },
-  { path: '/detroit-michigan', priority: '0.6', changefreq: 'monthly' },
-  { path: '/eugene-oregon', priority: '0.6', changefreq: 'monthly' },
-  { path: '/houston-texas', priority: '0.6', changefreq: 'monthly' },
-  { path: '/indianapolis-indiana', priority: '0.6', changefreq: 'monthly' },
-  { path: '/kansas-city-missouri', priority: '0.6', changefreq: 'monthly' },
-  { path: '/knoxville-tennessee', priority: '0.6', changefreq: 'monthly' },
-  { path: '/las-vegas-nevada', priority: '0.6', changefreq: 'monthly' },
-  { path: '/los-angeles-california', priority: '0.6', changefreq: 'monthly' },
-  { path: '/miami-florida', priority: '0.6', changefreq: 'monthly' },
-  { path: '/minneapolis-minnesota', priority: '0.6', changefreq: 'monthly' },
-  { path: '/nashville-tennessee', priority: '0.6', changefreq: 'monthly' },
-  { path: '/new-orleans-louisiana', priority: '0.6', changefreq: 'monthly' },
-  { path: '/oklahoma-city-oklahoma', priority: '0.6', changefreq: 'monthly' },
-  { path: '/omaha-nebraska', priority: '0.6', changefreq: 'monthly' },
-  { path: '/philadelphia-pennsylvania', priority: '0.6', changefreq: 'monthly' },
-  { path: '/phoenix-arizona', priority: '0.6', changefreq: 'monthly' },
   { path: '/portland-oregon', priority: '0.7', changefreq: 'monthly' },
-  { path: '/salt-lake-city-utah', priority: '0.6', changefreq: 'monthly' },
-  { path: '/san-francisco-california', priority: '0.6', changefreq: 'monthly' },
   { path: '/seattle-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/eugene-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/san-francisco-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/los-angeles-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/sacramento-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/oakland-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/san-jose-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/long-beach-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/pasadena-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/orange-county-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/anaheim-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/irvine-california', priority: '0.6', changefreq: 'monthly' },
+  { path: '/phoenix-arizona', priority: '0.6', changefreq: 'monthly' },
+  { path: '/austin-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/dallas-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/las-vegas-nevada', priority: '0.6', changefreq: 'monthly' },
+  { path: '/salt-lake-city-utah', priority: '0.6', changefreq: 'monthly' },
+  { path: '/boise-idaho', priority: '0.6', changefreq: 'monthly' },
+  { path: '/nampa-idaho', priority: '0.6', changefreq: 'monthly' },
+  { path: '/meridian-idaho', priority: '0.6', changefreq: 'monthly' },
+  { path: '/provo-utah', priority: '0.6', changefreq: 'monthly' },
+  { path: '/ogden-utah', priority: '0.6', changefreq: 'monthly' },
+  { path: '/henderson-nevada', priority: '0.6', changefreq: 'monthly' },
+  { path: '/reno-nevada', priority: '0.6', changefreq: 'monthly' },
+  { path: '/tucson-arizona', priority: '0.6', changefreq: 'monthly' },
+  { path: '/scottsdale-arizona', priority: '0.6', changefreq: 'monthly' },
+  { path: '/mesa-arizona', priority: '0.6', changefreq: 'monthly' },
+  { path: '/chandler-arizona', priority: '0.6', changefreq: 'monthly' },
+  { path: '/denver-colorado', priority: '0.6', changefreq: 'monthly' },
+  { path: '/colorado-springs-colorado', priority: '0.6', changefreq: 'monthly' },
+  { path: '/aurora-colorado', priority: '0.6', changefreq: 'monthly' },
+  { path: '/fort-collins-colorado', priority: '0.6', changefreq: 'monthly' },
+  { path: '/albuquerque-new-mexico', priority: '0.6', changefreq: 'monthly' },
+  { path: '/santa-fe-new-mexico', priority: '0.6', changefreq: 'monthly' },
+  { path: '/las-cruces-new-mexico', priority: '0.6', changefreq: 'monthly' },
+  { path: '/san-antonio-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/fort-worth-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/el-paso-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/plano-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/chicago-illinois', priority: '0.6', changefreq: 'monthly' },
+  { path: '/minneapolis-minnesota', priority: '0.6', changefreq: 'monthly' },
+  { path: '/kansas-city-missouri', priority: '0.6', changefreq: 'monthly' },
+  { path: '/houston-texas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/new-orleans-louisiana', priority: '0.6', changefreq: 'monthly' },
+  { path: '/detroit-michigan', priority: '0.6', changefreq: 'monthly' },
+  { path: '/miami-florida', priority: '0.6', changefreq: 'monthly' },
+  { path: '/nashville-tennessee', priority: '0.6', changefreq: 'monthly' },
+  { path: '/indianapolis-indiana', priority: '0.6', changefreq: 'monthly' },
   { path: '/spokane-washington', priority: '0.6', changefreq: 'monthly' },
-  // Canadian Provinces
-  { path: '/ontario', priority: '0.5', changefreq: 'monthly' },
-  { path: '/quebec', priority: '0.5', changefreq: 'monthly' },
+  { path: '/tacoma-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/bellevue-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/everett-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/olympia-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/yakima-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/vancouver-washington', priority: '0.6', changefreq: 'monthly' },
+  { path: '/bend-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/salem-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/medford-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/hillsboro-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/beaverton-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/gresham-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/corvallis-oregon', priority: '0.6', changefreq: 'monthly' },
+  { path: '/philadelphia-pennsylvania', priority: '0.6', changefreq: 'monthly' },
+  { path: '/baltimore-maryland', priority: '0.6', changefreq: 'monthly' },
+  { path: '/anchorage-alaska', priority: '0.6', changefreq: 'monthly' },
+  { path: '/knoxville-tennessee', priority: '0.6', changefreq: 'monthly' },
+  { path: '/columbus-ohio', priority: '0.6', changefreq: 'monthly' },
+  { path: '/omaha-nebraska', priority: '0.6', changefreq: 'monthly' },
+  { path: '/oklahoma-city-oklahoma', priority: '0.6', changefreq: 'monthly' },
+  { path: '/oahu-hawaii', priority: '0.6', changefreq: 'monthly' },
+  { path: '/maui-hawaii', priority: '0.6', changefreq: 'monthly' },
+  { path: '/big-island-hawaii', priority: '0.6', changefreq: 'monthly' },
+  { path: '/kauai-hawaii', priority: '0.6', changefreq: 'monthly' },
+  { path: '/wichita-kansas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/overland-park-kansas', priority: '0.6', changefreq: 'monthly' },
+  { path: '/topeka-kansas', priority: '0.6', changefreq: 'monthly' },
   { path: '/british-columbia', priority: '0.5', changefreq: 'monthly' },
   { path: '/alberta', priority: '0.5', changefreq: 'monthly' },
+  { path: '/ontario', priority: '0.5', changefreq: 'monthly' },
+  { path: '/quebec', priority: '0.5', changefreq: 'monthly' },
   { path: '/manitoba', priority: '0.5', changefreq: 'monthly' },
   { path: '/saskatchewan', priority: '0.5', changefreq: 'monthly' },
   { path: '/nova-scotia', priority: '0.5', changefreq: 'monthly' },
@@ -135,17 +182,13 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch all published blog posts
     const { data: posts, error } = await supabase
       .from('blog_posts')
       .select('slug, updated_at, published_at')
       .eq('published', true)
       .order('published_at', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching blog posts:', error);
-      throw error;
-    }
+    if (error) throw error;
 
     const today = new Date().toISOString().split('T')[0];
 
@@ -153,7 +196,6 @@ Deno.serve(async (req) => {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `;
 
-    // Add static pages
     for (const page of STATIC_PAGES) {
       xml += `  <url>
     <loc>${SITE_URL}${page.path}</loc>
@@ -164,7 +206,6 @@ Deno.serve(async (req) => {
 `;
     }
 
-    // Add blog posts dynamically
     if (posts) {
       for (const post of posts) {
         const lastmod = post.updated_at

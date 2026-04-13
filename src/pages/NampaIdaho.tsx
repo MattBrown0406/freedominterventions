@@ -195,7 +195,7 @@ const NampaIdaho = () => {
                     Key local resources in Canyon County include Port of Hope (residential treatment), El-Ada Community Action (supportive services), and Canyon County Behavioral Health (crisis and outpatient services). When local capacity is limited, we connect families with treatment throughout Idaho and the Pacific Northwest.
                   </p>
                   <p>
-                    Don't wait for the next crisis. Professional intervention can be the turning point your family needs to break the cycle of addiction.
+                    If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Professional intervention can be the turning point your family needs to break the cycle of addiction.
                   </p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const NampaIdaho = () => {
               Get Help for Your Canyon County Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Canyon County including Nampa, Caldwell, Middleton, Wilder, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Canyon County including Nampa, Caldwell, Middleton, Wilder, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

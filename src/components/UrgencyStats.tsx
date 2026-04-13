@@ -3,9 +3,9 @@ import { TrendingUp, Clock, Award } from "lucide-react";
 const stats = [
   {
     icon: TrendingUp,
-    stat: "90%+",
-    label: "Success Rate",
-    description: "Professional interventions result in treatment acceptance over 90% of the time.",
+    stat: "Prepared Families",
+    label: "Better Outcomes",
+    description: "Significantly higher success when families are prepared.",
   },
   {
     icon: Clock,
@@ -17,7 +17,7 @@ const stats = [
     icon: Award,
     stat: "20+ Years",
     label: "Experience",
-    description: "Over two decades helping families navigate the path to recovery.",
+    description: "Over two decades helping families navigate a way forward.",
   },
 ];
 
@@ -28,7 +28,7 @@ const UrgencyStats = () => {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-3">
-            Why Act Now?
+            Why Earlier Planning Helps
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Waiting rarely makes things easier. Here's what the evidence shows about professional intervention.

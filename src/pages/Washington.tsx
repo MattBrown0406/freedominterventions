@@ -88,7 +88,7 @@ const Washington = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">$2.54B</div>
@@ -167,7 +167,7 @@ const Washington = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Interventions elevate uptake 80-90%, with follow-up curbing relapse in resource-scarce settings. Washington's context amplifies value: where poly-substance admissions dominate (e.g., 10,960 alcohol+drug in 2010), pros dismantle enabling, boosting completion. Families regain stability—ending codependency—while data shows social support halves risks.
+                Interventions elevate uptake significantly higher, with follow-up curbing relapse in resource-scarce settings. Washington's context amplifies value: where poly-substance admissions dominate (e.g., 10,960 alcohol+drug in 2010), pros dismantle enabling, boosting completion. Families regain stability—ending codependency—while data shows social support halves risks.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Local wins: Crestview's community ties triple referrals; statewide, interventions adapt CRAFT for 64% superiority over confrontation.

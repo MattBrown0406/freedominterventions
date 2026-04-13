@@ -5,25 +5,25 @@ const services = [
   {
     icon: Users,
     title: "Family Intervention",
-    description: "We guide families through the intervention process with compassion, helping loved ones take the first step toward recovery while defining and implementing important boundaries.",
+    description: "Matt guides families through the intervention process, helping loved ones take the next step toward treatment while defining and implementing real boundaries.",
     link: "/family-intervention",
   },
   {
     icon: Heart,
     title: "Crisis Support",
-    description: "You're never alone. Our team is ready to support you when you need us most.",
+    description: "When the situation is escalating fast, Matt helps families slow the chaos down and decide what to do next.",
     link: "/crisis-support",
   },
   {
     icon: BookOpen,
     title: "Treatment Planning",
-    description: "We help identify the right treatment program and coordinate admissions to ensure a smooth transition to care.",
+    description: "Matt helps identify the right treatment fit, weigh insurance and geography, and prepare for admission before the window closes.",
     link: "/treatment-planning",
   },
   {
     icon: HeartHandshake,
     title: "Aftercare Guidance",
-    description: "Recovery doesn't end at treatment. We work with the treatment provider to identify and implement post-treatment resources and services for lasting sobriety.",
+    description: "Recovery does not end at treatment. Matt helps families prepare for discharge, relapse contingencies, and the changes needed after treatment begins.",
     link: "/aftercare-guidance",
   },
 ];
@@ -47,7 +47,7 @@ const Services = () => {
             Our Services
           </h2>
           <p className="mt-4 text-muted-foreground text-base md:text-lg">
-            Comprehensive intervention services designed to help your loved one find their path to recovery.
+            Direct services designed to help your loved one move toward treatment and help your family stop operating in chaos.
           </p>
         </div>
 

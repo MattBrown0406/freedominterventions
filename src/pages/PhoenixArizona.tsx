@@ -197,7 +197,7 @@ const PhoenixArizona = () => {
                     Despite the grim statistics, recovery flourishes in Phoenix. The Valley has a growing recovery community, excellent treatment facilities, and the sunshine that supports physical and mental wellness. Many people come to Arizona specifically for recovery—the climate, the outdoor opportunities, and the fresh-start mentality all support healing.
                   </p>
                   <p>
-                    But your loved one needs to get there first. Professional intervention breaks through the denial and manipulation that keep people trapped in addiction. If your family is struggling, don't wait for the crisis to become a catastrophe.
+                    But your loved one needs to get there first. Professional intervention breaks through the denial and manipulation that keep people trapped in addiction. If your family is struggling, the sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>

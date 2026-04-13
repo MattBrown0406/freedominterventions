@@ -92,7 +92,7 @@ const Saskatchewan = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional intervention is not about forcing someone into treatment — it's about creating the conditions where they can make the choice to accept help. An interventionist guides the family through a structured process that removes barriers, addresses objections, and presents a clear path to recovery.
+                Professional intervention is not about forcing someone into treatment — it's about creating the conditions where they can make the choice to accept help. An interventionist guides the family through a structured process that removes barriers, addresses objections, and presents a clear way forward.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 For Saskatchewan families, this often means coordinating treatment options beyond the province's borders, where specialized programs can provide immediate admission and the specific level of care needed. A professional interventionist manages every logistical detail, from securing a treatment bed to arranging travel.
@@ -122,7 +122,7 @@ const Saskatchewan = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Don't wait for a crisis to escalate further. Saskatchewan families can access professional intervention support 24/7. A free, confidential consultation helps you understand your options and develop a plan tailored to your family's unique situation.
+                If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Saskatchewan families can access professional intervention support and a confidential consultation to develop a plan tailored to their situation.
               </p>
             </div>
 

@@ -209,7 +209,7 @@ const GreshamOregon = () => {
               Get Help for Your Gresham Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait another day. Our free, confidential consultation will help you create an action plan for your loved one. We serve all of Multnomah County's east metro area including Gresham, Troutdale, Wood Village, Fairview, and surrounding communities.
+              The sooner families have a clear plan, the more options they have. Our free, confidential consultation will help you create an action plan for your loved one. We serve all of Multnomah County's east metro area including Gresham, Troutdale, Wood Village, Fairview, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

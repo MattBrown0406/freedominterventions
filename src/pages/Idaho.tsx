@@ -54,7 +54,7 @@ const Idaho = () => {
             Idaho's Drug Crisis: How Interventionists Help Families Get Treatment
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mb-8">
-            Idaho has a growing drug and alcohol problem. In 2023, there were 386 overdose deaths—20.5 deaths for every 100,000 people, up 53% since 2013. Professional interventionists achieve 80-90% success in securing treatment entry for families in crisis.
+            Idaho has a growing drug and alcohol problem. In 2023, there were 386 overdose deaths—20.5 deaths for every 100,000 people, up 53% since 2013. Professional interventionists achieve significantly higher success in securing treatment entry for families in crisis.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg" className="text-lg">
@@ -94,8 +94,8 @@ const Idaho = () => {
             </div>
             <div className="text-center p-6 rounded-lg bg-accent/50 border border-accent">
               <Heart className="h-8 w-8 text-accent-foreground mx-auto mb-3" />
-              <div className="text-3xl font-bold text-foreground mb-2">80-90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-3xl font-bold text-foreground mb-2">significantly higher</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
           </div>
         </div>
@@ -131,10 +131,10 @@ const Idaho = () => {
               </h2>
               <div className="prose prose-lg text-muted-foreground space-y-4">
                 <p>
-                  Drugs tear families apart—from Boise's fentanyl crisis to rural meth epidemics. DUIs are up 12% in tests (90% involve alcohol), alongside overdoses and teen suicides (5.1%). Families often enable unwittingly—like paying bail repeatedly. Home intervention efforts fail 70-80% of the time due to denial and manipulation.
+                  Drugs tear families apart—from Boise's fentanyl crisis to rural meth epidemics. DUIs are up 12% in tests (90% involve alcohol), alongside overdoses and teen suicides (5.1%). Families often enable unwittingly—like paying bail repeatedly. Home intervention efforts fail 70-more often when families are prepared due to denial and manipulation.
                 </p>
                 <p>
-                  90% of those needing treatment don't receive it. Homes break apart. 1.86% of all deaths are drug-related. Alcohol crashes claim many lives. Trained interventionists unite families for high success rates, with plans that address meth-fentanyl combinations, teen marijuana use, alcohol binge patterns, and repeat DUI offenders.
+                  90% of those needing treatment don't receive it. Homes break apart. 1.86% of all deaths are drug-related. Alcohol crashes claim many lives. Trained interventionists unite families for high outcomes, with plans that address meth-fentanyl combinations, teen marijuana use, alcohol binge patterns, and repeat DUI offenders.
                 </p>
               </div>
             </div>
@@ -164,7 +164,7 @@ const Idaho = () => {
               </h2>
               <div className="prose prose-lg text-muted-foreground space-y-4">
                 <p>
-                  Professional interventions raise treatment entry rates to 80-90% and cut relapse in hard-to-reach rural areas. Idaho especially needs this expertise: mixed substance tests (alcohol plus meth being most common) require professionals who can dismantle enabling patterns effectively.
+                  When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. Idaho especially needs this expertise: mixed substance tests (alcohol plus meth being most common) require professionals who can dismantle enabling patterns effectively.
                 </p>
                 <p>
                   Interventionists help bridge the 170,000-person treatment gap with high acceptance rates. Families repair relationships and end codependency cycles. Research shows social support networks cut relapse risk in half. Local treatment centers see 3x more referrals with properly structured intervention plans.
@@ -182,7 +182,7 @@ const Idaho = () => {
                   Remote communities, stigma, teen use (6.76% monthly), and DUIs (10,000+ annually) create barriers to treatment access. Overdoses have increased 54% since 2013. Professional intervention saves both money and families by preventing the devastating costs of continued addiction.
                 </p>
                 <p>
-                  2025 lab testing numbers remain high, but law enforcement collaboration is increasing. Families who act now can access growing resources before another crisis occurs.
+                  2025 lab testing numbers remain high, but law enforcement collaboration is increasing. Families who move toward a clear plan early often have more options before the next crisis occurs.
                 </p>
               </div>
             </div>
@@ -234,7 +234,7 @@ const Idaho = () => {
                   386 overdoses, 10,000 DUIs, and record lab test numbers—fentanyl, meth, and alcohol are devastating Idaho families. Professional interventionists create recovery pathways that work. They can help fill the 170,000-person treatment gap using state and local resources.
                 </p>
                 <p>
-                  Don't wait for another DUI arrest or tragic loss. Call an expert now to assess your situation, create a plan, and save your loved one. Start today—hope begins with one step.
+                  If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Talk with an expert, assess your situation, and build a clear plan for your loved one.
                 </p>
               </div>
             </div>
@@ -247,10 +247,10 @@ const Idaho = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your Idaho Family
+            Schedule Free Consultation for Your Idaho Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention achieves 80-90% success rates. Don't wait for another crisis—reach out today for a confidential consultation.
+            When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="text-lg">

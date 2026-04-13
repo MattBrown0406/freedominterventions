@@ -11,7 +11,7 @@ const InterventionFAQPage = () => {
   const faqItems = [
     {
       question: "What is an addiction intervention?",
-      answer: "An intervention is a professionally guided process where family and friends express concern about a loved one's addiction and encourage them to accept treatment."
+      answer: "An intervention is a professionally guided process where family and friends express concern about a loved one's addiction and encourage them to accept treatment. Matt's approach starts from the belief that addiction is a medical illness with a spiritual dimension, which means treatment has to address both the clinical reality and how the person is living."
     },
     {
       question: "When should we consider an intervention?",
@@ -19,7 +19,7 @@ const InterventionFAQPage = () => {
     },
     {
       question: "How successful are interventions?",
-      answer: "Professional interventions have a success rate of 80-90% in getting the person to accept treatment when conducted properly."
+      answer: "When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success."
     },
     {
       question: "How long does an intervention take?",
@@ -31,7 +31,7 @@ const InterventionFAQPage = () => {
     },
     {
       question: "Do I need a professional interventionist?",
-      answer: "While not required, professional interventionists significantly increase success rates by managing emotions, preventing manipulation, and ensuring treatment is arranged."
+      answer: "While not required, professional interventionists often improve the process by managing emotions, preventing manipulation, and ensuring treatment is arranged."
     }
   ];
 
@@ -72,7 +72,19 @@ const InterventionFAQPage = () => {
           </div>
         </section>
 
-        <InterventionFAQ />
+        <section className="py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Intervention FAQ
+              </h1>
+              <p className="text-muted-foreground mb-8">
+                Common questions from families considering an intervention.
+              </p>
+              <InterventionFAQ />
+            </div>
+          </div>
+        </section>
       </main>
       
       <Footer />

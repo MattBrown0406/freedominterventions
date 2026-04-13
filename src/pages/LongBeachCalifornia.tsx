@@ -209,7 +209,7 @@ const LongBeachCalifornia = () => {
               Get Help for Your Long Beach Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve Long Beach and all of Los Angeles County including Compton, Lakewood, Carson, Torrance, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve Long Beach and all of Los Angeles County including Compton, Lakewood, Carson, Torrance, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

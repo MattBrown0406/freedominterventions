@@ -37,7 +37,7 @@ const Testimonials = () => {
       rating: 5,
     },
     {
-      quote: "Matt Brown has saved many lives. He is professional, knowledgeable, and truly cares about the people and families he works with. Matt stands firm in his recovery and uses his experience to help others find hope and healing. I would recommend Matt Brown to any family seeking an interventionist.",
+      quote: "Matt Brown has saved many lives. He is professional, knowledgeable, and truly cares about the people and families he works with. Matt stands firm in his recovery and uses his experience to help others find clarity and a real plan. I would recommend Matt Brown to any family seeking an interventionist.",
       author: "Kalei McDonald",
       location: "Substance Abuse Coordinator",
       rating: 5,
@@ -144,7 +144,7 @@ const Testimonials = () => {
         <section className="relative h-[30vh] md:h-[35vh] overflow-hidden">
           <OptimizedImage
             src={testimonialsBanner}
-            alt="Families sharing their hope and healing testimonials"
+            alt="Families sharing their intervention success stories"
             className="w-full h-full"
             priority={true}
           />
@@ -152,10 +152,10 @@ const Testimonials = () => {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-6">
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-3">
-                Stories of Hope
+                Stories of Change
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                Real families share their journey from crisis to recovery
+                Real families share how they moved from crisis to treatment and change
               </p>
             </div>
           </div>
@@ -201,7 +201,7 @@ const Testimonials = () => {
               Your Family's Story Can Change Too
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-              Every journey to recovery begins with a single step. Let us help your family find hope and healing.
+              Every journey to recovery begins with a single step. Let us help your family find clarity and a real plan.
             </p>
             <a
               href="/#booking"

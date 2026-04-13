@@ -192,7 +192,7 @@ const SpokaneWashington = () => {
                     Despite the challenging statistics, recovery is happening every day in Spokane. We've helped families throughout the Inland Northwest guide their loved ones into treatment and watched remarkable transformations unfold.
                   </p>
                   <p>
-                    The key is taking action before tragedy strikes. With fentanyl present in nearly every street drug, the risk of fatal overdose has never been higher. If someone you love in Spokane is struggling with addiction, don't wait for rock bottom—it may be too late.
+                    The key is taking action before tragedy strikes. With fentanyl present in nearly every street drug, the risk of fatal overdose has never been higher. If someone you love in Spokane is struggling with addiction, The sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const SpokaneWashington = () => {
               Get Help for Your Spokane Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Spokane County including Spokane Valley, Liberty Lake, Cheney, Medical Lake, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Spokane County including Spokane Valley, Liberty Lake, Cheney, Medical Lake, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

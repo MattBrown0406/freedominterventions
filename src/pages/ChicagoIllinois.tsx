@@ -197,7 +197,7 @@ const ChicagoIllinois = () => {
                     Chicago has a strong recovery community with meetings in every neighborhood. The city's neighborhood-focused culture creates natural support systems for people in recovery. Many find that the same family bonds that complicated their addiction become sources of strength in sobriety.
                   </p>
                   <p>
-                    The fentanyl crisis means every day of active addiction carries extreme risk. Professional intervention can save your loved one's life. Don't wait for another overdose or arrest—act now.
+                    The fentanyl crisis means every day of active addiction carries extreme risk. Professional intervention can help your family create a real opening for treatment. The sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>

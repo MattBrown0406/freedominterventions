@@ -56,7 +56,7 @@ const Wisconsin = () => {
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <p className="text-sm text-muted-foreground">Intervention Success Rate</p>
+              <p className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</p>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">350K+</div>

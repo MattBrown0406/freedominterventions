@@ -26,6 +26,8 @@ const Hero = () => {
               className="h-[7rem] md:h-[9rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg object-contain" 
               loading="eager"
               fetchPriority="high"
+              width={266}
+              height={295}
             />
           </div>
 
@@ -35,8 +37,8 @@ const Hero = () => {
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-semibold text-foreground leading-tight text-balance animate-fade-up"
             style={{ animationDelay: "0.2s" }}
           >
-            Guiding Families to
-            <span className="block text-primary">Hope & Recovery</span>
+            Matt Brown, 
+            <span className="block text-primary">Certified Intervention Professional</span>
           </h1>
           
           {/* Subheadline */}
@@ -44,7 +46,7 @@ const Hero = () => {
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-up"
             style={{ animationDelay: "0.3s" }}
           >
-            When addiction takes hold, intervention offers a lifeline. Our compassionate team helps families navigate the path to recovery with dignity and care.
+            Helping families get loved ones into treatment for over 20 years. Matt works directly with families to build a clear plan, align everyone involved, and move their loved one toward treatment.
           </p>
           
           {/* Emergency Phone Number - Prominent for crisis situations */}
@@ -77,7 +79,7 @@ const Hero = () => {
             <a href="#booking">
               <Button variant="hero" size="xl">
                 <Calendar className="w-5 h-5" />
-                Book a Call Now
+                Schedule Free Consultation
               </Button>
             </a>
             <a href="#services">
@@ -95,8 +97,8 @@ const Hero = () => {
           >
             {[
               { icon: "✓", label: "Certified Intervention Professional (CIP)" },
-              { icon: "✓", label: "1,000+ Families Helped" },
               { icon: "✓", label: "20+ Years Experience" },
+              { icon: "✓", label: "Direct Family Guidance Into Treatment" },
             ].map((badge) => (
               <span
                 key={badge.label}

@@ -32,6 +32,12 @@ import TrailingSlashRedirect from "./components/TrailingSlashRedirect";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import HipaaCompliance from "./pages/HipaaCompliance";
+import HowInterventionWorks from "./pages/HowInterventionWorks";
+import WhenIsItTime from "./pages/WhenIsItTime";
+import WhatIfTheyRefuse from "./pages/WhatIfTheyRefuse";
+import WhatMakesMattDifferent from "./pages/WhatMakesMattDifferent";
+import InterventionCost from "./pages/InterventionCost";
+import BeforeYouCall from "./pages/BeforeYouCall";
 
 // US States
 import Alabama from "./pages/Alabama";
@@ -212,6 +218,12 @@ const App = () => (
           <Route path="/intervention-toolkit" element={<InterventionToolkit />} />
           <Route path="/intervention-faq" element={<InterventionFAQPage />} />
           <Route path="/service-areas" element={<ServiceAreas />} />
+          <Route path="/how-intervention-works" element={<HowInterventionWorks />} />
+          <Route path="/when-is-it-time-for-an-intervention" element={<WhenIsItTime />} />
+          <Route path="/what-if-they-refuse-treatment" element={<WhatIfTheyRefuse />} />
+          <Route path="/what-makes-matt-different" element={<WhatMakesMattDifferent />} />
+          <Route path="/intervention-cost" element={<InterventionCost />} />
+          <Route path="/before-you-call" element={<BeforeYouCall />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/hipaa-compliance" element={<HipaaCompliance />} />

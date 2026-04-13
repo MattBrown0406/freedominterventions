@@ -192,7 +192,7 @@ const SacramentoCalifornia = () => {
                     Recovery is possible, even in the midst of Sacramento's addiction crisis. We've helped families throughout the region—from Roseville to Davis, Citrus Heights to Elk Grove—guide their loved ones into treatment and witnessed life-changing transformations.
                   </p>
                   <p>
-                    Don't wait for the next overdose or crisis. A professional intervention can be the turning point that saves your loved one's life and restores your family. The time to act is now.
+                    If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. A professional intervention can be the turning point that saves your loved one's life and restores your family. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const SacramentoCalifornia = () => {
               Get Help for Your Sacramento Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Sacramento County including Sacramento, Elk Grove, Roseville, Folsom, Citrus Heights, Rancho Cordova, and Davis.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Sacramento County including Sacramento, Elk Grove, Roseville, Folsom, Citrus Heights, Rancho Cordova, and Davis.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

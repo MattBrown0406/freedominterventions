@@ -131,7 +131,7 @@ const OklahomaCityOklahoma = () => {
                     Oklahoma's strong family values and faith-based communities make watching a loved one struggle with addiction particularly painful. Parents in neighborhoods from Nichols Hills to Moore watch their children transform from promising students to unrecognizable addicts. Working families in the oil and gas industry lose colleagues to overdoses.
                   </p>
                   <p>
-                    The stigma of addiction in tight-knit Oklahoma communities often prevents families from seeking help. Many believe their loved one simply lacks faith or willpower, not understanding that addiction is a brain disease requiring medical intervention.
+                    The stigma of addiction in tight-knit Oklahoma communities often prevents families from seeking help. Many believe their loved one simply lacks faith or willpower, not understanding that addiction is a medical illness with a spiritual dimension that requires clinical treatment and real change in how a person lives.
                   </p>
                   <p>
                     Whether your loved one started with prescription pills after an oil field injury or discovered meth in rural Oklahoma communities, Freedom Interventions understands the unique challenges facing Oklahoma families.
@@ -163,7 +163,7 @@ const OklahomaCityOklahoma = () => {
                     <strong className="text-foreground">Experienced Guidance:</strong> We've helped families in every stage of addiction crisis, from early intervention to emergency situations. Our approach is tailored to your family's specific circumstances and your loved one's unique needs.
                   </p>
                   <p>
-                    <strong className="text-foreground">Treatment Placement:</strong> We connect Oklahoma City families with appropriate treatment facilities throughout Oklahoma and nationwide—programs equipped to handle fentanyl and meth addiction with high success rates.
+                    <strong className="text-foreground">Treatment Placement:</strong> We connect Oklahoma City families with appropriate treatment facilities throughout Oklahoma and nationwide—programs equipped to handle fentanyl and meth addiction with high outcomes.
                   </p>
                   <p>
                     <strong className="text-foreground">Family Healing:</strong> We help the whole family recover, ending enabling patterns, establishing healthy boundaries, and supporting everyone through the recovery journey.
@@ -192,7 +192,7 @@ const OklahomaCityOklahoma = () => {
                     Despite the devastating statistics, recovery happens every day in Oklahoma. We've helped families throughout the OKC metro guide their loved ones from the depths of addiction into treatment and lasting recovery. Your family's story can change too.
                   </p>
                   <p>
-                    Fentanyl has made every day without intervention a gamble with your loved one's life. Don't wait for rock bottom—it may be too late. If someone you love in Oklahoma City is struggling with addiction, the time to act is now.
+                    Fentanyl has made every day without intervention a gamble with your loved one's life. The sooner families have a clear plan, the more options they have. If someone you love in Oklahoma City is struggling with addiction, If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const OklahomaCityOklahoma = () => {
               Get Help for Your Oklahoma City Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Oklahoma City and central Oklahoma including Edmond, Norman, Moore, Midwest City, Yukon, Tulsa, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Oklahoma City and central Oklahoma including Edmond, Norman, Moore, Midwest City, Yukon, Tulsa, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

@@ -192,7 +192,7 @@ const FortCollinsColorado = () => {
                     Recovery is possible, even for young adults who are convinced they have no problem. We've helped families throughout Northern Colorado—from Fort Collins to Loveland, Greeley to Longmont—guide their loved ones into treatment and watched lives transform.
                   </p>
                   <p>
-                    The window for intervention matters. The earlier families act, the better the outcomes. Don't wait for a DUI, an overdose, or a dropout notice. Call for a free consultation today.
+                    The window for intervention matters. The earlier families act, the better the outcomes. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const FortCollinsColorado = () => {
               Get Help for Your Fort Collins Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Larimer County including Fort Collins, Loveland, Berthoud, and Estes Park.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Larimer County including Fort Collins, Loveland, Berthoud, and Estes Park.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

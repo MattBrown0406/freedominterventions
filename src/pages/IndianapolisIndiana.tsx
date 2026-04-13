@@ -192,7 +192,7 @@ const IndianapolisIndiana = () => {
                     Indianapolis has a growing recovery community with meetings throughout the metro, faith-based programs, and peer support networks. The same community bonds that define Hoosier life can become powerful supports for recovery.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries potentially fatal risk. Professional intervention can save your loved one's life and help your family begin healing.
+                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries potentially fatal risk. Professional intervention can help your loved one move toward treatment and help your family begin healing.
                   </p>
                 </div>
               </div>

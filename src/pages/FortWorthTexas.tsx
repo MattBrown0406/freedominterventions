@@ -192,7 +192,7 @@ const FortWorthTexas = () => {
                     Recovery is possible. We've helped families throughout Tarrant County—from the Near Southside to Aledo, from Haltom City to Burleson—guide their loved ones into treatment and watched real, lasting change happen.
                   </p>
                   <p>
-                    Fort Worth's toughness is an asset in recovery—when channeled right. Don't wait for the crisis to force your hand. Call today for a free, confidential consultation and take the first step toward getting your family back.
+                    Fort Worth's toughness is an asset in recovery when it is channeled well. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const FortWorthTexas = () => {
               Get Help for Your Fort Worth Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Tarrant County including Fort Worth, Arlington, Mansfield, Keller, Euless, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Tarrant County including Fort Worth, Arlington, Mansfield, Keller, Euless, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

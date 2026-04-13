@@ -48,7 +48,7 @@ const Kentucky = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">250K+</div>
@@ -110,7 +110,7 @@ const Kentucky = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                With Kentucky's devastating overdose rates, families cannot afford to wait. Professional intervention provides the best path to recovery.
+                With Kentucky's devastating overdose rates, families cannot afford to wait. Professional intervention provides the best way forward.
               </p>
             </div>
 

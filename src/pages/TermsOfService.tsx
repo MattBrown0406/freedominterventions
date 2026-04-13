@@ -79,7 +79,7 @@ const TermsOfService = () => {
                   <li>Intervention services complement but do not replace medical or psychiatric care</li>
                   <li>We do not diagnose mental health or substance use disorders</li>
                   <li>We do not prescribe medications or provide medical treatment</li>
-                  <li>We do not guarantee specific outcomes or recovery success rates</li>
+                  <li>We do not guarantee specific outcomes or recovery outcomes</li>
                   <li>Each situation is unique, and results may vary significantly</li>
                 </ul>
               </section>
@@ -120,7 +120,7 @@ const TermsOfService = () => {
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Provide accurate and complete information about your situation</li>
                   <li>Follow safety guidelines and recommendations</li>
-                  <li>Respect the professional boundaries of our staff</li>
+                  <li>Respect the professional boundaries of Matt and any coordinating providers</li>
                   <li>Maintain confidentiality of other participants in group sessions</li>
                   <li>Use our services lawfully and ethically</li>
                   <li>Notify us of any changes that may affect service delivery</li>

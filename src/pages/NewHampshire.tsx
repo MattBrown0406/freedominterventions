@@ -156,7 +156,7 @@ const NewHampshire = () => {
                   The intervention process begins with a thorough assessment, determining the appropriate level of care based on medical criteria. The interventionist then works with the family to prepare for the intervention itself—coaching family members on effective communication, establishing clear boundaries, and arranging treatment placement.
                 </p>
                 <p>
-                  When executed professionally, interventions achieve 80-90% treatment acceptance rates. The interventionist coordinates immediate transport to treatment and provides ongoing support to ensure successful transition into care.
+                  When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. The interventionist coordinates immediate transport to treatment and provides ongoing support to ensure successful transition into care.
                 </p>
               </div>
             </div>
@@ -228,10 +228,10 @@ const NewHampshire = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your New Hampshire Family
+            Schedule Free Consultation for Your New Hampshire Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to 80-90%. Reach out today for a confidential consultation.
+            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="text-lg">

@@ -139,7 +139,7 @@ const SanFranciscoCalifornia = () => {
                     The Bay Area's culture of innovation and disruption can make it difficult to recognize addiction as a medical condition requiring treatment. Families believe their brilliant, successful loved one can simply "choose" to stop—not understanding that addiction hijacks the brain's decision-making systems.
                   </p>
                   <p>
-                    From Marin County to San Jose, from Oakland to Palo Alto, Bay Area families need professional help to navigate the complex path to recovery.
+                    From Marin County to San Jose, from Oakland to Palo Alto, Bay Area families need professional help to navigate the complex way forward.
                   </p>
                 </div>
               </div>
@@ -197,7 +197,7 @@ const SanFranciscoCalifornia = () => {
                     Despite what the headlines suggest, recovery happens in San Francisco every day. The same resources, determination, and innovation that define the Bay Area can be channeled toward recovery. With professional intervention, families break through denial and open the door to treatment.
                   </p>
                   <p>
-                    But time is critical. Fentanyl has made every use potentially fatal. The margin for error is gone. If your loved one is struggling with addiction in the Bay Area, the time to act is now—before you become another statistic.
+                    But clarity matters. Fentanyl has made every use potentially fatal. The margin for error is gone. If your loved one is struggling with addiction in the Bay Area, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>

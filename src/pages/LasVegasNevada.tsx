@@ -168,7 +168,7 @@ const LasVegasNevada = () => {
                     <strong className="text-foreground">Multiple Addiction Expertise:</strong> Las Vegas addictions often intertwine—gambling, alcohol, and drugs together. We understand these complex patterns and address the full scope of addiction, not just one substance.
                   </p>
                   <p>
-                    <strong className="text-foreground">Treatment Away from Triggers:</strong> Sometimes the best path to recovery requires leaving Las Vegas. We have relationships with excellent treatment programs throughout the country and can help identify the right fit for sustained recovery.
+                    <strong className="text-foreground">Treatment Away from Triggers:</strong> Sometimes the best way forward requires leaving Las Vegas. We have relationships with excellent treatment programs throughout the country and can help identify the right fit for sustained recovery.
                   </p>
                   <p>
                     <strong className="text-foreground">24/7 Availability:</strong> Las Vegas never sleeps, and neither does addiction. We're available when crisis strikes, regardless of the hour.
@@ -197,7 +197,7 @@ const LasVegasNevada = () => {
                     People get sober in Las Vegas every day. The city has strong 12-step communities and growing treatment resources. For some, recovery means learning to live in Vegas without engaging in addictive behavior. For others, it means building a new life elsewhere. Professional intervention opens the door to both possibilities.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. The margin for error is gone. If your loved one is struggling with addiction in Las Vegas, don't wait for rock bottom—act now.
+                    The fentanyl crisis has raised the stakes. The margin for error is gone. If your loved one is struggling with addiction in Las Vegas, the sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>

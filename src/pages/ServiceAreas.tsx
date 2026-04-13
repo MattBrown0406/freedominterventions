@@ -108,7 +108,7 @@ const ServiceAreas = () => {
               </a>
               <Link to="/assessment">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  Free Assessment
+                  Schedule Free Consultation
                 </Button>
               </Link>
             </div>

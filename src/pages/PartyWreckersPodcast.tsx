@@ -5,7 +5,7 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Phone, Play, Clock, Calendar, Users} from "lucide-react";
-import partyWreckersLogo from "@/assets/party-wreckers-logo.png";
+import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
 
 import { Link } from "react-router-dom";
 interface Episode {
@@ -64,7 +64,7 @@ const PartyWreckersPodcast = () => {
       <SEOHead
         title="The Party Wreckers Podcast"
         description="Listen to The Party Wreckers Podcast - candid conversations about addiction, recovery, and intervention from the team at Freedom Interventions."
-        canonical="https://freedominterventions.com/podcast"
+        canonical="https://freedominterventions.com/party-wreckers-podcast"
         keywords="addiction podcast, recovery podcast, intervention podcast, Party Wreckers, substance abuse podcast"
       />
       <OrganizationSchema />
@@ -79,6 +79,8 @@ const PartyWreckersPodcast = () => {
               src={partyWreckersLogo} 
               alt="The Party Wreckers Podcast" 
               className="w-64 md:w-80 mx-auto mb-8"
+              width={320}
+              height={320}
             />
             <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
               The Party Wreckers Podcast
@@ -99,7 +101,7 @@ const PartyWreckersPodcast = () => {
                 About the Podcast
               </h2>
               <p className="mb-6">
-                The Party Wreckers Podcast is a weekly show for families, loved ones, and professionals who are tired of watching addiction destroy lives and relationships. Hosted by an experienced interventionist with more than two decades in the field, the podcast breaks down complex topics like enabling, boundaries, relapse, treatment programs, and recovery planning into clear, practical conversations. Each episode blends real-world intervention experience, storytelling, and education to help listeners understand addiction as a medical disease with a spiritual solution—while also showing them what to do next, not just what to think or feel about it.
+                The Party Wreckers Podcast is a weekly show for families, loved ones, and professionals who are tired of watching addiction destroy lives and relationships. Hosted by an experienced interventionist with more than two decades in the field, the podcast breaks down complex topics like enabling, boundaries, relapse, treatment programs, and recovery planning into clear, practical conversations. Each episode blends real-world intervention experience, storytelling, and education to help listeners understand addiction as a medical illness with a spiritual solution—while also showing them what to do next, not just what to think or feel about it.
               </p>
               <p className="mb-6">
                 Party Wreckers is designed as a reliable guide for anyone who feels stuck between loving someone with a substance use disorder and not knowing how to help. Through solo episodes, interviews with treatment and recovery experts, and case-based insights from hundreds of interventions, the show gives families language, tools, and step-by-step strategies they can use immediately. Listeners come away with a deeper understanding of support versus enabling, how to set and hold healthy boundaries, and how to build a long-term recovery plan that includes the whole family—not just the addicted person.

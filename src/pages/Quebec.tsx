@@ -74,7 +74,7 @@ const Quebec = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">175K</div>
@@ -124,7 +124,7 @@ const Quebec = () => {
             A Path Forward for Quebec Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Don't wait for the next crisis. Professional intervention offers a structured, compassionate path to treatment.
+            If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Professional intervention offers a structured, compassionate path to treatment.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">

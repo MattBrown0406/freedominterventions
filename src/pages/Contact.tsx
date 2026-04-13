@@ -9,7 +9,7 @@ import { OrganizationSchema, LocalBusinessSchema } from "@/components/Structured
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Phone, Mail, MapPin, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Send, MessageSquareText, ClipboardCheck, ArrowRightCircle, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Form,
@@ -116,7 +116,67 @@ const Contact = () => {
       {/* Contact Section */}
       <section className="py-16 md:py-24">
         <div className="container px-6">
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto space-y-12">
+            <div className="bg-card border border-border rounded-2xl p-8 md:p-10">
+              <div className="max-w-3xl mb-8">
+                <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  What Happens When You Reach Out
+                </h2>
+                <p className="text-muted-foreground">
+                  You will know quickly who you are talking to, what the situation looks like, and what the next step should be.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  {
+                    icon: MessageSquareText,
+                    title: "You talk to Matt directly",
+                    description: "Not a call center. Not an intake coordinator. Matt picks up or calls you back personally.",
+                  },
+                  {
+                    icon: ClipboardCheck,
+                    title: "You get an honest assessment",
+                    description: "Matt will ask direct questions and give you a straight answer about what the situation looks like and what options make sense.",
+                  },
+                  {
+                    icon: ArrowRightCircle,
+                    title: "You leave with a clear next step",
+                    description: "Whether that's an intervention, a family consultation, or just a better understanding of what's happening, you'll know what to do next.",
+                  },
+                  {
+                    icon: Shield,
+                    title: "Everything is confidential",
+                    description: "All conversations are private. Your family's situation stays between you and Matt.",
+                  },
+                ].map((step, index) => {
+                  const Icon = step.icon;
+
+                  return (
+                    <div key={step.title} className="rounded-2xl border border-border bg-background p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Icon className="w-5 h-5 text-primary" />
+                            <h3 className="font-semibold text-foreground">{step.title}</h3>
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <p className="mt-8 text-center text-foreground font-medium italic">
+                There is no pressure, no pitch, and no commitment required. Just an honest conversation.
+              </p>
+            </div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
@@ -255,6 +315,7 @@ const Contact = () => {
                 </form>
               </Form>
             </div>
+          </div>
           </div>
         </div>
       </section>

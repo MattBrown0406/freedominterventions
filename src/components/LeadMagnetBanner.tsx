@@ -19,7 +19,7 @@ const LeadMagnetBanner = () => {
                     <ClipboardList className="w-6 h-6 text-primary" />
                   </div>
                   <span className="text-sm font-medium text-primary uppercase tracking-wide">
-                    Free Assessment
+                    Family Assessment
                   </span>
                 </div>
 
@@ -68,7 +68,7 @@ const LeadMagnetBanner = () => {
                   className="w-full"
                 >
                   <Button size="lg" className="w-full gap-2">
-                    Take the Free Assessment
+                    Schedule Free Consultation
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </a>

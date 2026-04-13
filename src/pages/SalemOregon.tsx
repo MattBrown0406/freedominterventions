@@ -192,7 +192,7 @@ const SalemOregon = () => {
                     Recovery is possible, even in the most severe cases. We've helped families throughout the Willamette Valley guide their loved ones into treatment—and witnessed life-changing transformations that restored families, careers, and futures.
                   </p>
                   <p>
-                    Professional intervention isn't about forcing someone into treatment. It's about creating the right conditions, with the right people, at the right moment—giving your loved one the clearest possible opportunity to choose recovery. When families are prepared and unified, the success rate exceeds 90%.
+                    Professional intervention isn't about forcing someone into treatment. It's about creating the right conditions, with the right people, at the right moment—giving your loved one the clearest possible opportunity to choose recovery. When families are prepared and unified, the chance of success exceeds 90%.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const SalemOregon = () => {
               Get Help for Your Salem Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Marion County including Salem, Keizer, Silverton, Woodburn, Stayton, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Marion County including Salem, Keizer, Silverton, Woodburn, Stayton, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

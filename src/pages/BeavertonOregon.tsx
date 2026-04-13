@@ -192,7 +192,7 @@ const BeavertonOregon = () => {
                     Addiction doesn't care about zip codes, income levels, or how nice the neighborhood is. But neither does recovery. We've helped families across Washington County's most affluent communities break through denial and change the trajectory of their loved one's life.
                   </p>
                   <p>
-                    The earlier you act, the better the outcomes. Don't wait for the bottom to fall out. A confidential consultation costs nothing and could save everything.
+                    The earlier families act, the better the outcomes. A confidential consultation costs nothing and can help your family build a clear plan.
                   </p>
                 </div>
               </div>

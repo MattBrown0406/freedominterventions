@@ -76,7 +76,7 @@ const Minnesota = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">250K+</div>
@@ -137,7 +137,7 @@ const Minnesota = () => {
               <div className="flex items-center gap-3 mb-4">
                 <TrendingUp className="h-8 w-8 text-primary" />
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Take the First Step
+                  Schedule Free Consultation
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">

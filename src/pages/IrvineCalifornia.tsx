@@ -189,7 +189,7 @@ const IrvineCalifornia = () => {
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Recovery is attainable for Irvine families. We've helped professionals, students, and families throughout Orange County break through denial, access quality treatment, and rebuild their lives. The planning and structure that defines Irvine as a city can also define a family's path to recovery—with the right professional guidance.
+                    Recovery is attainable for Irvine families. We've helped professionals, students, and families throughout Orange County break through denial, access quality treatment, and rebuild their lives. The planning and structure that defines Irvine as a city can also define a family's way forward—with the right professional guidance.
                   </p>
                   <p>
                     The free consultation is the first step. It costs nothing, it's completely confidential, and it could be the most important call your family makes. Reach out today.
@@ -209,7 +209,7 @@ const IrvineCalifornia = () => {
               Get Help for Your Irvine Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve Irvine and all of Orange County including Newport Beach, Tustin, Lake Forest, Mission Viejo, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve Irvine and all of Orange County including Newport Beach, Tustin, Lake Forest, Mission Viejo, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

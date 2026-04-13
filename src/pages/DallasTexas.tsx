@@ -192,7 +192,7 @@ const DallasTexas = () => {
                     The DFW metroplex has growing treatment resources and a strong recovery community. Texas's "can-do" attitude extends to recovery—people get better here every day. The key is getting your loved one to accept help, and that's where professional intervention makes all the difference.
                   </p>
                   <p>
-                    Don't wait for the crisis to become tragedy. Fentanyl has eliminated the margin for error. If your loved one is struggling with addiction in Dallas-Fort Worth, the time to act is now.
+                    Fentanyl has eliminated the margin for error. If your loved one is struggling with addiction in Dallas-Fort Worth, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>

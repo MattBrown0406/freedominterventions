@@ -56,7 +56,7 @@ const Virginia = () => {
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <p className="text-sm text-muted-foreground">Intervention Success Rate</p>
+              <p className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</p>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">500K+</div>
@@ -152,7 +152,7 @@ const Virginia = () => {
                   Our proven intervention methods have helped countless Virginia families. We provide the expertise, compassion, and immediate action needed to break through denial and resistance.
                 </p>
                 <p className="text-muted-foreground">
-                  Don't wait for the crisis to worsen. With fentanyl's deadly potency, every day matters. One call can be the turning point your family needs.
+                  If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. With fentanyl involved, an earlier plan can make a real difference.
                 </p>
               </div>
             </div>

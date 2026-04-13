@@ -176,7 +176,7 @@ const Arizona = () => {
               </h2>
               <div className="prose prose-lg text-muted-foreground space-y-4">
                 <p>
-                  Research shows that professional interventionists increase treatment entry rates to 80-90%, with appropriately supported individuals enjoying significantly better recovery outcomes. Social support and structured follow-up, which interventionists help establish, are vital to sustained sobriety.
+                  Research shows that professional interventionists increase treatment entry rates to significantly higher, with appropriately supported individuals enjoying significantly better recovery outcomes. Social support and structured follow-up, which interventionists help establish, are vital to sustained sobriety.
                 </p>
                 <p>
                   Families report improvements in communication, decreased enabling, and restored hope following professional-led interventions. Interventionists' tailored approaches also help reduce hospitalizations, legal issues, and other costs related to untreated addiction.
@@ -251,10 +251,10 @@ const Arizona = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your Arizona Family
+            Schedule Free Consultation for Your Arizona Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to 80-90%. Reach out today for a confidential consultation tailored to Arizona's resources.
+            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation tailored to Arizona's resources.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="text-lg">

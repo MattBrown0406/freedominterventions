@@ -195,7 +195,7 @@ const MesaArizona = () => {
                     Key local resources include Banner Desert Medical Center (medical detox), Mercy Gilbert Medical Center, and TERROS Health (comprehensive behavioral health). We also connect Mesa families with residential and specialty treatment programs throughout Arizona and nationally.
                   </p>
                   <p>
-                    With fentanyl, time is critical. Every use carries overdose risk. Don't wait — call us today for a free consultation.
+                    With fentanyl, clarity matters. Every use carries overdose risk. When your family is ready to stop waiting and start moving, Matt is ready to help.
                   </p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const MesaArizona = () => {
               Get Help for Your Mesa Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Mesa and surrounding Maricopa County communities including Gilbert, Chandler, Tempe, and the east valley.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Mesa and surrounding Maricopa County communities including Gilbert, Chandler, Tempe, and the east valley.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

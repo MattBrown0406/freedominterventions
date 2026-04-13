@@ -48,7 +48,7 @@ const Massachusetts = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">350K+</div>
@@ -124,7 +124,7 @@ const Massachusetts = () => {
             Hope for Massachusetts Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Professional intervention services have helped countless Massachusetts families find the path to recovery. Contact us today.
+            Professional intervention services have helped countless Massachusetts families find a way forward. Contact us today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">

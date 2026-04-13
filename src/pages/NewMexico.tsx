@@ -39,7 +39,7 @@ const NewMexico = () => {
         <div className="w-full h-[300px] md:h-[400px] overflow-hidden">
           <img 
             src={newMexicoBanner} 
-            alt="New Mexico desert landscape with mountains at sunset symbolizing hope and the path to recovery" 
+            alt="New Mexico desert landscape with mountains at sunset symbolizing a way forward" 
             className="w-full h-full object-cover"
           />
         </div>
@@ -94,7 +94,7 @@ const NewMexico = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
           </div>
         </div>
@@ -168,17 +168,17 @@ const NewMexico = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventions achieve 80-90% success rates in getting loved ones into treatment—compared to less than 30% for unguided family attempts. In New Mexico, where treatment access is limited and fentanyl makes every day dangerous, this difference is life or death.
+                Professional interventions achieve significantly higher outcomes in getting loved ones into treatment—compared to less than 30% for unguided family attempts. In New Mexico, where treatment access is limited and fentanyl makes every day dangerous, this difference is life or death.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 We've helped New Mexico families navigate everything from young adult heroin addiction in Albuquerque to alcohol dependency in rural ranching communities. Families report restored hope, ended enabling patterns, and the beginning of real healing after years of chaos and fear.
               </p>
             </div>
 
-            {/* Barriers and Why Act Now */}
+            {/* Barriers and Why Earlier Planning Helps */}
             <div className="space-y-6">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Barriers and Why Act Now
+                Barriers and Why Earlier Planning Helps
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 New Mexico faces significant barriers to treatment: geographic isolation, underfunded healthcare systems, insurance gaps, and deep-rooted stigma. But waiting for the "right time" is deadly when fentanyl is involved. Professional interventionists know how to overcome these barriers, securing treatment beds, arranging transportation, and guiding families through the process.
@@ -243,7 +243,7 @@ const NewMexico = () => {
             A Path Forward for New Mexico Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            New Mexico's addiction crisis takes hundreds of lives each year—but recovery is possible. Professional interventionists empower families, transforming despair into decisive treatment entry with 90% efficacy. Don't wait for the next overdose or arrest.
+            New Mexico's addiction crisis takes hundreds of lives each year—but recovery is possible. Professional interventionists empower families, helping families turn panic into treatment action with a significantly higher chance of success. The sooner families have a clear plan, the more options they have.
           </p>
           <p className="text-xl font-semibold mb-8">
             Hope starts with one structured step—yours.

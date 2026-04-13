@@ -192,7 +192,7 @@ const ElPasoTexas = () => {
                     Recovery happens in El Paso. The city's resilience—evident in everything from its response to tragedy to its deep community bonds—is equally present in recovery. We've helped families throughout the Borderland guide their loved ones toward healing.
                   </p>
                   <p>
-                    The proximity to drugs makes the risk higher. It also makes the urgency greater. Don't wait—call today for a free, confidential consultation and take the first step toward bringing your loved one back.
+                    The proximity to drugs raises the risk. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const ElPasoTexas = () => {
               Get Help for Your El Paso Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of El Paso County including El Paso, Socorro, San Elizario, Anthony, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of El Paso County including El Paso, Socorro, San Elizario, Anthony, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

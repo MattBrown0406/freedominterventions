@@ -143,7 +143,7 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-display text-primary">
-            {submitted ? "Request Received!" : "Request a Callback"}
+            {submitted ? "Request Received!" : "Schedule Free Consultation"}
           </DialogTitle>
           <DialogDescription>
             {submitted
@@ -167,7 +167,7 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
               </p>
             </div>
             <p className="text-sm text-muted-foreground">
-              A member of our team will call you at {phone} during your preferred time.
+              Matt or someone coordinating directly with him will call you at {phone} during your preferred time.
             </p>
             <Button onClick={() => handleOpenChange(false)} className="w-full">
               Close

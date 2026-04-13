@@ -192,7 +192,7 @@ const OaklandCalifornia = () => {
                     Recovery is possible, even in the face of Oakland's addiction crisis. We've helped families across the Bay Area—from Oakland to Berkeley, Fremont to Hayward—guide their loved ones into treatment and witnessed remarkable transformations.
                   </p>
                   <p>
-                    You don't have to watch helplessly. A professional intervention gives your family the tools, structure, and support to create a turning point. Don't wait for the next crisis—reach out today.
+                    You do not have to watch helplessly. A professional intervention gives your family the tools, structure, and support to create a turning point. When your family is ready to stop waiting and start moving, Matt is ready to help.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const OaklandCalifornia = () => {
               Get Help for Your Oakland Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Alameda County including Oakland, Berkeley, Fremont, Hayward, San Leandro, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Alameda County including Oakland, Berkeley, Fremont, Hayward, San Leandro, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

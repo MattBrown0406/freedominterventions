@@ -139,7 +139,7 @@ const AustinTexas = () => {
                     Many Austin families are far from their original support networks, having moved for opportunity. When addiction strikes, they lack the family and community connections that might have caught the problem earlier. By the time parents in other states realize something is wrong with their adult child in Austin, addiction may have taken deep root.
                   </p>
                   <p>
-                    From the Domain to South Austin, from Round Rock to Bastrop, Central Texas families need professional help to navigate the complex path to recovery.
+                    From the Domain to South Austin, from Round Rock to Bastrop, Central Texas families need professional help to navigate the complex way forward.
                   </p>
                 </div>
               </div>
@@ -197,7 +197,7 @@ const AustinTexas = () => {
                     Austin has a thriving recovery community and growing treatment resources. The same innovation and determination that fuel the city's success can be channeled toward recovery. With professional intervention guidance, families break through denial and open the door to a new life.
                   </p>
                   <p>
-                    But the fentanyl crisis has made urgency essential. Every day of active addiction carries life-threatening risks. If your loved one is struggling in Austin, the time to act is now—before hope becomes heartbreak.
+                    But the fentanyl crisis has raised the stakes. Every day of active addiction carries serious risk. If your loved one is struggling in Austin, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>

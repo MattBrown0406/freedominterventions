@@ -192,7 +192,7 @@ const NewOrleansLouisiana = () => {
                     People get and stay sober in New Orleans. The city has 12-step meetings throughout the metro and a recovery community that understands the unique challenges of staying sober in a party city. Many find that the same community bonds that enabled their drinking become supports for sobriety.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. The drugs available on New Orleans streets today are far more dangerous than a generation ago. Professional intervention can save your loved one's life.
+                    The fentanyl crisis has made intervention more urgent than ever. The drugs available on New Orleans streets today are far more dangerous than a generation ago. Professional intervention can help your family create a real opening for treatment.
                   </p>
                 </div>
               </div>

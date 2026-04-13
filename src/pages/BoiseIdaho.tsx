@@ -197,7 +197,7 @@ const BoiseIdaho = () => {
                     Despite the challenges, recovery happens in Idaho every day. The same strong family values that make addiction feel shameful can also power recovery. Idaho's outdoor lifestyle provides healthy alternatives to substance use. Growing recovery communities offer peer support for those in recovery.
                   </p>
                   <p>
-                    But first, your loved one needs to accept help. Professional intervention breaks through the denial and manipulation that keep addiction alive. Don't wait for tragedy to force your hand—act now while there's still time.
+                    But first, your loved one needs to accept help. Professional intervention breaks through the denial and manipulation that keep addiction alive. The sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>

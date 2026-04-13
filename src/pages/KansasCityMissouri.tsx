@@ -192,7 +192,7 @@ const KansasCityMissouri = () => {
                     Kansas City has a growing recovery community with meetings throughout the metro. The city's strong sense of community and Midwest values of mutual support translate well into recovery. Many find that the same family bonds that complicated their addiction become sources of strength in sobriety.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries extreme risk. Professional intervention can save your loved one's life.
+                    The fentanyl crisis has made intervention more urgent than ever. Every day of active addiction carries extreme risk. Professional intervention can help your family create a real opening for treatment.
                   </p>
                 </div>
               </div>

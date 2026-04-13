@@ -192,7 +192,7 @@ const ColoradoSpringsColorado = () => {
                     Recovery is possible. We've helped families throughout El Paso County—from Briargate to Fountain, from Manitou Springs to Pueblo—guide their loved ones into treatment and witnessed remarkable transformations.
                   </p>
                   <p>
-                    The strength that drives service members through combat can be channeled into recovery. But the family has to act first. Don't wait for another crisis. Professional intervention can be the turning point your family needs.
+                    The strength that drives service members through combat can be channeled into recovery. But the family has to act first. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Professional intervention can be the turning point your family needs.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const ColoradoSpringsColorado = () => {
               Get Help for Your Colorado Springs Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of El Paso County including Colorado Springs, Fountain, Manitou Springs, Monument, and Pueblo.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of El Paso County including Colorado Springs, Fountain, Manitou Springs, Monument, and Pueblo.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

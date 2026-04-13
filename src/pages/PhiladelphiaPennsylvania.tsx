@@ -192,7 +192,7 @@ const PhiladelphiaPennsylvania = () => {
                     Despite Philadelphia's dire statistics, recovery happens every day. We've helped families from across the Delaware Valley guide their loved ones from the depths of addiction into treatment and lasting recovery. It's never too late—and it's never too early—to intervene.
                   </p>
                   <p>
-                    The margin for error with fentanyl is razor-thin. Every day without intervention is another day your loved one risks fatal overdose. If someone you love in Philadelphia is struggling with addiction, the time to act is now.
+                    The margin for error with fentanyl is razor-thin. Every day without intervention is another day your loved one risks fatal overdose. If someone you love in Philadelphia is struggling with addiction, If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const PhiladelphiaPennsylvania = () => {
               Get Help for Your Philadelphia Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another overdose. Our free, confidential consultation will help you understand your options and create a plan to save your loved one's life. We serve all of Philadelphia and the surrounding region including Bucks County, Montgomery County, Delaware County, Chester County, and South Jersey.
+              The sooner families have a clear plan, the more options they have. Our free, confidential consultation will help you understand your options and create a plan to help your loved one move toward treatment. We serve all of Philadelphia and the surrounding region including Bucks County, Montgomery County, Delaware County, Chester County, and South Jersey.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

@@ -192,7 +192,7 @@ const SanAntonioTexas = () => {
                     Recovery happens in San Antonio every day. The same courage that drives military service can drive recovery. The same family bonds that characterize San Antonio's community can be the foundation of lasting sobriety.
                   </p>
                   <p>
-                    We've helped families throughout Bexar County and South Texas guide their loved ones into treatment and watched lives transform. Don't wait for the crisis to deepen—call today for a free, confidential consultation.
+                    We've helped families throughout Bexar County and South Texas guide their loved ones into treatment and watched lives transform. If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const SanAntonioTexas = () => {
               Get Help for Your San Antonio Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Bexar County including San Antonio, Converse, Universal City, Helotes, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Bexar County including San Antonio, Converse, Universal City, Helotes, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

@@ -13,7 +13,7 @@ const Footer = () => {
       { name: "Aftercare Guidance", href: "/aftercare-guidance", isRoute: true },
     ],
     company: [
-      { name: "Our Team", href: "/interventionist", isRoute: true },
+      { name: "About Matt", href: "/interventionist", isRoute: true },
       { name: "Service Areas", href: "/service-areas", isRoute: true },
       { name: "Testimonials", href: "/testimonials", isRoute: true },
       { name: "Blog", href: "/blog", isRoute: true },
@@ -36,7 +36,7 @@ const Footer = () => {
               <img src={logo} alt="Freedom Interventions" className="h-24 md:h-[10.5rem] w-auto mix-blend-multiply" />
             </a>
             <p className="text-muted-foreground max-w-xs text-sm md:text-base">
-              Guiding families toward hope and recovery with compassionate, professional intervention services.
+              Direct addiction intervention services led by Matt Brown, helping families find clarity and a real plan.
             </p>
             <div className="space-y-2 pt-2">
               <TrackedPhoneLink phoneNumber="+15418386009" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base" metadata={{ location: 'footer' }}>

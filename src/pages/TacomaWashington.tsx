@@ -166,7 +166,7 @@ const TacomaWashington = () => {
                     <strong className="text-foreground">Structured Boundaries:</strong> We help families stop enabling and establish firm, loving boundaries that create real consequences—the leverage needed for lasting change.
                   </p>
                   <p>
-                    <strong className="text-foreground">Immediate Action:</strong> We understand that addiction crises don't wait. We work quickly to coordinate care and get your loved one into treatment when they're ready.
+                    <strong className="text-foreground">Immediate Coordination:</strong> We understand that addiction crises can escalate quickly. We work quickly to coordinate care and get your loved one into treatment when they're ready.
                   </p>
                 </div>
               </div>
@@ -192,7 +192,7 @@ const TacomaWashington = () => {
                     Recovery is possible, even when addiction seems completely in control. We've helped families throughout the South Sound region—from Tacoma to Puyallup, Lakewood to Gig Harbor—guide their loved ones into treatment and witnessed real, lasting transformations.
                   </p>
                   <p>
-                    The time to act is now. Every day of active addiction carries risk. Professional intervention is the most effective way to break the cycle and get your family member the help they need—before the next overdose or crisis.
+                    If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Every day of active addiction carries risk. Professional intervention is the most effective way to break the cycle and get your family member the help they need—before the next overdose or crisis.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const TacomaWashington = () => {
               Get Help for Your Tacoma Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan. We serve all of Pierce County including Tacoma, Puyallup, Lakewood, University Place, Gig Harbor, Bonney Lake, and Sumner.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan. We serve all of Pierce County including Tacoma, Puyallup, Lakewood, University Place, Gig Harbor, Bonney Lake, and Sumner.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

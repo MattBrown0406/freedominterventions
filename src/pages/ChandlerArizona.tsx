@@ -195,7 +195,7 @@ const ChandlerArizona = () => {
                     Key local resources include Chandler Regional Medical Center (medical), Dignity Health behavioral services, and Copa Health (comprehensive mental health and addiction services). We also connect families with specialized residential programs throughout Arizona.
                   </p>
                   <p>
-                    Don't let career concerns delay critical action. The longer addiction continues, the more career and family damage accumulates. Act now.
+                    Don't let career concerns delay critical action. The longer addiction continues, the more career and family damage accumulates. The sooner families have a clear plan, the more options they have.
                   </p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ const ChandlerArizona = () => {
               Get Help for Your Chandler Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Chandler and surrounding Maricopa County communities including Gilbert, Queen Creek, Sun Lakes, and the southeast valley.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Chandler and surrounding Maricopa County communities including Gilbert, Queen Creek, Sun Lakes, and the southeast valley.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

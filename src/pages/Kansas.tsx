@@ -318,7 +318,7 @@ const Kansas = () => {
                     Addiction is a chronic medical illness — not a moral failure, not a choice, not something that resolves on its own. But it does respond to treatment. Families across Kansas, from Wichita to the western plains, have watched loved ones find lasting recovery after a professional intervention opened the door.
                   </p>
                   <p>
-                    The time to act is before the next overdose. Don't wait for a rock bottom that may not come in time. A free consultation with Matt Brown costs nothing and could change everything.
+                    The sooner families have a clear plan, the more options they have. A free consultation with Matt Brown costs nothing and can help your family understand what to do next.
                   </p>
                 </div>
               </div>
@@ -335,7 +335,7 @@ const Kansas = () => {
               Get Help for Your Kansas Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. A free, confidential consultation will help you understand your options and create a plan. Freedom Interventions serves all of Kansas — Wichita, Overland Park, Topeka, Kansas City metro, Garden City, Dodge City, Lawrence, Manhattan, Salina, and every community in between.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. A free, confidential consultation will help you understand your options and create a plan. Freedom Interventions serves all of Kansas — Wichita, Overland Park, Topeka, Kansas City metro, Garden City, Dodge City, Lawrence, Manhattan, Salina, and every community in between.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

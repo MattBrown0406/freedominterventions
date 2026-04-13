@@ -192,7 +192,7 @@ const EverettWashington = () => {
                     Recovery happens every day in communities like Everett. We've helped Snohomish County families guide their loved ones into treatment and watched them rebuild their lives from the ground up. It takes courage to ask for help—and that courage starts with one phone call.
                   </p>
                   <p>
-                    Don't let stigma, fear, or exhaustion delay the conversation that could save your loved one's life. Professional intervention is your most powerful tool.
+                    Don't let stigma, fear, or exhaustion delay the conversation that could help your loved one move toward treatment. Professional intervention is your most powerful tool.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const EverettWashington = () => {
               Get Help for Your Everett Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for the next overdose or crisis. Our free, confidential consultation will help you understand your options. We serve all of Snohomish County including Everett, Marysville, Mukilteo, Lynnwood, Monroe, Edmonds, and Mountlake Terrace.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options. We serve all of Snohomish County including Everett, Marysville, Mukilteo, Lynnwood, Monroe, Edmonds, and Mountlake Terrace.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

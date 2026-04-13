@@ -131,7 +131,7 @@ const OmahaNebraska = () => {
                     Nebraska's hardworking, family-oriented culture makes watching a loved one struggle with addiction especially painful. Parents in neighborhoods from West Omaha to Bellevue watch their children transform from promising students to unrecognizable addicts. Working families lose wage earners to overdoses, leaving children without parents.
                   </p>
                   <p>
-                    The stigma of addiction in close-knit Midwestern communities often prevents families from seeking help. Many believe their loved one simply lacks willpower, not understanding that addiction is a brain disease requiring medical intervention.
+                    The stigma of addiction in close-knit Midwestern communities often prevents families from seeking help. Many believe their loved one simply lacks willpower, not understanding that addiction is a medical illness with a spiritual dimension that requires clinical treatment and real change in how a person lives.
                   </p>
                   <p>
                     Whether your loved one started with prescription pills after a work injury or discovered meth through acquaintances, Freedom Interventions understands the unique challenges facing Nebraska families.
@@ -163,7 +163,7 @@ const OmahaNebraska = () => {
                     <strong className="text-foreground">Experienced Guidance:</strong> We've helped families in every stage of addiction crisis, from early intervention to emergency situations. Our approach is tailored to your family's specific circumstances and your loved one's unique needs.
                   </p>
                   <p>
-                    <strong className="text-foreground">Treatment Placement:</strong> We connect Omaha families with appropriate treatment facilities throughout Nebraska and nationwide—programs equipped to handle fentanyl and meth addiction with high success rates.
+                    <strong className="text-foreground">Treatment Placement:</strong> We connect Omaha families with appropriate treatment facilities throughout Nebraska and nationwide—programs equipped to handle fentanyl and meth addiction with high outcomes.
                   </p>
                   <p>
                     <strong className="text-foreground">Family Healing:</strong> We help the whole family recover, ending enabling patterns, establishing healthy boundaries, and supporting everyone through the recovery journey.
@@ -192,7 +192,7 @@ const OmahaNebraska = () => {
                     Despite the devastating statistics, recovery happens every day in Nebraska. We've helped families throughout the Omaha metro guide their loved ones from the depths of addiction into treatment and lasting recovery. Your family's story can change too.
                   </p>
                   <p>
-                    Fentanyl has made every day without intervention a gamble with your loved one's life. Don't wait for rock bottom—it may be too late. If someone you love in Omaha is struggling with addiction, the time to act is now.
+                    Fentanyl has made every day without intervention a gamble with your loved one's life. The sooner families have a clear plan, the more options they have. If someone you love in Omaha is struggling with addiction, If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const OmahaNebraska = () => {
               Get Help for Your Omaha Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Omaha and Nebraska including Council Bluffs, Bellevue, Papillion, La Vista, Lincoln, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Omaha and Nebraska including Council Bluffs, Bellevue, Papillion, La Vista, Lincoln, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

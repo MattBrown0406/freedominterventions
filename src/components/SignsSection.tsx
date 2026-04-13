@@ -79,7 +79,7 @@ const SignsSection = () => {
           </p>
           <Button asChild variant="default" size="lg">
             <Link to="/self-assessment">
-              Take Our Free Assessment
+              Schedule Free Consultation
             </Link>
           </Button>
         </div>

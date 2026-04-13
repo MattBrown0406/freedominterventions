@@ -56,7 +56,7 @@ const RhodeIsland = () => {
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <p className="text-sm text-muted-foreground">Intervention Success Rate</p>
+              <p className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</p>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">73K+</div>
@@ -152,7 +152,7 @@ const RhodeIsland = () => {
                   Professional intervention creates the breakthrough moment that many families have been waiting for. With immediate treatment placement and ongoing support, change is possible.
                 </p>
                 <p className="text-muted-foreground">
-                  Don't wait until it's too late. With fentanyl's deadly potency, every day of active addiction carries life-threatening risk.
+                  If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. With fentanyl involved, the sooner families have a clear plan, the more options they have.
                 </p>
               </div>
             </div>

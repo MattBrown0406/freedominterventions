@@ -192,7 +192,7 @@ const AuroraColorado = () => {
                     Recovery is possible for every family in Aurora. We've helped families across the Denver metro area—from Stapleton to Centennial, from Englewood to Commerce City—guide loved ones out of active addiction and into treatment that works.
                   </p>
                   <p>
-                    The crisis is real. The risk is urgent. But so is hope. A professional intervention, done right, can be the moment everything changes. Don't wait for the next overdose or crisis—call now for a free, confidential consultation.
+                    The crisis is real, and so is hope. A professional intervention, done right, can be the moment everything changes. When your family is ready to stop waiting and start moving, Matt is ready to help.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const AuroraColorado = () => {
               Get Help for Your Aurora Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Aurora and surrounding Arapahoe County communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Aurora and surrounding Arapahoe County communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

@@ -192,7 +192,7 @@ const OrangeCountyCalifornia = () => {
                     Recovery is achievable for Orange County families. Despite the complexity of the OC treatment landscape, we've helped families throughout the region guide their loved ones into quality treatment and witnessed genuine, lasting recoveries.
                   </p>
                   <p>
-                    Don't navigate this alone—and don't wait. A free consultation with Matt Brown can help you understand exactly what you're dealing with, what options exist, and what your family can do right now to change the trajectory.
+                    Do not navigate this alone. A free consultation with Matt Brown can help you understand exactly what you're dealing with, what options exist, and what your family can do next to change the trajectory.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const OrangeCountyCalifornia = () => {
               Get Help for Your Orange County Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Orange County including Anaheim, Irvine, Santa Ana, Huntington Beach, Newport Beach, Fullerton, Costa Mesa, and surrounding communities.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Orange County including Anaheim, Irvine, Santa Ana, Huntington Beach, Newport Beach, Fullerton, Costa Mesa, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

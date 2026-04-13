@@ -136,7 +136,7 @@ const AnchorageAlaska = () => {
                     Alaska's rugged individualism and frontier mentality can make seeking help for addiction feel like weakness. Families suffer in silence, watching loved ones destroy themselves while feeling powerless and isolated. The long, dark winters exacerbate depression and addiction, while geographic barriers make accessing treatment incredibly difficult.
                   </p>
                   <p>
-                    Many Alaska families have tried everything they know to help—begging, threatening, enabling, cutting off contact—but nothing works. They don't realize that professional intervention offers a structured approach with much higher success rates than going it alone.
+                    Many Alaska families have tried everything they know to help—begging, threatening, enabling, cutting off contact—but nothing works. They don't realize that professional intervention offers a structured approach with much higher outcomes than going it alone.
                   </p>
                   <p>
                     Whether your loved one is struggling in Anchorage's Midtown, in Eagle River, or in remote communities throughout Alaska, Freedom Interventions can help your family find a path to recovery.
@@ -214,7 +214,7 @@ const AnchorageAlaska = () => {
               Get Help for Your Alaska Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one—no matter where in Alaska you're located. We serve Anchorage, the Mat-Su Valley, Fairbanks, Juneau, and communities throughout the state.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one—no matter where in Alaska you're located. We serve Anchorage, the Mat-Su Valley, Fairbanks, Juneau, and communities throughout the state.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

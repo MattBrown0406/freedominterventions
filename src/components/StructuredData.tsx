@@ -6,20 +6,21 @@ export const OrganizationSchema = () => {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ProfessionalService",
+        "@type": ["LocalBusiness", "ProfessionalService"],
         "@id": "https://freedominterventions.com/#organization",
         name: "Freedom Interventions",
         alternateName: "Freedom Interventions LLC",
         url: "https://freedominterventions.com",
-        logo: "https://freedominterventions.com/favicon.jpeg",
+        logo: "https://freedominterventions.com/logo.png",
         image: "https://freedominterventions.com/favicon.jpeg",
         description:
-          "Professional addiction intervention services helping families guide loved ones toward recovery. Over 20 years of experience serving all 50 states and Canada.",
+          "Professional addiction intervention services led by Matt Brown, Certified Intervention Professional with 20+ years of experience.",
         telephone: "+1-541-838-6009",
         email: "matt@freedominterventions.com",
         foundingDate: "2004",
         founder: {
           "@type": "Person",
+          "@id": "https://freedominterventions.com/interventionist#person",
           name: "Matt Brown",
           jobTitle: "Professional Interventionist",
           description: "Drug & alcohol interventionist with over 20 years of experience and 22 years of personal recovery. Has conducted over 1,000 professional interventions.",
@@ -30,10 +31,7 @@ export const OrganizationSchema = () => {
           addressRegion: "OR",
           addressCountry: "US",
         },
-        areaServed: [
-          { "@type": "Country", name: "United States" },
-          { "@type": "Country", name: "Canada" },
-        ],
+        areaServed: { "@type": "Country", name: "United States" },
         serviceType: [
           "Addiction Intervention",
           "Drug Intervention",
@@ -50,10 +48,13 @@ export const OrganizationSchema = () => {
           closes: "23:59",
         },
         sameAs: [
+          "https://www.facebook.com/FreedomInterventions",
+          "https://www.instagram.com/freedominterventions",
           "https://soberhelpline.com",
           "https://nomoreenabling.com",
           "https://partywreckers.com",
         ],
+        category: "Addiction Intervention Services",
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "Intervention Services",
@@ -232,6 +233,56 @@ export const BreadcrumbSchema = ({
       name: item.name,
       item: item.url,
     })),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
+export const WebPageSchema = ({
+  name,
+  description,
+  url,
+}: {
+  name: string;
+  description: string;
+  url: string;
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name,
+    isPartOf: { "@id": "https://freedominterventions.com/#website" },
+    about: { "@id": "https://freedominterventions.com/#organization" },
+    description,
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
+export const BlogSchema = () => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": "https://freedominterventions.com/blog#blog",
+    url: "https://freedominterventions.com/blog",
+    name: "Freedom Interventions Blog",
+    description: "Guidance for families navigating addiction intervention, boundaries, enabling, and treatment.",
+    publisher: {
+      "@type": "Person",
+      name: "Matt Brown",
+      "@id": "https://freedominterventions.com/interventionist#person",
+    },
+    isPartOf: { "@id": "https://freedominterventions.com/#website" },
   };
 
   return (
@@ -436,8 +487,8 @@ export const LocationFAQSchema = ({
       answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (541) 838-6009 for a confidential consultation.`,
     },
     {
-      question: `What is the success rate for interventions in ${location}?`,
-      answer: `Professional interventions have a 90%+ success rate in getting individuals to accept treatment when conducted properly. Key factors include proper family preparation, unified messaging, pre-arranged treatment, and professional facilitation.`,
+      question: `How do professional interventions improve the chances of treatment entry in ${location}?`,
+      answer: `When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. Key factors include proper family preparation, unified messaging, pre-arranged treatment, and professional facilitation.`,
     },
     {
       question: `How quickly can an intervention be arranged in ${location}?`,

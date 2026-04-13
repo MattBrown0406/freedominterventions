@@ -192,7 +192,7 @@ const MiamiFlorida = () => {
                     People get and stay sober in Miami. The city has a strong recovery community with meetings in English and Spanish throughout the metro. Many find that the same energy and ambition that drove their addiction becomes fuel for building a fulfilling sober life.
                   </p>
                   <p>
-                    The fentanyl contamination of Miami's cocaine supply has made intervention more urgent than ever. Stimulant users who never touched opioids are dying from fentanyl-laced cocaine. Professional intervention can save your loved one's life.
+                    The fentanyl contamination of Miami's cocaine supply has made intervention more urgent than ever. Stimulant users who never touched opioids are dying from fentanyl-laced cocaine. Professional intervention can help your family create a real opening for treatment.
                   </p>
                 </div>
               </div>

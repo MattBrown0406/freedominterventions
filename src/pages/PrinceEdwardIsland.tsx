@@ -107,7 +107,7 @@ const PrinceEdwardIsland = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Living with a loved one's addiction in a small community adds unique pressures. Everyone knows everyone, and the fear of judgment can keep families suffering in silence for years. Professional intervention provides a confidential, dignified process that protects your family's privacy while taking decisive action to save your loved one's life.
+                Living with a loved one's addiction in a small community adds unique pressures. Everyone knows everyone, and the fear of judgment can keep families suffering in silence for years. Professional intervention provides a confidential, dignified process that protects your family's privacy while taking decisive action to help your loved one move toward treatment.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 The intervention process also helps family members begin their own healing journey. Through education, boundary-setting guidance, and connections to support resources, family members learn how to care for themselves while supporting their loved one's recovery.

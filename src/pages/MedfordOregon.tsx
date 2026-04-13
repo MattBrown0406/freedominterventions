@@ -51,7 +51,7 @@ const MedfordOregon = () => {
               Medford, Oregon
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Medford Addiction Intervention Specialist: Southern Oregon Families Get Help Now
+              Medford Addiction Intervention Specialist: Southern Oregon Families Call Now
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Medford and the Rogue Valley carry some of Oregon's highest per-capita drug use rates. Jackson County families dealing with addiction face a landscape where isolation, limited treatment options, and the opioid-to-fentanyl pipeline have created a devastating public health emergency. Freedom Interventions brings certified, compassionate help directly to Southern Oregon.
@@ -209,7 +209,7 @@ const MedfordOregon = () => {
               Get Help for Your Southern Oregon Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for the next overdose or arrest. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Jackson County including Medford, Ashland, Jacksonville, Central Point, White City, Eagle Point, and surrounding communities.
+              The sooner families have a clear plan, the more options they have. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Jackson County including Medford, Ashland, Jacksonville, Central Point, White City, Eagle Point, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

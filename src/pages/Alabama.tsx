@@ -50,7 +50,7 @@ const Alabama = () => {
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Intervention Success Rate</div>
+              <div className="text-sm text-muted-foreground">Prepared Families, Better Outcomes</div>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl md:text-4xl font-bold text-primary mb-2">200K+</div>
@@ -95,7 +95,7 @@ const Alabama = () => {
                 Professional interventionists understand Alabama's unique cultural and geographic challenges. They work with families to create customized intervention plans that respect local values while implementing evidence-based approaches proven to motivate treatment acceptance.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Unlike confrontational approaches that often backfire, professional interventions use compassionate methods like ARISE and CRAFT that achieve 80-90% success rates in getting loved ones into treatment.
+                Unlike confrontational approaches that often backfire, professional interventions use compassionate methods like ARISE and CRAFT that achieve significantly higher outcomes in getting loved ones into treatment.
               </p>
             </div>
 
@@ -122,7 +122,7 @@ const Alabama = () => {
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Every day without intervention is another day of risk. Professional interventionists help families break through denial and resistance, creating a clear path to recovery. The process begins with a confidential consultation to assess your unique situation.
+                Every day without intervention is another day of risk. Professional interventionists help families break through denial and resistance, creating a clear way forward. The process begins with a confidential consultation to assess your unique situation.
               </p>
             </div>
 
@@ -137,7 +137,7 @@ const Alabama = () => {
             Help Is Available for Alabama Families
           </h2>
           <p className="text-lg opacity-90 mb-8 max-w-3xl mx-auto">
-            Don't wait for the crisis to worsen. Professional intervention services have helped thousands of families across Alabama find hope and healing. Take the first step today.
+            If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Professional intervention services help Alabama families build a practical path forward.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">

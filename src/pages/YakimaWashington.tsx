@@ -209,7 +209,7 @@ const YakimaWashington = () => {
               Get Help for Your Yakima Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for the next crisis. Our free, confidential consultation will help you understand your options. We serve all of Yakima County including Yakima, Selah, Sunnyside, Grandview, Wapato, Toppenish, and rural communities throughout the Yakima Valley.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options. We serve all of Yakima County including Yakima, Selah, Sunnyside, Grandview, Wapato, Toppenish, and rural communities throughout the Yakima Valley.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

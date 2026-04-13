@@ -135,7 +135,7 @@ const Tennessee = () => {
                   Tennessee families bear enormous burdens watching loved ones struggle with addiction. The constant fear of overdose, repeated legal troubles, job losses, and deteriorating relationships create profound trauma. Many families have lost multiple members to this crisis.
                 </p>
                 <p>
-                  Without professional guidance, family intervention attempts succeed only 20-30% of the time. Well-intentioned efforts often push the addicted person further away. Professional interventionists provide the structure and expertise that achieves 80-90% treatment acceptance rates.
+                  Without professional guidance, family intervention attempts succeed only 20-30% of the time. Well-intentioned efforts often push the addicted person further away. Professional interventionists provide the structure and expertise that achieves significantly higher treatment acceptance rates.
                 </p>
               </div>
             </div>
@@ -225,10 +225,10 @@ const Tennessee = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your Tennessee Family
+            Schedule Free Consultation for Your Tennessee Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
-            Professional intervention increases treatment entry rates to 80-90%. Reach out today for a confidential consultation.
+            Professional intervention increases treatment entry rates to significantly higher. Reach out today for a confidential consultation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="text-lg">

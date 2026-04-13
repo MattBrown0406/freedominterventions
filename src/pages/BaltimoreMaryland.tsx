@@ -131,7 +131,7 @@ const BaltimoreMaryland = () => {
                     Baltimore families have been fighting addiction for generations. Parents who lost siblings to heroin now watch their children struggle with fentanyl. The cycle of addiction tears through families, destroying relationships and claiming lives across all demographics.
                   </p>
                   <p>
-                    The working-class pride of Baltimore often prevents families from seeking help. Many have "tried everything"—tough love, enabling, begging, threatening—without success. They don't realize that professional intervention offers a different approach with much higher success rates.
+                    The working-class pride of Baltimore often prevents families from seeking help. Many have "tried everything"—tough love, enabling, begging, threatening—without success. They don't realize that professional intervention offers a different approach with much higher outcomes.
                   </p>
                   <p>
                     Whether your loved one is caught in Baltimore's street drug scene or hiding a prescription pill addiction in the suburbs of Anne Arundel or Howard County, Freedom Interventions has the experience to help.
@@ -192,7 +192,7 @@ const BaltimoreMaryland = () => {
                     Despite decades of struggle, recovery is possible for Baltimore families. Every day, people escape addiction and rebuild their lives. We've helped families throughout the Baltimore metro area guide their loved ones into treatment and witnessed remarkable transformations.
                   </p>
                   <p>
-                    With fentanyl in virtually every street drug, time is critical. Every day without intervention is another day your loved one risks fatal overdose. If someone you love in Baltimore is struggling, don't wait—the time to act is now.
+                    With fentanyl in virtually every street drug, clarity matters. Every day without intervention carries real risk. If someone you love in Baltimore is struggling, it makes sense to get clarity before the next crisis makes the decision for you.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const BaltimoreMaryland = () => {
               Get Help for Your Baltimore Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for another crisis. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Baltimore City and surrounding counties including Baltimore County, Anne Arundel, Howard, Harford, and Carroll County.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation will help you understand your options and create a plan to help your loved one. We serve all of Baltimore City and surrounding counties including Baltimore County, Anne Arundel, Howard, Harford, and Carroll County.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

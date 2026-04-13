@@ -157,7 +157,7 @@ const BellevueWashington = () => {
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    With over 20 years of experience including work with high-functioning professionals and their families, Matt Brown understands the specific dynamics at play on the Eastside. We approach intervention with the discretion, sophistication, and clinical precision that Bellevue families expect.
+                    With over 20 years of experience including work with high-functioning professionals and their families, Matt Brown understands the specific dynamics at play on the Eastside. We approach intervention with the discretion, sophistication, and clear structure and direct guidance that Bellevue families expect.
                   </p>
                   <p>
                     <strong className="text-foreground">Eastside Resources:</strong> We connect families with King County's top-tier treatment resources including Overlake Medical Center, Fairfax Hospital Behavioral Health, and Eastside Recovery. We identify programs that match both clinical needs and lifestyle considerations.
@@ -192,7 +192,7 @@ const BellevueWashington = () => {
                     Recovery transforms lives regardless of income or status. We've helped Eastside families break through years of high-functioning addiction and guide their loved ones into treatment that actually works. The intelligence and drive that fuel success in tech can be redirected into one of the most powerful recoveries you'll ever witness.
                   </p>
                   <p>
-                    The earlier you act, the more you preserve. Don't wait for a DUI, a health crisis, or a career collapse to force the issue. Professional intervention creates the structured opportunity your family needs now.
+                    The earlier families make a plan, the more they can preserve. It makes sense to get clarity before a DUI, a health crisis, or a career collapse forces the issue. Professional intervention creates the structured opportunity your family needs.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ const BellevueWashington = () => {
               Get Help for Your Bellevue Family Today
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              Don't wait for the next crisis. Our free, confidential consultation helps you understand your options and build a plan. We serve all of King County's Eastside including Bellevue, Kirkland, Redmond, Mercer Island, Issaquah, Sammamish, and Medina.
+              If the situation is escalating, it makes sense to get clarity before the next crisis makes the decision for you. Our free, confidential consultation helps you understand your options and build a plan. We serve all of King County's Eastside including Bellevue, Kirkland, Redmond, Mercer Island, Issaquah, Sammamish, and Medina.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

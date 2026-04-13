@@ -192,7 +192,7 @@ const NashvilleTennessee = () => {
                     Nashville has a growing recovery community that includes faith-based programs, 12-step meetings, and alternative approaches. Many musicians and industry professionals have gotten sober and now mentor others. Recovery in Nashville is possible, and many find it transforms their creativity.
                   </p>
                   <p>
-                    The fentanyl crisis has made intervention more urgent than ever. Tennessee's overdose death rate continues to climb. Professional intervention can save your loved one's life.
+                    The fentanyl crisis has made intervention more urgent than ever. Tennessee's overdose death rate continues to climb. Professional intervention can help your family create a real opening for treatment.
                   </p>
                 </div>
               </div>

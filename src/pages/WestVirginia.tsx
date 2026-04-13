@@ -153,7 +153,7 @@ const WestVirginia = () => {
                   The intervention process begins with comprehensive assessment to determine appropriate care level. Given the severity of opioid dependence common in West Virginia, medical detox is often essential. The interventionist arranges immediate placement and transport.
                 </p>
                 <p>
-                  Family preparation is equally important. The interventionist helps families understand healthy boundaries, stop enabling behaviors, and communicate effectively. When the intervention occurs, the structured approach achieves 80-90% treatment acceptance.
+                  Family preparation is equally important. The interventionist helps families understand healthy boundaries, stop enabling behaviors, and communicate effectively. When the intervention occurs, the structured approach achieves significantly higher treatment acceptance.
                 </p>
               </div>
             </div>
@@ -225,7 +225,7 @@ const WestVirginia = () => {
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-            Take the First Step for Your West Virginia Family
+            Schedule Free Consultation for Your West Virginia Family
           </h2>
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
             In the nation's hardest-hit state, professional intervention can save lives. Reach out today for a confidential consultation.
