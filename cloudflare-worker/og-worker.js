@@ -212,8 +212,8 @@ const SUPABASE_URL = 'https://rizfkjgwhcpwiryyqejx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpemZramd3aGNwd2lyeXlxZWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2NTA1NTQsImV4cCI6MjA4MDIyNjU1NH0.7FENiqyiZCFTXJWzlNpxu7Jtf0JROfJAK44oAWHZeH4';
 const SITE_URL = 'https://freedominterventions.com';
 
-// Social media crawler detection
-const CRAWLER_USER_AGENTS = [
+// Social preview crawler detection (search bots should see the real page, not the OG stub)
+const SOCIAL_CRAWLER_USER_AGENTS = [
   'facebookexternalhit',
   'Facebot',
   'Twitterbot',
@@ -222,17 +222,13 @@ const CRAWLER_USER_AGENTS = [
   'Discordbot',
   'TelegramBot',
   'WhatsApp',
-  'Googlebot',
-  'bingbot',
-  'DuckDuckBot',
-  'Applebot',
   'PinterestBot',
 ];
 
-function isCrawler(userAgent) {
+function isSocialCrawler(userAgent) {
   if (!userAgent) return false;
   const ua = userAgent.toLowerCase();
-  return CRAWLER_USER_AGENTS.some(crawler => ua.includes(crawler.toLowerCase()));
+  return SOCIAL_CRAWLER_USER_AGENTS.some(crawler => ua.includes(crawler.toLowerCase()));
 }
 
 function escapeHtml(text) {
@@ -309,12 +305,10 @@ function generateOgHtml(post, pageUrl) {
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${imageUrl}">
   
-  <!-- Redirect for any browser that renders this -->
-  <meta http-equiv="refresh" content="0; url=${pageUrl}">
   <link rel="canonical" href="${pageUrl}">
 </head>
 <body>
-  <p>Redirecting to <a href="${pageUrl}">${title}</a>...</p>
+  <p><a href="${pageUrl}">${title}</a></p>
 </body>
 </html>`;
 }
@@ -390,12 +384,17 @@ export default {
       return fetch(request);
     }
 
-    // Only serve OG HTML to crawlers
-    if (!isCrawler(userAgent)) {
+    // Search bots should get the real blog page so they can index actual content.
+    if (isSearchCrawler(userAgent)) {
       return fetch(request);
     }
 
-    console.log(`Crawler detected: ${userAgent.substring(0, 50)} for slug: ${slug}`);
+    // Only serve the OG HTML stub to social preview crawlers.
+    if (!isSocialCrawler(userAgent)) {
+      return fetch(request);
+    }
+
+    console.log(`Social crawler detected: ${userAgent.substring(0, 50)} for slug: ${slug}`);
 
     try {
       const post = await fetchBlogPost(slug);
@@ -413,7 +412,7 @@ export default {
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
           'Cache-Control': 'public, max-age=3600',
-          'X-Robots-Tag': 'noindex',
+          'Vary': 'User-Agent',
         },
       });
     } catch (error) {
