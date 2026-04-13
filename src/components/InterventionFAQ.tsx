@@ -126,9 +126,9 @@ const InterventionFAQ = () => {
               <HelpCircle className="w-4 h-4" />
               Frequently Asked Questions
             </div>
-            <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
               Family Intervention FAQ & Myth-Busting
-            </h1>
+            </h2>
             <p className="text-lg text-muted-foreground">
               Clear Answers to the Family Intervention Questions Families Are Afraid to Ask
             </p>
