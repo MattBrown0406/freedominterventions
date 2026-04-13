@@ -40,7 +40,7 @@ const About = () => {
                 Watching a loved one disappear into addiction is brutal. Matt works directly with families to bring structure, clarity, and consistent, honest guidance to a situation that usually feels chaotic and exhausting.
               </p>
               <p>
-                Over more than 20 years, Matt has helped more than 1,000 families stop managing the chaos and start moving toward treatment. He believes addiction is a medical illness with a spiritual dimension, which means treatment has to address both the clinical reality and how a person is living.
+                Over more than 20 years, Matt has helped more than 1,000 families stop managing the chaos and start moving toward treatment. He believes addiction is a medical illness with a spiritual solution, which means treatment has to address both the clinical reality and how a person is living.
               </p>
             </div>
             
