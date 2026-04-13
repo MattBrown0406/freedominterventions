@@ -86,7 +86,7 @@ const Index = () => {
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">Matt's Philosophy</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Addiction is a medical illness with a spiritual dimension. It requires clinical treatment and meaningful change in purpose, connection, and how a person lives. Families do best when they stop waiting for the perfect moment and start dealing with the truth in front of them.
+                Addiction is a medical illness with a spiritual solution. It requires clinical treatment and meaningful change in purpose, connection, and how a person lives. Families do best when they stop waiting for the perfect moment and start dealing with the truth in front of them.
               </p>
             </div>
           </div>
