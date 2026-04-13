@@ -7,9 +7,11 @@ import SignsSection from "@/components/SignsSection";
 import TestimonialHighlight from "@/components/TestimonialHighlight";
 import ProcessOverview from "@/components/ProcessOverview";
 import UrgencyStats from "@/components/UrgencyStats";
+import SocialProof from "@/components/SocialProof";
 import ResourceBanner from "@/components/ResourceBanner";
 import ToolkitBanner from "@/components/ToolkitBanner";
 import About from "@/components/About";
+import WorkWithMatt from "@/components/WorkWithMatt";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -147,12 +149,14 @@ const Index = () => {
         <Services />
         <SignsSection />
         <TestimonialHighlight />
+        <SocialProof />
         <LeadMagnetBanner />
         <ProcessOverview />
         <UrgencyStats />
         <ResourceBanner />
         <ToolkitBanner />
         <About />
+        <WorkWithMatt />
         <BookingCalendar />
         <section className="py-16 md:py-24 bg-muted/20">
           <div className="container px-6">
