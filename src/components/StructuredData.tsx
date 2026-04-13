@@ -103,26 +103,55 @@ export const OrganizationSchema = () => {
   );
 };
 
-// LocalBusiness Schema for location pages
-export const LocalBusinessSchema = ({ location, state }: { location: string; state: string }) => {
+type ServiceAreaType = "City" | "AdministrativeArea" | "State" | "Province" | "Place";
+
+interface LocalBusinessSchemaProps {
+  location: string;
+  state: string;
+  country?: "US" | "CA";
+  areaType?: ServiceAreaType;
+  areaServedName?: string;
+  url?: string;
+}
+
+// Legacy name kept for compatibility with existing pages, but this now emits
+// a service-area schema instead of implying a physical local office everywhere.
+export const LocalBusinessSchema = ({
+  location,
+  state,
+  country = "US",
+  areaType = "City",
+  areaServedName,
+  url = "https://freedominterventions.com",
+}: LocalBusinessSchemaProps) => {
+  const servedName = areaServedName || location;
   const schema = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: `Freedom Interventions - ${location}`,
-    description: `Professional addiction intervention services in ${location}, ${state}. Helping families guide loved ones toward recovery.`,
+    "@type": "ProfessionalService",
+    name: "Freedom Interventions",
+    description: `Professional addiction intervention services for families in ${servedName}${areaType === "City" ? `, ${state}` : ""}. Helping loved ones move toward treatment and recovery.`,
     telephone: "+1-541-838-6009",
     email: "matt@freedominterventions.com",
-    url: "https://freedominterventions.com",
+    url,
     image: "https://freedominterventions.com/favicon.jpeg",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: location,
-      addressRegion: state,
-      addressCountry: "US",
-    },
     areaServed: {
-      "@type": "City",
-      name: location,
+      "@type": areaType,
+      name: servedName,
+      addressCountry: country,
+    },
+    provider: {
+      "@id": "https://freedominterventions.com/#organization",
+    },
+    serviceType: [
+      "Addiction Intervention",
+      "Family Intervention",
+      "Crisis Support",
+      "Treatment Planning",
+      "Aftercare Guidance",
+    ],
+    audience: {
+      "@type": "Audience",
+      audienceType: "Families dealing with addiction",
     },
     priceRange: "$$",
     openingHoursSpecification: {
@@ -131,6 +160,47 @@ export const LocalBusinessSchema = ({ location, state }: { location: string; sta
       opens: "00:00",
       closes: "23:59",
     },
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
+export const ServiceAreaSchema = ({
+  areaName,
+  url,
+  description,
+  country = "US",
+  areaType = "AdministrativeArea",
+}: {
+  areaName: string;
+  url: string;
+  description: string;
+  country?: "US" | "CA";
+  areaType?: ServiceAreaType;
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `Addiction intervention services in ${areaName}`,
+    description,
+    url,
+    provider: {
+      "@id": "https://freedominterventions.com/#organization",
+    },
+    areaServed: {
+      "@type": areaType,
+      name: areaName,
+      addressCountry: country,
+    },
+    audience: {
+      "@type": "Audience",
+      audienceType: "Families dealing with addiction",
+    },
+    serviceType: "Addiction Intervention",
   };
 
   return (
