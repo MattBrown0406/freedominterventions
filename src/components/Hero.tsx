@@ -108,7 +108,7 @@ const Hero = () => {
             style={{ animationDelay: "0.5s" }}
           >
             {[
-              { icon: "✓", label: "Certified Intervention Professional (CIP)" },
+              { icon: "✓", label: "CIP Certified" },
               { icon: "✓", label: "20+ Years Experience" },
               { icon: "✓", label: "Direct Family Guidance Into Treatment" },
             ].map((badge) => (
