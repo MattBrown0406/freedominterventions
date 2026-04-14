@@ -144,6 +144,16 @@ const resolveChromiumLaunchOptions = () => {
 const main = async () => {
   if (!existsSync(distDir)) throw new Error('dist directory does not exist. Run vite build first.');
 
+  // Check if Playwright browsers are available before attempting to launch
+  try {
+    const testBrowser = await chromium.launch(resolveChromiumLaunchOptions());
+    await testBrowser.close();
+  } catch (e) {
+    console.warn('⚠️  Playwright browsers not available, skipping prerender step.');
+    console.warn('   Run "npx playwright install" to enable prerendering.');
+    return;
+  }
+
   const env = await loadEnv();
   const [staticRoutes, blogRoutes] = await Promise.all([getStaticRoutes(), getBlogRoutes(env)]);
   const routes = [...new Set([...staticRoutes, ...blogRoutes])];
