@@ -14,7 +14,7 @@ const root = path.resolve(__dirname, '..');
 const distDir = path.join(root, 'dist');
 const appFile = path.join(root, 'src', 'App.tsx');
 const envFile = path.join(root, '.env');
-const previewPort = 4173;
+const previewPort = Number(process.env.PRERENDER_PREVIEW_PORT || 4273);
 const previewOrigin = `http://127.0.0.1:${previewPort}`;
 
 const loadEnv = async () => {
