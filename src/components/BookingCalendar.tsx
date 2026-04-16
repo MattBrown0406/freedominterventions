@@ -295,6 +295,55 @@ export const BookingCalendar = () => {
     return `${displayHour}:00 ${ampm}`;
   };
 
+  // All availability is set in Pacific Time (Matt's local time zone).
+  // Convert a Pacific HH:MM slot on selectedDate to the visitor's local time.
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const userTzShort = (() => {
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: userTimeZone,
+        timeZoneName: 'short',
+      }).formatToParts(new Date());
+      return parts.find((p) => p.type === 'timeZoneName')?.value || userTimeZone;
+    } catch {
+      return userTimeZone;
+    }
+  })();
+
+  const formatTimeInUserTz = (time: string, date?: Date) => {
+    if (!date) return '';
+    const [h, m] = time.split(':').map(Number);
+    // Build an ISO-ish string anchored to Pacific Time, then let the browser convert.
+    // We compute the offset for Los Angeles on the selected date to handle DST correctly.
+    const ymd = format(date, 'yyyy-MM-dd');
+    // Determine LA offset for that date
+    const probe = new Date(`${ymd}T12:00:00Z`);
+    const laParts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+    }).formatToParts(probe);
+    const laHour = parseInt(laParts.find((p) => p.type === 'hour')?.value || '0');
+    const offsetHours = 12 - laHour; // hours to add to LA time to get UTC
+    const utc = new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      h + offsetHours,
+      m,
+    ));
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: userTimeZone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZoneName: 'short',
+    }).format(utc);
+  };
+
+  const isUserInPacific = userTimeZone === 'America/Los_Angeles';
+
   const getStepTitle = () => {
     switch (step) {
       case 'type': return 'Choose Session Type';
