@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, ArrowRight, ClipboardList } from "lucide-react";
+import { X, ArrowRight, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "leadMagnetDismissed";
@@ -60,13 +60,13 @@ const LeadMagnetPopup = () => {
         {/* Header */}
         <div className="bg-primary px-6 py-8 text-center">
           <div className="w-16 h-16 bg-primary-foreground/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ClipboardList className="w-8 h-8 text-primary-foreground" />
+            <Users className="w-8 h-8 text-primary-foreground" />
           </div>
           <h2 className="font-serif text-2xl font-bold text-primary-foreground mb-2">
-            Not sure what your family needs?
+            Join The Family Squares
           </h2>
           <p className="text-primary-foreground/80 text-sm">
-            Answer 6 quick questions and get a personalized recommendation — free, no commitment.
+            A free weekly Zoom support meeting for families affected by addiction — led by Matt Brown.
           </p>
         </div>
 
@@ -75,27 +75,27 @@ const LeadMagnetPopup = () => {
           <ul className="space-y-3 mb-6 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
               <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <span>Identify enabling patterns that are keeping things stuck</span>
+              <span>No obligation to speak or participate</span>
             </li>
             <li className="flex items-start gap-2">
               <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <span>Understand how serious the situation really is</span>
+              <span>Many families just listen with their cameras off — that's completely fine</span>
             </li>
             <li className="flex items-start gap-2">
               <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <span>Get a clear next step — intervention, support, or resources</span>
+              <span>Connect with others who truly understand what you're going through</span>
             </li>
           </ul>
 
           <a
-            href="https://soberhelpline.com/family-situation-assessment"
+            href="https://soberhelpline.com/monday-zoom-registration"
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleClose}
           >
             <Button className="w-full h-11 gap-2" size="lg">
-              <ClipboardList className="w-4 h-4" />
-              Take the Free 2-Minute Assessment
+              <Users className="w-4 h-4" />
+              Register for the Free Meeting
             </Button>
           </a>
 
@@ -103,7 +103,7 @@ const LeadMagnetPopup = () => {
             onClick={handleClose}
             className="w-full text-xs text-muted-foreground hover:text-foreground mt-3 text-center transition-colors"
           >
-            No thanks, I'll figure it out on my own
+            No thanks, maybe another time
           </button>
         </div>
 
