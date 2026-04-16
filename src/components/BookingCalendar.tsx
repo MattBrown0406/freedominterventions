@@ -449,19 +449,36 @@ export const BookingCalendar = () => {
               {/* Step: Select Time */}
               {step === "time" && (
                 <div>
+                  <div className="mb-4 p-3 rounded-md bg-primary/5 border border-primary/20 text-sm">
+                    <p className="font-medium text-foreground">
+                      Times shown in <span className="text-primary">your local time zone</span> ({userTzShort})
+                    </p>
+                    {!isUserInPacific && (
+                      <p className="text-muted-foreground mt-1">
+                        Appointments are scheduled in Pacific Time and automatically converted for you.
+                      </p>
+                    )}
+                  </div>
                   {loading ? (
                     <p className="text-center text-muted-foreground">Loading available times...</p>
                   ) : availableSlots.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
                       {availableSlots.map((slot) => (
                         <Button
                           key={slot}
                           variant={selectedTime === slot ? "default" : "outline"}
                           onClick={() => handleTimeSelect(slot)}
-                          className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 h-10 sm:h-11"
+                          className="flex flex-col items-center justify-center gap-0.5 text-xs sm:text-sm px-2 sm:px-3 h-auto py-2"
                         >
-                          <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                          <span className="whitespace-nowrap">{formatTime(slot)}</span>
+                          <span className="flex items-center gap-1 font-semibold whitespace-nowrap">
+                            <Clock className="w-3 h-3 flex-shrink-0" />
+                            {formatTimeInUserTz(slot, selectedDate)}
+                          </span>
+                          {!isUserInPacific && (
+                            <span className="text-[10px] opacity-75 whitespace-nowrap">
+                              {formatTime(slot)} PT
+                            </span>
+                          )}
                         </Button>
                       ))}
                     </div>
