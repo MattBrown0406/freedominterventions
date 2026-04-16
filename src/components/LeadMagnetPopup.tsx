@@ -8,7 +8,7 @@ const LeadMagnetPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const dismissed = localStorage.getItem(STORAGE_KEY);
+    const dismissed = sessionStorage.getItem(STORAGE_KEY);
     if (dismissed) return;
 
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
@@ -22,7 +22,7 @@ const LeadMagnetPopup = () => {
     };
 
     const timer = setTimeout(() => {
-      if (!localStorage.getItem(STORAGE_KEY)) {
+      if (!sessionStorage.getItem(STORAGE_KEY)) {
         setIsVisible(true);
       }
     }, isMobile ? 30000 : 30000);
@@ -39,7 +39,7 @@ const LeadMagnetPopup = () => {
 
   const handleClose = () => {
     setIsVisible(false);
-    localStorage.setItem(STORAGE_KEY, "true");
+    sessionStorage.setItem(STORAGE_KEY, "true");
   };
 
   if (!isVisible) return null;
