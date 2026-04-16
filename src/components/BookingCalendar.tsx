@@ -637,7 +637,12 @@ export const BookingCalendar = () => {
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
                     <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Coaching (1 hour)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
+                    <p>
+                      <strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}
+                      {!isUserInPacific && (
+                        <span className="text-muted-foreground"> ({formatTime(selectedTime)} Pacific)</span>
+                      )}
+                    </p>
                   </div>
 
                   <p className="text-sm text-muted-foreground">
