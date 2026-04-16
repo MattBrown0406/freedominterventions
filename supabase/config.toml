@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.case-documents]
 verify_jwt = false
+
+[functions.assessment-to-notion]
+verify_jwt = false
