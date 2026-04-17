@@ -414,7 +414,7 @@ export const BookingCalendar = () => {
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <DollarSign className="w-6 h-6 text-primary" />
-                      <span className="text-lg font-semibold">Schedule Coaching Consultation for $150</span>
+                      <span className="text-lg font-semibold">Schedule Coaching Consultation</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
                       A 1-hour Zoom call with you and any concerned loved ones. This meeting is intended to give you an actionable plan to change your family's circumstances.
