@@ -86,7 +86,7 @@ const WorkWithMatt = () => {
               </Button>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary" />
-                <span>No retainers. Fee paid in full, engagement lasts 30–60 days.</span>
+                <span>No retainers. Fee paid in full, engagement lasts until the client completes treatment successfully.</span>
               </div>
             </div>
           </div>
