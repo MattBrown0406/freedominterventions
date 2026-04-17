@@ -66,7 +66,7 @@ const LeadMagnetPopup = () => {
             Join The Family Squares
           </h2>
           <p className="text-primary-foreground/80 text-sm">
-            A free weekly Zoom support meeting for families affected by addiction — led by Matt Brown.
+            A free weekly Zoom support meeting for families affected by addiction — led by Matt Brown. Every Monday at 7:00 PM Pacific.
           </p>
         </div>
 
