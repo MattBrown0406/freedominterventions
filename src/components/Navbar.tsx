@@ -25,7 +25,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "How It Works", href: "/family-intervention#process" },
   { name: "About Matt", href: "/interventionist" },
-  { name: "Testimonials", href: "/testimonials" },
+  { name: "Assessment", href: "/self-assessment" },
   { name: "Contact", href: "/contact" },
 ];
 
