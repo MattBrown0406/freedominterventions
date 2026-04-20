@@ -25,7 +25,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "How It Works", href: "/family-intervention#process" },
   { name: "About Matt", href: "/interventionist" },
-  { name: "Testimonials", href: "/testimonials" },
+  { name: "Assessment", href: "/self-assessment" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -84,7 +84,7 @@ const Navbar = () => {
             <Link to="/family-intervention#process" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">How It Works</Link>
             <Link to="/interventionist" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">About Matt</Link>
             <Dropdown label="Resources" items={resourceLinks} />
-            <Link to="/testimonials" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Testimonials</Link>
+            <Link to="/self-assessment" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Assessment</Link>
             <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Contact</Link>
             <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "navbar_desktop" }}>
               <Button variant="hero" size="default">
