@@ -61,7 +61,10 @@ export const SquareCardForm = ({
         }
 
         const payments = window.Square.payments(applicationId, locationId);
-        const cardInstance = await payments.card();
+        const cardInstance = await payments.card({
+          includeInputLabels: true,
+          postalCode: true,
+        });
         
         if (cardContainerRef.current) {
           await cardInstance.attach(cardContainerRef.current);
