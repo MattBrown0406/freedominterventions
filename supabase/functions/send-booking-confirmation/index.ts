@@ -141,6 +141,21 @@ async function sendEmail(
   console.log("Email sent successfully via SendGrid");
 }
 
+// Map booking type → display label and default duration
+function getBookingMeta(bookingType: string): { label: string; defaultDuration: number; emailNoun: string } {
+  switch (bookingType) {
+    case 'consultation':
+      return { label: 'Free Consultation', defaultDuration: 15, emailNoun: 'Consultation' };
+    case 'crisis-coaching':
+    case 'coaching': // legacy fallback
+      return { label: 'Crisis Coaching Session', defaultDuration: 60, emailNoun: 'Crisis Coaching Session' };
+    case 'readiness-intensive':
+      return { label: 'Family Readiness Intensive', defaultDuration: 90, emailNoun: 'Family Readiness Intensive' };
+    default:
+      return { label: 'Appointment', defaultDuration: 60, emailNoun: 'Appointment' };
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -154,11 +169,16 @@ const handler = async (req: Request): Promise<Response> => {
       bookingType,
       bookingDate,
       bookingTime,
-      durationMinutes = bookingType === 'consultation' ? 30 : 60,
+      durationMinutes,
       isReschedule = false,
     }: BookingConfirmationRequest = await req.json();
 
-    console.log("Processing booking confirmation for:", customerEmail);
+    const meta = getBookingMeta(bookingType);
+    const effectiveDuration = typeof durationMinutes === 'number' && durationMinutes > 0
+      ? durationMinutes
+      : meta.defaultDuration;
+
+    console.log("Processing booking confirmation for:", customerEmail, "type:", bookingType);
 
     // Format the meeting time for Zoom (ISO 8601)
     const meetingDateTime = new Date(`${bookingDate}T${bookingTime}`);
@@ -168,15 +188,13 @@ const handler = async (req: Request): Promise<Response> => {
     const accessToken = await getZoomAccessToken();
     console.log("Got Zoom access token");
 
-    const meetingTopic = bookingType === "consultation" 
-      ? `Freedom Interventions - Free Consultation with ${customerName}`
-      : `Freedom Interventions - Coaching Session with ${customerName}`;
+    const meetingTopic = `Freedom Interventions - ${meta.label} with ${customerName}`;
 
     const { joinUrl, meetingId } = await createZoomMeeting(
       accessToken,
       meetingTopic,
       zoomStartTime,
-      durationMinutes
+      effectiveDuration
     );
     console.log("Created Zoom meeting:", meetingId);
 
@@ -193,27 +211,44 @@ const handler = async (req: Request): Promise<Response> => {
       hour12: true,
     });
 
-    const appointmentType = bookingType === "consultation" 
-      ? "Free Consultation (30 minutes)" 
-      : "Coaching Session (1 hour - $150)";
+    let appointmentType: string;
+    if (bookingType === 'consultation') {
+      appointmentType = 'Free Consultation (15 minutes)';
+    } else if (bookingType === 'readiness-intensive') {
+      appointmentType = 'Family Readiness Intensive (90 minutes - $2,500)';
+    } else {
+      appointmentType = 'Crisis Coaching Session (60 minutes - $150)';
+    }
 
-    const emailTitle = isReschedule 
+    const emailTitle = isReschedule
       ? "Your Appointment Has Been Rescheduled!"
       : "Your Appointment is Confirmed!";
 
     const emailSubject = isReschedule
-      ? `Rescheduled: Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} - Freedom Interventions`
-      : `Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} is Confirmed - Freedom Interventions`;
+      ? `Rescheduled: Your ${meta.emailNoun} - Freedom Interventions`
+      : `Your ${meta.emailNoun} is Confirmed - Freedom Interventions`;
+
+    // Family Readiness Intensive special block
+    const intensiveBlock = bookingType === 'readiness-intensive'
+      ? `
+        <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 16px 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #065f46; margin: 0 0 8px;">Includes 7 Days of Follow-Up Support</h3>
+          <p style="margin: 0; font-size: 14px; color: #064e3b;">
+            For 7 days following your 90-minute Zoom session, you'll have direct access to Matt by
+            <strong>Zoom, phone, text, or email</strong> as you put your family's plan into action.
+          </p>
+        </div>`
+      : '';
 
     // Send confirmation email
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #1e40af;">${emailTitle}</h1>
         <p>Dear ${customerName},</p>
-        <p>${isReschedule 
-          ? "Your appointment with Freedom Interventions has been successfully rescheduled." 
+        <p>${isReschedule
+          ? "Your appointment with Freedom Interventions has been successfully rescheduled."
           : "Thank you for booking with Freedom Interventions. Your appointment has been confirmed."}</p>
-        
+
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Appointment Details</h2>
           <p><strong>Booking ID:</strong> ${bookingId}</p>
@@ -221,24 +256,26 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Date:</strong> ${formattedDate}</p>
           <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
         </div>
-        
+
+        ${intensiveBlock}
+
         <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Join Your Meeting</h2>
           <p>Click the button below to join your Zoom meeting at the scheduled time:</p>
           <a href="${joinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 10px;">Join Zoom Meeting</a>
           <p style="margin-top: 15px; font-size: 14px; color: #666;">Or copy this link: ${joinUrl}</p>
         </div>
-        
+
         <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 0; font-size: 14px;"><strong>Need to reschedule?</strong> Use your Booking ID above along with your email address at our reschedule page.</p>
         </div>
-        
+
         <p>If you have any questions, please contact us at:</p>
         <ul>
           <li>Phone: (541) 838-6009</li>
           <li>Email: matt@freedominterventions.com</li>
         </ul>
-        
+
         <p>We look forward to speaking with you!</p>
         <p>Best regards,<br>Freedom Interventions Team</p>
       </div>
@@ -252,10 +289,14 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     // Send notification email to Matt
+    const adminIntensiveNote = bookingType === 'readiness-intensive'
+      ? `<p style="margin: 8px 0 0; font-size: 13px; color: #065f46;"><strong>Includes 7 days of follow-up support</strong> by Zoom, phone, text, or email.</p>`
+      : '';
+
     const adminNotificationHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #1e40af;">New Booking ${isReschedule ? '(Rescheduled)' : 'Received'}</h1>
-        
+
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
           <p><strong>Booking ID:</strong> ${bookingId}</p>
@@ -264,8 +305,9 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Type:</strong> ${appointmentType}</p>
           <p><strong>Date:</strong> ${formattedDate}</p>
           <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
+          ${adminIntensiveNote}
         </div>
-        
+
         <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Zoom Meeting</h2>
           <p><a href="${joinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Join Zoom Meeting</a></p>
@@ -276,7 +318,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     await sendEmail(
       "matt@freedominterventions.com",
-      `New ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} Booking - ${customerName}`,
+      `New ${meta.emailNoun} Booking - ${customerName}`,
       adminNotificationHtml
     );
 
