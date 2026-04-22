@@ -79,19 +79,28 @@ const SocialProof = () => {
               ))}
             </div>
 
-            <div className="space-y-4">
-              {storyHighlights.map((story) => (
-                <article
-                  key={story.family}
-                  className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm"
-                >
-                  <Quote className="w-6 h-6 text-primary/50 mb-3" aria-hidden="true" />
-                  <p className="text-base text-foreground font-medium leading-relaxed">“{story.quote}”</p>
-                  <p className="text-sm font-semibold text-foreground mt-4">{story.family}</p>
-                  <p className="text-sm text-muted-foreground">{story.outcome}</p>
-                </article>
-              ))}
-            </div>
+            <Carousel
+              opts={{ loop: true, align: "start" }}
+              plugins={[autoplay.current]}
+              className="w-full"
+            >
+              <CarouselContent>
+                {storyHighlights.map((story) => (
+                  <CarouselItem key={story.family}>
+                    <article className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm h-full">
+                      <Quote className="w-6 h-6 text-primary/50 mb-3" aria-hidden="true" />
+                      <p className="text-base text-foreground font-medium leading-relaxed">“{story.quote}”</p>
+                      <p className="text-sm font-semibold text-foreground mt-4">{story.family}</p>
+                      <p className="text-sm text-muted-foreground">{story.outcome}</p>
+                    </article>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="flex justify-end gap-2 mt-4">
+                <CarouselPrevious className="static translate-y-0" />
+                <CarouselNext className="static translate-y-0" />
+              </div>
+            </Carousel>
 
             <Button
               size="lg"
