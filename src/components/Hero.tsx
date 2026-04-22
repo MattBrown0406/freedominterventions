@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
+import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
 
 const Hero = () => {
