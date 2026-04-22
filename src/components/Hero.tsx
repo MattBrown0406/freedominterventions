@@ -35,8 +35,8 @@ const Hero = () => {
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-semibold text-foreground leading-tight text-balance animate-fade-up"
             style={{ animationDelay: "0.2s" }}
           >
-            Your Family Cannot
-            <span className="block text-primary">Afford to Wait</span>
+            When Addiction Has Your Family in Crisis,
+            <span className="block text-primary">Waiting Makes It Worse</span>
           </h1>
           
           {/* Subheadline */}
@@ -44,7 +44,7 @@ const Hero = () => {
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-up"
             style={{ animationDelay: "0.3s" }}
           >
-            If your loved one is spiraling and your family is scared, divided, or exhausted, get expert guidance now. Start with a free consultation or reserve a Family Readiness Intensive and leave with a real plan.
+            If your loved one is spiraling and your family is scared, exhausted, or divided, you do not need more guesswork. You need experienced professional guidance now. We help families take the right next step before the situation gets worse.
           </p>
           
           {/* CTAs */}
@@ -60,7 +60,7 @@ const Hero = () => {
             >
               <a href="#booking">
                 <Calendar className="w-5 h-5" />
-                Book a Free Consultation
+                Get Help Now
               </a>
             </Button>
             <Button
@@ -70,10 +70,17 @@ const Hero = () => {
               onClick={() => trackEvent("cta_learn_more", { location: "hero" })}
             >
               <a href="/family-readiness-intensive">
-                Explore the Intensive
+                Book a Free Consultation
                 <ArrowRight className="w-5 h-5" />
               </a>
             </Button>
+          </div>
+
+          <div 
+            className="text-sm text-muted-foreground animate-fade-up"
+            style={{ animationDelay: "0.45s" }}
+          >
+            Confidential help for families in crisis. Professional intervention and coaching options available.
           </div>
 
           {/* Trust badges */}
