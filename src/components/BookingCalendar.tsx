@@ -73,6 +73,47 @@ export const BookingCalendar = () => {
   const [cardReady, setCardReady] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
+  const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
+
+  // Pre-fill from URL params (abandoned cart recovery deep link)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type") as BookingType | null;
+    if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive")) {
+      setBookingType(type);
+      const name = params.get("name") || "";
+      const email = params.get("email") || "";
+      const phone = params.get("phone") || "";
+      if (name || email || phone) {
+        setCustomerInfo({ name, email, phone });
+      }
+      const dateStr = params.get("date");
+      const timeStr = params.get("time");
+      if (dateStr) {
+        const [y, m, d] = dateStr.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+        if (!isNaN(date.getTime())) {
+          setSelectedDate(date);
+          fetchAvailableSlots(date);
+          if (timeStr) {
+            setSelectedTime(timeStr);
+            // Skip straight to details so user can confirm and pay
+            setStep("details");
+          } else {
+            setStep("time");
+          }
+        } else {
+          setStep("date");
+        }
+      } else {
+        setStep("date");
+      }
+      // Clean URL so refreshes don't re-trigger
+      const cleanUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const offer = bookingType ? OFFERS[bookingType] : null;
   const isPaid = !!offer && offer.priceCents > 0;
