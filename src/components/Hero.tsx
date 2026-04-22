@@ -32,6 +32,20 @@ const Hero = () => {
             />
           </div>
 
+          {/* Matt's portrait */}
+          <div
+            className="flex justify-center animate-fade-up"
+            style={{ animationDelay: "0.08s" }}
+          >
+            <img
+              src={mattPortrait}
+              alt="Matt Brown, Certified Intervention Professional"
+              className="h-40 w-40 md:h-48 md:w-48 rounded-full object-cover border-4 border-primary/20 shadow-lg"
+              loading="eager"
+              width={192}
+              height={192}
+            />
+          </div>
 
           {/* Hope Statement */}
           <p 
