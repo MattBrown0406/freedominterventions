@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Phone } from "lucide-react";
-import logo from "@/assets/logo.jpeg";
+
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
 
@@ -16,21 +16,6 @@ const Hero = () => {
 
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-          {/* Logo - priority load for LCP */}
-          <div 
-            className="flex justify-center animate-fade-up"
-            style={{ animationDelay: "0.05s" }}
-          >
-            <img 
-              src={logo} 
-              alt="Freedom Interventions" 
-              className="h-[7rem] md:h-[9rem] w-auto mix-blend-multiply border-2 border-foreground rounded-lg object-contain" 
-              loading="eager"
-              fetchPriority="high"
-              width={266}
-              height={295}
-            />
-          </div>
 
           {/* Matt's portrait */}
           <div
