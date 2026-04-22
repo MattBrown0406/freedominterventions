@@ -54,7 +54,7 @@ const Hero = () => {
             className="space-y-3 animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <TrackedPhoneLink
                 phoneNumber="+15418386009"
                 metadata={{ location: 'hero_primary_cta' }}
@@ -64,10 +64,18 @@ const Hero = () => {
                   Get Help Now
                 </Button>
               </TrackedPhoneLink>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
               <a href="#booking">
                 <Button variant="hero-outline" size="xl">
                   <Calendar className="w-5 h-5" />
-                  Book a Free Consultation
+                  Book a Crisis Coaching Session
+                </Button>
+              </a>
+              <a href="#booking">
+                <Button variant="hero-outline" size="xl">
+                  <Calendar className="w-5 h-5" />
+                  Book a Family Readiness Intensive
                 </Button>
               </a>
             </div>
