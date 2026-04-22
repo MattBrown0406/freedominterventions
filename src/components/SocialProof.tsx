@@ -2,8 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Quote, Mic, PlayCircle, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { testimonials } from "@/data/testimonials";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 
-const storyHighlights = testimonials.slice(0, 3).map((testimonial) => ({
+const storyHighlights = testimonials.slice(0, 6).map((testimonial) => ({
   quote: testimonial.quote,
   family: `${testimonial.author}, ${testimonial.location}`,
   outcome: "Families emphasized aligned boundaries, honest communication, and relief after stepping into a plan.",
@@ -40,6 +49,7 @@ const resourceLinks = [
 ];
 
 const SocialProof = () => {
+  const autoplay = useRef(Autoplay({ delay: 6000, stopOnInteraction: true }));
   return (
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-6">
@@ -70,19 +80,28 @@ const SocialProof = () => {
               ))}
             </div>
 
-            <div className="space-y-4">
-              {storyHighlights.map((story) => (
-                <article
-                  key={story.family}
-                  className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm"
-                >
-                  <Quote className="w-6 h-6 text-primary/50 mb-3" aria-hidden="true" />
-                  <p className="text-base text-foreground font-medium leading-relaxed">“{story.quote}”</p>
-                  <p className="text-sm font-semibold text-foreground mt-4">{story.family}</p>
-                  <p className="text-sm text-muted-foreground">{story.outcome}</p>
-                </article>
-              ))}
-            </div>
+            <Carousel
+              opts={{ loop: true, align: "start" }}
+              plugins={[autoplay.current]}
+              className="w-full"
+            >
+              <CarouselContent>
+                {storyHighlights.map((story) => (
+                  <CarouselItem key={story.family}>
+                    <article className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm h-full">
+                      <Quote className="w-6 h-6 text-primary/50 mb-3" aria-hidden="true" />
+                      <p className="text-base text-foreground font-medium leading-relaxed">“{story.quote}”</p>
+                      <p className="text-sm font-semibold text-foreground mt-4">{story.family}</p>
+                      <p className="text-sm text-muted-foreground">{story.outcome}</p>
+                    </article>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="flex justify-end gap-2 mt-4">
+                <CarouselPrevious className="static translate-y-0" />
+                <CarouselNext className="static translate-y-0" />
+              </div>
+            </Carousel>
 
             <Button
               size="lg"
