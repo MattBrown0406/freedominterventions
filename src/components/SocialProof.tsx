@@ -2,15 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Quote, Mic, PlayCircle, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { testimonials } from "@/data/testimonials";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
-import type { CarouselApi } from "@/components/ui/carousel";
 
 const storyHighlights = testimonials.slice(0, 6).map((testimonial) => ({
   quote: testimonial.quote,
@@ -49,13 +41,17 @@ const resourceLinks = [
 ];
 
 const SocialProof = () => {
-  const [api, setApi] = useState<CarouselApi>();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    if (!api) return;
-    const interval = setInterval(() => api.scrollNext(), 6000);
-    return () => clearInterval(interval);
-  }, [api]);
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % storyHighlights.length);
+    }, 6000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const activeStory = storyHighlights[activeIndex];
 
   return (
     <section className="py-16 bg-muted/40">
@@ -87,28 +83,52 @@ const SocialProof = () => {
               ))}
             </div>
 
-            <Carousel
-              setApi={setApi}
-              opts={{ loop: true, align: "start" }}
-              className="w-full"
-            >
-              <CarouselContent>
-                {storyHighlights.map((story) => (
-                  <CarouselItem key={story.family}>
-                    <article className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm h-full">
-                      <Quote className="w-6 h-6 text-primary/50 mb-3" aria-hidden="true" />
-                      <p className="text-base text-foreground font-medium leading-relaxed">“{story.quote}”</p>
-                      <p className="text-sm font-semibold text-foreground mt-4">{story.family}</p>
-                      <p className="text-sm text-muted-foreground">{story.outcome}</p>
-                    </article>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <div className="flex justify-end gap-2 mt-4">
-                <CarouselPrevious className="static translate-y-0" />
-                <CarouselNext className="static translate-y-0" />
+            <article className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm min-h-[250px] flex flex-col justify-between">
+              <div>
+                <Quote className="w-6 h-6 text-primary/50 mb-3" aria-hidden="true" />
+                <p className="text-base text-foreground font-medium leading-relaxed">“{activeStory.quote}”</p>
               </div>
-            </Carousel>
+              <div className="mt-4 space-y-3">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{activeStory.family}</p>
+                  <p className="text-sm text-muted-foreground">{activeStory.outcome}</p>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2" aria-label="Testimonial navigation dots">
+                    {storyHighlights.map((story, index) => (
+                      <button
+                        key={story.family}
+                        type="button"
+                        onClick={() => setActiveIndex(index)}
+                        className={`h-2.5 rounded-full transition-all ${
+                          index === activeIndex ? "w-8 bg-primary" : "w-2.5 bg-border hover:bg-primary/40"
+                        }`}
+                        aria-label={`Show testimonial ${index + 1}`}
+                        aria-pressed={index === activeIndex}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setActiveIndex((current) => (current - 1 + storyHighlights.length) % storyHighlights.length)}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setActiveIndex((current) => (current + 1) % storyHighlights.length)}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </article>
 
             <Button
               size="lg"
