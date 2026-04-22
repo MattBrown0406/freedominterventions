@@ -321,6 +321,17 @@ export const BookingCalendar = () => {
       setBookingId(booking?.id || null);
       setStep("confirmation");
       toast.success("Booking confirmed!");
+      // Mark abandoned cart as recovered
+      if (abandonedCartId) {
+        try {
+          await supabase
+            .from("abandoned_carts")
+            .update({ status: "recovered", recovered_at: new Date().toISOString() })
+            .eq("id", abandonedCartId);
+        } catch (err) {
+          console.warn("Failed to mark cart recovered:", err);
+        }
+      }
       if (booking?.id) {
         await sendBookingConfirmation(booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
       }
