@@ -207,14 +207,15 @@ serve(async (req) => {
           });
         }
 
-        const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime } = params;
+        const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime, bookingType: paymentBookingType } = params;
         
         // Validate all required inputs
         if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {
           throw new Error('Invalid payment source');
         }
 
-        if (typeof amount !== 'number' || amount <= 0 || amount > 100000) {
+        // Allow up to $5000 (500000 cents) to support Family Readiness Intensive
+        if (typeof amount !== 'number' || amount <= 0 || amount > 500000) {
           throw new Error('Invalid payment amount');
         }
 
@@ -233,10 +234,17 @@ serve(async (req) => {
         const sanitizedName = sanitizeString(customerName);
         const sanitizedEmail = customerEmail.toLowerCase().trim();
 
+        const sessionLabel = paymentBookingType === 'readiness-intensive'
+          ? 'Family Readiness Intensive'
+          : paymentBookingType === 'crisis-coaching'
+          ? 'Crisis Coaching Session'
+          : 'Coaching session';
+
         console.log('Processing payment', { 
           amount, 
           customerEmail: sanitizedEmail, 
-          bookingDate, 
+          bookingDate,
+          bookingType: paymentBookingType,
           rateLimitRemaining: rateLimit.remaining 
         });
         
@@ -255,7 +263,7 @@ serve(async (req) => {
               currency: 'USD',
             },
             location_id: SQUARE_LOCATION_ID,
-            note: `Coaching session for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
+            note: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
             buyer_email_address: sanitizedEmail,
           }),
         });
@@ -316,12 +324,15 @@ serve(async (req) => {
           throw new Error('Valid booking date and time are required');
         }
 
-        if (!bookingType || !['consultation', 'coaching'].includes(bookingType)) {
+        if (!bookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching'].includes(bookingType)) {
           throw new Error('Valid booking type is required');
         }
 
+        // Normalize legacy 'coaching' -> 'crisis-coaching'
+        const normalizedBookingType = bookingType === 'coaching' ? 'crisis-coaching' : bookingType;
+
         const sanitizedData = {
-          booking_type: bookingType,
+          booking_type: normalizedBookingType,
           customer_name: sanitizeString(customerName),
           customer_email: customerEmail.toLowerCase().trim(),
           customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
