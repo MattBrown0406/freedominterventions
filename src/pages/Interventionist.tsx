@@ -50,8 +50,7 @@ const Interventionist = () => {
                   src={mattHeadshot}
                   alt="Matt Brown - Professional Interventionist with over 20 years of experience"
                   className="w-full max-w-md rounded-2xl shadow-2xl"
-                  width={1110}
-                  height={1506}
+                  objectFit="contain"
                   priority={true}
                 />
                 <div className="mt-6 flex flex-wrap gap-3 justify-center">
