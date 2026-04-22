@@ -35,8 +35,8 @@ const Hero = () => {
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-semibold text-foreground leading-tight text-balance animate-fade-up"
             style={{ animationDelay: "0.2s" }}
           >
-            Guiding Families to
-            <span className="block text-primary">Hope & Recovery</span>
+            Your Family Cannot
+            <span className="block text-primary">Afford to Wait</span>
           </h1>
           
           {/* Subheadline */}
@@ -44,7 +44,7 @@ const Hero = () => {
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-up"
             style={{ animationDelay: "0.3s" }}
           >
-            When addiction takes hold, intervention offers a lifeline. Our compassionate team helps families navigate the path to recovery with dignity and care.
+            If your loved one is spiraling and your family is scared, divided, or exhausted, get expert guidance now. Start with a free consultation or reserve a Family Readiness Intensive and leave with a real plan.
           </p>
           
           {/* CTAs */}
@@ -60,7 +60,7 @@ const Hero = () => {
             >
               <a href="#booking">
                 <Calendar className="w-5 h-5" />
-                Book a Call Now
+                Book a Free Consultation
               </a>
             </Button>
             <Button
@@ -69,8 +69,8 @@ const Hero = () => {
               asChild
               onClick={() => trackEvent("cta_learn_more", { location: "hero" })}
             >
-              <a href="#services">
-                Learn More
+              <a href="/family-readiness-intensive">
+                Explore the Intensive
                 <ArrowRight className="w-5 h-5" />
               </a>
             </Button>

@@ -12,7 +12,7 @@ import { SquareCardForm } from "./SquareCardForm";
 import { z } from "zod";
 import { trackEvent } from "@/lib/analytics";
 
-const SESSION_PRICE = 15000; // $150.00 in cents
+const SESSION_PRICE = 250000; // $2,500.00 in cents
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
@@ -25,7 +25,7 @@ const customerInfoSchema = z.object({
   phone: z.string().max(20, "Phone number must be less than 20 characters").optional().or(z.literal("")),
 });
 
-type BookingType = 'consultation' | 'coaching';
+type BookingType = 'consultation' | 'readiness-intensive';
 type Step = 'type' | 'date' | 'time' | 'details' | 'payment' | 'confirmation';
 
 export const BookingCalendar = () => {
@@ -124,7 +124,7 @@ export const BookingCalendar = () => {
       // Free consultation - book directly
       await bookFreeConsultation();
     } else {
-      // Paid coaching - go to payment
+      // Paid Family Readiness Intensive - go to payment
       setCardReady(false);
       setStep("payment");
     }
@@ -251,7 +251,7 @@ export const BookingCalendar = () => {
       const { data: bookingData, error: bookingError } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-booking',
-          bookingType: 'coaching',
+          bookingType: 'readiness-intensive',
           customerName: customerInfo.name,
           customerEmail: customerInfo.email,
           customerPhone: customerInfo.phone || null,
@@ -272,7 +272,7 @@ export const BookingCalendar = () => {
       setStep("confirmation");
       toast.success("Booking confirmed!");
       trackEvent("booking_confirmed", {
-        booking_type: "coaching",
+        booking_type: "readiness-intensive",
         booking_date: bookingDate,
         booking_time: selectedTime,
         amount_cents: SESSION_PRICE,
@@ -280,7 +280,7 @@ export const BookingCalendar = () => {
 
       // Send confirmation email with Zoom link
       if (booking?.id) {
-        await sendBookingConfirmation(booking.id, 'coaching', bookingDate, selectedTime, 60);
+        await sendBookingConfirmation(booking.id, 'readiness-intensive', bookingDate, selectedTime, 90);
       }
     } catch (error: any) {
       console.error('Payment error:', error);
@@ -321,7 +321,7 @@ export const BookingCalendar = () => {
   const getStepDescription = () => {
     switch (step) {
       case 'type': return 'Select the type of session you\'d like to book';
-      case 'date': return `Pick a date for your ${bookingType === 'consultation' ? 'free consultation' : 'coaching session'}`;
+      case 'date': return `Pick a date for your ${bookingType === 'consultation' ? 'free consultation' : 'Family Readiness Intensive'}`;
       case 'time': return selectedDate ? `Available times for ${format(selectedDate, 'MMMM d, yyyy')}` : '';
       case 'details': return 'Enter your contact details';
       case 'payment': return 'Complete your payment securely';
@@ -337,7 +337,7 @@ export const BookingCalendar = () => {
             Schedule an Appointment
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Book a free consultation or a paid coaching session to get the support you need.
+            Book a free consultation or reserve a Family Readiness Intensive to get expert clarity, structure, and a real plan.
           </p>
           <p className="text-sm text-muted-foreground mt-3 max-w-2xl mx-auto">
             Please complete an <a href="/assessment" className="text-primary hover:underline font-medium">assessment</a> before your meeting time.
@@ -372,17 +372,17 @@ export const BookingCalendar = () => {
                   </button>
 
                   <button
-                    onClick={() => handleTypeSelect('coaching')}
+                    onClick={() => handleTypeSelect('readiness-intensive')}
                     className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left"
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <DollarSign className="w-6 h-6 text-primary" />
-                      <span className="text-lg font-semibold">Coaching Session</span>
+                      <span className="text-lg font-semibold">Family Readiness Intensive</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      A 1-hour Zoom call with you and any concerned loved ones. This meeting is intended to give you an actionable plan to change your family's circumstances.
+                      A focused 90-minute strategy session for families who are scared, divided, or stuck and need professional guidance before deciding on a full intervention.
                     </p>
-                    <div className="text-2xl font-bold text-primary">$150</div>
+                    <div className="text-2xl font-bold text-primary">$2,500</div>
                   </button>
                 </div>
               )}
@@ -507,7 +507,7 @@ export const BookingCalendar = () => {
                       ← Back
                     </Button>
                     <Button type="submit" disabled={loading} className="flex-1">
-                      {loading ? "Booking..." : bookingType === 'consultation' ? 'Book Consultation' : 'Continue to Payment'}
+                      {loading ? "Booking..." : bookingType === 'consultation' ? 'Book Consultation' : 'Continue to Secure Payment'}
                     </Button>
                   </div>
                 </form>
@@ -518,13 +518,13 @@ export const BookingCalendar = () => {
                 <div className="max-w-md mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
-                    <p><strong>Session:</strong> Coaching (1 hour)</p>
+                    <p><strong>Session:</strong> Family Readiness Intensive (90 minutes)</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
                     <div className="border-t pt-2 mt-2">
-                      <p className="text-lg font-bold">Total: $150.00</p>
+                      <p className="text-lg font-bold">Total: $2,500.00</p>
                     </div>
                   </div>
 
@@ -551,7 +551,7 @@ export const BookingCalendar = () => {
                       className="flex-1 flex items-center gap-2"
                     >
                       <CreditCard className="w-4 h-4" />
-                      {loading ? "Processing..." : "Pay $150.00"}
+                      {loading ? "Processing..." : "Pay $2,500.00"}
                     </Button>
                   </div>
                 </div>
@@ -568,7 +568,7 @@ export const BookingCalendar = () => {
 
                   <div>
                     <h3 className="text-xl font-semibold mb-2">
-                      {bookingType === 'consultation' ? 'Consultation Booked!' : 'Payment Successful!'}
+                      {bookingType === 'consultation' ? 'Consultation Booked!' : 'Intensive Reserved!'}
                     </h3>
                     <p className="text-muted-foreground">
                       We've sent a confirmation email to {customerInfo.email}
@@ -576,7 +576,7 @@ export const BookingCalendar = () => {
                   </div>
 
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
-                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Coaching Session (1 hour)'}</p>
+                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Family Readiness Intensive (90 minutes)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                   </div>

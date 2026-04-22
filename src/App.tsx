@@ -57,6 +57,7 @@ const SubstanceGuide = lazyPage("SubstanceGuide");
 const InterventionToolkit = lazyPage("InterventionToolkit");
 const InterventionFAQPage = lazyPage("InterventionFAQPage");
 const ServiceAreas = lazyPage("ServiceAreas");
+const FamilyReadinessIntensive = lazyPage("FamilyReadinessIntensive");
 
 const usStates = [
   "Alabama",
@@ -195,6 +196,7 @@ const App = () => (
             <Route path="/intervention-toolkit" element={<InterventionToolkit />} />
             <Route path="/intervention-faq" element={<InterventionFAQPage />} />
             <Route path="/service-areas" element={<ServiceAreas />} />
+            <Route path="/family-readiness-intensive" element={<FamilyReadinessIntensive />} />
 
             {stateRoutes.map(({ path, Component }) => (
               <Route key={path} path={path} element={<Component />} />
