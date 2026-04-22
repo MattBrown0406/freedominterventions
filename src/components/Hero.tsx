@@ -32,79 +32,48 @@ const Hero = () => {
             />
           </div>
 
-          {/* Hope Statement */}
-          <p 
-            className="text-xl md:text-2xl lg:text-3xl font-serif text-primary font-medium italic animate-fade-up"
+          {/* Headline */}
+          <h1
+            className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight animate-fade-up"
             style={{ animationDelay: "0.1s" }}
           >
-            "There is always hope for recovery—and for your family."
-          </p>
+            When Addiction Has Your Family in Crisis,
+            <span className="block text-primary mt-2">Waiting Makes It Worse</span>
+          </h1>
 
-          {/* Name and Certification */}
-          <div 
-            className="space-y-1 animate-fade-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            <h1 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
-              Matt Brown, <span className="text-primary">CIP</span>
-            </h1>
-            <p className="text-sm md:text-base text-muted-foreground">
-              Certified Intervention Professional
-            </p>
-          </div>
-          
           {/* Subheadline */}
-          <p 
+          <p
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-up"
             style={{ animationDelay: "0.3s" }}
           >
-            Helping families get loved ones into treatment for over 20 years. Matt works directly with families to build a clear plan, align everyone involved, and move their loved one toward treatment.
+            If your loved one is spiraling and your family is scared, exhausted, or divided, you do not need more guesswork. You need experienced professional guidance now. We help families take the right next step before the situation gets worse.
           </p>
-          
-          {/* Emergency Phone Number - Prominent for crisis situations */}
-          <div 
-            className="animate-fade-up"
-            style={{ animationDelay: "0.35s" }}
-          >
-            <TrackedPhoneLink 
-              phoneNumber="+15418386009" 
-              metadata={{ location: 'hero_emergency' }}
-              className="group"
-            >
-              <div className="inline-flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-xl border-2 border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <div className="flex items-center justify-center w-10 h-10 bg-primary-foreground/20 rounded-full group-hover:bg-primary-foreground/30 transition-colors">
-                  <Phone className="w-5 h-5 animate-pulse" />
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-medium opacity-90">Crisis Support Available 7 Days a Week</div>
-                  <div className="text-xl font-bold">(541) 838-6009</div>
-                </div>
-              </div>
-            </TrackedPhoneLink>
-          </div>
-          
-          {/* Urgent CTAs */}
+
+          {/* CTAs */}
           <div
             className="space-y-3 animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <p className="text-base md:text-lg font-semibold text-foreground">
-              Don't wait for the next crisis. Take action today.
-            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#booking">
+              <TrackedPhoneLink
+                phoneNumber="+15418386009"
+                metadata={{ location: 'hero_primary_cta' }}
+              >
                 <Button variant="hero" size="xl">
-                  <Calendar className="w-5 h-5" />
-                  Book Free Consultation
+                  <Phone className="w-5 h-5" />
+                  Get Help Now
                 </Button>
-              </a>
-              <a href="/family-readiness-intensive">
+              </TrackedPhoneLink>
+              <a href="#booking">
                 <Button variant="hero-outline" size="xl">
-                  Family Readiness Intensive
-                  <ArrowRight className="w-5 h-5" />
+                  <Calendar className="w-5 h-5" />
+                  Book a Free Consultation
                 </Button>
               </a>
             </div>
+            <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto pt-2">
+              Confidential help for families in crisis. Professional intervention and coaching options available.
+            </p>
           </div>
 
           {/* Trust badges */}
