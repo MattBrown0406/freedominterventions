@@ -49,6 +49,7 @@ const resourceLinks = [
 ];
 
 const SocialProof = () => {
+  const autoplay = useRef(Autoplay({ delay: 6000, stopOnInteraction: true }));
   return (
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-6">
