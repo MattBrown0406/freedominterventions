@@ -88,8 +88,8 @@ const SocialProof = () => {
             </div>
 
             <Carousel
+              setApi={setApi}
               opts={{ loop: true, align: "start" }}
-              plugins={[autoplay.current]}
               className="w-full"
             >
               <CarouselContent>
