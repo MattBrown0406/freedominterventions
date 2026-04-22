@@ -83,23 +83,28 @@ const Hero = () => {
             </TrackedPhoneLink>
           </div>
           
-          {/* CTAs */}
-          <div 
-            className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up"
+          {/* Urgent CTAs */}
+          <div
+            className="space-y-3 animate-fade-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <a href="#booking">
-              <Button variant="hero" size="xl">
-                <Calendar className="w-5 h-5" />
-                Schedule Free Consultation
-              </Button>
-            </a>
-            <a href="#services">
-              <Button variant="hero-outline" size="xl">
-                Learn More
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </a>
+            <p className="text-base md:text-lg font-semibold text-foreground">
+              Don't wait for the next crisis. Take action today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#booking">
+                <Button variant="hero" size="xl">
+                  <Calendar className="w-5 h-5" />
+                  Book Free Consultation
+                </Button>
+              </a>
+              <a href="/family-readiness-intensive">
+                <Button variant="hero-outline" size="xl">
+                  Family Readiness Intensive
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </a>
+            </div>
           </div>
 
           {/* Trust badges */}
