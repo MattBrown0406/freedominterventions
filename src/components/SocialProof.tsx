@@ -9,8 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
+import type { CarouselApi } from "@/components/ui/carousel";
 
 const storyHighlights = testimonials.slice(0, 6).map((testimonial) => ({
   quote: testimonial.quote,
@@ -49,7 +49,14 @@ const resourceLinks = [
 ];
 
 const SocialProof = () => {
-  const autoplay = useRef(Autoplay({ delay: 6000, stopOnInteraction: true }));
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) return;
+    const interval = setInterval(() => api.scrollNext(), 6000);
+    return () => clearInterval(interval);
+  }, [api]);
+
   return (
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-6">
@@ -81,8 +88,8 @@ const SocialProof = () => {
             </div>
 
             <Carousel
+              setApi={setApi}
               opts={{ loop: true, align: "start" }}
-              plugins={[autoplay.current]}
               className="w-full"
             >
               <CarouselContent>
