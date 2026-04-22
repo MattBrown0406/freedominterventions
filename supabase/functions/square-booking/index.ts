@@ -255,7 +255,7 @@ serve(async (req) => {
               currency: 'USD',
             },
             location_id: SQUARE_LOCATION_ID,
-            note: `Coaching session for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
+            note: `Family Readiness Intensive for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
             buyer_email_address: sanitizedEmail,
           }),
         });
@@ -316,7 +316,7 @@ serve(async (req) => {
           throw new Error('Valid booking date and time are required');
         }
 
-        if (!bookingType || !['consultation', 'coaching'].includes(bookingType)) {
+        if (!bookingType || !['consultation', 'readiness-intensive'].includes(bookingType)) {
           throw new Error('Valid booking type is required');
         }
 
@@ -327,7 +327,7 @@ serve(async (req) => {
           customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
           booking_date: bookingDate,
           booking_time: bookingTime,
-          duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : 60,
+          duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : bookingType === 'readiness-intensive' ? 90 : 60,
           status: 'confirmed',
           payment_id: paymentId || null,
           amount_cents: typeof amountCents === 'number' ? amountCents : null,

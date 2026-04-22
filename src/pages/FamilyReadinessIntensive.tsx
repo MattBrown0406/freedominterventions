@@ -79,7 +79,7 @@ const FamilyReadinessIntensive = () => {
                 </a>
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
-                $2,500, 90 minutes, confidential Zoom session, with a partial credit available toward a full intervention.
+                $2,500 includes a confidential 90-minute Zoom session and 7 days of follow-up support by Zoom, phone, text, or email, with a partial credit available toward a full intervention.
               </p>
             </div>
           </div>
@@ -119,7 +119,7 @@ const FamilyReadinessIntensive = () => {
                     <li>• intervention readiness analysis</li>
                     <li>• boundary and communication guidance</li>
                     <li>• a clear recommendation and written action plan</li>
-                    <li>• 7 days of follow-up support by text or email</li>
+                    <li>• 7 days of follow-up support by Zoom, phone, text, or email</li>
                   </ul>
                 </div>
               </div>
@@ -139,7 +139,7 @@ const FamilyReadinessIntensive = () => {
                 <div className="rounded-2xl border border-border bg-card p-8">
                   <p className="text-4xl font-bold text-foreground mb-3">$2,500</p>
                   <p className="text-muted-foreground mb-4">
-                    If your family moves forward with a full intervention within 30 days, part of that fee can be credited toward the intervention cost.
+                    This includes the initial 90-minute Zoom consultation plus 7 days of follow-up support by Zoom, phone, text, or email. If your family moves forward with a full intervention within 30 days, part of that fee can be credited toward the intervention cost.
                   </p>
                   <div className="flex items-center gap-3 text-sm text-muted-foreground">
                     <Users className="h-4 w-4 text-primary" />

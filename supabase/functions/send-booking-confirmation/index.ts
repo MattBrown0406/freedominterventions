@@ -154,7 +154,7 @@ const handler = async (req: Request): Promise<Response> => {
       bookingType,
       bookingDate,
       bookingTime,
-      durationMinutes = bookingType === 'consultation' ? 30 : 60,
+      durationMinutes = bookingType === 'consultation' ? 15 : bookingType === 'readiness-intensive' ? 90 : 60,
       isReschedule = false,
     }: BookingConfirmationRequest = await req.json();
 
@@ -170,6 +170,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     const meetingTopic = bookingType === "consultation" 
       ? `Freedom Interventions - Free Consultation with ${customerName}`
+      : bookingType === "readiness-intensive"
+      ? `Freedom Interventions - Family Readiness Intensive with ${customerName}`
       : `Freedom Interventions - Coaching Session with ${customerName}`;
 
     const { joinUrl, meetingId } = await createZoomMeeting(
@@ -194,7 +196,9 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const appointmentType = bookingType === "consultation" 
-      ? "Free Consultation (30 minutes)" 
+      ? "Free Consultation (15 minutes)" 
+      : bookingType === "readiness-intensive"
+      ? "Family Readiness Intensive (90-minute Zoom session, $2,500, plus 7 days of follow-up support by Zoom, phone, text, or email)"
       : "Coaching Session (1 hour - $150)";
 
     const emailTitle = isReschedule 
@@ -202,8 +206,8 @@ const handler = async (req: Request): Promise<Response> => {
       : "Your Appointment is Confirmed!";
 
     const emailSubject = isReschedule
-      ? `Rescheduled: Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} - Freedom Interventions`
-      : `Your ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} is Confirmed - Freedom Interventions`;
+      ? `Rescheduled: Your ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : "Coaching Session"} - Freedom Interventions`
+      : `Your ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : "Coaching Session"} is Confirmed - Freedom Interventions`;
 
     // Send confirmation email
     const emailHtml = `
@@ -232,6 +236,19 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 0; font-size: 14px;"><strong>Need to reschedule?</strong> Use your Booking ID above along with your email address at our reschedule page.</p>
         </div>
+
+        ${bookingType === "readiness-intensive" ? `
+        <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #065f46; margin-top: 0;">What Happens After the Intensive</h2>
+          <p style="margin-bottom: 10px;">Customer service is a priority. After your 90-minute Zoom session, you will receive 7 days of follow-up support.</p>
+          <ul style="margin: 0; padding-left: 20px; color: #374151;">
+            <li>Follow-up by Zoom</li>
+            <li>Follow-up by phone</li>
+            <li>Follow-up by text</li>
+            <li>Follow-up by email</li>
+          </ul>
+        </div>
+        ` : ""}
         
         <p>If you have any questions, please contact us at:</p>
         <ul>
@@ -276,7 +293,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     await sendEmail(
       "matt@freedominterventions.com",
-      `New ${bookingType === "consultation" ? "Consultation" : "Coaching Session"} Booking - ${customerName}`,
+      `New ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : "Coaching Session"} Booking - ${customerName}`,
       adminNotificationHtml
     );
 

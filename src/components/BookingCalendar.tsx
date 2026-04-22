@@ -380,7 +380,7 @@ export const BookingCalendar = () => {
                       <span className="text-lg font-semibold">Family Readiness Intensive</span>
                     </div>
                     <p className="text-muted-foreground text-sm mb-3">
-                      A focused 90-minute strategy session for families who are scared, divided, or stuck and need professional guidance before deciding on a full intervention.
+                      A focused 90-minute Zoom strategy session for families who are scared, divided, or stuck, plus 7 days of follow-up support by Zoom, phone, text, or email.
                     </p>
                     <div className="text-2xl font-bold text-primary">$2,500</div>
                   </button>
@@ -518,7 +518,7 @@ export const BookingCalendar = () => {
                 <div className="max-w-md mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
-                    <p><strong>Session:</strong> Family Readiness Intensive (90 minutes)</p>
+                    <p><strong>Session:</strong> Family Readiness Intensive (90-minute Zoom session + 7 days follow-up support)</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
@@ -573,10 +573,15 @@ export const BookingCalendar = () => {
                     <p className="text-muted-foreground">
                       We've sent a confirmation email to {customerInfo.email}
                     </p>
+                    {bookingType === 'readiness-intensive' && (
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Your booking includes 7 days of follow-up support by Zoom, phone, text, or email.
+                      </p>
+                    )}
                   </div>
 
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
-                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Family Readiness Intensive (90 minutes)'}</p>
+                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Family Readiness Intensive (90-minute Zoom session + 7 days follow-up support)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                   </div>
