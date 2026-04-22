@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Reschedule from "./pages/Reschedule";
 import Interventionist from "./pages/Interventionist";
 import FamilyIntervention from "./pages/FamilyIntervention";
+import FamilyReadinessIntensive from "./pages/FamilyReadinessIntensive";
 import CrisisSupport from "./pages/CrisisSupport";
 import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
@@ -201,6 +202,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
           <Route path="/family-intervention" element={<FamilyIntervention />} />
+          <Route path="/family-readiness-intensive" element={<FamilyReadinessIntensive />} />
           <Route path="/crisis-support" element={<CrisisSupport />} />
           <Route path="/treatment-planning" element={<TreatmentPlanning />} />
           <Route path="/aftercare-guidance" element={<AftercareGuidance />} />
