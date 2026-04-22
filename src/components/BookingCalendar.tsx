@@ -641,9 +641,32 @@ export const BookingCalendar = () => {
                     )}
                   </div>
 
-                  <p className="text-sm text-muted-foreground">
-                    We'll contact you at {customerInfo.phone || customerInfo.email} to confirm the details.
-                  </p>
+                  {bookingType === 'readiness-intensive' ? (
+                    <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3">
+                      <h4 className="font-semibold text-primary flex items-center gap-2">
+                        <Sparkles className="w-5 h-5" />
+                        Important Next Step
+                      </h4>
+                      <p className="text-sm text-foreground">
+                        To get the most out of your Family Readiness Intensive, please complete the
+                        Clinical Assessment <strong>as completely as possible</strong> before our session.
+                        This gives Matt the full picture of your family's situation so we can make
+                        every minute count.
+                      </p>
+                      <Button
+                        onClick={() => window.location.href = '/assessment'}
+                        variant="hero"
+                        size="lg"
+                        className="w-full"
+                      >
+                        Start Clinical Assessment
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      We'll contact you at {customerInfo.phone || customerInfo.email} to confirm the details.
+                    </p>
+                  )}
 
                   <Button onClick={resetForm} variant="outline" className="w-full">
                     Book Another Appointment
