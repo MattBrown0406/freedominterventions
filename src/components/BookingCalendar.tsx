@@ -12,7 +12,8 @@ import { SquareCardForm } from "./SquareCardForm";
 import { z } from "zod";
 import { trackEvent } from "@/lib/analytics";
 
-const SESSION_PRICE = 250000; // $2,500.00 in cents
+const READINESS_INTENSIVE_PRICE = 250000; // $2,500.00 in cents
+const CRISIS_COACHING_PRICE = 15000; // $150.00 in cents
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
@@ -25,7 +26,7 @@ const customerInfoSchema = z.object({
   phone: z.string().max(20, "Phone number must be less than 20 characters").optional().or(z.literal("")),
 });
 
-type BookingType = 'consultation' | 'readiness-intensive';
+type BookingType = 'consultation' | 'crisis-coaching' | 'readiness-intensive';
 type Step = 'type' | 'date' | 'time' | 'details' | 'payment' | 'confirmation';
 
 export const BookingCalendar = () => {
@@ -233,15 +234,19 @@ export const BookingCalendar = () => {
 
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
       
+      const amount = bookingType === 'crisis-coaching' ? CRISIS_COACHING_PRICE : READINESS_INTENSIVE_PRICE;
+      const durationMinutes = bookingType === 'crisis-coaching' ? 60 : 90;
+
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-payment',
           sourceId: token,
-          amount: SESSION_PRICE,
+          amount,
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
           bookingDate,
           bookingTime: selectedTime,
+          bookingType,
         }
       });
 
@@ -251,15 +256,15 @@ export const BookingCalendar = () => {
       const { data: bookingData, error: bookingError } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-booking',
-          bookingType: 'readiness-intensive',
+          bookingType,
           customerName: customerInfo.name,
           customerEmail: customerInfo.email,
           customerPhone: customerInfo.phone || null,
           bookingDate,
           bookingTime: selectedTime,
-          durationMinutes: 60,
+          durationMinutes,
           paymentId: data.payment?.id,
-          amountCents: SESSION_PRICE
+          amountCents: amount
         }
       });
 
@@ -272,15 +277,15 @@ export const BookingCalendar = () => {
       setStep("confirmation");
       toast.success("Booking confirmed!");
       trackEvent("booking_confirmed", {
-        booking_type: "readiness-intensive",
+        booking_type: bookingType,
         booking_date: bookingDate,
         booking_time: selectedTime,
-        amount_cents: SESSION_PRICE,
+        amount_cents: amount,
       });
 
       // Send confirmation email with Zoom link
       if (booking?.id) {
-        await sendBookingConfirmation(booking.id, 'readiness-intensive', bookingDate, selectedTime, 90);
+        await sendBookingConfirmation(booking.id, bookingType, bookingDate, selectedTime, durationMinutes);
       }
     } catch (error: any) {
       console.error('Payment error:', error);
@@ -321,7 +326,7 @@ export const BookingCalendar = () => {
   const getStepDescription = () => {
     switch (step) {
       case 'type': return 'Select the type of session you\'d like to book';
-      case 'date': return `Pick a date for your ${bookingType === 'consultation' ? 'free consultation' : 'Family Readiness Intensive'}`;
+      case 'date': return `Pick a date for your ${bookingType === 'consultation' ? 'free consultation' : bookingType === 'crisis-coaching' ? 'Crisis Coaching Session' : 'Family Readiness Intensive'}`;
       case 'time': return selectedDate ? `Available times for ${format(selectedDate, 'MMMM d, yyyy')}` : '';
       case 'details': return 'Enter your contact details';
       case 'payment': return 'Complete your payment securely';
@@ -337,7 +342,7 @@ export const BookingCalendar = () => {
             Schedule an Appointment
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Book a free consultation or reserve a Family Readiness Intensive to get expert clarity, structure, and a real plan.
+            Book a free consultation, a Crisis Coaching Session, or a Family Readiness Intensive depending on the level of support your family needs.
           </p>
           <p className="text-sm text-muted-foreground mt-3 max-w-2xl mx-auto">
             Please complete an <a href="/assessment" className="text-primary hover:underline font-medium">assessment</a> before your meeting time.
@@ -356,7 +361,7 @@ export const BookingCalendar = () => {
             <CardContent>
               {/* Step: Choose Type */}
               {step === "type" && (
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-3 gap-6">
                   <button
                     onClick={() => handleTypeSelect('consultation')}
                     className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left"
@@ -369,6 +374,20 @@ export const BookingCalendar = () => {
                       A 15-minute Zoom call. Not every family needs an intervention—we'll assess your situation and explore whether coaching can equip you with a strategy to move forward on your own.
                     </p>
                     <div className="text-2xl font-bold text-primary">Free</div>
+                  </button>
+
+                  <button
+                    onClick={() => handleTypeSelect('crisis-coaching')}
+                    className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <DollarSign className="w-6 h-6 text-primary" />
+                      <span className="text-lg font-semibold">Crisis Coaching Session</span>
+                    </div>
+                    <p className="text-muted-foreground text-sm mb-3">
+                      A focused 60-minute Zoom session for families in immediate distress who need practical guidance, quick stabilization, and a next-step plan.
+                    </p>
+                    <div className="text-2xl font-bold text-primary">$150</div>
                   </button>
 
                   <button
@@ -518,13 +537,13 @@ export const BookingCalendar = () => {
                 <div className="max-w-md mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
-                    <p><strong>Session:</strong> Family Readiness Intensive (90-minute Zoom session + 7 days follow-up support)</p>
+                    <p><strong>Session:</strong> {bookingType === 'crisis-coaching' ? 'Crisis Coaching Session (60-minute Zoom session)' : 'Family Readiness Intensive (90-minute Zoom session + 7 days follow-up support)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
                     <div className="border-t pt-2 mt-2">
-                      <p className="text-lg font-bold">Total: $2,500.00</p>
+                      <p className="text-lg font-bold">Total: ${bookingType === 'crisis-coaching' ? '150.00' : '2,500.00'}</p>
                     </div>
                   </div>
 
@@ -551,7 +570,7 @@ export const BookingCalendar = () => {
                       className="flex-1 flex items-center gap-2"
                     >
                       <CreditCard className="w-4 h-4" />
-                      {loading ? "Processing..." : "Pay $2,500.00"}
+                      {loading ? "Processing..." : bookingType === 'crisis-coaching' ? 'Pay $150.00' : 'Pay $2,500.00'}
                     </Button>
                   </div>
                 </div>
@@ -568,7 +587,7 @@ export const BookingCalendar = () => {
 
                   <div>
                     <h3 className="text-xl font-semibold mb-2">
-                      {bookingType === 'consultation' ? 'Consultation Booked!' : 'Intensive Reserved!'}
+                      {bookingType === 'consultation' ? 'Consultation Booked!' : bookingType === 'crisis-coaching' ? 'Crisis Coaching Session Reserved!' : 'Intensive Reserved!'}
                     </h3>
                     <p className="text-muted-foreground">
                       We've sent a confirmation email to {customerInfo.email}
@@ -581,7 +600,7 @@ export const BookingCalendar = () => {
                   </div>
 
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
-                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : 'Family Readiness Intensive (90-minute Zoom session + 7 days follow-up support)'}</p>
+                    <p><strong>Session:</strong> {bookingType === 'consultation' ? 'Free Consultation (15 min)' : bookingType === 'crisis-coaching' ? 'Crisis Coaching Session (60-minute Zoom session)' : 'Family Readiness Intensive (90-minute Zoom session + 7 days follow-up support)'}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
                     <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
                   </div>

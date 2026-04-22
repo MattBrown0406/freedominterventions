@@ -154,7 +154,7 @@ const handler = async (req: Request): Promise<Response> => {
       bookingType,
       bookingDate,
       bookingTime,
-      durationMinutes = bookingType === 'consultation' ? 15 : bookingType === 'readiness-intensive' ? 90 : 60,
+      durationMinutes = bookingType === 'consultation' ? 15 : bookingType === 'readiness-intensive' ? 90 : bookingType === 'crisis-coaching' ? 60 : 60,
       isReschedule = false,
     }: BookingConfirmationRequest = await req.json();
 
@@ -172,6 +172,8 @@ const handler = async (req: Request): Promise<Response> => {
       ? `Freedom Interventions - Free Consultation with ${customerName}`
       : bookingType === "readiness-intensive"
       ? `Freedom Interventions - Family Readiness Intensive with ${customerName}`
+      : bookingType === "crisis-coaching"
+      ? `Freedom Interventions - Crisis Coaching Session with ${customerName}`
       : `Freedom Interventions - Coaching Session with ${customerName}`;
 
     const { joinUrl, meetingId } = await createZoomMeeting(
@@ -199,6 +201,8 @@ const handler = async (req: Request): Promise<Response> => {
       ? "Free Consultation (15 minutes)" 
       : bookingType === "readiness-intensive"
       ? "Family Readiness Intensive (90-minute Zoom session, $2,500, plus 7 days of follow-up support by Zoom, phone, text, or email)"
+      : bookingType === "crisis-coaching"
+      ? "Crisis Coaching Session (60-minute Zoom session, $150)"
       : "Coaching Session (1 hour - $150)";
 
     const emailTitle = isReschedule 
@@ -206,8 +210,8 @@ const handler = async (req: Request): Promise<Response> => {
       : "Your Appointment is Confirmed!";
 
     const emailSubject = isReschedule
-      ? `Rescheduled: Your ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : "Coaching Session"} - Freedom Interventions`
-      : `Your ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : "Coaching Session"} is Confirmed - Freedom Interventions`;
+      ? `Rescheduled: Your ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : bookingType === "crisis-coaching" ? "Crisis Coaching Session" : "Coaching Session"} - Freedom Interventions`
+      : `Your ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : bookingType === "crisis-coaching" ? "Crisis Coaching Session" : "Coaching Session"} is Confirmed - Freedom Interventions`;
 
     // Send confirmation email
     const emailHtml = `
@@ -293,7 +297,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     await sendEmail(
       "matt@freedominterventions.com",
-      `New ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : "Coaching Session"} Booking - ${customerName}`,
+      `New ${bookingType === "consultation" ? "Consultation" : bookingType === "readiness-intensive" ? "Family Readiness Intensive" : bookingType === "crisis-coaching" ? "Crisis Coaching Session" : "Coaching Session"} Booking - ${customerName}`,
       adminNotificationHtml
     );
 

@@ -207,7 +207,7 @@ serve(async (req) => {
           });
         }
 
-        const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime } = params;
+        const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime, bookingType } = params;
         
         // Validate all required inputs
         if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {
@@ -255,7 +255,7 @@ serve(async (req) => {
               currency: 'USD',
             },
             location_id: SQUARE_LOCATION_ID,
-            note: `Family Readiness Intensive for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
+            note: `${bookingType === 'crisis-coaching' ? 'Crisis Coaching Session' : bookingType === 'readiness-intensive' ? 'Family Readiness Intensive' : 'Paid Session'} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
             buyer_email_address: sanitizedEmail,
           }),
         });
@@ -316,7 +316,7 @@ serve(async (req) => {
           throw new Error('Valid booking date and time are required');
         }
 
-        if (!bookingType || !['consultation', 'readiness-intensive'].includes(bookingType)) {
+        if (!bookingType || !['consultation', 'crisis-coaching', 'readiness-intensive'].includes(bookingType)) {
           throw new Error('Valid booking type is required');
         }
 
@@ -327,7 +327,7 @@ serve(async (req) => {
           customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
           booking_date: bookingDate,
           booking_time: bookingTime,
-          duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : bookingType === 'readiness-intensive' ? 90 : 60,
+          duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : bookingType === 'readiness-intensive' ? 90 : bookingType === 'crisis-coaching' ? 60 : 60,
           status: 'confirmed',
           payment_id: paymentId || null,
           amount_cents: typeof amountCents === 'number' ? amountCents : null,
