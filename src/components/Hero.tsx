@@ -40,10 +40,10 @@ const Hero = () => {
             <img
               src={mattPortrait}
               alt="Matt Brown, Certified Intervention Professional"
-              className="h-40 w-40 md:h-48 md:w-48 rounded-full object-cover border-4 border-primary/20 shadow-lg"
+              className="h-44 w-44 md:h-52 md:w-52 rounded-full object-cover object-top border-4 border-primary/20 shadow-lg"
               loading="eager"
-              width={192}
-              height={192}
+              width={208}
+              height={208}
             />
           </div>
 
