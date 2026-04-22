@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,6 +73,47 @@ export const BookingCalendar = () => {
   const [cardReady, setCardReady] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
+  const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
+
+  // Pre-fill from URL params (abandoned cart recovery deep link)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type") as BookingType | null;
+    if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive")) {
+      setBookingType(type);
+      const name = params.get("name") || "";
+      const email = params.get("email") || "";
+      const phone = params.get("phone") || "";
+      if (name || email || phone) {
+        setCustomerInfo({ name, email, phone });
+      }
+      const dateStr = params.get("date");
+      const timeStr = params.get("time");
+      if (dateStr) {
+        const [y, m, d] = dateStr.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+        if (!isNaN(date.getTime())) {
+          setSelectedDate(date);
+          fetchAvailableSlots(date);
+          if (timeStr) {
+            setSelectedTime(timeStr);
+            // Skip straight to details so user can confirm and pay
+            setStep("details");
+          } else {
+            setStep("time");
+          }
+        } else {
+          setStep("date");
+        }
+      } else {
+        setStep("date");
+      }
+      // Clean URL so refreshes don't re-trigger
+      const cleanUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const offer = bookingType ? OFFERS[bookingType] : null;
   const isPaid = !!offer && offer.priceCents > 0;
@@ -148,6 +189,26 @@ export const BookingCalendar = () => {
     if (!isPaid) {
       await bookFreeConsultation();
     } else {
+      // Capture abandoned cart for recovery (paid offers only)
+      try {
+        const { data: cartData } = await supabase
+          .from("abandoned_carts")
+          .insert({
+            customer_name: customerInfo.name,
+            customer_email: customerInfo.email,
+            customer_phone: customerInfo.phone || null,
+            booking_type: bookingType!,
+            booking_date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : null,
+            booking_time: selectedTime || null,
+            amount_cents: offer!.priceCents,
+          })
+          .select("id")
+          .single();
+        if (cartData?.id) setAbandonedCartId(cartData.id);
+      } catch (err) {
+        // Non-blocking — don't prevent checkout if capture fails
+        console.warn("Cart capture failed:", err);
+      }
       setCardReady(false);
       setStep("payment");
     }
@@ -260,6 +321,17 @@ export const BookingCalendar = () => {
       setBookingId(booking?.id || null);
       setStep("confirmation");
       toast.success("Booking confirmed!");
+      // Mark abandoned cart as recovered
+      if (abandonedCartId) {
+        try {
+          await supabase
+            .from("abandoned_carts")
+            .update({ status: "recovered", recovered_at: new Date().toISOString() })
+            .eq("id", abandonedCartId);
+        } catch (err) {
+          console.warn("Failed to mark cart recovered:", err);
+        }
+      }
       if (booking?.id) {
         await sendBookingConfirmation(booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
       }
@@ -278,6 +350,7 @@ export const BookingCalendar = () => {
     setSelectedTime("");
     setCustomerInfo({ name: "", email: "", phone: "" });
     setBookingId(null);
+    setAbandonedCartId(null);
   };
 
   const formatTime = (time: string) => {

@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      abandoned_carts: {
+        Row: {
+          amount_cents: number
+          booking_date: string | null
+          booking_time: string | null
+          booking_type: string
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          recovered_at: string | null
+          recovery_email_sent_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          booking_date?: string | null
+          booking_time?: string | null
+          booking_type: string
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          recovered_at?: string | null
+          recovery_email_sent_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          booking_date?: string | null
+          booking_time?: string | null
+          booking_type?: string
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          recovered_at?: string | null
+          recovery_email_sent_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       assessment_access_audit: {
         Row: {
           action: string
