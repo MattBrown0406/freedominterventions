@@ -9,8 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
+import type { CarouselApi } from "@/components/ui/carousel";
 
 const storyHighlights = testimonials.slice(0, 6).map((testimonial) => ({
   quote: testimonial.quote,
