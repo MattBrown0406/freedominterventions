@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, Phone } from "lucide-react";
+import { Calendar, Phone } from "lucide-react";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
