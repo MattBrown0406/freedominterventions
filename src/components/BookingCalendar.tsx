@@ -350,6 +350,7 @@ export const BookingCalendar = () => {
     setSelectedTime("");
     setCustomerInfo({ name: "", email: "", phone: "" });
     setBookingId(null);
+    setAbandonedCartId(null);
   };
 
   const formatTime = (time: string) => {
