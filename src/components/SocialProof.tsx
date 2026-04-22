@@ -2,8 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Quote, Mic, PlayCircle, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { testimonials } from "@/data/testimonials";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 
-const storyHighlights = testimonials.slice(0, 3).map((testimonial) => ({
+const storyHighlights = testimonials.slice(0, 6).map((testimonial) => ({
   quote: testimonial.quote,
   family: `${testimonial.author}, ${testimonial.location}`,
   outcome: "Families emphasized aligned boundaries, honest communication, and relief after stepping into a plan.",
