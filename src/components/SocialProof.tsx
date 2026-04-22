@@ -49,7 +49,14 @@ const resourceLinks = [
 ];
 
 const SocialProof = () => {
-  const autoplay = useRef(Autoplay({ delay: 6000, stopOnInteraction: true }));
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) return;
+    const interval = setInterval(() => api.scrollNext(), 6000);
+    return () => clearInterval(interval);
+  }, [api]);
+
   return (
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-6">
