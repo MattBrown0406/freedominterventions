@@ -189,6 +189,26 @@ export const BookingCalendar = () => {
     if (!isPaid) {
       await bookFreeConsultation();
     } else {
+      // Capture abandoned cart for recovery (paid offers only)
+      try {
+        const { data: cartData } = await supabase
+          .from("abandoned_carts")
+          .insert({
+            customer_name: customerInfo.name,
+            customer_email: customerInfo.email,
+            customer_phone: customerInfo.phone || null,
+            booking_type: bookingType!,
+            booking_date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : null,
+            booking_time: selectedTime || null,
+            amount_cents: offer!.priceCents,
+          })
+          .select("id")
+          .single();
+        if (cartData?.id) setAbandonedCartId(cartData.id);
+      } catch (err) {
+        // Non-blocking — don't prevent checkout if capture fails
+        console.warn("Cart capture failed:", err);
+      }
       setCardReady(false);
       setStep("payment");
     }
