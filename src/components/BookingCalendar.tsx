@@ -1,4 +1,6 @@
 import { useState, useCallback } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,8 +28,76 @@ const customerInfoSchema = z.object({
   phone: z.string().max(20, "Phone number must be less than 20 characters").optional().or(z.literal("")),
 });
 
+const FRI_AGREEMENT_VERSION = "fri-v1";
+const FRI_AGREEMENT_TEXT = `FAMILY READINESS INTENSIVE AGREEMENT
+
+Freedom Interventions
+Matt Brown
+FreedomInterventions.com
+(541) 838-6009
+
+This Family Readiness Intensive Agreement ("Agreement") is entered into by and between Freedom Interventions ("Consultant") and the undersigned client ("Client").
+
+1. Services
+Client is engaging Consultant for a Family Readiness Intensive focused on evaluating the family system, current crisis dynamics, intervention readiness, communication strategy, boundary guidance, and immediate next-step recommendations relating to a loved one struggling with substance use or related behavioral health concerns.
+
+The Family Readiness Intensive includes:
+• one 90-minute consultation session, typically by Zoom unless otherwise arranged
+• review of the family situation and relevant background shared by Client
+• strategic guidance and recommendations
+• up to 7 days of reasonable follow-up support by phone, Zoom, text, or email, at Consultant’s discretion and subject to scheduling availability
+
+2. Fee
+The fee for the Family Readiness Intensive is $2,500.00.
+
+Client understands and agrees that this fee is earned in exchange for Consultant reserving time, providing specialized professional guidance, and making availability and follow-up support available to Client.
+
+3. Payment Terms
+Payment is due in full at the time of signing unless otherwise stated in writing by Consultant.
+
+No services are guaranteed to begin until this Agreement is signed and payment has been successfully processed.
+
+4. No Guarantee of Outcome
+Client understands that Consultant does not and cannot guarantee any specific outcome, including but not limited to:
+• that a loved one will accept help
+• that a loved one will enter treatment
+• that a family intervention will occur
+• that any particular relationship, treatment, or recovery result will follow
+
+Consultant agrees only to provide professional guidance, experience-based recommendations, and agreed support services.
+
+5. Nonrefundable Fee
+Client acknowledges that the Family Readiness Intensive requires Consultant to reserve time, prepare for the matter, provide specialized advisory services, and make follow-up availability available.
+
+Accordingly, all fees paid under this Agreement are nonrefundable once the Agreement is signed and payment is processed, including in circumstances where:
+• Client later decides not to proceed
+• Client does not attend or fully participate
+• Client believes the family is not ready
+• the loved one refuses help or treatment
+• the family elects not to move forward with any further services
+
+Client agrees not to initiate a chargeback, payment dispute, or reversal based on dissatisfaction with outcome alone where Consultant has made the agreed professional time, guidance, and support available.
+
+6. Scheduling and Rescheduling
+Consultant will make reasonable efforts to schedule the session promptly. If Client needs to reschedule, Client agrees to provide as much notice as possible. Consultant will make reasonable efforts to accommodate a rescheduled session, but availability is not guaranteed on Client’s preferred timeline.
+
+7. Client Responsibility
+Client agrees to provide accurate information to the best of their knowledge and to participate honestly and in good faith. Client understands that the quality of strategic guidance may depend in part on the completeness and accuracy of the information provided.
+
+8. Not Medical or Legal Advice
+Consultant does not provide medical care, psychiatric treatment, legal advice, or emergency services. If there is an immediate safety risk, medical emergency, overdose concern, or psychiatric crisis, Client should contact 911 or appropriate emergency services immediately.
+
+9. Confidentiality
+Consultant will use reasonable discretion regarding information shared by Client, subject to legal, ethical, safety, and practical limitations. Electronic communications and virtual meetings carry inherent privacy and security risks that cannot be entirely eliminated.
+
+10. Entire Agreement
+This Agreement reflects the entire understanding between the parties regarding the Family Readiness Intensive and supersedes prior discussions relating to this specific service, unless modified in writing.
+
+11. Acceptance
+By signing below, Client acknowledges that Client has read this Agreement, understands it, and agrees to its terms, including the nonrefundable nature of the fee.`;
+
 type BookingType = 'consultation' | 'crisis-coaching' | 'readiness-intensive';
-type Step = 'type' | 'date' | 'time' | 'details' | 'payment' | 'confirmation';
+type Step = 'type' | 'date' | 'time' | 'details' | 'agreement' | 'payment' | 'confirmation';
 
 export const BookingCalendar = () => {
   const [bookingType, setBookingType] = useState<BookingType | null>(null);
@@ -37,6 +107,9 @@ export const BookingCalendar = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<Step>("type");
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
+  const [friAgreementAccepted, setFriAgreementAccepted] = useState(false);
+  const [friSignerName, setFriSignerName] = useState("");
+  const [friAgreementError, setFriAgreementError] = useState<string | null>(null);
   const [cardReady, setCardReady] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
@@ -124,8 +197,11 @@ export const BookingCalendar = () => {
     if (bookingType === 'consultation') {
       // Free consultation - book directly
       await bookFreeConsultation();
+    } else if (bookingType === 'readiness-intensive') {
+      setFriSignerName(customerInfo.name);
+      setFriAgreementError(null);
+      setStep("agreement");
     } else {
-      // Paid Family Readiness Intensive - go to payment
       setCardReady(false);
       setStep("payment");
     }
@@ -264,7 +340,12 @@ export const BookingCalendar = () => {
           bookingTime: selectedTime,
           durationMinutes,
           paymentId: data.payment?.id,
-          amountCents: amount
+          amountCents: amount,
+          agreementAccepted: bookingType === 'readiness-intensive' ? friAgreementAccepted : undefined,
+          agreementSignerName: bookingType === 'readiness-intensive' ? friSignerName : undefined,
+          agreementSignedAt: bookingType === 'readiness-intensive' ? new Date().toISOString() : undefined,
+          agreementText: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_TEXT : undefined,
+          agreementVersion: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_VERSION : undefined,
         }
       });
 
@@ -301,6 +382,9 @@ export const BookingCalendar = () => {
     setSelectedDate(undefined);
     setSelectedTime("");
     setCustomerInfo({ name: "", email: "", phone: "" });
+    setFriAgreementAccepted(false);
+    setFriSignerName("");
+    setFriAgreementError(null);
     setBookingId(null);
   };
 
@@ -318,6 +402,7 @@ export const BookingCalendar = () => {
       case 'date': return 'Select a Date';
       case 'time': return 'Choose a Time';
       case 'details': return 'Your Information';
+      case 'agreement': return 'Review and Sign Agreement';
       case 'payment': return 'Payment';
       case 'confirmation': return 'Booking Confirmed!';
     }
@@ -329,6 +414,7 @@ export const BookingCalendar = () => {
       case 'date': return `Pick a date for your ${bookingType === 'consultation' ? 'free consultation' : bookingType === 'crisis-coaching' ? 'Crisis Coaching Session' : 'Family Readiness Intensive'}`;
       case 'time': return selectedDate ? `Available times for ${format(selectedDate, 'MMMM d, yyyy')}` : '';
       case 'details': return 'Enter your contact details';
+      case 'agreement': return 'Review the Family Readiness Intensive agreement before payment';
       case 'payment': return 'Complete your payment securely';
       case 'confirmation': return 'Your appointment has been scheduled';
     }
@@ -532,6 +618,101 @@ export const BookingCalendar = () => {
                 </form>
               )}
 
+              {/* Step: Agreement (FRI only) */}
+              {step === "agreement" && selectedDate && bookingType === 'readiness-intensive' && (
+                <div className="max-w-3xl mx-auto space-y-6">
+                  <div className="bg-muted p-4 rounded-lg space-y-2">
+                    <h4 className="font-semibold">Family Readiness Intensive Summary</h4>
+                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
+                    <p><strong>Time:</strong> {formatTime(selectedTime)}</p>
+                    <p><strong>Name:</strong> {customerInfo.name}</p>
+                    <p><strong>Email:</strong> {customerInfo.email}</p>
+                    <div className="border-t pt-2 mt-2">
+                      <p className="text-lg font-bold">Total: $2,500.00</p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border bg-background p-5 space-y-4">
+                    <div>
+                      <h4 className="text-lg font-semibold">Family Readiness Intensive Agreement</h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Please read this agreement carefully. You will sign it electronically before continuing to payment.
+                      </p>
+                    </div>
+                    <Textarea
+                      value={FRI_AGREEMENT_TEXT}
+                      readOnly
+                      className="min-h-[420px] resize-none bg-muted/40 text-sm leading-6"
+                    />
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+                    <div className="space-y-2">
+                      <Label htmlFor="friSignerName">Type your full legal name as your electronic signature *</Label>
+                      <Input
+                        id="friSignerName"
+                        value={friSignerName}
+                        onChange={(e) => {
+                          setFriSignerName(e.target.value);
+                          if (friAgreementError) setFriAgreementError(null);
+                        }}
+                        placeholder="Full legal name"
+                        maxLength={100}
+                      />
+                    </div>
+                    <div className="text-sm text-muted-foreground md:pb-2">
+                      Signed electronically on {format(new Date(), 'MMMM d, yyyy')}
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 rounded-lg border p-4">
+                    <Checkbox
+                      id="friAgreementAccepted"
+                      checked={friAgreementAccepted}
+                      onCheckedChange={(checked) => {
+                        setFriAgreementAccepted(checked === true);
+                        if (friAgreementError) setFriAgreementError(null);
+                      }}
+                    />
+                    <Label htmlFor="friAgreementAccepted" className="text-sm leading-6 cursor-pointer">
+                      I have read this agreement, understand that the $2,500 Family Readiness Intensive fee is nonrefundable once signed and paid, and agree to proceed.
+                    </Label>
+                  </div>
+
+                  {friAgreementError && (
+                    <p className="text-sm text-destructive">{friAgreementError}</p>
+                  )}
+
+                  <div className="flex gap-2">
+                    <Button variant="ghost" type="button" onClick={() => setStep("details")}>
+                      ← Back
+                    </Button>
+                    <Button
+                      type="button"
+                      className="flex-1"
+                      onClick={() => {
+                        if (!friSignerName.trim()) {
+                          setFriAgreementError('Please type your full legal name to sign the agreement.');
+                          return;
+                        }
+                        if (friSignerName.trim().toLowerCase() !== customerInfo.name.trim().toLowerCase()) {
+                          setFriAgreementError('The signature name must match the name entered above.');
+                          return;
+                        }
+                        if (!friAgreementAccepted) {
+                          setFriAgreementError('You must accept the agreement before continuing.');
+                          return;
+                        }
+                        setCardReady(false);
+                        setStep("payment");
+                      }}
+                    >
+                      Continue to Secure Payment
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {/* Step: Payment (coaching only) */}
               {step === "payment" && selectedDate && (
                 <div className="max-w-md mx-auto space-y-6">
@@ -561,7 +742,7 @@ export const BookingCalendar = () => {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button variant="ghost" onClick={() => setStep("details")}>
+                    <Button variant="ghost" onClick={() => setStep(bookingType === 'readiness-intensive' ? "agreement" : "details")}>
                       ← Back
                     </Button>
                     <Button

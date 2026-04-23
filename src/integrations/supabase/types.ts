@@ -786,6 +786,11 @@ export type Database = {
       }
       bookings: {
         Row: {
+          agreement_accepted: boolean
+          agreement_signed_at: string | null
+          agreement_signer_name: string | null
+          agreement_text: string | null
+          agreement_version: string | null
           amount_cents: number | null
           booking_date: string
           booking_time: string
@@ -803,6 +808,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          agreement_accepted?: boolean
+          agreement_signed_at?: string | null
+          agreement_signer_name?: string | null
+          agreement_text?: string | null
+          agreement_version?: string | null
           amount_cents?: number | null
           booking_date: string
           booking_time: string
@@ -820,6 +830,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          agreement_accepted?: boolean
+          agreement_signed_at?: string | null
+          agreement_signer_name?: string | null
+          agreement_text?: string | null
+          agreement_version?: string | null
           amount_cents?: number | null
           booking_date?: string
           booking_time?: string
