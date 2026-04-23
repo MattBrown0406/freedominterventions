@@ -72,7 +72,7 @@ const Hero = () => {
                   Book a Crisis Coaching Session
                 </Button>
               </a>
-              <a href="#booking">
+              <a href="/family-readiness-intensive">
                 <Button variant="hero-outline" size="xl">
                   <Calendar className="w-5 h-5" />
                   Book a Family Readiness Intensive
