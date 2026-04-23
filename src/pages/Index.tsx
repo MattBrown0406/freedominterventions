@@ -148,7 +148,6 @@ const Index = () => {
         <VideoSection />
         <Services />
         <SignsSection />
-        <TestimonialHighlight />
         <SocialProof />
         <LeadMagnetBanner />
         <ProcessOverview />
