@@ -309,7 +309,7 @@ serve(async (req) => {
           });
         }
 
-        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents } = params;
+        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion } = params;
 
         // Validate required fields
         if (!validateString(customerName, 100)) {
@@ -331,6 +331,21 @@ serve(async (req) => {
         // Normalize legacy 'coaching' -> 'crisis-coaching'
         const normalizedBookingType = bookingType === 'coaching' ? 'crisis-coaching' : bookingType;
 
+        if (normalizedBookingType === 'readiness-intensive') {
+          if (agreementAccepted !== true) {
+            throw new Error('Agreement acceptance is required for the Family Readiness Intensive');
+          }
+          if (!validateString(agreementSignerName, 100)) {
+            throw new Error('Agreement signer name is required for the Family Readiness Intensive');
+          }
+          if (!validateString(agreementText, 12000)) {
+            throw new Error('Agreement text is required for the Family Readiness Intensive');
+          }
+          if (!validateString(agreementVersion, 50)) {
+            throw new Error('Agreement version is required for the Family Readiness Intensive');
+          }
+        }
+
         const sanitizedData = {
           booking_type: normalizedBookingType,
           customer_name: sanitizeString(customerName),
@@ -342,6 +357,11 @@ serve(async (req) => {
           status: 'confirmed',
           payment_id: paymentId || null,
           amount_cents: typeof amountCents === 'number' ? amountCents : null,
+          agreement_accepted: normalizedBookingType === 'readiness-intensive' ? agreementAccepted === true : false,
+          agreement_signer_name: normalizedBookingType === 'readiness-intensive' ? sanitizeString(agreementSignerName) : null,
+          agreement_signed_at: normalizedBookingType === 'readiness-intensive' ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
+          agreement_text: normalizedBookingType === 'readiness-intensive' ? agreementText.trim() : null,
+          agreement_version: normalizedBookingType === 'readiness-intensive' ? agreementVersion.trim() : null,
         };
 
         console.log('Creating booking:', { 
