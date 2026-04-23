@@ -39,6 +39,7 @@ import WhatIfTheyRefuse from "./pages/WhatIfTheyRefuse";
 import WhatMakesMattDifferent from "./pages/WhatMakesMattDifferent";
 import InterventionCost from "./pages/InterventionCost";
 import BeforeYouCall from "./pages/BeforeYouCall";
+import StartContract from "./pages/StartContract";
 
 // US States
 import Alabama from "./pages/Alabama";
@@ -196,6 +197,7 @@ const App = () => (
        <BrowserRouter>
         <TrailingSlashRedirect />
         <ScrollToTop />
+<<<<<<< HEAD
         <DefaultSEO />
         <FloatingContactForm />
         <Routes>
@@ -226,6 +228,7 @@ const App = () => (
           <Route path="/what-makes-matt-different" element={<WhatMakesMattDifferent />} />
           <Route path="/intervention-cost" element={<InterventionCost />} />
           <Route path="/before-you-call" element={<BeforeYouCall />} />
+          <Route path="/start-contract" element={<StartContract />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/hipaa-compliance" element={<HipaaCompliance />} />
@@ -379,6 +382,47 @@ const App = () => (
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+=======
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/interventionist" element={<Interventionist />} />
+            <Route path="/family-intervention" element={<FamilyIntervention />} />
+            <Route path="/crisis-support" element={<CrisisSupport />} />
+            <Route path="/treatment-planning" element={<TreatmentPlanning />} />
+            <Route path="/aftercare-guidance" element={<AftercareGuidance />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/party-wreckers-podcast" element={<PartyWreckersPodcast />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/assessment" element={<Assessment />} />
+            <Route path="/self-assessment" element={<SelfAssessment />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/reschedule" element={<Reschedule />} />
+            <Route path="/substance-guide" element={<SubstanceGuide />} />
+            <Route path="/intervention-toolkit" element={<InterventionToolkit />} />
+            <Route path="/intervention-faq" element={<InterventionFAQPage />} />
+            <Route path="/service-areas" element={<ServiceAreas />} />
+            <Route path="/family-readiness-intensive" element={<FamilyReadinessIntensive />} />
+            <Route path="/start-contract" element={<StartContract />} />
+
+            {stateRoutes.map(({ path, Component }) => (
+              <Route key={path} path={path} element={<Component />} />
+            ))}
+            {cityRoutes.map(({ path, Component }) => (
+              <Route key={path} path={path} element={<Component />} />
+            ))}
+            {provinceRoutes.map(({ path, Component }) => (
+              <Route key={path} path={path} element={<Component />} />
+            ))}
+
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+>>>>>>> c62c51c (Add intervention contract intake handoff page)
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
