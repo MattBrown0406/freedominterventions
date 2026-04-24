@@ -283,7 +283,7 @@ export const BookingCalendar = () => {
         console.warn("Cart capture failed:", err);
       }
       setCardReady(false);
-      setStep("payment");
+      setStep(bookingType === 'readiness-intensive' ? "agreement" : "payment");
     }
   };
 
@@ -352,6 +352,14 @@ export const BookingCalendar = () => {
 
   const processPayment = async () => {
     if (!selectedDate || !selectedTime || !bookingType || !offer) return;
+    if (bookingType === 'readiness-intensive') {
+      const signerName = friSignerName.trim();
+      if (!friAgreementAccepted || !signerName) {
+        setFriAgreementError("Please sign and accept the Family Readiness Intensive agreement before payment.");
+        toast.error("Agreement signature is required before payment.");
+        return;
+      }
+    }
     const tokenizeFn = (window as any).__squareTokenize;
     if (!tokenizeFn) {
       toast.error("Payment form not ready. Please wait.");
@@ -362,6 +370,7 @@ export const BookingCalendar = () => {
       const token = await tokenizeFn();
       if (!token) { setLoading(false); return; }
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
+      const agreementSignedAt = new Date().toISOString();
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-payment',
@@ -387,6 +396,11 @@ export const BookingCalendar = () => {
           durationMinutes: offer.durationMinutes,
           paymentId: data.payment?.id,
           amountCents: offer.priceCents,
+          agreementAccepted: bookingType === 'readiness-intensive' ? friAgreementAccepted : undefined,
+          agreementSignerName: bookingType === 'readiness-intensive' ? friSignerName.trim() : undefined,
+          agreementSignedAt: bookingType === 'readiness-intensive' ? agreementSignedAt : undefined,
+          agreementText: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_TEXT : undefined,
+          agreementVersion: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_VERSION : undefined,
         }
       });
       if (bookingError) console.error('Booking save error:', bookingError);
@@ -702,6 +716,90 @@ export const BookingCalendar = () => {
                     </Button>
                   </div>
                 </form>
+              )}
+
+              {/* Step: Agreement */}
+              {step === "agreement" && selectedDate && offer && bookingType === 'readiness-intensive' && (
+                <div className="max-w-3xl mx-auto space-y-6">
+                  <div className="bg-muted p-4 rounded-lg space-y-2">
+                    <h4 className="font-semibold">Booking Summary</h4>
+                    <p><strong>Session:</strong> {offer.shortName}</p>
+                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
+                    <p>
+                      <strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}
+                      {!isUserInPacific && (
+                        <span className="text-muted-foreground"> ({formatTime(selectedTime)} Pacific)</span>
+                      )}
+                    </p>
+                    <p><strong>Name:</strong> {customerInfo.name}</p>
+                    <p><strong>Email:</strong> {customerInfo.email}</p>
+                    <div className="border-t pt-2 mt-2">
+                      <p className="text-lg font-bold">Total: {offer.priceLabel}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label htmlFor="fri-agreement-text">Family Readiness Intensive Agreement</Label>
+                    <Textarea
+                      id="fri-agreement-text"
+                      value={FRI_AGREEMENT_TEXT}
+                      readOnly
+                      className="min-h-[360px] font-mono text-xs leading-5"
+                    />
+                  </div>
+
+                  <div className="space-y-2 max-w-md">
+                    <Label htmlFor="fri-signer-name">Type your full legal name to sign *</Label>
+                    <Input
+                      id="fri-signer-name"
+                      value={friSignerName}
+                      onChange={(e) => {
+                        setFriSignerName(e.target.value);
+                        if (friAgreementError) setFriAgreementError(null);
+                      }}
+                      placeholder="Full legal name"
+                      maxLength={100}
+                    />
+                  </div>
+
+                  <div className="flex items-start gap-3 rounded-lg border p-4">
+                    <Checkbox
+                      id="fri-agreement-accepted"
+                      checked={friAgreementAccepted}
+                      onCheckedChange={(checked) => {
+                        setFriAgreementAccepted(checked === true);
+                        if (friAgreementError) setFriAgreementError(null);
+                      }}
+                    />
+                    <Label htmlFor="fri-agreement-accepted" className="leading-6 font-normal">
+                      I have read this agreement, understand it, and agree to its terms, including the nonrefundable nature of the fee.
+                    </Label>
+                  </div>
+
+                  {friAgreementError && (
+                    <p className="text-sm text-destructive">{friAgreementError}</p>
+                  )}
+
+                  <div className="flex gap-2">
+                    <Button variant="ghost" onClick={() => setStep("details")}>
+                      ← Back
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const signerName = friSignerName.trim();
+                        if (!friAgreementAccepted || !signerName) {
+                          setFriAgreementError("Please type your full name and accept the agreement before continuing.");
+                          return;
+                        }
+                        setFriAgreementError(null);
+                        setStep("payment");
+                      }}
+                      className="flex-1"
+                    >
+                      Continue to Payment
+                    </Button>
+                  </div>
+                </div>
               )}
 
               {/* Step: Payment */}
