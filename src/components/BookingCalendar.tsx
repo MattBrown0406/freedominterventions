@@ -417,14 +417,17 @@ export const BookingCalendar = () => {
           agreementText: FRI_AGREEMENT_TEXT,
         });
 
-        const pdfPath = `fri/${crypto.randomUUID()}.pdf`;
-        const upload = await supabase.storage.from('contracts').upload(pdfPath, pdfBlob, {
-          contentType: 'application/pdf',
-          upsert: false,
+        const pdfBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result as string;
+            resolve(result.split(',')[1] || '');
+          };
+          reader.onerror = () => reject(new Error('Failed to encode FRI contract PDF.'));
+          reader.readAsDataURL(pdfBlob);
         });
-        if (upload.error) throw upload.error;
 
-        const { data: signedUrlData } = await supabase.storage.from('contracts').createSignedUrl(pdfPath, 60 * 60 * 24 * 7);
+        const pdfPath = `fri/${crypto.randomUUID()}.pdf`;
 
         const contractResponse = await supabase.functions.invoke('contracts', {
           body: {
@@ -439,7 +442,7 @@ export const BookingCalendar = () => {
             agreementVersion: FRI_AGREEMENT_VERSION,
             amountCents: offer.priceCents,
             contractPdfPath: pdfPath,
-            contractPdfUrl: signedUrlData?.signedUrl ?? null,
+            contractPdfBase64: pdfBase64,
             metadata: {
               bookingDate,
               bookingTime: selectedTime,

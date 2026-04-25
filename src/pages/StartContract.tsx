@@ -157,16 +157,18 @@ const StartContract = () => {
         agreementText,
       });
 
+      const pdfBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          resolve(result.split(",")[1] || "");
+        };
+        reader.onerror = () => reject(new Error("Failed to encode contract PDF."));
+        reader.readAsDataURL(pdfBlob);
+      });
+
       const contractId = crypto.randomUUID();
       const pdfPath = `intervention/${contractId}.pdf`;
-      const upload = await supabase.storage.from("contracts").upload(pdfPath, pdfBlob, {
-        contentType: "application/pdf",
-        upsert: false,
-      });
-      if (upload.error) throw upload.error;
-
-      const { data: signedUrlData } = await supabase.storage.from("contracts").createSignedUrl(pdfPath, 60 * 60 * 24 * 7);
-
       const bookingDate = new Date().toISOString().slice(0, 10);
       const contractResponse = await supabase.functions.invoke("contracts", {
         body: {
@@ -183,7 +185,7 @@ const StartContract = () => {
           discountCode: normalizedDiscountCode || null,
           discountCents,
           contractPdfPath: pdfPath,
-          contractPdfUrl: signedUrlData?.signedUrl ?? null,
+          contractPdfBase64: pdfBase64,
           metadata: {
             lovedOneName: data.lovedOneName.trim(),
             lovedOneDateOfBirth: data.lovedOneDateOfBirth?.trim() || null,

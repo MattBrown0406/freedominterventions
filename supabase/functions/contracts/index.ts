@@ -51,6 +51,7 @@ serve(async (req) => {
           discountCents,
           contractPdfPath,
           contractPdfUrl,
+          contractPdfBase64,
           metadata,
         } = params;
 
@@ -64,9 +65,33 @@ serve(async (req) => {
         if (!validateString(agreementText, 30000)) throw new Error("Agreement text is required");
         if (!validateString(agreementVersion, 50)) throw new Error("Agreement version is required");
 
+        const contractId = crypto.randomUUID();
+        let resolvedPdfPath = typeof contractPdfPath === "string" && contractPdfPath.trim() ? contractPdfPath : `${contractType}/${contractId}.pdf`;
+        let resolvedPdfUrl = typeof contractPdfUrl === "string" ? contractPdfUrl : null;
+
+        if (typeof contractPdfBase64 === "string" && contractPdfBase64.trim()) {
+          const binaryString = atob(contractPdfBase64);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+
+          const { error: uploadError } = await supabase.storage
+            .from("contracts")
+            .upload(resolvedPdfPath, bytes, {
+              contentType: "application/pdf",
+              upsert: false,
+            });
+          if (uploadError) throw uploadError;
+
+          const signedUrlResult = await supabase.storage
+            .from("contracts")
+            .createSignedUrl(resolvedPdfPath, 60 * 60 * 24 * 7);
+          resolvedPdfUrl = signedUrlResult.data?.signedUrl ?? resolvedPdfUrl;
+        }
+
         const { data, error } = await supabase
           .from("contracts")
           .insert({
+            id: contractId,
             contract_type: contractType,
             status: "signed-awaiting-payment",
             client_name: sanitizeString(clientName),
@@ -79,8 +104,8 @@ serve(async (req) => {
             amount_cents: typeof amountCents === "number" ? amountCents : null,
             discount_code: typeof discountCode === "string" && discountCode.trim() ? sanitizeString(discountCode).slice(0, 40) : null,
             discount_cents: typeof discountCents === "number" ? discountCents : null,
-            contract_pdf_path: typeof contractPdfPath === "string" ? contractPdfPath : null,
-            contract_pdf_url: typeof contractPdfUrl === "string" ? contractPdfUrl : null,
+            contract_pdf_path: resolvedPdfPath,
+            contract_pdf_url: resolvedPdfUrl,
             metadata: metadata && typeof metadata === "object" ? metadata : {},
           })
           .select()
