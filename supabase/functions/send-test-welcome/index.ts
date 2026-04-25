@@ -55,7 +55,7 @@ serve(async (req) => {
                 <a href="${SITE_URL}/start-contract" style="display:inline-block;background-color:#1e3a8a;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:6px;font-weight:bold;font-size:15px;">Review & Sign Contract</a>
               </td>
               <td align="center" style="padding:8px;">
-                <a href="${SITE_URL}/self-assessment" style="display:inline-block;background-color:#fbbf24;color:#1e3a8a;text-decoration:none;padding:14px 28px;border-radius:6px;font-weight:bold;font-size:15px;">Begin Family Assessment</a>
+                <a href="${SITE_URL}/assessment" style="display:inline-block;background-color:#fbbf24;color:#1e3a8a;text-decoration:none;padding:14px 28px;border-radius:6px;font-weight:bold;font-size:15px;">Begin Family Assessment</a>
               </td>
             </tr>
           </table>
