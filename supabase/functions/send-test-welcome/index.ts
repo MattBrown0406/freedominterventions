@@ -66,7 +66,8 @@ serve(async (req) => {
           <p style="font-size:15px;line-height:1.6;margin:24px 0 0;">
             With you in this,<br/>
             <strong>Matt Brown</strong><br/>
-            <span style="color:#64748b;">Founder, Freedom Interventions</span>
+            <span style="color:#64748b;">Founder, Freedom Interventions</span><br/>
+            <a href="tel:+15038362136" style="color:#1e3a8a;text-decoration:none;">503-836-2136</a>
           </p>
         </td></tr>
         <tr><td style="background-color:#f8fafc;padding:20px 32px;text-align:center;border-top:1px solid #e2e8f0;">
