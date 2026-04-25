@@ -274,13 +274,13 @@ const StartContract = () => {
                   Sign the Intervention Agreement and Pay Online
                 </h1>
                 <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
-                  Families can review the intervention agreement here, sign electronically, apply an approved discount code if one was provided, and complete payment through secure Square-hosted checkout.
+                  Families can review the full intervention agreement here, sign electronically, and complete payment through secure Square-hosted checkout.
                 </p>
                 <div className="mt-8 grid gap-4 sm:grid-cols-3">
                   <div className="rounded-2xl border border-border bg-background p-5">
                     <BadgeDollarSign className="mb-3 h-5 w-5 text-primary" />
                     <p className="font-semibold text-foreground">Standard fee</p>
-                    <p className="text-sm text-muted-foreground">{formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)} before any approved discount</p>
+                    <p className="text-sm text-muted-foreground">{formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}</p>
                   </div>
                   <div className="rounded-2xl border border-border bg-background p-5">
                     <ShieldCheck className="mb-3 h-5 w-5 text-primary" />
@@ -299,7 +299,7 @@ const StartContract = () => {
                 <p className="mb-3 text-sm font-medium uppercase tracking-[0.18em] text-primary">What this page does</p>
                 <ul className="space-y-4 text-muted-foreground">
                   <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Collects the core client and case details before payment</li>
-                  <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Reflects the standard fee and any approved discount code in both the agreement and checkout total</li>
+                  <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Lets the signer review the full agreement before continuing</li>
                   <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Generates and stores a signed PDF contract for admin review</li>
                 </ul>
                 <div className="mt-8 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm text-muted-foreground">
@@ -317,7 +317,7 @@ const StartContract = () => {
                 <div className="mb-8">
                   <h2 className="mb-3 font-serif text-3xl font-semibold text-foreground">Start the contract process</h2>
                   <p className="text-muted-foreground">
-                    Fill in the family details, generate the signed agreement, and continue to Square checkout.
+                    Fill in the family details, review the agreement in full, sign electronically, and continue to Square checkout.
                   </p>
                 </div>
 
@@ -384,8 +384,9 @@ const StartContract = () => {
                     <div className="grid gap-6 md:grid-cols-2">
                       <FormField control={form.control} name="discountCode" render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Discount code (optional)</FormLabel>
-                          <FormControl><Input placeholder="If Matt gave you a code" {...field} /></FormControl>
+                          <FormLabel>Private code (if provided)</FormLabel>
+                          <FormControl><Input placeholder="Enter code" {...field} /></FormControl>
+                          <p className="text-xs text-muted-foreground">Leave blank unless you were given a code directly.</p>
                           <FormMessage />
                         </FormItem>
                       )} />
@@ -393,8 +394,8 @@ const StartContract = () => {
                         <p className="mb-2 text-sm font-medium uppercase tracking-[0.18em] text-primary">Amount due</p>
                         <p className="text-3xl font-bold text-foreground">{formatUsdFromCents(finalAmountCents)}</p>
                         <p className="mt-2 text-sm text-muted-foreground">
-                          Base fee {formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}
-                          {discountCents > 0 ? ` minus ${formatUsdFromCents(discountCents)} discount (${normalizedDiscountCode}).` : "."}
+                          Standard fee {formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}
+                          {discountCents > 0 ? ` adjusted to ${formatUsdFromCents(finalAmountCents)}.` : "."}
                         </p>
                       </div>
                     </div>
@@ -413,6 +414,21 @@ const StartContract = () => {
                         <FormMessage />
                       </FormItem>
                     )} />
+
+                    <div className="rounded-2xl border border-border bg-background p-5 text-sm text-muted-foreground">
+                      <p className="font-medium text-foreground">Review the agreement</p>
+                      <p className="mt-2">Please read the full agreement below before signing and continuing to payment.</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-border bg-background p-5">
+                      <div className="mb-4 flex items-center justify-between gap-3">
+                        <div>
+                          <p className="font-medium text-foreground">Intervention Services Agreement</p>
+                          <p className="text-sm text-muted-foreground">Version {INTERVENTION_CONTRACT_VERSION}</p>
+                        </div>
+                      </div>
+                      <Textarea value={buildAgreementText(form.getValues(), finalAmountCents, discountCents, normalizedDiscountCode)} readOnly className="min-h-[420px] resize-none text-sm leading-6 bg-muted/40" />
+                    </div>
 
                     <div className="rounded-2xl border border-border bg-background p-5 text-sm text-muted-foreground">
                       <p className="font-medium text-foreground">Electronic signature</p>
@@ -455,9 +471,9 @@ const StartContract = () => {
                 <div className="rounded-3xl border border-border bg-card p-8">
                   <h2 className="mb-5 font-serif text-2xl font-semibold text-foreground">Agreement summary</h2>
                   <ul className="space-y-3 text-muted-foreground">
-                    <li>• Intervention fee: {formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}</li>
-                    <li>• Approved discount codes reduce both the written agreement amount and the Square payment total</li>
-                    <li>• Agreement becomes part of the stored booking record after signing</li>
+                    <li>• Standard intervention fee: {formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}</li>
+                    <li>• The full agreement is reviewed before signature and payment</li>
+                    <li>• Agreement becomes part of the stored contract record after signing</li>
                     <li>• Payment is completed on secure Square-hosted checkout</li>
                   </ul>
                 </div>
