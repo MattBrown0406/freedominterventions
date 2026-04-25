@@ -38,6 +38,7 @@ const contractSchema = z.object({
   clientEmail: z.string().trim().email("Enter a valid email address"),
   clientPhone: z.string().trim().min(7, "Phone is required").max(25, "Keep the phone number under 25 characters"),
   lovedOneName: z.string().trim().min(2, "Loved one name is required").max(100, "Keep the name under 100 characters"),
+  lovedOneDateOfBirth: z.string().trim().optional(),
   relationship: z.string().trim().min(2, "Relationship is required").max(80, "Keep this under 80 characters"),
   referralSource: z.string().trim().max(120, "Keep this under 120 characters").optional(),
   discountCode: z.string().trim().max(40, "Keep the discount code under 40 characters").optional(),
@@ -58,6 +59,7 @@ const buildAgreementText = (data: ContractFormData, finalAmountCents: number, di
     `Client Phone: ${data.clientPhone}`,
     `Loved One Name: ${data.lovedOneName}`,
     `Relationship to Loved One: ${data.relationship}`,
+    `Loved One Date of Birth: ${data.lovedOneDateOfBirth?.trim() || "Not provided"}`,
     `Referral Source: ${data.referralSource?.trim() || "Not provided"}`,
     `Base Intervention Fee: ${formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}`,
     `Discount Code: ${normalizedDiscountCode || "None"}`,
@@ -89,6 +91,7 @@ const StartContract = () => {
       clientPhone: "",
       lovedOneName: "",
       relationship: "",
+      lovedOneDateOfBirth: "",
       referralSource: "",
       discountCode: "",
       signerName: "",
@@ -146,6 +149,7 @@ const StartContract = () => {
         discountLabel: discountCents > 0 ? formatUsdFromCents(discountCents) : undefined,
         metadata: {
           "Loved One": data.lovedOneName.trim(),
+          "Loved One DOB": data.lovedOneDateOfBirth?.trim() || "Not provided",
           "Relationship": data.relationship.trim(),
           "Referral Source": data.referralSource?.trim() || "Not provided",
           "Notes": data.notes?.trim() || "None",
@@ -182,6 +186,7 @@ const StartContract = () => {
           contractPdfUrl: signedUrlData?.signedUrl ?? null,
           metadata: {
             lovedOneName: data.lovedOneName.trim(),
+            lovedOneDateOfBirth: data.lovedOneDateOfBirth?.trim() || null,
             relationship: data.relationship.trim(),
             referralSource: data.referralSource?.trim() || null,
             notes: data.notes?.trim() || null,
@@ -223,7 +228,7 @@ const StartContract = () => {
       console.error("Contract checkout error:", error);
       toast({
         title: "Couldn’t start checkout",
-        description: error instanceof Error ? error.message : "Please try again.",
+        description: error instanceof Error ? error.message : "Please try again. If this keeps happening, copy the browser console error and the exact step where it failed.",
         variant: "destructive",
       });
     } finally {
@@ -350,11 +355,18 @@ const StartContract = () => {
                       )} />
                     </div>
 
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid gap-6 md:grid-cols-3">
                       <FormField control={form.control} name="lovedOneName" render={({ field }) => (
                         <FormItem>
                           <FormLabel>Loved one’s name</FormLabel>
                           <FormControl><Input placeholder="Person needing help" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name="lovedOneDateOfBirth" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Loved one’s date of birth (optional)</FormLabel>
+                          <FormControl><Input type="date" {...field} /></FormControl>
                           <FormMessage />
                         </FormItem>
                       )} />
