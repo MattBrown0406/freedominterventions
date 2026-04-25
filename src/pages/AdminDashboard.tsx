@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image, Download, MessageSquare, Home, Calendar, ShoppingCart } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import BlogImageManager from "@/components/admin/BlogImageManager";
@@ -18,6 +18,7 @@ import TestimonialManager from "@/components/admin/TestimonialManager";
 import AvailabilityManager from "@/components/admin/AvailabilityManager";
 import CaseDocumentsManager from "@/components/admin/CaseDocumentsManager";
 import AbandonedCartsManager from "@/components/admin/AbandonedCartsManager";
+import ContractsManager from "@/components/admin/ContractsManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -287,6 +288,10 @@ const AdminDashboard = () => {
               <FileText className="w-4 h-4" />
               Case Docs
             </TabsTrigger>
+            <TabsTrigger value="contracts" className="gap-2">
+              <FileSignature className="w-4 h-4" />
+              Contracts
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="assessments">
@@ -417,6 +422,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="case-documents">
               <CaseDocumentsManager />
+            </TabsContent>
+
+            <TabsContent value="contracts">
+              <ContractsManager />
             </TabsContent>
 
             <TabsContent value="abandoned-carts">

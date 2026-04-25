@@ -228,6 +228,7 @@ const App = () => (
           <Route path="/intervention-cost" element={<InterventionCost />} />
           <Route path="/before-you-call" element={<BeforeYouCall />} />
           <Route path="/start-contract" element={<StartContract />} />
+          <Route path="/intervention-agreement" element={<StartContract />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/hipaa-compliance" element={<HipaaCompliance />} />

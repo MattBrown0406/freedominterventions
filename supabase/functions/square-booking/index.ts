@@ -222,6 +222,9 @@ serve(async (req) => {
           agreementSignedAt,
           agreementText,
           agreementVersion,
+          discountCode,
+          discountCents,
+          contractMetadata,
         } = params;
 
         if (typeof amount !== 'number' || amount <= 0 || amount > 500000) {
@@ -240,7 +243,7 @@ serve(async (req) => {
           throw new Error('Invalid booking date or time');
         }
 
-        if (!paymentBookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching'].includes(paymentBookingType)) {
+        if (!paymentBookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching', 'intervention-contract'].includes(paymentBookingType)) {
           throw new Error('Valid booking type is required');
         }
 
@@ -253,6 +256,8 @@ serve(async (req) => {
           ? 'Family Readiness Intensive'
           : normalizedBookingType === 'crisis-coaching'
           ? 'Crisis Coaching Session'
+          : normalizedBookingType === 'intervention-contract'
+          ? 'Intervention Agreement'
           : 'Coaching session';
 
         if (action === 'create-payment') {
@@ -310,6 +315,8 @@ serve(async (req) => {
           });
         }
 
+        const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
+
         const bookingPayload = {
           booking_type: normalizedBookingType,
           customer_name: sanitizedName,
@@ -321,11 +328,14 @@ serve(async (req) => {
           status: 'confirmed',
           payment_id: null,
           amount_cents: amount,
-          agreement_accepted: normalizedBookingType === 'readiness-intensive' ? agreementAccepted === true : false,
-          agreement_signer_name: normalizedBookingType === 'readiness-intensive' && validateString(agreementSignerName, 100) ? sanitizeString(agreementSignerName) : null,
-          agreement_signed_at: normalizedBookingType === 'readiness-intensive' ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
-          agreement_text: normalizedBookingType === 'readiness-intensive' && validateString(agreementText, 12000) ? agreementText.trim() : null,
-          agreement_version: normalizedBookingType === 'readiness-intensive' && validateString(agreementVersion, 50) ? agreementVersion.trim() : null,
+          agreement_accepted: requiresAgreementStorage ? agreementAccepted === true : false,
+          agreement_signer_name: requiresAgreementStorage && validateString(agreementSignerName, 100) ? sanitizeString(agreementSignerName) : null,
+          agreement_signed_at: requiresAgreementStorage ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
+          agreement_text: requiresAgreementStorage && validateString(agreementText, 30000) ? agreementText.trim() : null,
+          agreement_version: requiresAgreementStorage && validateString(agreementVersion, 50) ? agreementVersion.trim() : null,
+          discount_code: typeof discountCode === 'string' && discountCode.trim().length > 0 ? sanitizeString(discountCode).slice(0, 40) : null,
+          discount_cents: typeof discountCents === 'number' && discountCents >= 0 ? discountCents : null,
+          contract_metadata: contractMetadata && typeof contractMetadata === 'object' ? contractMetadata : {},
         };
 
         const { data: booking, error: bookingError } = await supabase
@@ -340,7 +350,7 @@ serve(async (req) => {
         }
 
         const origin = req.headers.get('origin') || 'https://freedominterventions.com';
-        const successUrl = new URL('/#booking', origin);
+        const successUrl = new URL(normalizedBookingType === 'intervention-contract' ? '/start-contract' : '/#booking', origin);
         successUrl.searchParams.set('square_status', 'success');
         successUrl.searchParams.set('booking_id', booking.id);
         successUrl.searchParams.set('type', normalizedBookingType);
@@ -415,7 +425,7 @@ serve(async (req) => {
           });
         }
 
-        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion } = params;
+        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion, discountCode, discountCents, contractMetadata } = params;
 
         // Validate required fields
         if (!validateString(customerName, 100)) {
@@ -430,27 +440,29 @@ serve(async (req) => {
           throw new Error('Valid booking date and time are required');
         }
 
-        if (!bookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching'].includes(bookingType)) {
+        if (!bookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching', 'intervention-contract'].includes(bookingType)) {
           throw new Error('Valid booking type is required');
         }
 
         // Normalize legacy 'coaching' -> 'crisis-coaching'
         const normalizedBookingType = bookingType === 'coaching' ? 'crisis-coaching' : bookingType;
 
-        if (normalizedBookingType === 'readiness-intensive') {
+        if (normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract') {
           if (agreementAccepted !== true) {
-            throw new Error('Agreement acceptance is required for the Family Readiness Intensive');
+            throw new Error('Agreement acceptance is required for this contract flow');
           }
           if (!validateString(agreementSignerName, 100)) {
-            throw new Error('Agreement signer name is required for the Family Readiness Intensive');
+            throw new Error('Agreement signer name is required for this contract flow');
           }
-          if (!validateString(agreementText, 12000)) {
-            throw new Error('Agreement text is required for the Family Readiness Intensive');
+          if (!validateString(agreementText, 30000)) {
+            throw new Error('Agreement text is required for this contract flow');
           }
           if (!validateString(agreementVersion, 50)) {
-            throw new Error('Agreement version is required for the Family Readiness Intensive');
+            throw new Error('Agreement version is required for this contract flow');
           }
         }
+
+        const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
 
         const sanitizedData = {
           booking_type: normalizedBookingType,
@@ -463,11 +475,14 @@ serve(async (req) => {
           status: 'confirmed',
           payment_id: paymentId || null,
           amount_cents: typeof amountCents === 'number' ? amountCents : null,
-          agreement_accepted: normalizedBookingType === 'readiness-intensive' ? agreementAccepted === true : false,
-          agreement_signer_name: normalizedBookingType === 'readiness-intensive' ? sanitizeString(agreementSignerName) : null,
-          agreement_signed_at: normalizedBookingType === 'readiness-intensive' ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
-          agreement_text: normalizedBookingType === 'readiness-intensive' ? agreementText.trim() : null,
-          agreement_version: normalizedBookingType === 'readiness-intensive' ? agreementVersion.trim() : null,
+          agreement_accepted: requiresAgreementStorage ? agreementAccepted === true : false,
+          agreement_signer_name: requiresAgreementStorage ? sanitizeString(agreementSignerName) : null,
+          agreement_signed_at: requiresAgreementStorage ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
+          agreement_text: requiresAgreementStorage ? agreementText.trim() : null,
+          agreement_version: requiresAgreementStorage ? agreementVersion.trim() : null,
+          discount_code: typeof discountCode === 'string' && discountCode.trim().length > 0 ? sanitizeString(discountCode).slice(0, 40) : null,
+          discount_cents: typeof discountCents === 'number' && discountCents >= 0 ? discountCents : null,
+          contract_metadata: contractMetadata && typeof contractMetadata === 'object' ? contractMetadata : {},
         };
 
         console.log('Creating booking:', { 
