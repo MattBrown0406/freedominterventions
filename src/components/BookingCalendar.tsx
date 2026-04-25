@@ -11,12 +11,14 @@ import { toast } from "sonner";
 import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, CheckCircle, Sparkles, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { z } from "zod";
+import { generateContractPdf } from "@/utils/generateContractPdf";
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
 const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
 
 type BookingType = 'consultation' | 'crisis-coaching' | 'readiness-intensive';
+type PaidReturnType = BookingType | 'fri-contract';
 
 interface OfferConfig {
   label: string;
@@ -142,6 +144,7 @@ export const BookingCalendar = () => {
   const [friSignerName, setFriSignerName] = useState("");
   const [friAgreementError, setFriAgreementError] = useState<string | null>(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
+  const [contractId, setContractId] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
 
@@ -149,7 +152,7 @@ export const BookingCalendar = () => {
     const params = new URLSearchParams(window.location.search);
     const squareStatus = params.get("square_status");
     const returnedBookingId = params.get("booking_id");
-    const returnedType = params.get("type") as BookingType | null;
+    const returnedType = params.get("type") as PaidReturnType | null;
     const returnedDate = params.get("date");
     const returnedTime = params.get("time");
     const returnedName = params.get("name");
@@ -157,8 +160,8 @@ export const BookingCalendar = () => {
     const returnedPhone = params.get("phone");
 
     if (squareStatus === 'success' && returnedBookingId) {
-      if (returnedType && (returnedType === 'consultation' || returnedType === 'crisis-coaching' || returnedType === 'readiness-intensive')) {
-        setBookingType(returnedType);
+      if (returnedType && (returnedType === 'consultation' || returnedType === 'crisis-coaching' || returnedType === 'readiness-intensive' || returnedType === 'fri-contract')) {
+        setBookingType(returnedType === 'fri-contract' ? 'readiness-intensive' : returnedType);
       }
       if (returnedDate) {
         const [y, m, d] = returnedDate.split('-').map(Number);
@@ -169,7 +172,11 @@ export const BookingCalendar = () => {
       if (returnedName || returnedEmail || returnedPhone) {
         setCustomerInfo({ name: returnedName || '', email: returnedEmail || '', phone: returnedPhone || '' });
       }
-      setBookingId(returnedBookingId);
+      if (returnedType === 'fri-contract') {
+        setContractId(returnedBookingId);
+      } else {
+        setBookingId(returnedBookingId);
+      }
       setStep('confirmation');
       toast.success('Payment completed successfully.');
       const cleanUrl = window.location.pathname + window.location.hash;
@@ -381,24 +388,95 @@ export const BookingCalendar = () => {
     try {
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
       const agreementSignedAt = new Date().toISOString();
-      const { data, error } = await supabase.functions.invoke('square-booking', {
-        body: {
-          action: 'create-checkout-link',
-          amount: offer.priceCents,
-          customerEmail: customerInfo.email,
-          customerName: customerInfo.name,
-          customerPhone: customerInfo.phone || null,
-          bookingDate,
-          bookingTime: selectedTime,
-          bookingType,
-          durationMinutes: offer.durationMinutes,
-          agreementAccepted: bookingType === 'readiness-intensive' ? friAgreementAccepted : undefined,
-          agreementSignerName: bookingType === 'readiness-intensive' ? friSignerName.trim() : undefined,
-          agreementSignedAt: bookingType === 'readiness-intensive' ? agreementSignedAt : undefined,
-          agreementText: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_TEXT : undefined,
-          agreementVersion: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_VERSION : undefined,
-        }
-      });
+      let data;
+      let error;
+
+      if (bookingType === 'readiness-intensive') {
+        const pdfBlob = generateContractPdf({
+          contractTitle: 'Family Readiness Intensive Agreement',
+          contractVersion: FRI_AGREEMENT_VERSION,
+          clientName: customerInfo.name,
+          clientEmail: customerInfo.email,
+          clientPhone: customerInfo.phone || '',
+          signerName: friSignerName.trim(),
+          signedAt: agreementSignedAt,
+          bookingTypeLabel: 'Family Readiness Intensive',
+          amountLabel: offer.priceLabel,
+          metadata: {
+            'Session Date': format(selectedDate, 'MMMM d, yyyy'),
+            'Session Time': `${formatTimeInUserTz(selectedTime, selectedDate)}${!isUserInPacific ? ` (${formatTime(selectedTime)} Pacific)` : ''}`,
+          },
+          agreementText: FRI_AGREEMENT_TEXT,
+        });
+
+        const pdfPath = `fri/${crypto.randomUUID()}.pdf`;
+        const upload = await supabase.storage.from('contracts').upload(pdfPath, pdfBlob, {
+          contentType: 'application/pdf',
+          upsert: false,
+        });
+        if (upload.error) throw upload.error;
+
+        const { data: signedUrlData } = await supabase.storage.from('contracts').createSignedUrl(pdfPath, 60 * 60 * 24 * 7);
+
+        const contractResponse = await supabase.functions.invoke('contracts', {
+          body: {
+            action: 'create-contract',
+            contractType: 'readiness-intensive',
+            clientName: customerInfo.name,
+            clientEmail: customerInfo.email,
+            clientPhone: customerInfo.phone || null,
+            signerName: friSignerName.trim(),
+            signedAt: agreementSignedAt,
+            agreementText: FRI_AGREEMENT_TEXT,
+            agreementVersion: FRI_AGREEMENT_VERSION,
+            amountCents: offer.priceCents,
+            contractPdfPath: pdfPath,
+            contractPdfUrl: signedUrlData?.signedUrl ?? null,
+            metadata: {
+              bookingDate,
+              bookingTime: selectedTime,
+              durationMinutes: offer.durationMinutes,
+              followUpIncluded: true,
+            },
+          }
+        });
+        error = contractResponse.error;
+        data = contractResponse.data;
+        if (error) throw error;
+        if (!data?.contract?.id) throw new Error('FRI contract record was not created.');
+
+        setContractId(data.contract.id);
+
+        const paymentResponse = await supabase.functions.invoke('contracts', {
+          body: {
+            action: 'create-payment-link',
+            contractId: data.contract.id,
+            amount: offer.priceCents,
+            customerEmail: customerInfo.email,
+            customerName: customerInfo.name,
+            redirectPath: `/booking?square_status=success&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}`,
+            note: `Family Readiness Intensive for ${customerInfo.name}`,
+          }
+        });
+        error = paymentResponse.error;
+        data = paymentResponse.data;
+      } else {
+        const response = await supabase.functions.invoke('square-booking', {
+          body: {
+            action: 'create-checkout-link',
+            amount: offer.priceCents,
+            customerEmail: customerInfo.email,
+            customerName: customerInfo.name,
+            customerPhone: customerInfo.phone || null,
+            bookingDate,
+            bookingTime: selectedTime,
+            bookingType,
+            durationMinutes: offer.durationMinutes,
+          }
+        });
+        error = response.error;
+        data = response.data;
+      }
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       if (abandonedCartId) {
@@ -433,6 +511,7 @@ export const BookingCalendar = () => {
     setFriSignerName('');
     setFriAgreementError(null);
     setBookingId(null);
+    setContractId(null);
     setAbandonedCartId(null);
   };
 
@@ -643,6 +722,7 @@ export const BookingCalendar = () => {
                     <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3"><h4 className="font-semibold text-primary flex items-center gap-2"><Sparkles className="w-5 h-5" />Important Next Step</h4><p className="text-sm text-foreground">Please complete the family assessment before your Family Readiness Intensive so Matt has the strongest possible picture of your situation before the session.</p><Button asChild className="w-full"><a href="/assessment">Complete Assessment</a></Button></div>
                   ) : null}
                   <div className="flex gap-2 justify-center"><Button variant="outline" onClick={resetForm}>Book Another Session</Button>{bookingId && <Button variant="secondary" asChild><a href={`/reschedule?bookingId=${bookingId}&email=${encodeURIComponent(customerInfo.email)}`}>Manage Booking</a></Button>}</div>
+                  {contractId && bookingType === 'readiness-intensive' ? <p className="text-xs text-muted-foreground">Contract ID: {contractId}</p> : null}
                 </div>
               )}
             </CardContent>
