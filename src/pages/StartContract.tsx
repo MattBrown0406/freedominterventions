@@ -150,58 +150,45 @@ const StartContract = () => {
       const { data: signedUrlData } = await supabase.storage.from("contracts").createSignedUrl(pdfPath, 60 * 60 * 24 * 7);
 
       const bookingDate = new Date().toISOString().slice(0, 10);
-      const { data: bookingRecord, error: bookingError } = await supabase.functions.invoke("square-booking", {
+      const contractResponse = await supabase.functions.invoke("contracts", {
         body: {
-          action: "create-booking",
-          bookingType: "intervention-contract",
-          customerEmail: data.clientEmail.trim().toLowerCase(),
-          customerName: data.clientName.trim(),
-          customerPhone: data.clientPhone.trim(),
-          bookingDate,
-          bookingTime: "00:00",
-          durationMinutes: 60,
-          paymentId: null,
-          amountCents: finalAmountCents,
-          agreementAccepted: true,
-          agreementSignerName: data.signerName.trim(),
-          agreementSignedAt,
+          action: "create-contract",
+          contractType: "intervention",
+          clientEmail: data.clientEmail.trim().toLowerCase(),
+          clientName: data.clientName.trim(),
+          clientPhone: data.clientPhone.trim(),
+          signerName: data.signerName.trim(),
+          signedAt: agreementSignedAt,
           agreementText,
           agreementVersion: INTERVENTION_CONTRACT_VERSION,
+          amountCents: finalAmountCents,
           discountCode: normalizedDiscountCode || null,
           discountCents,
-          contractMetadata: {
+          contractPdfPath: pdfPath,
+          contractPdfUrl: signedUrlData?.signedUrl ?? null,
+          metadata: {
             lovedOneName: data.lovedOneName.trim(),
             relationship: data.relationship.trim(),
             referralSource: data.referralSource?.trim() || null,
             notes: data.notes?.trim() || null,
             baseFeeCents: STANDARD_INTERVENTION_FEE_CENTS,
-            contractId,
+            createdDate: bookingDate,
+            localContractId: contractId,
           },
         },
       });
-      if (bookingError) throw bookingError;
+      if (contractResponse.error) throw contractResponse.error;
 
-      const bookingId = bookingRecord?.booking?.id;
-      if (!bookingId) throw new Error("Contract record was created without an ID.");
+      const savedContractId = contractResponse.data?.contract?.id;
+      if (!savedContractId) throw new Error("Contract record was created without an ID.");
 
-      const { error: updateError } = await supabase
-        .from("bookings")
-        .update({
-          contract_pdf_path: pdfPath,
-          contract_pdf_url: signedUrlData?.signedUrl ?? null,
-          status: "signed-awaiting-payment",
-        })
-        .eq("id", bookingId);
-      if (updateError) throw updateError;
-
-      const checkoutResponse = await supabase.functions.invoke("square-booking", {
+      const checkoutResponse = await supabase.functions.invoke("contracts", {
         body: {
-          action: "create-contract-payment-link",
+          action: "create-payment-link",
           amount: finalAmountCents,
           customerEmail: data.clientEmail.trim().toLowerCase(),
           customerName: data.clientName.trim(),
-          customerPhone: data.clientPhone.trim(),
-          contractId: bookingId,
+          contractId: savedContractId,
           redirectPath: "/start-contract?contract_status=success",
           note: `Intervention Agreement for ${data.clientName.trim()}`,
         },

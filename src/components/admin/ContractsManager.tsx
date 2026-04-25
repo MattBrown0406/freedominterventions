@@ -12,20 +12,17 @@ import { useToast } from "@/hooks/use-toast";
 
 type ContractRow = {
   id: string;
-  booking_type: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string | null;
-  booking_date: string;
-  booking_time: string;
+  contract_type: string;
+  client_name: string;
+  client_email: string;
+  client_phone: string | null;
   status: string;
   amount_cents: number | null;
   payment_id: string | null;
-  agreement_accepted: boolean;
-  agreement_signer_name: string | null;
-  agreement_signed_at: string | null;
-  agreement_version: string | null;
-  agreement_text: string | null;
+  signer_name: string;
+  signed_at: string;
+  agreement_version: string;
+  agreement_text: string;
   contract_pdf_path?: string | null;
   contract_pdf_url?: string | null;
   discount_code?: string | null;
@@ -34,7 +31,7 @@ type ContractRow = {
 };
 
 const typeLabel = (type: string) => {
-  if (type === "intervention-contract") return "Intervention Contract";
+  if (type === "intervention") return "Intervention Contract";
   if (type === "readiness-intensive") return "FRI Contract";
   return type;
 };
@@ -48,11 +45,9 @@ export default function ContractsManager() {
   const fetchContracts = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("bookings")
-      .select("id, booking_type, customer_name, customer_email, customer_phone, booking_date, booking_time, status, amount_cents, payment_id, agreement_accepted, agreement_signer_name, agreement_signed_at, agreement_version, agreement_text, contract_pdf_path, contract_pdf_url, discount_code, discount_cents, created_at")
-      .in("booking_type", ["intervention-contract", "readiness-intensive"])
-      .eq("agreement_accepted", true)
-      .order("agreement_signed_at", { ascending: false, nullsFirst: false })
+      .from("contracts")
+      .select("id, contract_type, client_name, client_email, client_phone, status, amount_cents, payment_id, signer_name, signed_at, agreement_version, agreement_text, contract_pdf_path, contract_pdf_url, discount_code, discount_cents, created_at")
+      .order("signed_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -72,7 +67,7 @@ export default function ContractsManager() {
     const q = query.trim().toLowerCase();
     if (!q) return contracts;
     return contracts.filter((row) =>
-      [row.customer_name, row.customer_email, row.booking_type, row.agreement_signer_name || "", row.discount_code || ""]
+      [row.client_name, row.client_email, row.contract_type, row.signer_name || "", row.discount_code || ""]
         .join(" ")
         .toLowerCase()
         .includes(q)
@@ -132,16 +127,16 @@ export default function ContractsManager() {
                   <CardContent className="flex flex-col gap-4 p-4 md:flex-row md:items-start md:justify-between">
                     <div className="min-w-0 space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium text-foreground">{row.customer_name}</p>
-                        <Badge variant="secondary">{typeLabel(row.booking_type)}</Badge>
+                        <p className="font-medium text-foreground">{row.client_name}</p>
+                        <Badge variant="secondary">{typeLabel(row.contract_type)}</Badge>
                         <Badge variant="outline">{formatUsdFromCents(row.amount_cents ?? 0)}</Badge>
                         {row.discount_cents ? <Badge variant="outline">-{formatUsdFromCents(row.discount_cents)}</Badge> : null}
                         {row.discount_code ? <Badge>{row.discount_code}</Badge> : null}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        <p>{row.customer_email}{row.customer_phone ? ` • ${row.customer_phone}` : ""}</p>
-                        <p>Signed by {row.agreement_signer_name || "Unknown signer"}{row.agreement_signed_at ? ` • ${new Date(row.agreement_signed_at).toLocaleString()}` : ""}</p>
-                        <p>Status: {row.status} • Booking date: {row.booking_date} {row.booking_time}</p>
+                        <p>{row.client_email}{row.client_phone ? ` • ${row.client_phone}` : ""}</p>
+                        <p>Signed by {row.signer_name || "Unknown signer"}{row.signed_at ? ` • ${new Date(row.signed_at).toLocaleString()}` : ""}</p>
+                        <p>Status: {row.status}</p>
                         <p>Version: {row.agreement_version || "—"}{row.payment_id ? ` • Square payment: ${row.payment_id}` : ""}</p>
                       </div>
                     </div>
@@ -152,7 +147,7 @@ export default function ContractsManager() {
                         </DialogTrigger>
                         <DialogContent className="max-w-3xl">
                           <DialogHeader>
-                            <DialogTitle>{typeLabel(row.booking_type)} — {row.customer_name}</DialogTitle>
+                            <DialogTitle>{typeLabel(row.contract_type)} — {row.client_name}</DialogTitle>
                           </DialogHeader>
                           <ScrollArea className="h-[65vh] rounded-md border p-4">
                             <pre className="whitespace-pre-wrap text-sm leading-6">{row.agreement_text || "No agreement text stored."}</pre>
