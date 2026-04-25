@@ -188,33 +188,42 @@ serve(async (req) => {
         });
       }
 
-      case 'create-payment': {
-        // Rate limit check for payment attempts
+      case 'create-payment':
+      case 'create-checkout-link': {
         const clientIP = getClientIP(req);
         const rateLimit = checkRateLimit(clientIP, paymentAttempts, MAX_PAYMENT_ATTEMPTS);
-        
+
         if (!rateLimit.allowed) {
           console.warn(`Rate limit exceeded for IP: ${clientIP}`);
-          return new Response(JSON.stringify({ 
-            error: 'Too many payment attempts. Please try again later.' 
+          return new Response(JSON.stringify({
+            error: 'Too many payment attempts. Please try again later.'
           }), {
             status: 429,
-            headers: { 
-              ...corsHeaders, 
+            headers: {
+              ...corsHeaders,
               'Content-Type': 'application/json',
               'Retry-After': '3600'
             },
           });
         }
 
-        const { sourceId, amount, customerEmail, customerName, bookingDate, bookingTime, bookingType: paymentBookingType } = params;
-        
-        // Validate all required inputs
-        if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {
-          throw new Error('Invalid payment source');
-        }
+        const {
+          sourceId,
+          amount,
+          customerEmail,
+          customerName,
+          customerPhone,
+          bookingDate,
+          bookingTime,
+          bookingType: paymentBookingType,
+          durationMinutes,
+          agreementAccepted,
+          agreementSignerName,
+          agreementSignedAt,
+          agreementText,
+          agreementVersion,
+        } = params;
 
-        // Allow up to $5000 (500000 cents) to support Family Readiness Intensive
         if (typeof amount !== 'number' || amount <= 0 || amount > 500000) {
           throw new Error('Invalid payment amount');
         }
@@ -231,24 +240,117 @@ serve(async (req) => {
           throw new Error('Invalid booking date or time');
         }
 
+        if (!paymentBookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching'].includes(paymentBookingType)) {
+          throw new Error('Valid booking type is required');
+        }
+
+        const normalizedBookingType = paymentBookingType === 'coaching' ? 'crisis-coaching' : paymentBookingType;
         const sanitizedName = sanitizeString(customerName);
         const sanitizedEmail = customerEmail.toLowerCase().trim();
+        const sanitizedPhone = customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null;
 
-        const sessionLabel = paymentBookingType === 'readiness-intensive'
+        const sessionLabel = normalizedBookingType === 'readiness-intensive'
           ? 'Family Readiness Intensive'
-          : paymentBookingType === 'crisis-coaching'
+          : normalizedBookingType === 'crisis-coaching'
           ? 'Crisis Coaching Session'
           : 'Coaching session';
 
-        console.log('Processing payment', { 
-          amount, 
-          customerEmail: sanitizedEmail, 
-          bookingDate,
-          bookingType: paymentBookingType,
-          rateLimitRemaining: rateLimit.remaining 
-        });
-        
-        const paymentResponse = await fetch(`${SQUARE_BASE_URL}/payments`, {
+        if (action === 'create-payment') {
+          if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {
+            throw new Error('Invalid payment source');
+          }
+
+          console.log('Processing direct payment', {
+            amount,
+            customerEmail: sanitizedEmail,
+            bookingDate,
+            bookingType: normalizedBookingType,
+            rateLimitRemaining: rateLimit.remaining
+          });
+
+          const paymentResponse = await fetch(`${SQUARE_BASE_URL}/payments`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
+              'Content-Type': 'application/json',
+              'Square-Version': '2024-01-18',
+            },
+            body: JSON.stringify({
+              source_id: sourceId,
+              idempotency_key: crypto.randomUUID(),
+              amount_money: {
+                amount: amount,
+                currency: 'USD',
+              },
+              location_id: SQUARE_LOCATION_ID,
+              note: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
+              buyer_email_address: sanitizedEmail,
+            }),
+          });
+
+          const paymentData = await paymentResponse.json();
+          console.log('Square payment response status:', paymentResponse.status);
+
+          if (paymentData.errors) {
+            console.error('Square payment error:', paymentData.errors);
+            throw new Error(paymentData.errors[0]?.detail || 'Payment failed');
+          }
+
+          return new Response(JSON.stringify({
+            success: true,
+            payment: paymentData.payment,
+            bookingDetails: {
+              date: bookingDate,
+              time: bookingTime,
+              customerName: sanitizedName,
+              customerEmail: sanitizedEmail,
+            }
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        const bookingPayload = {
+          booking_type: normalizedBookingType,
+          customer_name: sanitizedName,
+          customer_email: sanitizedEmail,
+          customer_phone: sanitizedPhone,
+          booking_date: bookingDate,
+          booking_time: bookingTime,
+          duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : 60,
+          status: 'confirmed',
+          payment_id: null,
+          amount_cents: amount,
+          agreement_accepted: normalizedBookingType === 'readiness-intensive' ? agreementAccepted === true : false,
+          agreement_signer_name: normalizedBookingType === 'readiness-intensive' && validateString(agreementSignerName, 100) ? sanitizeString(agreementSignerName) : null,
+          agreement_signed_at: normalizedBookingType === 'readiness-intensive' ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
+          agreement_text: normalizedBookingType === 'readiness-intensive' && validateString(agreementText, 12000) ? agreementText.trim() : null,
+          agreement_version: normalizedBookingType === 'readiness-intensive' && validateString(agreementVersion, 50) ? agreementVersion.trim() : null,
+        };
+
+        const { data: booking, error: bookingError } = await supabase
+          .from('bookings')
+          .insert(bookingPayload)
+          .select()
+          .single();
+
+        if (bookingError) {
+          console.error('Error creating booking for checkout link:', bookingError);
+          throw new Error('Failed to create booking before checkout');
+        }
+
+        const origin = req.headers.get('origin') || 'https://freedominterventions.com';
+        const successUrl = new URL('/#booking', origin);
+        successUrl.searchParams.set('square_status', 'success');
+        successUrl.searchParams.set('booking_id', booking.id);
+        successUrl.searchParams.set('type', normalizedBookingType);
+        successUrl.searchParams.set('date', bookingDate);
+        successUrl.searchParams.set('time', bookingTime);
+        successUrl.searchParams.set('name', sanitizedName);
+        successUrl.searchParams.set('email', sanitizedEmail);
+        if (sanitizedPhone) successUrl.searchParams.set('phone', sanitizedPhone);
+
+        const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
@@ -256,35 +358,39 @@ serve(async (req) => {
             'Square-Version': '2024-01-18',
           },
           body: JSON.stringify({
-            source_id: sourceId,
             idempotency_key: crypto.randomUUID(),
-            amount_money: {
-              amount: amount,
-              currency: 'USD',
+            quick_pay: {
+              name: sessionLabel,
+              price_money: {
+                amount,
+                currency: 'USD',
+              },
+              location_id: SQUARE_LOCATION_ID,
             },
-            location_id: SQUARE_LOCATION_ID,
-            note: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
-            buyer_email_address: sanitizedEmail,
+            checkout_options: {
+              redirect_url: successUrl.toString(),
+              ask_for_shipping_address: false,
+            },
+            pre_populated_data: {
+              buyer_email: sanitizedEmail,
+            },
+            description: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
           }),
         });
 
-        const paymentData = await paymentResponse.json();
-        console.log('Square payment response status:', paymentResponse.status);
+        const checkoutData = await checkoutResponse.json();
+        console.log('Square checkout response status:', checkoutResponse.status);
 
-        if (paymentData.errors) {
-          console.error('Square payment error:', paymentData.errors);
-          throw new Error(paymentData.errors[0]?.detail || 'Payment failed');
+        if (checkoutData.errors) {
+          console.error('Square checkout link error:', checkoutData.errors);
+          throw new Error(checkoutData.errors[0]?.detail || 'Failed to create Square Checkout link');
         }
 
-        return new Response(JSON.stringify({ 
-          success: true, 
-          payment: paymentData.payment,
-          bookingDetails: {
-            date: bookingDate,
-            time: bookingTime,
-            customerName: sanitizedName,
-            customerEmail: sanitizedEmail,
-          }
+        return new Response(JSON.stringify({
+          success: true,
+          bookingId: booking.id,
+          checkoutUrl: checkoutData.payment_link?.url,
+          paymentLinkId: checkoutData.payment_link?.id,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

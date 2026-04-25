@@ -8,9 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, CreditCard, Lock, Phone, CheckCircle, Sparkles } from "lucide-react";
+import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, CheckCircle, Sparkles, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
-import { SquareCardForm } from "./SquareCardForm";
 import { z } from "zod";
 
 // Square credentials
@@ -55,7 +54,6 @@ const OFFERS: Record<BookingType, OfferConfig> = {
   },
 };
 
-// Validation schema for customer info
 const customerInfoSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
@@ -143,14 +141,42 @@ export const BookingCalendar = () => {
   const [friAgreementAccepted, setFriAgreementAccepted] = useState(false);
   const [friSignerName, setFriSignerName] = useState("");
   const [friAgreementError, setFriAgreementError] = useState<string | null>(null);
-  const [cardReady, setCardReady] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
 
-  // Pre-fill from URL params (abandoned cart recovery deep link)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const squareStatus = params.get("square_status");
+    const returnedBookingId = params.get("booking_id");
+    const returnedType = params.get("type") as BookingType | null;
+    const returnedDate = params.get("date");
+    const returnedTime = params.get("time");
+    const returnedName = params.get("name");
+    const returnedEmail = params.get("email");
+    const returnedPhone = params.get("phone");
+
+    if (squareStatus === 'success' && returnedBookingId) {
+      if (returnedType && (returnedType === 'consultation' || returnedType === 'crisis-coaching' || returnedType === 'readiness-intensive')) {
+        setBookingType(returnedType);
+      }
+      if (returnedDate) {
+        const [y, m, d] = returnedDate.split('-').map(Number);
+        const date = new Date(y, m - 1, d);
+        if (!isNaN(date.getTime())) setSelectedDate(date);
+      }
+      if (returnedTime) setSelectedTime(returnedTime);
+      if (returnedName || returnedEmail || returnedPhone) {
+        setCustomerInfo({ name: returnedName || '', email: returnedEmail || '', phone: returnedPhone || '' });
+      }
+      setBookingId(returnedBookingId);
+      setStep('confirmation');
+      toast.success('Payment completed successfully.');
+      const cleanUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, '', cleanUrl);
+      return;
+    }
+
     const type = params.get("type") as BookingType | null;
     if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive")) {
       setBookingType(type);
@@ -170,7 +196,6 @@ export const BookingCalendar = () => {
           fetchAvailableSlots(date);
           if (timeStr) {
             setSelectedTime(timeStr);
-            // Skip straight to details so user can confirm and pay
             setStep("details");
           } else {
             setStep("time");
@@ -181,11 +206,9 @@ export const BookingCalendar = () => {
       } else {
         setStep("date");
       }
-      // Clean URL so refreshes don't re-trigger
       const cleanUrl = window.location.pathname + window.location.hash;
       window.history.replaceState({}, "", cleanUrl);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const offer = bookingType ? OFFERS[bookingType] : null;
@@ -215,7 +238,7 @@ export const BookingCalendar = () => {
       setAvailableSlots(filteredSlots);
     } catch (error: any) {
       console.error('Error fetching slots:', error);
-      toast.error("Failed to load available times");
+      toast.error('Failed to load available times');
     } finally {
       setLoading(false);
     }
@@ -223,21 +246,21 @@ export const BookingCalendar = () => {
 
   const handleTypeSelect = (type: BookingType) => {
     setBookingType(type);
-    setStep("date");
+    setStep('date');
   };
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
-    setSelectedTime("");
+    setSelectedTime('');
     if (date) {
       fetchAvailableSlots(date);
-      setStep("time");
+      setStep('time');
     }
   };
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
-    setStep("details");
+    setStep('details');
   };
 
   const handleDetailsSubmit = async (e: React.FormEvent) => {
@@ -251,39 +274,36 @@ export const BookingCalendar = () => {
         errors[field] = err.message;
       });
       setValidationErrors(errors);
-      toast.error("Please correct the errors in the form");
+      toast.error('Please correct the errors in the form');
       return;
     }
     if (bookingType === 'consultation' && !customerInfo.phone?.trim()) {
-      setValidationErrors({ phone: "Phone is required for consultations" });
-      toast.error("Phone number is required for consultations");
+      setValidationErrors({ phone: 'Phone is required for consultations' });
+      toast.error('Phone number is required for consultations');
       return;
     }
     if (!isPaid) {
       await bookFreeConsultation();
     } else {
-      // Capture abandoned cart for recovery (paid offers only)
       try {
         const { data: cartData } = await supabase
-          .from("abandoned_carts")
+          .from('abandoned_carts')
           .insert({
             customer_name: customerInfo.name,
             customer_email: customerInfo.email,
             customer_phone: customerInfo.phone || null,
             booking_type: bookingType!,
-            booking_date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : null,
+            booking_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
             booking_time: selectedTime || null,
             amount_cents: offer!.priceCents,
           })
-          .select("id")
+          .select('id')
           .single();
         if (cartData?.id) setAbandonedCartId(cartData.id);
       } catch (err) {
-        // Non-blocking — don't prevent checkout if capture fails
-        console.warn("Cart capture failed:", err);
+        console.warn('Cart capture failed:', err);
       }
-      setCardReady(false);
-      setStep(bookingType === 'readiness-intensive' ? "agreement" : "payment");
+      setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'payment');
     }
   };
 
@@ -308,7 +328,7 @@ export const BookingCalendar = () => {
       });
       if (error) {
         console.error('Failed to send confirmation:', error);
-        toast.error("Booking saved, but confirmation email failed to send.");
+        toast.error('Booking saved, but confirmation email failed to send.');
       }
     } catch (error) {
       console.error('Confirmation error:', error);
@@ -335,67 +355,43 @@ export const BookingCalendar = () => {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       setBookingId(data.booking.id);
-      setStep("confirmation");
-      toast.success("Consultation booked successfully!");
+      setStep('confirmation');
+      toast.success('Consultation booked successfully!');
       await sendBookingConfirmation(data.booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
     } catch (error: any) {
       console.error('Booking error:', error);
-      toast.error(error.message || "Failed to book consultation. Please try again.");
+      toast.error(error.message || 'Failed to book consultation. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTokenize = useCallback((_token: string) => {}, []);
-  const handleCardError = useCallback((error: string) => { toast.error(error); }, []);
-  const handleCardReady = useCallback(() => { setCardReady(true); }, []);
-
-  const processPayment = async () => {
+  const handleHostedCheckout = useCallback(async () => {
     if (!selectedDate || !selectedTime || !bookingType || !offer) return;
     if (bookingType === 'readiness-intensive') {
       const signerName = friSignerName.trim();
       if (!friAgreementAccepted || !signerName) {
-        setFriAgreementError("Please sign and accept the Family Readiness Intensive agreement before payment.");
-        toast.error("Agreement signature is required before payment.");
+        setFriAgreementError('Please sign and accept the Family Readiness Intensive agreement before payment.');
+        toast.error('Agreement signature is required before payment.');
         return;
       }
     }
-    const tokenizeFn = (window as any).__squareTokenize;
-    if (!tokenizeFn) {
-      toast.error("Payment form not ready. Please wait.");
-      return;
-    }
+
     setLoading(true);
     try {
-      const token = await tokenizeFn();
-      if (!token) { setLoading(false); return; }
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
       const agreementSignedAt = new Date().toISOString();
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: {
-          action: 'create-payment',
-          sourceId: token,
+          action: 'create-checkout-link',
           amount: offer.priceCents,
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
-          bookingDate,
-          bookingTime: selectedTime,
-          bookingType,
-        }
-      });
-      if (error) throw error;
-      const { data: bookingData, error: bookingError } = await supabase.functions.invoke('square-booking', {
-        body: {
-          action: 'create-booking',
-          bookingType,
-          customerName: customerInfo.name,
-          customerEmail: customerInfo.email,
           customerPhone: customerInfo.phone || null,
           bookingDate,
           bookingTime: selectedTime,
+          bookingType,
           durationMinutes: offer.durationMinutes,
-          paymentId: data.payment?.id,
-          amountCents: offer.priceCents,
           agreementAccepted: bookingType === 'readiness-intensive' ? friAgreementAccepted : undefined,
           agreementSignerName: bookingType === 'readiness-intensive' ? friSignerName.trim() : undefined,
           agreementSignedAt: bookingType === 'readiness-intensive' ? agreementSignedAt : undefined,
@@ -403,41 +399,38 @@ export const BookingCalendar = () => {
           agreementVersion: bookingType === 'readiness-intensive' ? FRI_AGREEMENT_VERSION : undefined,
         }
       });
-      if (bookingError) console.error('Booking save error:', bookingError);
-      const booking = bookingData?.booking;
-      setBookingId(booking?.id || null);
-      setStep("confirmation");
-      toast.success("Booking confirmed!");
-      // Mark abandoned cart as recovered
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       if (abandonedCartId) {
         try {
           await supabase
-            .from("abandoned_carts")
-            .update({ status: "recovered", recovered_at: new Date().toISOString() })
-            .eq("id", abandonedCartId);
+            .from('abandoned_carts')
+            .update({ status: 'recovered', recovered_at: new Date().toISOString() })
+            .eq('id', abandonedCartId);
         } catch (err) {
-          console.warn("Failed to mark cart recovered:", err);
+          console.warn('Failed to mark cart recovered:', err);
         }
       }
-      if (booking?.id) {
-        await sendBookingConfirmation(booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
+      if (data?.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
       }
+      throw new Error('Hosted checkout link was not returned.');
     } catch (error: any) {
-      console.error('Payment error:', error);
-      toast.error(error.message || "Payment failed. Please try again.");
-    } finally {
+      console.error('Hosted checkout error:', error);
+      toast.error(error.message || 'Failed to start payment. Please try again.');
       setLoading(false);
     }
-  };
+  }, [selectedDate, selectedTime, bookingType, offer, customerInfo, friAgreementAccepted, friSignerName, abandonedCartId]);
 
   const resetForm = () => {
-    setStep("type");
+    setStep('type');
     setBookingType(null);
     setSelectedDate(undefined);
-    setSelectedTime("");
-    setCustomerInfo({ name: "", email: "", phone: "" });
+    setSelectedTime('');
+    setCustomerInfo({ name: '', email: '', phone: '' });
     setFriAgreementAccepted(false);
-    setFriSignerName("");
+    setFriSignerName('');
     setFriAgreementError(null);
     setBookingId(null);
     setAbandonedCartId(null);
@@ -480,7 +473,7 @@ export const BookingCalendar = () => {
       case 'time': return 'Choose a Time';
       case 'details': return 'Your Information';
       case 'agreement': return 'Review and Sign Agreement';
-      case 'payment': return 'Payment';
+      case 'payment': return 'Secure Payment';
       case 'confirmation': return 'Booking Confirmed!';
     }
   };
@@ -492,7 +485,7 @@ export const BookingCalendar = () => {
       case 'time': return selectedDate ? `Available times for ${format(selectedDate, 'MMMM d, yyyy')}` : '';
       case 'details': return 'Enter your contact details';
       case 'agreement': return 'Review the Family Readiness Intensive agreement before payment';
-      case 'payment': return 'Complete your payment securely';
+      case 'payment': return 'You will complete payment securely on Square-hosted checkout';
       case 'confirmation': return 'Your appointment has been scheduled';
     }
   };
@@ -522,404 +515,134 @@ export const BookingCalendar = () => {
               <CardDescription>{getStepDescription()}</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Step: Choose Type */}
-              {step === "type" && (
+              {step === 'type' && (
                 <div className="grid md:grid-cols-3 gap-4">
-                  <button
-                    onClick={() => handleTypeSelect('consultation')}
-                    className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <Phone className="w-6 h-6 text-primary" />
-                      <span className="text-lg font-semibold">Free Consultation</span>
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-3 flex-1">
-                      {OFFERS['consultation'].description}
-                    </p>
+                  <button onClick={() => handleTypeSelect('consultation')} className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col">
+                    <div className="flex items-center gap-2 mb-3"><Phone className="w-6 h-6 text-primary" /><span className="text-lg font-semibold">Free Consultation</span></div>
+                    <p className="text-muted-foreground text-sm mb-3 flex-1">{OFFERS.consultation.description}</p>
                     <div className="text-2xl font-bold text-primary">Free</div>
                     <p className="text-xs text-muted-foreground mt-1">15-minute Zoom call</p>
                   </button>
-
-                  <button
-                    onClick={() => handleTypeSelect('crisis-coaching')}
-                    className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <DollarSign className="w-6 h-6 text-primary" />
-                      <span className="text-lg font-semibold">Crisis Coaching Session</span>
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-3 flex-1">
-                      {OFFERS['crisis-coaching'].description}
-                    </p>
+                  <button onClick={() => handleTypeSelect('crisis-coaching')} className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col">
+                    <div className="flex items-center gap-2 mb-3"><DollarSign className="w-6 h-6 text-primary" /><span className="text-lg font-semibold">Crisis Coaching Session</span></div>
+                    <p className="text-muted-foreground text-sm mb-3 flex-1">{OFFERS['crisis-coaching'].description}</p>
                     <div className="text-2xl font-bold text-primary">$150</div>
                     <p className="text-xs text-muted-foreground mt-1">60-minute Zoom session</p>
                   </button>
-
-                  <button
-                    onClick={() => handleTypeSelect('readiness-intensive')}
-                    className="p-6 rounded-lg border-2 border-accent/60 bg-accent/5 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col relative"
-                  >
-                    <span className="absolute -top-3 right-4 text-xs font-semibold bg-primary text-primary-foreground px-2 py-1 rounded-full">
-                      Premium
-                    </span>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Sparkles className="w-6 h-6 text-primary" />
-                      <span className="text-lg font-semibold">Family Readiness Intensive</span>
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-3 flex-1">
-                      {OFFERS['readiness-intensive'].description}
-                    </p>
+                  <button onClick={() => handleTypeSelect('readiness-intensive')} className="p-6 rounded-lg border-2 border-accent/60 bg-accent/5 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col relative">
+                    <span className="absolute -top-3 right-4 text-xs font-semibold bg-primary text-primary-foreground px-2 py-1 rounded-full">Premium</span>
+                    <div className="flex items-center gap-2 mb-3"><Sparkles className="w-6 h-6 text-primary" /><span className="text-lg font-semibold">Family Readiness Intensive</span></div>
+                    <p className="text-muted-foreground text-sm mb-3 flex-1">{OFFERS['readiness-intensive'].description}</p>
                     <div className="text-2xl font-bold text-primary">$2,500</div>
                     <p className="text-xs text-muted-foreground mt-1">90-min Zoom + 7 days follow-up support</p>
                   </button>
                 </div>
               )}
 
-              {/* Step: Select Date */}
-              {step === "date" && (
+              {step === 'date' && (
                 <div>
                   <div className="flex justify-center">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={handleDateSelect}
-                      disabled={(date) => {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        return date < today;
-                      }}
-                      className="rounded-md border"
-                    />
+                    <Calendar mode="single" selected={selectedDate} onSelect={handleDateSelect} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} className="rounded-md border" />
                   </div>
-                  <Button variant="ghost" onClick={() => setStep("type")} className="mt-4">
-                    ← Back
-                  </Button>
+                  <div className="flex justify-between mt-6">
+                    <Button variant="ghost" onClick={() => setStep('type')}>← Back</Button>
+                  </div>
                 </div>
               )}
 
-              {/* Step: Select Time */}
-              {step === "time" && (
-                <div>
-                  <div className="mb-4 p-3 rounded-md bg-primary/5 border border-primary/20 text-sm">
-                    <p className="font-medium text-foreground">
-                      Times shown in <span className="text-primary">your local time zone</span> ({userTzShort})
-                    </p>
-                    {!isUserInPacific && (
-                      <p className="text-muted-foreground mt-1">
-                        Appointments are scheduled in Pacific Time and automatically converted for you.
-                      </p>
-                    )}
+              {step === 'time' && selectedDate && (
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Times shown in your timezone ({userTzShort})</p>
                   </div>
-                  {loading ? (
-                    <p className="text-center text-muted-foreground">Loading available times...</p>
-                  ) : availableSlots.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
-                      {availableSlots.map((slot) => (
-                        <Button
-                          key={slot}
-                          variant={selectedTime === slot ? "default" : "outline"}
-                          onClick={() => handleTimeSelect(slot)}
-                          className="flex flex-col items-center justify-center gap-0.5 text-xs sm:text-sm px-2 sm:px-3 h-auto py-2"
-                        >
-                          <span className="flex items-center gap-1 font-semibold whitespace-nowrap">
-                            <Clock className="w-3 h-3 flex-shrink-0" />
-                            {formatTimeInUserTz(slot, selectedDate)}
-                          </span>
-                          {!isUserInPacific && (
-                            <span className="text-[10px] opacity-75 whitespace-nowrap">
-                              {formatTime(slot)} PT
-                            </span>
-                          )}
-                        </Button>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-center text-muted-foreground">No available times for this date</p>
-                  )}
-                  <Button variant="ghost" onClick={() => setStep("date")} className="mt-4">
-                    ← Back
-                  </Button>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {availableSlots.map((slot) => (
+                      <Button key={slot} variant="outline" onClick={() => handleTimeSelect(slot)} className="h-auto py-4 flex flex-col gap-1">
+                        <span className="font-semibold">{formatTimeInUserTz(slot, selectedDate)}</span>
+                        {!isUserInPacific && <span className="text-xs text-muted-foreground">{formatTime(slot)} Pacific</span>}
+                      </Button>
+                    ))}
+                  </div>
+                  {availableSlots.length === 0 && !loading && <p className="text-center text-muted-foreground">No available times for this date.</p>}
+                  <div className="flex justify-between"><Button variant="ghost" onClick={() => setStep('date')}>← Back</Button></div>
                 </div>
               )}
 
-              {/* Step: Customer Details */}
-              {step === "details" && (
-                <form onSubmit={handleDetailsSubmit} className="space-y-4 max-w-md mx-auto">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="flex items-center gap-2">
-                      <User className="w-4 h-4" /> Full Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      value={customerInfo.name}
-                      onChange={(e) => {
-                        setCustomerInfo({ ...customerInfo, name: e.target.value });
-                        if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined });
-                      }}
-                      placeholder="John Doe"
-                      maxLength={100}
-                      required
-                      className={validationErrors.name ? "border-destructive" : ""}
-                    />
-                    {validationErrors.name && (
-                      <p className="text-sm text-destructive">{validationErrors.name}</p>
-                    )}
+              {step === 'details' && selectedDate && offer && (
+                <form onSubmit={handleDetailsSubmit} className="max-w-md mx-auto space-y-6">
+                  <div className="bg-muted p-4 rounded-lg space-y-2">
+                    <h4 className="font-semibold">Booking Summary</h4>
+                    <p><strong>Session:</strong> {offer.shortName}</p>
+                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
+                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
+                    <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="flex items-center gap-2">
-                      <Mail className="w-4 h-4" /> Email *
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={customerInfo.email}
-                      onChange={(e) => {
-                        setCustomerInfo({ ...customerInfo, email: e.target.value });
-                        if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined });
-                      }}
-                      placeholder="john@example.com"
-                      maxLength={255}
-                      required
-                      className={validationErrors.email ? "border-destructive" : ""}
-                    />
-                    {validationErrors.email && (
-                      <p className="text-sm text-destructive">{validationErrors.email}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="flex items-center gap-2">
-                      <Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}
-                    </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={customerInfo.phone}
-                      onChange={(e) => {
-                        setCustomerInfo({ ...customerInfo, phone: e.target.value });
-                        if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined });
-                      }}
-                      placeholder="(555) 123-4567"
-                      maxLength={20}
-                      required={bookingType === 'consultation'}
-                      className={validationErrors.phone ? "border-destructive" : ""}
-                    />
-                    {validationErrors.phone && (
-                      <p className="text-sm text-destructive">{validationErrors.phone}</p>
-                    )}
-                  </div>
-                  <div className="flex gap-2 pt-4">
-                    <Button type="button" variant="ghost" onClick={() => setStep("time")}>
-                      ← Back
-                    </Button>
-                    <Button type="submit" disabled={loading} className="flex-1">
-                      {loading ? "Booking..." : !isPaid ? 'Book Consultation' : 'Continue to Payment'}
-                    </Button>
-                  </div>
+                  <div className="space-y-2"><Label htmlFor="name" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name *</Label><Input id="name" value={customerInfo.name} onChange={(e) => { setCustomerInfo({ ...customerInfo, name: e.target.value }); if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined }); }} placeholder="John Smith" maxLength={100} required className={validationErrors.name ? 'border-destructive' : ''} />{validationErrors.name && <p className="text-sm text-destructive">{validationErrors.name}</p>}</div>
+                  <div className="space-y-2"><Label htmlFor="email" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email *</Label><Input id="email" type="email" value={customerInfo.email} onChange={(e) => { setCustomerInfo({ ...customerInfo, email: e.target.value }); if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined }); }} placeholder="john@example.com" maxLength={255} required className={validationErrors.email ? 'border-destructive' : ''} />{validationErrors.email && <p className="text-sm text-destructive">{validationErrors.email}</p>}</div>
+                  <div className="space-y-2"><Label htmlFor="phone" className="flex items-center gap-2"><Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}</Label><Input id="phone" type="tel" value={customerInfo.phone} onChange={(e) => { setCustomerInfo({ ...customerInfo, phone: e.target.value }); if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined }); }} placeholder="(555) 123-4567" maxLength={20} required={bookingType === 'consultation'} className={validationErrors.phone ? 'border-destructive' : ''} />{validationErrors.phone && <p className="text-sm text-destructive">{validationErrors.phone}</p>}</div>
+                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>← Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? 'Book Consultation' : 'Continue to Payment'}</Button></div>
                 </form>
               )}
 
-              {/* Step: Agreement */}
-              {step === "agreement" && selectedDate && offer && bookingType === 'readiness-intensive' && (
+              {step === 'agreement' && selectedDate && offer && bookingType === 'readiness-intensive' && (
                 <div className="max-w-3xl mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
                     <p><strong>Session:</strong> {offer.shortName}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p>
-                      <strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}
-                      {!isUserInPacific && (
-                        <span className="text-muted-foreground"> ({formatTime(selectedTime)} Pacific)</span>
-                      )}
-                    </p>
+                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
-                    <div className="border-t pt-2 mt-2">
-                      <p className="text-lg font-bold">Total: {offer.priceLabel}</p>
-                    </div>
+                    <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
                   </div>
-
-                  <div className="space-y-3">
-                    <Label htmlFor="fri-agreement-text">Family Readiness Intensive Agreement</Label>
-                    <Textarea
-                      id="fri-agreement-text"
-                      value={FRI_AGREEMENT_TEXT}
-                      readOnly
-                      className="min-h-[360px] font-mono text-xs leading-5"
-                    />
-                  </div>
-
-                  <div className="space-y-2 max-w-md">
-                    <Label htmlFor="fri-signer-name">Type your full legal name to sign *</Label>
-                    <Input
-                      id="fri-signer-name"
-                      value={friSignerName}
-                      onChange={(e) => {
-                        setFriSignerName(e.target.value);
-                        if (friAgreementError) setFriAgreementError(null);
-                      }}
-                      placeholder="Full legal name"
-                      maxLength={100}
-                    />
-                  </div>
-
-                  <div className="flex items-start gap-3 rounded-lg border p-4">
-                    <Checkbox
-                      id="fri-agreement-accepted"
-                      checked={friAgreementAccepted}
-                      onCheckedChange={(checked) => {
-                        setFriAgreementAccepted(checked === true);
-                        if (friAgreementError) setFriAgreementError(null);
-                      }}
-                    />
-                    <Label htmlFor="fri-agreement-accepted" className="leading-6 font-normal">
-                      I have read this agreement, understand it, and agree to its terms, including the nonrefundable nature of the fee.
-                    </Label>
-                  </div>
-
-                  {friAgreementError && (
-                    <p className="text-sm text-destructive">{friAgreementError}</p>
-                  )}
-
-                  <div className="flex gap-2">
-                    <Button variant="ghost" onClick={() => setStep("details")}>
-                      ← Back
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        const signerName = friSignerName.trim();
-                        if (!friAgreementAccepted || !signerName) {
-                          setFriAgreementError("Please type your full name and accept the agreement before continuing.");
-                          return;
-                        }
-                        setFriAgreementError(null);
-                        setStep("payment");
-                      }}
-                      className="flex-1"
-                    >
-                      Continue to Payment
-                    </Button>
+                  <div className="rounded-lg border bg-background p-5 space-y-4">
+                    <h4 className="font-semibold text-lg">Family Readiness Intensive Agreement</h4>
+                    <Textarea value={FRI_AGREEMENT_TEXT} readOnly className="min-h-[360px] text-sm leading-6 bg-muted/40" />
+                    <div className="space-y-2"><Label htmlFor="fri-signer-name">Type your full legal name</Label><Input id="fri-signer-name" value={friSignerName} onChange={(e) => { setFriSignerName(e.target.value); if (friAgreementError) setFriAgreementError(null); }} placeholder="Full legal name" maxLength={100} /></div>
+                    <div className="flex items-start gap-3 rounded-lg border p-4"><Checkbox id="fri-agreement-accepted" checked={friAgreementAccepted} onCheckedChange={(checked) => { setFriAgreementAccepted(checked === true); if (friAgreementError) setFriAgreementError(null); }} /><Label htmlFor="fri-agreement-accepted" className="leading-6 font-normal">I have read this agreement, understand it, and agree to its terms, including the nonrefundable nature of the fee.</Label></div>
+                    {friAgreementError && <p className="text-sm text-destructive">{friAgreementError}</p>}
+                    <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep('details')}>← Back</Button><Button onClick={() => { const signerName = friSignerName.trim(); if (!friAgreementAccepted || !signerName) { setFriAgreementError('Please type your full name and accept the agreement before continuing.'); return; } setFriAgreementError(null); setStep('payment'); }} className="flex-1">Continue to Payment</Button></div>
                   </div>
                 </div>
               )}
 
-              {/* Step: Payment */}
-              {step === "payment" && selectedDate && offer && (
-                <div className="max-w-md mx-auto space-y-6">
+              {step === 'payment' && selectedDate && offer && (
+                <div className="max-w-xl mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
                     <p><strong>Session:</strong> {offer.shortName}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p>
-                      <strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}
-                      {!isUserInPacific && (
-                        <span className="text-muted-foreground"> ({formatTime(selectedTime)} Pacific)</span>
-                      )}
-                    </p>
+                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
-                    {bookingType === 'readiness-intensive' && (
-                      <p className="text-sm text-primary pt-1">
-                        ✓ Includes 7 days of follow-up support by Zoom, phone, text, or email
-                      </p>
-                    )}
-                    <div className="border-t pt-2 mt-2">
-                      <p className="text-lg font-bold">Total: {offer.priceLabel}</p>
+                    {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-1">✓ Includes 7 days of follow-up support by Zoom, phone, text, or email</p>}
+                    <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
+                  </div>
+                  <div className="rounded-lg border bg-card p-6 space-y-4">
+                    <div className="flex items-center gap-3"><div className="rounded-full bg-primary/10 p-2"><ExternalLink className="w-5 h-5 text-primary" /></div><div><h4 className="font-semibold">Complete payment on Square</h4><p className="text-sm text-muted-foreground">You’ll be redirected to Square’s secure hosted checkout page to enter card details and complete payment.</p></div></div>
+                    <div className="rounded-lg bg-muted p-4 text-sm text-muted-foreground space-y-2">
+                      <div className="flex items-center gap-2"><Lock className="w-4 h-4" /><span>Secure hosted checkout powered by Square</span></div>
+                      <p>You’ll return here after payment. This gives you a more professional payment experience than the embedded card field.</p>
                     </div>
                   </div>
-
-                  <SquareCardForm
-                    applicationId={SQUARE_APPLICATION_ID}
-                    locationId={SQUARE_LOCATION_ID}
-                    onTokenize={handleTokenize}
-                    onError={handleCardError}
-                    onReady={handleCardReady}
-                  />
-
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Lock className="w-4 h-4" />
-                    <span>Your payment is secured by Square</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button variant="ghost" onClick={() => setStep(bookingType === "readiness-intensive" ? "agreement" : "details")}>
-                      ← Back
-                    </Button>
-                    <Button
-                      onClick={processPayment}
-                      disabled={loading || !cardReady}
-                      className="flex-1 flex items-center gap-2"
-                    >
-                      <CreditCard className="w-4 h-4" />
-                      {loading ? "Processing..." : `Pay ${offer.priceLabel}`}
-                    </Button>
-                  </div>
+                  <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'details')}>← Back</Button><Button onClick={handleHostedCheckout} disabled={loading} className="flex-1 flex items-center gap-2">{loading ? 'Redirecting...' : `Continue to Square Checkout`}</Button></div>
                 </div>
               )}
 
-              {/* Step: Confirmation */}
-              {step === "confirmation" && selectedDate && offer && (
+              {step === 'confirmation' && selectedDate && offer && (
                 <div className="max-w-md mx-auto text-center space-y-6">
-                  <div className="flex justify-center">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-10 h-10 text-green-600" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">
-                      {!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      We've sent a confirmation email to {customerInfo.email}
-                    </p>
-                  </div>
-
+                  <div className="flex justify-center"><div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle className="w-10 h-10 text-green-600" /></div></div>
+                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">We've sent a confirmation email to {customerInfo.email}</p></div>
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
                     <p><strong>Session:</strong> {offer.shortName}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p>
-                      <strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}
-                      {!isUserInPacific && (
-                        <span className="text-muted-foreground"> ({formatTime(selectedTime)} Pacific)</span>
-                      )}
-                    </p>
-                    {bookingType === 'readiness-intensive' && (
-                      <p className="text-sm text-primary pt-2">
-                        Your booking includes 7 days of follow-up support by Zoom, phone, text, or email.
-                      </p>
-                    )}
+                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
+                    {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-2">Your booking includes 7 days of follow-up support by Zoom, phone, text, or email.</p>}
                   </div>
-
                   {bookingType === 'readiness-intensive' ? (
-                    <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3">
-                      <h4 className="font-semibold text-primary flex items-center gap-2">
-                        <Sparkles className="w-5 h-5" />
-                        Important Next Step
-                      </h4>
-                      <p className="text-sm text-foreground">
-                        To get the most out of your Family Readiness Intensive, please complete the
-                        Clinical Assessment <strong>as completely as possible</strong> before our session.
-                        This gives Matt the full picture of your family's situation so we can make
-                        every minute count.
-                      </p>
-                      <Button
-                        onClick={() => window.location.href = '/assessment'}
-                        variant="hero"
-                        size="lg"
-                        className="w-full"
-                      >
-                        Start Clinical Assessment
-                      </Button>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      We'll contact you at {customerInfo.phone || customerInfo.email} to confirm the details.
-                    </p>
-                  )}
-
-                  <Button onClick={resetForm} variant="outline" className="w-full">
-                    Book Another Appointment
-                  </Button>
+                    <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3"><h4 className="font-semibold text-primary flex items-center gap-2"><Sparkles className="w-5 h-5" />Important Next Step</h4><p className="text-sm text-foreground">Please complete the family assessment before your Family Readiness Intensive so Matt has the strongest possible picture of your situation before the session.</p><Button asChild className="w-full"><a href="/assessment">Complete Assessment</a></Button></div>
+                  ) : null}
+                  <div className="flex gap-2 justify-center"><Button variant="outline" onClick={resetForm}>Book Another Session</Button>{bookingId && <Button variant="secondary" asChild><a href={`/reschedule?bookingId=${bookingId}&email=${encodeURIComponent(customerInfo.email)}`}>Manage Booking</a></Button>}</div>
                 </div>
               )}
             </CardContent>
