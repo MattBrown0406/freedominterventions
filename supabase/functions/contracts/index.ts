@@ -88,6 +88,14 @@ serve(async (req) => {
 
         if (error) throw error;
 
+        try {
+          await supabase.functions.invoke("send-contract-notification", {
+            body: { contractId: data.id, event: "signed" },
+          });
+        } catch (notifyError) {
+          console.error("Failed to send signed contract notification:", notifyError);
+        }
+
         return new Response(JSON.stringify({ success: true, contract: data }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -164,6 +172,14 @@ serve(async (req) => {
           .eq("id", contractId);
 
         if (error) throw error;
+
+        try {
+          await supabase.functions.invoke("send-contract-notification", {
+            body: { contractId, event: "paid" },
+          });
+        } catch (notifyError) {
+          console.error("Failed to send paid contract notification:", notifyError);
+        }
 
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },

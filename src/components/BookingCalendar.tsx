@@ -174,6 +174,14 @@ export const BookingCalendar = () => {
       }
       if (returnedType === 'fri-contract') {
         setContractId(returnedBookingId);
+        supabase.functions.invoke('contracts', {
+          body: {
+            action: 'mark-paid',
+            contractId: returnedBookingId,
+          }
+        }).catch((error) => {
+          console.error('Failed to mark FRI contract paid:', error);
+        });
       } else {
         setBookingId(returnedBookingId);
       }
@@ -454,7 +462,7 @@ export const BookingCalendar = () => {
             amount: offer.priceCents,
             customerEmail: customerInfo.email,
             customerName: customerInfo.name,
-            redirectPath: `/booking?square_status=success&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}`,
+            redirectPath: `/booking?square_status=success&contract_status=success&contract_id=${data.contract.id}&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}`,
             note: `Family Readiness Intensive for ${customerInfo.name}`,
           }
         });

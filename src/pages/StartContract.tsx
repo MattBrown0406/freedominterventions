@@ -107,8 +107,22 @@ const StartContract = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("contract_status") === "success") {
+    const contractStatus = params.get("contract_status");
+    const returnedContractId = params.get("contract_id");
+
+    if (contractStatus === "success") {
       setPaymentComplete(true);
+
+      if (returnedContractId) {
+        supabase.functions.invoke("contracts", {
+          body: {
+            action: "mark-paid",
+            contractId: returnedContractId,
+          },
+        }).catch((error) => {
+          console.error("Failed to mark contract paid:", error);
+        });
+      }
     }
   }, []);
 
@@ -189,7 +203,7 @@ const StartContract = () => {
           customerEmail: data.clientEmail.trim().toLowerCase(),
           customerName: data.clientName.trim(),
           contractId: savedContractId,
-          redirectPath: "/start-contract?contract_status=success",
+          redirectPath: `/start-contract?contract_status=success&contract_id=${savedContractId}`,
           note: `Intervention Agreement for ${data.clientName.trim()}`,
         },
       });
