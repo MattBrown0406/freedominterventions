@@ -189,7 +189,8 @@ serve(async (req) => {
       }
 
       case 'create-payment':
-      case 'create-checkout-link': {
+      case 'create-checkout-link':
+      case 'create-contract-payment-link': {
         const clientIP = getClientIP(req);
         const rateLimit = checkRateLimit(clientIP, paymentAttempts, MAX_PAYMENT_ATTEMPTS);
 
@@ -239,15 +240,17 @@ serve(async (req) => {
           throw new Error('Invalid customer name');
         }
 
-        if (!validateString(bookingDate, 20) || !validateString(bookingTime, 10)) {
+        const isContractPaymentLink = action === 'create-contract-payment-link';
+
+        if (!isContractPaymentLink && (!validateString(bookingDate, 20) || !validateString(bookingTime, 10))) {
           throw new Error('Invalid booking date or time');
         }
 
-        if (!paymentBookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching', 'intervention-contract'].includes(paymentBookingType)) {
+        if (!isContractPaymentLink && (!paymentBookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching', 'intervention-contract'].includes(paymentBookingType))) {
           throw new Error('Valid booking type is required');
         }
 
-        const normalizedBookingType = paymentBookingType === 'coaching' ? 'crisis-coaching' : paymentBookingType;
+        const normalizedBookingType = isContractPaymentLink ? 'intervention-contract' : paymentBookingType === 'coaching' ? 'crisis-coaching' : paymentBookingType;
         const sanitizedName = sanitizeString(customerName);
         const sanitizedEmail = customerEmail.toLowerCase().trim();
         const sanitizedPhone = customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null;
@@ -259,6 +262,62 @@ serve(async (req) => {
           : normalizedBookingType === 'intervention-contract'
           ? 'Intervention Agreement'
           : 'Coaching session';
+
+        if (action === 'create-contract-payment-link') {
+          const { contractId, redirectPath, note } = params;
+          if (!validateString(contractId, 100)) {
+            throw new Error('Valid contract ID is required');
+          }
+
+          const origin = req.headers.get('origin') || 'https://freedominterventions.com';
+          const successUrl = new URL(redirectPath || '/start-contract?contract_status=success', origin);
+          successUrl.searchParams.set('contract_id', contractId);
+
+          const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
+              'Content-Type': 'application/json',
+              'Square-Version': '2024-01-18',
+            },
+            body: JSON.stringify({
+              idempotency_key: crypto.randomUUID(),
+              quick_pay: {
+                name: sessionLabel,
+                price_money: {
+                  amount,
+                  currency: 'USD',
+                },
+                location_id: SQUARE_LOCATION_ID,
+              },
+              checkout_options: {
+                redirect_url: successUrl.toString(),
+                ask_for_shipping_address: false,
+              },
+              pre_populated_data: {
+                buyer_email: sanitizedEmail,
+              },
+              description: note || `${sessionLabel} for ${sanitizedName}`,
+            }),
+          });
+
+          const checkoutData = await checkoutResponse.json();
+          console.log('Square contract checkout response status:', checkoutResponse.status);
+
+          if (checkoutData.errors) {
+            console.error('Square contract checkout link error:', checkoutData.errors);
+            throw new Error(checkoutData.errors[0]?.detail || 'Failed to create contract payment link');
+          }
+
+          return new Response(JSON.stringify({
+            success: true,
+            contractId,
+            checkoutUrl: checkoutData.payment_link?.url,
+            paymentLinkId: checkoutData.payment_link?.id,
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
 
         if (action === 'create-payment') {
           if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {

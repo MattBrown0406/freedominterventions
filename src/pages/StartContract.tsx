@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ import {
   resolveDiscountCents,
   STANDARD_INTERVENTION_FEE_CENTS,
 } from "@/lib/contracts";
+import { generateContractPdf } from "@/utils/generateContractPdf";
 
 const MAX_NOTES_LENGTH = 1200;
 
@@ -78,6 +79,7 @@ const StartContract = () => {
     finalAmountCents: number;
     discountCode: string;
   } | null>(null);
+  const [paymentComplete, setPaymentComplete] = useState(false);
 
   const form = useForm<ContractFormData>({
     resolver: zodResolver(contractSchema),
@@ -103,23 +105,63 @@ const StartContract = () => {
     [discountCents]
   );
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("contract_status") === "success") {
+      setPaymentComplete(true);
+    }
+  }, []);
+
   const onSubmit = async (data: ContractFormData) => {
     setIsLaunching(true);
     const agreementText = buildAgreementText(data, finalAmountCents, discountCents, normalizedDiscountCode);
     const agreementSignedAt = new Date().toISOString();
 
     try {
-      const { data: response, error } = await supabase.functions.invoke("square-booking", {
+      const pdfBlob = generateContractPdf({
+        contractTitle: "Freedom Interventions Services Agreement",
+        contractVersion: INTERVENTION_CONTRACT_VERSION,
+        clientName: data.clientName.trim(),
+        clientEmail: data.clientEmail.trim().toLowerCase(),
+        clientPhone: data.clientPhone.trim(),
+        signerName: data.signerName.trim(),
+        signedAt: agreementSignedAt,
+        bookingTypeLabel: "Intervention Contract",
+        amountLabel: formatUsdFromCents(finalAmountCents),
+        discountCode: normalizedDiscountCode || undefined,
+        discountLabel: discountCents > 0 ? formatUsdFromCents(discountCents) : undefined,
+        metadata: {
+          "Loved One": data.lovedOneName.trim(),
+          "Relationship": data.relationship.trim(),
+          "Referral Source": data.referralSource?.trim() || "Not provided",
+          "Notes": data.notes?.trim() || "None",
+        },
+        agreementText,
+      });
+
+      const contractId = crypto.randomUUID();
+      const pdfPath = `intervention/${contractId}.pdf`;
+      const upload = await supabase.storage.from("contracts").upload(pdfPath, pdfBlob, {
+        contentType: "application/pdf",
+        upsert: false,
+      });
+      if (upload.error) throw upload.error;
+
+      const { data: signedUrlData } = await supabase.storage.from("contracts").createSignedUrl(pdfPath, 60 * 60 * 24 * 7);
+
+      const bookingDate = new Date().toISOString().slice(0, 10);
+      const { data: bookingRecord, error: bookingError } = await supabase.functions.invoke("square-booking", {
         body: {
-          action: "create-checkout-link",
-          amount: finalAmountCents,
+          action: "create-booking",
+          bookingType: "intervention-contract",
           customerEmail: data.clientEmail.trim().toLowerCase(),
           customerName: data.clientName.trim(),
           customerPhone: data.clientPhone.trim(),
-          bookingDate: new Date().toISOString().slice(0, 10),
-          bookingTime: "09:00",
-          bookingType: "intervention-contract",
+          bookingDate,
+          bookingTime: "00:00",
           durationMinutes: 60,
+          paymentId: null,
+          amountCents: finalAmountCents,
           agreementAccepted: true,
           agreementSignerName: data.signerName.trim(),
           agreementSignedAt,
@@ -133,12 +175,40 @@ const StartContract = () => {
             referralSource: data.referralSource?.trim() || null,
             notes: data.notes?.trim() || null,
             baseFeeCents: STANDARD_INTERVENTION_FEE_CENTS,
+            contractId,
           },
         },
       });
+      if (bookingError) throw bookingError;
 
-      if (error) throw error;
-      if (!response?.checkoutUrl) throw new Error("Hosted checkout link was not returned.");
+      const bookingId = bookingRecord?.booking?.id;
+      if (!bookingId) throw new Error("Contract record was created without an ID.");
+
+      const { error: updateError } = await supabase
+        .from("bookings")
+        .update({
+          contract_pdf_path: pdfPath,
+          contract_pdf_url: signedUrlData?.signedUrl ?? null,
+          status: "signed-awaiting-payment",
+        })
+        .eq("id", bookingId);
+      if (updateError) throw updateError;
+
+      const checkoutResponse = await supabase.functions.invoke("square-booking", {
+        body: {
+          action: "create-contract-payment-link",
+          amount: finalAmountCents,
+          customerEmail: data.clientEmail.trim().toLowerCase(),
+          customerName: data.clientName.trim(),
+          customerPhone: data.clientPhone.trim(),
+          contractId: bookingId,
+          redirectPath: "/start-contract?contract_status=success",
+          note: `Intervention Agreement for ${data.clientName.trim()}`,
+        },
+      });
+
+      if (checkoutResponse.error) throw checkoutResponse.error;
+      if (!checkoutResponse.data?.checkoutUrl) throw new Error("Hosted payment link was not returned.");
 
       setSubmittedSummary({
         clientName: data.clientName.trim(),
@@ -147,7 +217,7 @@ const StartContract = () => {
         discountCode: normalizedDiscountCode,
       });
 
-      window.location.href = response.checkoutUrl;
+      window.location.href = checkoutResponse.data.checkoutUrl;
     } catch (error) {
       console.error("Contract checkout error:", error);
       toast({
@@ -222,7 +292,7 @@ const StartContract = () => {
                 <ul className="space-y-4 text-muted-foreground">
                   <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Collects the core client and case details before payment</li>
                   <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Reflects the standard fee and any approved discount code in both the agreement and checkout total</li>
-                  <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Stores the signed agreement for admin review after checkout</li>
+                  <li className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />Generates and stores a signed PDF contract for admin review</li>
                 </ul>
                 <div className="mt-8 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm text-muted-foreground">
                   Square processes payment on its secure hosted checkout page. Freedom Interventions does not collect card details directly on this page.
@@ -239,7 +309,7 @@ const StartContract = () => {
                 <div className="mb-8">
                   <h2 className="mb-3 font-serif text-3xl font-semibold text-foreground">Start the contract process</h2>
                   <p className="text-muted-foreground">
-                    Fill in the family details, review the agreement summary, sign electronically, and continue to Square checkout.
+                    Fill in the family details, generate the signed agreement, and continue to Square checkout.
                   </p>
                 </div>
 
@@ -389,6 +459,15 @@ const StartContract = () => {
                     After you sign and continue, you’ll be redirected to Square to complete the payment. Once payment is complete, Freedom Interventions can review the signed agreement in the admin dashboard.
                   </p>
                 </div>
+
+                {paymentComplete ? (
+                  <div className="rounded-3xl border border-emerald-300 bg-emerald-50 p-8">
+                    <p className="mb-2 text-lg font-semibold text-emerald-900">Payment received</p>
+                    <p className="text-sm text-emerald-800">
+                      The agreement was signed and the payment flow completed successfully. The contract record is now stored in the admin dashboard.
+                    </p>
+                  </div>
+                ) : null}
 
                 {submittedSummary ? (
                   <div className="rounded-3xl border border-primary/20 bg-primary/5 p-8">
