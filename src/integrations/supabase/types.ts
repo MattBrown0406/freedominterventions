@@ -843,15 +843,10 @@ export type Database = {
           booking_date: string
           booking_time: string
           booking_type: string
-          contract_metadata: Json
-          contract_pdf_path: string | null
-          contract_pdf_url: string | null
           created_at: string
           customer_email: string
           customer_name: string
           customer_phone: string | null
-          discount_cents: number | null
-          discount_code: string | null
           duration_minutes: number
           id: string
           notes: string | null
@@ -870,15 +865,10 @@ export type Database = {
           booking_date: string
           booking_time: string
           booking_type: string
-          contract_metadata?: Json
-          contract_pdf_path?: string | null
-          contract_pdf_url?: string | null
           created_at?: string
           customer_email: string
           customer_name: string
           customer_phone?: string | null
-          discount_cents?: number | null
-          discount_code?: string | null
           duration_minutes?: number
           id?: string
           notes?: string | null
@@ -897,89 +887,15 @@ export type Database = {
           booking_date?: string
           booking_time?: string
           booking_type?: string
-          contract_metadata?: Json
-          contract_pdf_path?: string | null
-          contract_pdf_url?: string | null
           created_at?: string
           customer_email?: string
           customer_name?: string
           customer_phone?: string | null
-          discount_cents?: number | null
-          discount_code?: string | null
           duration_minutes?: number
           id?: string
           notes?: string | null
           payment_id?: string | null
           reminder_sent?: boolean
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      contracts: {
-        Row: {
-          agreement_text: string
-          agreement_version: string
-          amount_cents: number | null
-          client_email: string
-          client_name: string
-          client_phone: string | null
-          contract_pdf_path: string | null
-          contract_pdf_url: string | null
-          contract_type: string
-          created_at: string
-          discount_cents: number | null
-          discount_code: string | null
-          id: string
-          metadata: Json
-          payment_id: string | null
-          payment_link_id: string | null
-          signed_at: string
-          signer_name: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          agreement_text: string
-          agreement_version: string
-          amount_cents?: number | null
-          client_email: string
-          client_name: string
-          client_phone?: string | null
-          contract_pdf_path?: string | null
-          contract_pdf_url?: string | null
-          contract_type: string
-          created_at?: string
-          discount_cents?: number | null
-          discount_code?: string | null
-          id?: string
-          metadata?: Json
-          payment_id?: string | null
-          payment_link_id?: string | null
-          signed_at?: string
-          signer_name: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          agreement_text?: string
-          agreement_version?: string
-          amount_cents?: number | null
-          client_email?: string
-          client_name?: string
-          client_phone?: string | null
-          contract_pdf_path?: string | null
-          contract_pdf_url?: string | null
-          contract_type?: string
-          created_at?: string
-          discount_cents?: number | null
-          discount_code?: string | null
-          id?: string
-          metadata?: Json
-          payment_id?: string | null
-          payment_link_id?: string | null
-          signed_at?: string
-          signer_name?: string
           status?: string
           updated_at?: string
         }
