@@ -28,7 +28,7 @@ const SEOHead = ({
   canonical,
   keywords,
   type = "website",
-  image = `${BASE_URL}/favicon.jpeg`,
+  image = `${BASE_URL}/og-share.jpg`,
   imageAlt,
   noindex = false,
   geoRegion = "US-OR",
