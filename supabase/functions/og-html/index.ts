@@ -47,9 +47,10 @@ Deno.serve(async (req) => {
     console.log("Image URL from DB:", post.image_url);
 
     const siteUrl = "https://freedominterventions.com";
+    const fallbackImage = `${siteUrl}/og-share.jpg`;
     
     // Construct absolute image URL - handle various formats
-    let imageUrl = "";
+    let imageUrl = fallbackImage;
     if (post.image_url) {
       if (post.image_url.startsWith("http://") || post.image_url.startsWith("https://")) {
         imageUrl = post.image_url;
