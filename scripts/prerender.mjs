@@ -149,9 +149,13 @@ const main = async () => {
     const testBrowser = await chromium.launch(resolveChromiumLaunchOptions());
     await testBrowser.close();
   } catch (e) {
-    console.warn('⚠️  Playwright browsers not available, skipping prerender step.');
-    console.warn('   Run "npx playwright install" to enable prerendering.');
-    return;
+    const message = 'Playwright/Chrome is required for prerendering SEO pages. Set ALLOW_PRERENDER_SKIP=true only for local development.';
+    if (process.env.ALLOW_PRERENDER_SKIP === 'true') {
+      console.warn(`⚠️  ${message}`);
+      console.warn('   Skipping prerender because ALLOW_PRERENDER_SKIP=true.');
+      return;
+    }
+    throw new Error(message);
   }
 
   const env = await loadEnv();

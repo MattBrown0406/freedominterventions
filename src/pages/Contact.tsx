@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { trackEvent } from "@/lib/analytics";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -71,6 +72,10 @@ const Contact = () => {
       toast({
         title: "Message Sent",
         description: "Thank you for reaching out. We'll get back to you soon.",
+      });
+      trackEvent("contact_message_sent", {
+        source: "contact_page",
+        page_path: window.location.pathname,
       });
       
       form.reset();

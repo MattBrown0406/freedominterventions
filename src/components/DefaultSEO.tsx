@@ -13,6 +13,10 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
     title: "Contact Freedom Interventions | Free Addiction Intervention Consultation",
     description: "Schedule a free, confidential consultation with Matt Brown. Professional addiction intervention services available nationwide. Call (541) 838-6009.",
   },
+  "/start-here": {
+    title: "Start Here | Addiction Intervention Help for Families",
+    description: "Not sure what your family needs next? Choose a clear path to a call, free consultation, crisis coaching, or intervention readiness support.",
+  },
   "/testimonials": {
     title: "Intervention Success Stories & Testimonials | Freedom Interventions",
     description: "Real stories from families who found hope through professional intervention. Read testimonials from families Matt Brown has helped over 20+ years.",

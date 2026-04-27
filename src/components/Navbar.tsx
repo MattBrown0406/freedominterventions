@@ -23,6 +23,7 @@ const resourceLinks = [
 
 const navLinks = [
   { name: "Home", href: "/" },
+  { name: "Start Here", href: "/start-here" },
   { name: "How It Works", href: "/family-intervention#process" },
   { name: "About Matt", href: "/interventionist" },
   { name: "Assessment", href: "/assessment" },
@@ -80,6 +81,7 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center gap-6">
             <Link to="/" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Home</Link>
+            <Link to="/start-here" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Start Here</Link>
             <Dropdown label="Services" items={servicesLinks} />
             <Link to="/family-intervention#process" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">How It Works</Link>
             <Link to="/interventionist" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">About Matt</Link>

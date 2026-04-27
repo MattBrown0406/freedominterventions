@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-api-key",
+    "authorization, x-client-info, apikey, content-type",
 };
 
 function json(body: unknown, status = 200) {
@@ -17,23 +17,44 @@ function error(msg: string, status = 400) {
   return json({ error: msg }, status);
 }
 
+async function parseMetadata(value: FormDataEntryValue | null) {
+  if (!value) return {};
+  if (typeof value === "string") return JSON.parse(value || "{}");
+  return JSON.parse(await value.text());
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // --- Auth: check x-api-key header ---
-  const apiKey = req.headers.get("x-api-key");
-  const expectedKey = Deno.env.get("CASE_DOCS_API_KEY");
-  if (!expectedKey || apiKey !== expectedKey) {
-    return error("Unauthorized", 401);
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
+    return error("Server not configured", 500);
   }
 
+  const authHeader = req.headers.get("authorization") ?? "";
+  if (!authHeader) return error("Unauthorized", 401);
+
+  const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: authHeader } },
+  });
+
+  const {
+    data: { user },
+    error: userErr,
+  } = await userClient.auth.getUser();
+
+  if (userErr || !user) return error("Unauthorized", 401);
+
+  const { data: isStrictAdmin, error: strictErr } = await userClient.rpc("is_strict_admin");
+  if (strictErr || !isStrictAdmin) return error("Forbidden", 403);
+
   // Service-role client to bypass RLS
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-  );
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   const url = new URL(req.url);
   const action = url.pathname.split("/").pop(); // upload | list | download | delete
@@ -43,9 +64,7 @@ Deno.serve(async (req) => {
     if (req.method === "POST" && action === "upload") {
       const formData = await req.formData();
       const file = formData.get("file") as File | null;
-      const metadata = JSON.parse(
-        (formData.get("metadata") as string) || "{}"
-      );
+      const metadata = await parseMetadata(formData.get("metadata"));
 
       const {
         notion_case_id,
@@ -106,7 +125,7 @@ Deno.serve(async (req) => {
           file_size,
           mime_type,
           notes: notes || null,
-          uploaded_by: uploaded_by || null,
+          uploaded_by: uploaded_by || user.email || user.id,
         })
         .select()
         .single();

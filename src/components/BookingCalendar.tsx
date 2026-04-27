@@ -12,6 +12,7 @@ import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, C
 import { format } from "date-fns";
 import { z } from "zod";
 import { generateContractPdf } from "@/utils/generateContractPdf";
+import { trackEvent } from "@/lib/analytics";
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
@@ -160,6 +161,10 @@ export const BookingCalendar = () => {
     const returnedPhone = params.get("phone");
 
     if (squareStatus === 'success' && returnedBookingId) {
+      trackEvent('booking_payment_completed', {
+        booking_id: returnedBookingId,
+        booking_type: returnedType,
+      });
       if (returnedType && (returnedType === 'consultation' || returnedType === 'crisis-coaching' || returnedType === 'readiness-intensive' || returnedType === 'fri-contract')) {
         setBookingType(returnedType === 'fri-contract' ? 'readiness-intensive' : returnedType);
       }
@@ -261,6 +266,10 @@ export const BookingCalendar = () => {
 
   const handleTypeSelect = (type: BookingType) => {
     setBookingType(type);
+    trackEvent('booking_type_selected', {
+      booking_type: type,
+      price_cents: OFFERS[type].priceCents,
+    });
     setStep('date');
   };
 
@@ -289,6 +298,9 @@ export const BookingCalendar = () => {
         errors[field] = err.message;
       });
       setValidationErrors(errors);
+      trackEvent('booking_details_validation_failed', {
+        booking_type: bookingType,
+      });
       toast.error('Please correct the errors in the form');
       return;
     }
@@ -315,6 +327,11 @@ export const BookingCalendar = () => {
           .select('id')
           .single();
         if (cartData?.id) setAbandonedCartId(cartData.id);
+        trackEvent('booking_lead_captured', {
+          booking_type: bookingType,
+          amount_cents: offer!.priceCents,
+          cart_id: cartData?.id,
+        });
       } catch (err) {
         console.warn('Cart capture failed:', err);
       }
@@ -371,6 +388,11 @@ export const BookingCalendar = () => {
       if (data?.error) throw new Error(data.error);
       setBookingId(data.booking.id);
       setStep('confirmation');
+      trackEvent('consultation_booked', {
+        booking_id: data.booking.id,
+        booking_type: bookingType,
+        booking_date: bookingDate,
+      });
       toast.success('Consultation booked successfully!');
       await sendBookingConfirmation(data.booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
     } catch (error: any) {
@@ -396,6 +418,7 @@ export const BookingCalendar = () => {
     try {
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
       const agreementSignedAt = new Date().toISOString();
+      let checkoutContractId: string | null = null;
       let data;
       let error;
 
@@ -457,6 +480,12 @@ export const BookingCalendar = () => {
         if (!data?.contract?.id) throw new Error('FRI contract record was not created.');
 
         setContractId(data.contract.id);
+        checkoutContractId = data.contract.id;
+        trackEvent('contract_signed', {
+          contract_id: data.contract.id,
+          contract_type: 'readiness-intensive',
+          amount_cents: offer.priceCents,
+        });
 
         const paymentResponse = await supabase.functions.invoke('contracts', {
           body: {
@@ -465,7 +494,7 @@ export const BookingCalendar = () => {
             amount: offer.priceCents,
             customerEmail: customerInfo.email,
             customerName: customerInfo.name,
-            redirectPath: `/booking?square_status=success&contract_status=success&contract_id=${data.contract.id}&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}`,
+            redirectPath: `/?square_status=success&contract_status=success&contract_id=${data.contract.id}&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}#booking`,
             note: `Family Readiness Intensive for ${customerInfo.name}`,
           }
         });
@@ -501,6 +530,12 @@ export const BookingCalendar = () => {
         }
       }
       if (data?.checkoutUrl) {
+        trackEvent('checkout_started', {
+          booking_type: bookingType,
+          amount_cents: offer.priceCents,
+          contract_id: checkoutContractId,
+          abandoned_cart_id: abandonedCartId,
+        });
         window.location.href = data.checkoutUrl;
         return;
       }

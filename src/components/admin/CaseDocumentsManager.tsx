@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Download, Trash2, FileText, Image, File, RefreshCw } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const API_BASE = "https://rizfkjgwhcpwiryyqejx.supabase.co/functions/v1/case-documents";
-const API_KEY = import.meta.env.VITE_CASE_DOCS_API_KEY || "";
+const API_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/case-documents`;
 
 const DOC_TYPES: { value: string; label: string }[] = [
   { value: "insurance_card", label: "Insurance Card" },
@@ -67,12 +67,18 @@ export default function CaseDocumentsManager() {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
 
-  const headers = { "x-api-key": API_KEY };
+  const getAuthHeaders = async () => {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) throw new Error("Admin session expired. Please sign in again.");
+    return { Authorization: `Bearer ${token}` };
+  };
 
   const fetchDocs = async (id: string) => {
     if (!id.trim()) return;
     setLoading(true);
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch(`${API_BASE}/list?notion_case_id=${encodeURIComponent(id)}`, { headers });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
@@ -112,6 +118,7 @@ export default function CaseDocumentsManager() {
       form.append("metadata", metaBlob);
       form.append("file", file, file.name);
 
+      const headers = await getAuthHeaders();
       const res = await fetch(`${API_BASE}/upload`, { method: "POST", headers, body: form });
       if (!res.ok) throw new Error(await res.text());
 
@@ -129,10 +136,11 @@ export default function CaseDocumentsManager() {
 
   const handleDownload = async (doc: CaseDoc) => {
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch(`${API_BASE}/download?file_path=${encodeURIComponent(doc.file_path)}`, { headers });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
-      window.open(data.url || data.signedUrl || data.file_url, "_blank");
+      window.open(data.url || data.signedUrl || data.signed_url || data.file_url, "_blank");
     } catch (err: unknown) {
       toast({ title: "Download failed", description: String(err), variant: "destructive" });
     }
@@ -141,6 +149,7 @@ export default function CaseDocumentsManager() {
   const handleDelete = async (doc: CaseDoc) => {
     if (!confirm(`Delete "${doc.title}"? This cannot be undone.`)) return;
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch(`${API_BASE}/delete?id=${encodeURIComponent(doc.id)}`, { method: "DELETE", headers });
       if (!res.ok) throw new Error(await res.text());
       toast({ title: "Document deleted" });

@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { trackEvent } from "@/lib/analytics";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -55,6 +56,10 @@ const FloatingContactForm = () => {
         }
       );
       if (!response.ok) throw new Error("Failed to send message");
+      trackEvent("contact_message_sent", {
+        source: "floating_contact_form",
+        page_path: window.location.pathname,
+      });
       toast({ title: "Message Sent", description: "We'll get back to you soon." });
       form.reset();
       setIsOpen(false);

@@ -11,8 +11,8 @@ export const OrganizationSchema = () => {
         name: "Freedom Interventions",
         alternateName: "Freedom Interventions LLC",
         url: "https://freedominterventions.com",
-        logo: "https://freedominterventions.com/logo.png",
-        image: "https://freedominterventions.com/favicon.jpeg",
+        logo: "https://freedominterventions.com/og-share.jpg",
+        image: "https://freedominterventions.com/og-share.jpg",
         description:
           "Professional addiction intervention services led by Matt Brown, Certified Intervention Professional with 20+ years of experience.",
         telephone: "+1-541-838-6009",

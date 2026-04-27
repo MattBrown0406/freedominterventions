@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { CalendarIcon, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 // Validation schema for callback request form
 const callbackSchema = z.object({
@@ -121,6 +122,11 @@ const CallbackRequestDialog = ({ children }: CallbackRequestDialogProps) => {
       if (error) throw error;
 
       setSubmitted(true);
+      trackEvent("callback_request_submitted", {
+        preferred_date: format(selectedDate, "yyyy-MM-dd"),
+        preferred_time_window: timeWindow,
+        source: "callback_dialog",
+      });
       toast.success("Callback request submitted!");
     } catch (error: any) {
       console.error("Error submitting callback request:", error);

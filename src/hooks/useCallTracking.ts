@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { trackEvent } from '@/lib/analytics';
 
 // Generate or retrieve session ID for grouping clicks
 const getSessionId = (): string => {
@@ -23,6 +24,12 @@ export const useCallTracking = () => {
   const location = useLocation();
 
   const trackCallClick = useCallback(async (phoneNumber: string = '541-838-6009', metadata: Record<string, unknown> = {}) => {
+    trackEvent('phone_call_click', {
+      page_path: location.pathname,
+      phone_number: phoneNumber,
+      ...metadata,
+    });
+
     try {
       // Use type assertion since the table was just created and types haven't synced
       await (supabase.from('call_analytics' as never) as unknown as { 

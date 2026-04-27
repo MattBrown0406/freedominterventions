@@ -29,6 +29,7 @@ import InterventionFAQPage from "./pages/InterventionFAQPage";
 import ServiceAreas from "./pages/ServiceAreas";
 import TawkToChat from "./components/TawkToChat";
 import DefaultSEO from "./components/DefaultSEO";
+import RouteAnalytics from "./components/RouteAnalytics";
 import TrailingSlashRedirect from "./components/TrailingSlashRedirect";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -40,6 +41,8 @@ import WhatMakesMattDifferent from "./pages/WhatMakesMattDifferent";
 import InterventionCost from "./pages/InterventionCost";
 import BeforeYouCall from "./pages/BeforeYouCall";
 import StartContract from "./pages/StartContract";
+import StartHere from "./pages/StartHere";
+import MobileStickyCTA from "./components/MobileStickyCTA";
 
 // US States
 import Alabama from "./pages/Alabama";
@@ -196,9 +199,11 @@ const App = () => (
       {/* <TawkToChat /> */}
        <BrowserRouter>
         <TrailingSlashRedirect />
+        <RouteAnalytics />
         <ScrollToTop />
         <DefaultSEO />
         <FloatingContactForm />
+        <MobileStickyCTA />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
@@ -227,6 +232,7 @@ const App = () => (
           <Route path="/what-makes-matt-different" element={<WhatMakesMattDifferent />} />
           <Route path="/intervention-cost" element={<InterventionCost />} />
           <Route path="/before-you-call" element={<BeforeYouCall />} />
+          <Route path="/start-here" element={<StartHere />} />
           <Route path="/start-contract" element={<StartContract />} />
           <Route path="/intervention-agreement" element={<StartContract />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

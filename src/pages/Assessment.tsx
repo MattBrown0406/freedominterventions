@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-react";
 import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION, PHYSICAL_WITHDRAWAL_SYMPTOMS, PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS } from "@/components/assessment/types";
 import InsuranceCardUpload from "@/components/assessment/InsuranceCardUpload";
+import { trackEvent } from "@/lib/analytics";
 
 interface TreatmentEntry {
   programName: string;
@@ -472,6 +473,12 @@ const Assessment = () => {
 
       const { error } = await supabase.functions.invoke("submit-assessment", { body: assessmentData });
       if (error) throw new Error(error.message);
+
+      trackEvent("assessment_submitted", {
+        urgency_level: formData.urgencyLevel || undefined,
+        family_ready_intervention: formData.familyReadyIntervention || undefined,
+        dsm_yes_count: Object.values(formData.dsmBehaviors).filter(Boolean).length,
+      });
 
       toast({
         title: "Assessment Submitted Successfully",
