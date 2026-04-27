@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import FloatingContactForm from "@/components/FloatingContactForm";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -20,8 +21,6 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Assessment from "./pages/Assessment";
 import SelfAssessment from "./pages/SelfAssessment";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import SubstanceGuide from "./pages/SubstanceGuide";
 import InterventionToolkit from "./pages/InterventionToolkit";
@@ -40,8 +39,6 @@ import WhatIfTheyRefuse from "./pages/WhatIfTheyRefuse";
 import WhatMakesMattDifferent from "./pages/WhatMakesMattDifferent";
 import InterventionCost from "./pages/InterventionCost";
 import BeforeYouCall from "./pages/BeforeYouCall";
-import StartContract from "./pages/StartContract";
-import StartHere from "./pages/StartHere";
 import MobileStickyCTA from "./components/MobileStickyCTA";
 
 // US States
@@ -191,6 +188,17 @@ import PlanoTexas from "./pages/PlanoTexas";
 
 const queryClient = new QueryClient();
 
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const StartContract = lazy(() => import("./pages/StartContract"));
+const StartHere = lazy(() => import("./pages/StartHere"));
+
+const PageLoader = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center px-6">
+    <p className="text-sm text-muted-foreground">Loading...</p>
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -204,6 +212,7 @@ const App = () => (
         <DefaultSEO />
         <FloatingContactForm />
         <MobileStickyCTA />
+        <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
@@ -388,6 +397,7 @@ const App = () => (
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

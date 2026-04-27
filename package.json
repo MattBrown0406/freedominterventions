@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "node scripts/generate-sitemap.js",
-    "build": "vite build && ALLOW_PRERENDER_SKIP=true node scripts/prerender.mjs",
+    "build": "vite build && node scripts/generate-static-fallbacks.mjs && ALLOW_PRERENDER_SKIP=true node scripts/prerender.mjs",
     "build:client": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

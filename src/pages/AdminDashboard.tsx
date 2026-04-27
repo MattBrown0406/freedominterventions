@@ -69,6 +69,12 @@ interface Assessment {
   child_welfare_involvement: string | null;
   family_ready_intervention: string | null;
   intervention_barriers: string | null;
+  urgency_level: string | null;
+  immediate_safety_concerns: string | null;
+  overdose_history: string | null;
+  suicide_ideation: string | null;
+  suicide_attempts_history: string | null;
+  homeless_unstable: string | null;
   family_signature: string | null;
   frequency: string | null;
   duration_of_use: string | null;
@@ -85,6 +91,46 @@ const parseAssessment = (data: unknown): Assessment => {
     dsm_behaviors: raw.dsm_behaviors as Record<string, boolean> | null,
     treatment_history: raw.treatment_history as Array<{ programName: string; dateAttended: string; successfulCompletion: boolean }> | null,
   } as Assessment;
+};
+
+const includesYes = (value: string | null | undefined) => {
+  if (!value) return false;
+  return /\b(yes|true|high|urgent|immediate|active|current)\b/i.test(value);
+};
+
+const calculateLeadScore = (assessment: Assessment) => {
+  let score = 0;
+
+  if (assessment.status === "new") score += 20;
+  if (assessment.urgency_level && /urgent|high|immediate/i.test(assessment.urgency_level)) score += 25;
+  if ((assessment.dsm_yes_count || 0) >= 6) score += 20;
+  if (includesYes(assessment.overdose_history)) score += 20;
+  if (includesYes(assessment.suicide_ideation) || includesYes(assessment.suicide_attempts_history)) score += 25;
+  if (includesYes(assessment.violence_history)) score += 15;
+  if (includesYes(assessment.immediate_safety_concerns)) score += 20;
+  if (includesYes(assessment.homeless_unstable)) score += 10;
+  if (includesYes(assessment.family_ready_intervention)) score += 15;
+  if (assessment.contact_phone) score += 5;
+
+  return Math.min(score, 100);
+};
+
+const getLeadPriority = (score: number) => {
+  if (score >= 75) return { label: "Hot Lead", className: "bg-red-600 text-white hover:bg-red-600" };
+  if (score >= 50) return { label: "High Priority", className: "bg-amber-500 text-white hover:bg-amber-500" };
+  if (score >= 25) return { label: "Needs Review", className: "bg-blue-600 text-white hover:bg-blue-600" };
+  return { label: "Standard", className: "bg-muted text-foreground hover:bg-muted" };
+};
+
+const getFollowUpLabel = (assessment: Assessment) => {
+  if (assessment.status === "reviewed") return "Reviewed";
+
+  const created = new Date(assessment.created_at).getTime();
+  const hoursOld = Number.isFinite(created) ? (Date.now() - created) / (1000 * 60 * 60) : 0;
+  if (assessment.status === "new" && hoursOld >= 24) return "Overdue";
+  if (assessment.status === "new" && hoursOld >= 4) return "Same-day follow-up";
+  if (assessment.status === "in_progress") return "Active follow-up";
+  return "New lead";
 };
 
 const AdminDashboard = () => {
@@ -197,6 +243,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const sortedAssessments = [...assessments].sort((a, b) => {
+    const scoreDelta = calculateLeadScore(b) - calculateLeadScore(a);
+    if (scoreDelta !== 0) return scoreDelta;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
+  const hotLeadCount = assessments.filter((assessment) => calculateLeadScore(assessment) >= 75).length;
+  const newLeadCount = assessments.filter((assessment) => assessment.status === "new").length;
+  const overdueCount = assessments.filter((assessment) => getFollowUpLabel(assessment) === "Overdue").length;
+
   // These must match the exact keys used in Assessment.tsx form submission
   const dsmBehaviorQuestions = [
     "Has your loved one used substances in larger amounts or for longer periods than they originally intended?",
@@ -307,7 +363,39 @@ const AdminDashboard = () => {
               </Card>
             ) : (
               <div className="space-y-4">
-                {assessments.map((assessment) => (
+                <div className="grid gap-4 md:grid-cols-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <p className="text-xs uppercase text-muted-foreground">New Leads</p>
+                      <p className="text-2xl font-bold">{newLeadCount}</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <p className="text-xs uppercase text-muted-foreground">Hot Leads</p>
+                      <p className="text-2xl font-bold text-red-600">{hotLeadCount}</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <p className="text-xs uppercase text-muted-foreground">Overdue Follow-Up</p>
+                      <p className="text-2xl font-bold text-amber-600">{overdueCount}</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <p className="text-xs uppercase text-muted-foreground">Total Assessments</p>
+                      <p className="text-2xl font-bold">{assessments.length}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {sortedAssessments.map((assessment) => {
+                  const leadScore = calculateLeadScore(assessment);
+                  const priority = getLeadPriority(leadScore);
+                  const followUpLabel = getFollowUpLabel(assessment);
+
+                  return (
               <Card key={assessment.id}>
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
@@ -323,7 +411,9 @@ const AdminDashboard = () => {
                         {format(new Date(assessment.created_at), "MMM d, yyyy 'at' h:mm a")}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                      <Badge className={priority.className}>{priority.label} · {leadScore}</Badge>
+                      <Badge variant={followUpLabel === "Overdue" ? "destructive" : "outline"}>{followUpLabel}</Badge>
                       {getStatusBadge(assessment.status)}
                     </div>
                   </div>
@@ -355,6 +445,27 @@ const AdminDashboard = () => {
                       <p className="text-sm">{assessment.primary_substances}</p>
                     </div>
                   )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 rounded-lg border border-border bg-muted/30 p-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Urgency</p>
+                      <p className="text-sm">{assessment.urgency_level || "Not specified"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Safety Concerns</p>
+                      <p className="text-sm">{assessment.immediate_safety_concerns || "Not specified"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Family Ready</p>
+                      <p className="text-sm">{assessment.family_ready_intervention || "Not specified"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase">Suggested Next Step</p>
+                      <p className="text-sm font-medium">
+                        {leadScore >= 75 ? "Call first" : leadScore >= 50 ? "Same-day review" : "Review in queue"}
+                      </p>
+                    </div>
+                  </div>
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     <Button
@@ -399,7 +510,8 @@ const AdminDashboard = () => {
                   )}
                 </CardContent>
               </Card>
-            ))}
+                  );
+                })}
                 </div>
               )}
             </TabsContent>

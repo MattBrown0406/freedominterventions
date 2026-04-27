@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, CheckCircle, Sparkles, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { z } from "zod";
-import { generateContractPdf } from "@/utils/generateContractPdf";
 import { trackEvent } from "@/lib/analytics";
 
 // Square credentials
@@ -423,6 +422,7 @@ export const BookingCalendar = () => {
       let error;
 
       if (bookingType === 'readiness-intensive') {
+        const { generateContractPdf } = await import("@/utils/generateContractPdf");
         const pdfBlob = generateContractPdf({
           contractTitle: 'Family Readiness Intensive Agreement',
           contractVersion: FRI_AGREEMENT_VERSION,
