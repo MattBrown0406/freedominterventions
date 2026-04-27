@@ -74,7 +74,6 @@ interface Assessment {
   overdose_history: string | null;
   suicide_ideation: string | null;
   suicide_attempts_history: string | null;
-  homeless_unstable: string | null;
   family_signature: string | null;
   frequency: string | null;
   duration_of_use: string | null;
