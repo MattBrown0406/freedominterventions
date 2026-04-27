@@ -621,6 +621,18 @@ export default {
     const url = new URL(request.url);
     const userAgent = request.headers.get('user-agent') || '';
 
+    // Temporary diagnostics: confirms whether this worker is attached to the domain.
+    if (url.pathname === '/worker-health') {
+      return new Response('Freedom Interventions worker active', {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-Worker-Health': 'ok',
+        },
+      });
+    }
+
     // Serve dynamic sitemap from edge function
     if (url.pathname === '/sitemap.xml') {
       try {
