@@ -3,7 +3,6 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
-import { chromium } from 'playwright';
 import { createClient } from '@supabase/supabase-js';
 
 const defaultChromeExecutablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -141,11 +140,18 @@ const resolveChromiumLaunchOptions = () => {
   return { headless: true };
 };
 
+const loadChromium = async () => {
+  const playwright = await import('playwright');
+  return playwright.chromium;
+};
+
 const main = async () => {
   if (!existsSync(distDir)) throw new Error('dist directory does not exist. Run vite build first.');
 
   // Check if Playwright browsers are available before attempting to launch
+  let chromium;
   try {
+    chromium = await loadChromium();
     const testBrowser = await chromium.launch(resolveChromiumLaunchOptions());
     await testBrowser.close();
   } catch (e) {
