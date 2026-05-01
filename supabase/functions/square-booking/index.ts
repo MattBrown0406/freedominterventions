@@ -13,6 +13,12 @@ const SQUARE_BASE_URL = 'https://connect.squareup.com/v2';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const BOOKING_FEES_CENTS: Record<string, number> = {
+  consultation: 0,
+  coaching: 15000,
+  'crisis-coaching': 15000,
+  'readiness-intensive': 250000,
+};
 
 // Simple in-memory rate limiter for payment attempts
 const paymentAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -58,6 +64,37 @@ function validateString(value: string, maxLength: number): boolean {
 
 function sanitizeString(value: string): string {
   return value.trim().slice(0, 255);
+}
+
+function resolveBookingAmountCents(bookingType: string): number {
+  return BOOKING_FEES_CENTS[bookingType] ?? -1;
+}
+
+async function verifySquareOrderPaid(orderId: string, expectedAmountCents: number) {
+  if (!SQUARE_ACCESS_TOKEN) throw new Error('Square access token is not configured');
+  if (!SQUARE_LOCATION_ID) throw new Error('Square location ID is not configured');
+
+  const orderResponse = await fetch(`${SQUARE_BASE_URL}/orders/${orderId}`, {
+    headers: {
+      'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
+      'Square-Version': '2024-01-18',
+    },
+  });
+  const orderData = await orderResponse.json();
+  if (!orderResponse.ok || orderData.errors) {
+    throw new Error(orderData.errors?.[0]?.detail || 'Could not verify Square order');
+  }
+
+  const order = orderData.order;
+  const orderAmount = order?.total_money?.amount;
+  const locationMatches = !order?.location_id || order.location_id === SQUARE_LOCATION_ID;
+  const amountMatches = typeof orderAmount === 'number' && orderAmount === expectedAmountCents;
+  const isComplete = order?.state === 'COMPLETED';
+
+  return {
+    paid: Boolean(locationMatches && amountMatches && isComplete),
+    order,
+  };
 }
 
 serve(async (req) => {
@@ -251,6 +288,15 @@ serve(async (req) => {
         }
 
         const normalizedBookingType = isContractPaymentLink ? 'intervention-contract' : paymentBookingType === 'coaching' ? 'crisis-coaching' : paymentBookingType;
+        const resolvedAmount = normalizedBookingType === 'intervention-contract'
+          ? amount
+          : resolveBookingAmountCents(normalizedBookingType);
+        if (resolvedAmount <= 0 || resolvedAmount > 500000) {
+          throw new Error('Invalid payment amount for booking type');
+        }
+        if (!isContractPaymentLink && amount !== resolvedAmount) {
+          throw new Error('Payment amount does not match booking type');
+        }
         const sanitizedName = sanitizeString(customerName);
         const sanitizedEmail = customerEmail.toLowerCase().trim();
         const sanitizedPhone = customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null;
@@ -268,6 +314,15 @@ serve(async (req) => {
           if (!validateString(contractId, 100)) {
             throw new Error('Valid contract ID is required');
           }
+          const { data: contract, error: contractError } = await supabase
+            .from('contracts')
+            .select('id, contract_type, amount_cents, client_email, status')
+            .eq('id', contractId)
+            .single();
+          if (contractError || !contract) throw contractError || new Error('Contract not found');
+          if (contract.status === 'paid') throw new Error('Contract has already been paid');
+          if (contract.client_email !== sanitizedEmail) throw new Error('Customer email does not match this contract');
+          if (typeof contract.amount_cents !== 'number' || contract.amount_cents <= 0) throw new Error('Contract amount is invalid');
 
           const origin = req.headers.get('origin') || 'https://freedominterventions.com';
           const successUrl = new URL(redirectPath || '/start-contract?contract_status=success', origin);
@@ -283,9 +338,9 @@ serve(async (req) => {
             body: JSON.stringify({
               idempotency_key: crypto.randomUUID(),
               quick_pay: {
-                name: sessionLabel,
+                name: contract.contract_type === 'readiness-intensive' ? 'Family Readiness Intensive' : sessionLabel,
                 price_money: {
-                  amount,
+                  amount: contract.amount_cents,
                   currency: 'USD',
                 },
                 location_id: SQUARE_LOCATION_ID,
@@ -309,11 +364,23 @@ serve(async (req) => {
             throw new Error(checkoutData.errors[0]?.detail || 'Failed to create contract payment link');
           }
 
+          const paymentLinkId = checkoutData.payment_link?.id ?? null;
+          const squareOrderId = checkoutData.payment_link?.order_id ?? null;
+          await supabase
+            .from('contracts')
+            .update({
+              payment_link_id: paymentLinkId,
+              square_order_id: squareOrderId,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', contractId);
+
           return new Response(JSON.stringify({
             success: true,
             contractId,
             checkoutUrl: checkoutData.payment_link?.url,
-            paymentLinkId: checkoutData.payment_link?.id,
+            paymentLinkId,
+            squareOrderId,
           }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
@@ -343,7 +410,7 @@ serve(async (req) => {
               source_id: sourceId,
               idempotency_key: crypto.randomUUID(),
               amount_money: {
-                amount: amount,
+                amount: resolvedAmount,
                 currency: 'USD',
               },
               location_id: SQUARE_LOCATION_ID,
@@ -384,9 +451,9 @@ serve(async (req) => {
           booking_date: bookingDate,
           booking_time: bookingTime,
           duration_minutes: typeof durationMinutes === 'number' ? Math.min(Math.max(durationMinutes, 15), 180) : 60,
-          status: 'confirmed',
+          status: 'pending',
           payment_id: null,
-          amount_cents: amount,
+          amount_cents: resolvedAmount,
           agreement_accepted: requiresAgreementStorage ? agreementAccepted === true : false,
           agreement_signer_name: requiresAgreementStorage && validateString(agreementSignerName, 100) ? sanitizeString(agreementSignerName) : null,
           agreement_signed_at: requiresAgreementStorage ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
@@ -431,7 +498,7 @@ serve(async (req) => {
             quick_pay: {
               name: sessionLabel,
               price_money: {
-                amount,
+                amount: resolvedAmount,
                 currency: 'USD',
               },
               location_id: SQUARE_LOCATION_ID,
@@ -455,12 +522,86 @@ serve(async (req) => {
           throw new Error(checkoutData.errors[0]?.detail || 'Failed to create Square Checkout link');
         }
 
+        const paymentLinkId = checkoutData.payment_link?.id ?? null;
+        const squareOrderId = checkoutData.payment_link?.order_id ?? null;
+        await supabase
+          .from('bookings')
+          .update({
+            payment_link_id: paymentLinkId,
+            square_order_id: squareOrderId,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', booking.id);
+
         return new Response(JSON.stringify({
           success: true,
           bookingId: booking.id,
           checkoutUrl: checkoutData.payment_link?.url,
-          paymentLinkId: checkoutData.payment_link?.id,
+          paymentLinkId,
+          squareOrderId,
         }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      case 'verify-booking-payment': {
+        const { bookingId } = params;
+        if (!validateString(bookingId, 100)) {
+          throw new Error('Valid booking ID is required');
+        }
+
+        const { data: booking, error: bookingError } = await supabase
+          .from('bookings')
+          .select('id, booking_type, booking_date, booking_time, customer_name, customer_email, customer_phone, duration_minutes, amount_cents, payment_id, square_order_id, status')
+          .eq('id', bookingId)
+          .single();
+        if (bookingError || !booking) throw bookingError || new Error('Booking not found');
+        if (booking.status === 'confirmed' && booking.payment_id) {
+          return new Response(JSON.stringify({ success: true, paid: true, booking }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        if (!booking.square_order_id) throw new Error('Square order ID is missing for this booking');
+        if (typeof booking.amount_cents !== 'number' || booking.amount_cents <= 0) throw new Error('Booking amount is invalid');
+
+        const verification = await verifySquareOrderPaid(booking.square_order_id, booking.amount_cents);
+        if (!verification.paid) {
+          return new Response(JSON.stringify({ success: false, paid: false }), {
+            status: 402,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id ?? verification.order?.tenders?.[0]?.id ?? null;
+        const { data: confirmedBooking, error: updateError } = await supabase
+          .from('bookings')
+          .update({
+            status: 'confirmed',
+            payment_id: typeof verifiedPaymentId === 'string' ? sanitizeString(verifiedPaymentId).slice(0, 200) : null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', booking.id)
+          .select()
+          .single();
+        if (updateError) throw updateError;
+
+        try {
+          await supabase.functions.invoke('send-booking-confirmation', {
+            body: {
+              bookingId: booking.id,
+              customerName: booking.customer_name,
+              customerEmail: booking.customer_email,
+              bookingType: booking.booking_type,
+              bookingDate: booking.booking_date,
+              bookingTime: booking.booking_time,
+              durationMinutes: booking.duration_minutes,
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send booking confirmation:', emailError);
+        }
+
+        return new Response(JSON.stringify({ success: true, paid: true, booking: confirmedBooking }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }

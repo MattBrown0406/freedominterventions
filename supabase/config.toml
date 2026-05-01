@@ -3,6 +3,9 @@ project_id = "rizfkjgwhcpwiryyqejx"
 [functions.square-booking]
 verify_jwt = false
 
+[functions.contracts]
+verify_jwt = false
+
 [functions.send-booking-confirmation]
 verify_jwt = false
 

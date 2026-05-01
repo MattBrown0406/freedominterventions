@@ -12,6 +12,15 @@ const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const SQUARE_ACCESS_TOKEN = Deno.env.get("SQUARE_ACCESS_TOKEN");
 const SQUARE_LOCATION_ID = Deno.env.get("SQUARE_LOCATION_ID");
 const SQUARE_BASE_URL = "https://connect.squareup.com/v2";
+const STANDARD_INTERVENTION_FEE_CENTS = 950000;
+const READINESS_INTENSIVE_FEE_CENTS = 250000;
+const INTERVENTION_DISCOUNT_CODES: Record<string, number> = {
+  SAVE500: 50000,
+  SAVE1000: 100000,
+  SAVE1500: 150000,
+  SAVE2000: 200000,
+  SAVE2500: 250000,
+};
 
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,6 +33,59 @@ function validateString(value: string, maxLength: number): boolean {
 
 function sanitizeString(value: string): string {
   return value.trim().slice(0, 255);
+}
+
+function normalizeDiscountCode(code: unknown): string {
+  return typeof code === "string" ? code.trim().toUpperCase() : "";
+}
+
+function resolveContractAmount(contractType: string, discountCode: unknown) {
+  if (contractType === "readiness-intensive") {
+    return { amountCents: READINESS_INTENSIVE_FEE_CENTS, discountCode: null, discountCents: 0 };
+  }
+
+  const normalizedDiscountCode = normalizeDiscountCode(discountCode);
+  const discountCents = INTERVENTION_DISCOUNT_CODES[normalizedDiscountCode] ?? 0;
+  return {
+    amountCents: Math.max(STANDARD_INTERVENTION_FEE_CENTS - discountCents, 0),
+    discountCode: discountCents > 0 ? normalizedDiscountCode : null,
+    discountCents,
+  };
+}
+
+function formatUsdFromCents(cents: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
+}
+
+async function verifySquareOrderPaid(orderId: string, expectedAmountCents: number) {
+  if (!SQUARE_ACCESS_TOKEN) throw new Error("Square access token is not configured");
+  if (!SQUARE_LOCATION_ID) throw new Error("Square location ID is not configured");
+
+  const orderResponse = await fetch(`${SQUARE_BASE_URL}/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${SQUARE_ACCESS_TOKEN}`,
+      "Square-Version": "2024-01-18",
+    },
+  });
+  const orderData = await orderResponse.json();
+  if (!orderResponse.ok || orderData.errors) {
+    throw new Error(orderData.errors?.[0]?.detail || "Could not verify Square order");
+  }
+
+  const order = orderData.order;
+  const orderAmount = order?.total_money?.amount;
+  const locationMatches = !order?.location_id || order.location_id === SQUARE_LOCATION_ID;
+  const amountMatches = typeof orderAmount === "number" && orderAmount === expectedAmountCents;
+  const isComplete = order?.state === "COMPLETED";
+
+  return {
+    paid: Boolean(locationMatches && amountMatches && isComplete),
+    order,
+  };
 }
 
 serve(async (req) => {
@@ -46,11 +108,8 @@ serve(async (req) => {
           signedAt,
           agreementText,
           agreementVersion,
-          amountCents,
           discountCode,
-          discountCents,
           contractPdfPath,
-          contractPdfUrl,
           contractPdfBase64,
           metadata,
         } = params;
@@ -64,10 +123,13 @@ serve(async (req) => {
         if (!validateString(signerName, 100)) throw new Error("Signer name is required");
         if (!validateString(agreementText, 30000)) throw new Error("Agreement text is required");
         if (!validateString(agreementVersion, 50)) throw new Error("Agreement version is required");
+        const resolvedAmount = resolveContractAmount(contractType, discountCode);
+        if (contractType === "intervention" && !agreementText.includes(`Final Intervention Fee Due: ${formatUsdFromCents(resolvedAmount.amountCents)}`)) {
+          throw new Error("Agreement amount does not match approved contract amount");
+        }
 
         const contractId = crypto.randomUUID();
-        let resolvedPdfPath = typeof contractPdfPath === "string" && contractPdfPath.trim() ? contractPdfPath : `${contractType}/${contractId}.pdf`;
-        let resolvedPdfUrl = typeof contractPdfUrl === "string" ? contractPdfUrl : null;
+        const resolvedPdfPath = typeof contractPdfPath === "string" && contractPdfPath.trim() ? contractPdfPath : `${contractType}/${contractId}.pdf`;
 
         if (typeof contractPdfBase64 === "string" && contractPdfBase64.trim()) {
           const binaryString = atob(contractPdfBase64);
@@ -81,11 +143,6 @@ serve(async (req) => {
               upsert: false,
             });
           if (uploadError) throw uploadError;
-
-          const signedUrlResult = await supabase.storage
-            .from("contracts")
-            .createSignedUrl(resolvedPdfPath, 60 * 60 * 24 * 7);
-          resolvedPdfUrl = signedUrlResult.data?.signedUrl ?? resolvedPdfUrl;
         }
 
         const { data, error } = await supabase
@@ -101,11 +158,11 @@ serve(async (req) => {
             signed_at: typeof signedAt === "string" ? signedAt : new Date().toISOString(),
             agreement_text: agreementText.trim(),
             agreement_version: agreementVersion.trim(),
-            amount_cents: typeof amountCents === "number" ? amountCents : null,
-            discount_code: typeof discountCode === "string" && discountCode.trim() ? sanitizeString(discountCode).slice(0, 40) : null,
-            discount_cents: typeof discountCents === "number" ? discountCents : null,
+            amount_cents: resolvedAmount.amountCents,
+            discount_code: resolvedAmount.discountCode,
+            discount_cents: resolvedAmount.discountCents,
             contract_pdf_path: resolvedPdfPath,
-            contract_pdf_url: resolvedPdfUrl,
+            contract_pdf_url: null,
             metadata: metadata && typeof metadata === "object" ? metadata : {},
           })
           .select()
@@ -127,11 +184,20 @@ serve(async (req) => {
       }
 
       case "create-payment-link": {
-        const { contractId, amount, customerEmail, customerName, redirectPath, note } = params;
+        const { contractId, customerEmail, customerName, redirectPath, note } = params;
         if (!validateString(contractId, 100)) throw new Error("Valid contract ID is required");
-        if (typeof amount !== "number" || amount <= 0 || amount > 1000000) throw new Error("Invalid payment amount");
         if (!validateEmail(customerEmail)) throw new Error("Invalid email address");
         if (!validateString(customerName, 100)) throw new Error("Invalid customer name");
+
+        const { data: contract, error: contractError } = await supabase
+          .from("contracts")
+          .select("id, contract_type, amount_cents, client_email, client_name, status")
+          .eq("id", contractId)
+          .single();
+        if (contractError || !contract) throw contractError || new Error("Contract not found");
+        if (contract.status === "paid") throw new Error("Contract has already been paid");
+        if (contract.client_email !== customerEmail.toLowerCase().trim()) throw new Error("Customer email does not match this contract");
+        if (typeof contract.amount_cents !== "number" || contract.amount_cents <= 0) throw new Error("Contract amount is invalid");
 
         const origin = req.headers.get("origin") || "https://freedominterventions.com";
         const successUrl = new URL(redirectPath || "/start-contract?contract_status=success", origin);
@@ -147,8 +213,8 @@ serve(async (req) => {
           body: JSON.stringify({
             idempotency_key: crypto.randomUUID(),
             quick_pay: {
-              name: "Intervention Agreement",
-              price_money: { amount, currency: "USD" },
+              name: contract.contract_type === "readiness-intensive" ? "Family Readiness Intensive" : "Intervention Agreement",
+              price_money: { amount: contract.amount_cents, currency: "USD" },
               location_id: SQUARE_LOCATION_ID,
             },
             checkout_options: {
@@ -168,9 +234,14 @@ serve(async (req) => {
         }
 
         const paymentLinkId = checkoutData.payment_link?.id ?? null;
+        const squareOrderId = checkoutData.payment_link?.order_id ?? null;
         await supabase
           .from("contracts")
-          .update({ payment_link_id: paymentLinkId })
+          .update({
+            payment_link_id: paymentLinkId,
+            square_order_id: squareOrderId,
+            updated_at: new Date().toISOString(),
+          })
           .eq("id", contractId);
 
         return new Response(JSON.stringify({
@@ -178,6 +249,7 @@ serve(async (req) => {
           contractId,
           checkoutUrl: checkoutData.payment_link?.url,
           paymentLinkId,
+          squareOrderId,
         }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -187,11 +259,35 @@ serve(async (req) => {
         const { contractId, paymentId } = params;
         if (!validateString(contractId, 100)) throw new Error("Valid contract ID is required");
 
+        const { data: contract, error: contractError } = await supabase
+          .from("contracts")
+          .select("id, amount_cents, square_order_id, status")
+          .eq("id", contractId)
+          .single();
+        if (contractError || !contract) throw contractError || new Error("Contract not found");
+        if (contract.status === "paid") {
+          return new Response(JSON.stringify({ success: true, alreadyPaid: true }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (!contract.square_order_id) throw new Error("Square order ID is missing for this contract");
+        if (typeof contract.amount_cents !== "number" || contract.amount_cents <= 0) throw new Error("Contract amount is invalid");
+
+        const verification = await verifySquareOrderPaid(contract.square_order_id, contract.amount_cents);
+        if (!verification.paid) {
+          return new Response(JSON.stringify({ success: false, paid: false }), {
+            status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        const verifiedPaymentId = paymentId || verification.order?.tenders?.[0]?.payment_id || verification.order?.tenders?.[0]?.id || null;
+
         const { error } = await supabase
           .from("contracts")
           .update({
             status: "paid",
-            payment_id: typeof paymentId === "string" ? sanitizeString(paymentId).slice(0, 200) : null,
+            payment_id: typeof verifiedPaymentId === "string" ? sanitizeString(verifiedPaymentId).slice(0, 200) : null,
             updated_at: new Date().toISOString(),
           })
           .eq("id", contractId);

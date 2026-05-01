@@ -62,6 +62,13 @@ serve(async (req) => {
     const adminSubject = event === "signed"
       ? `${displayType} signed by ${contract.signer_name}`
       : `${displayType} paid by ${contract.signer_name}`;
+    let contractPdfSignedUrl = contract.contract_pdf_url;
+    if (contract.contract_pdf_path) {
+      const { data: signedPdf } = await supabase.storage
+        .from("contracts")
+        .createSignedUrl(contract.contract_pdf_path, 60 * 60 * 24 * 7);
+      contractPdfSignedUrl = signedPdf?.signedUrl ?? contractPdfSignedUrl;
+    }
 
     const adminHtml = `
       <h2>${displayType} ${event === "signed" ? "Signed" : "Paid"}</h2>
@@ -74,7 +81,7 @@ serve(async (req) => {
       <p><strong>Status:</strong> ${contract.status}</p>
       ${contract.discount_code ? `<p><strong>Discount code:</strong> ${contract.discount_code}</p>` : ""}
       ${contract.payment_id ? `<p><strong>Payment ID:</strong> ${contract.payment_id}</p>` : ""}
-      ${contract.contract_pdf_url ? `<p><a href="${contract.contract_pdf_url}">Open signed PDF</a></p>` : ""}
+      ${contractPdfSignedUrl ? `<p><a href="${contractPdfSignedUrl}">Open signed PDF</a></p>` : ""}
     `;
 
     await sendEmail({
