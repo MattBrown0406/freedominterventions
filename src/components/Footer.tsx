@@ -136,7 +136,15 @@ const Footer = () => {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Freedom Interventions. All rights reserved.
+            <Link
+              to="/admin-login"
+              aria-label="Staff login"
+              title="Staff"
+              className="hover:text-primary transition-colors"
+            >
+              ©
+            </Link>{" "}
+            {new Date().getFullYear()} Freedom Interventions. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
             Certified & Insured • Confidential Services
