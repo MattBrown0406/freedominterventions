@@ -243,11 +243,9 @@ const AdminDashboard = () => {
     }
   };
 
-  const sortedAssessments = [...assessments].sort((a, b) => {
-    const scoreDelta = calculateLeadScore(b) - calculateLeadScore(a);
-    if (scoreDelta !== 0) return scoreDelta;
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-  });
+  const sortedAssessments = [...assessments].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
 
   const hotLeadCount = assessments.filter((assessment) => calculateLeadScore(assessment) >= 75).length;
   const newLeadCount = assessments.filter((assessment) => assessment.status === "new").length;
