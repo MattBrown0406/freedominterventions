@@ -1,0 +1,1 @@
+DELETE FROM public.assessments WHERE id IN ('28c16960-6567-416c-9869-069198dc3055', '7b714d0a-c06e-45fe-b0d8-7ccf89e31323');
