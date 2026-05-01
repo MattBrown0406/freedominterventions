@@ -1111,6 +1111,204 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_contacts: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          last_contacted_at: string | null
+          last_name: string | null
+          notes: string | null
+          phone: string | null
+          source: string
+          source_id: string | null
+          tags: string[] | null
+          unsubscribe_token: string
+          unsubscribed: boolean
+          unsubscribed_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          last_name?: string | null
+          notes?: string | null
+          phone?: string | null
+          source?: string
+          source_id?: string | null
+          tags?: string[] | null
+          unsubscribe_token?: string
+          unsubscribed?: boolean
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          last_name?: string | null
+          notes?: string | null
+          phone?: string | null
+          source?: string
+          source_id?: string | null
+          tags?: string[] | null
+          unsubscribe_token?: string
+          unsubscribed?: boolean
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      discount_codes: {
+        Row: {
+          amount_cents: number
+          base_amount_cents: number
+          code: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          issued_to_email: string | null
+          issued_to_name: string | null
+          notes: string | null
+          updated_at: string
+          used_at: string | null
+          used_by_contract_id: string | null
+          used_by_email: string | null
+        }
+        Insert: {
+          amount_cents: number
+          base_amount_cents?: number
+          code: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          issued_to_email?: string | null
+          issued_to_name?: string | null
+          notes?: string | null
+          updated_at?: string
+          used_at?: string | null
+          used_by_contract_id?: string | null
+          used_by_email?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          base_amount_cents?: number
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          issued_to_email?: string | null
+          issued_to_name?: string | null
+          notes?: string | null
+          updated_at?: string
+          used_at?: string | null
+          used_by_contract_id?: string | null
+          used_by_email?: string | null
+        }
+        Relationships: []
+      }
+      email_campaign_sends: {
+        Row: {
+          campaign_id: string
+          contact_id: string | null
+          created_at: string
+          email: string
+          error_message: string | null
+          id: string
+          sendgrid_message_id: string | null
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          campaign_id: string
+          contact_id?: string | null
+          created_at?: string
+          email: string
+          error_message?: string | null
+          id?: string
+          sendgrid_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          campaign_id?: string
+          contact_id?: string | null
+          created_at?: string
+          email?: string
+          error_message?: string | null
+          id?: string
+          sendgrid_message_id?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      email_campaigns: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          failed_count: number
+          from_email: string
+          from_name: string
+          html_body: string
+          id: string
+          recipient_count: number
+          reply_to: string | null
+          sent_at: string | null
+          sent_count: number
+          skipped_count: number
+          status: string
+          subject: string
+          text_body: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          failed_count?: number
+          from_email?: string
+          from_name?: string
+          html_body: string
+          id?: string
+          recipient_count?: number
+          reply_to?: string | null
+          sent_at?: string | null
+          sent_count?: number
+          skipped_count?: number
+          status?: string
+          subject: string
+          text_body?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          failed_count?: number
+          from_email?: string
+          from_name?: string
+          html_body?: string
+          id?: string
+          recipient_count?: number
+          reply_to?: string | null
+          sent_at?: string | null
+          sent_count?: number
+          skipped_count?: number
+          status?: string
+          subject?: string
+          text_body?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       family_reviews: {
         Row: {
           approved: boolean | null

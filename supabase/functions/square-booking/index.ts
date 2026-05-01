@@ -265,10 +265,6 @@ serve(async (req) => {
           contractMetadata,
         } = params;
 
-        if (typeof amount !== 'number' || amount <= 0 || amount > 500000) {
-          throw new Error('Invalid payment amount');
-        }
-
         if (!validateEmail(customerEmail)) {
           throw new Error('Invalid email address');
         }
@@ -288,6 +284,12 @@ serve(async (req) => {
         }
 
         const normalizedBookingType = isContractPaymentLink ? 'intervention-contract' : paymentBookingType === 'coaching' ? 'crisis-coaching' : paymentBookingType;
+        if (!isContractPaymentLink && normalizedBookingType === 'intervention-contract') {
+          throw new Error('Intervention contract payments must be created from a signed contract');
+        }
+        if (!isContractPaymentLink && (typeof amount !== 'number' || amount <= 0 || amount > 500000)) {
+          throw new Error('Invalid payment amount');
+        }
         const resolvedAmount = normalizedBookingType === 'intervention-contract'
           ? amount
           : resolveBookingAmountCents(normalizedBookingType);
@@ -646,6 +648,9 @@ serve(async (req) => {
 
         // Normalize legacy 'coaching' -> 'crisis-coaching'
         const normalizedBookingType = bookingType === 'coaching' ? 'crisis-coaching' : bookingType;
+        if (resolveBookingAmountCents(normalizedBookingType) > 0 || normalizedBookingType === 'intervention-contract') {
+          throw new Error('Paid bookings must be created through verified Square checkout');
+        }
 
         if (normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract') {
           if (agreementAccepted !== true) {

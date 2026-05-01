@@ -49,7 +49,7 @@ const contractSchema = z.object({
 
 type ContractFormData = z.infer<typeof contractSchema>;
 
-const buildAgreementText = (data: ContractFormData, finalAmountCents: number, discountCents: number, normalizedDiscountCode: string) => {
+const buildAgreementText = (data: ContractFormData, baseAmountCents: number, finalAmountCents: number, discountCents: number, normalizedDiscountCode: string) => {
   const header = [
     INTERVENTION_CONTRACT_TEXT,
     "",
@@ -61,7 +61,7 @@ const buildAgreementText = (data: ContractFormData, finalAmountCents: number, di
     `Relationship to Loved One: ${data.relationship}`,
     `Loved One Date of Birth: ${data.lovedOneDateOfBirth?.trim() || "Not provided"}`,
     `Referral Source: ${data.referralSource?.trim() || "Not provided"}`,
-    `Base Intervention Fee: ${formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}`,
+    `Base Intervention Fee: ${formatUsdFromCents(baseAmountCents)}`,
     `Discount Code: ${normalizedDiscountCode || "None"}`,
     `Discount Applied: ${formatUsdFromCents(discountCents)}`,
     `Final Intervention Fee Due: ${formatUsdFromCents(finalAmountCents)}`,
@@ -82,6 +82,13 @@ const StartContract = () => {
     discountCode: string;
   } | null>(null);
   const [paymentComplete, setPaymentComplete] = useState(false);
+  const [discountQuote, setDiscountQuote] = useState<{
+    code: string;
+    email: string;
+    baseAmountCents: number;
+    discountCents: number;
+    finalAmountCents: number;
+  } | null>(null);
 
   const form = useForm<ContractFormData>({
     resolver: zodResolver(contractSchema),
@@ -93,7 +100,7 @@ const StartContract = () => {
       relationship: "",
       lovedOneDateOfBirth: "",
       referralSource: "",
-      discountCode: "",
+      discountCode: new URLSearchParams(window.location.search).get("code") || "",
       signerName: "",
       notes: "",
       accepted: false,
@@ -101,12 +108,55 @@ const StartContract = () => {
   });
 
   const watchedDiscountCode = form.watch("discountCode") || "";
+  const watchedClientEmail = form.watch("clientEmail") || "";
   const normalizedDiscountCode = normalizeDiscountCode(watchedDiscountCode);
-  const discountCents = useMemo(() => resolveDiscountCents(watchedDiscountCode), [watchedDiscountCode]);
-  const finalAmountCents = useMemo(
-    () => Math.max(STANDARD_INTERVENTION_FEE_CENTS - discountCents, 0),
-    [discountCents]
-  );
+  const normalizedQuoteEmail = watchedClientEmail.trim().toLowerCase();
+  const localDiscountCents = useMemo(() => resolveDiscountCents(watchedDiscountCode), [watchedDiscountCode]);
+  const activeServerQuote = discountQuote?.code === normalizedDiscountCode && discountQuote.email === normalizedQuoteEmail;
+  const baseAmountCents = activeServerQuote ? discountQuote.baseAmountCents : STANDARD_INTERVENTION_FEE_CENTS;
+  const discountCents = activeServerQuote ? discountQuote.discountCents : localDiscountCents;
+  const finalAmountCents = activeServerQuote
+    ? discountQuote.finalAmountCents
+    : Math.max(STANDARD_INTERVENTION_FEE_CENTS - localDiscountCents, 0);
+
+  useEffect(() => {
+    if (!normalizedDiscountCode) {
+      setDiscountQuote(null);
+      return;
+    }
+
+    let cancelled = false;
+    const timeout = window.setTimeout(() => {
+      supabase.functions.invoke("contracts", {
+        body: {
+          action: "validate-discount-code",
+          contractType: "intervention",
+          discountCode: normalizedDiscountCode,
+          clientEmail: watchedClientEmail.trim() || undefined,
+        },
+      }).then(({ data, error }) => {
+        if (cancelled || error || !data?.success) return;
+        if (data.discountCode === normalizedDiscountCode) {
+          setDiscountQuote({
+            code: data.discountCode,
+            email: watchedClientEmail.trim().toLowerCase(),
+            baseAmountCents: data.baseAmountCents,
+            discountCents: data.discountCents,
+            finalAmountCents: data.finalAmountCents,
+          });
+        } else {
+          setDiscountQuote(null);
+        }
+      }).catch(() => {
+        if (!cancelled) setDiscountQuote(null);
+      });
+    }, 250);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+    };
+  }, [normalizedDiscountCode, watchedClientEmail]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -138,10 +188,46 @@ const StartContract = () => {
 
   const onSubmit = async (data: ContractFormData) => {
     setIsLaunching(true);
-    const agreementText = buildAgreementText(data, finalAmountCents, discountCents, normalizedDiscountCode);
     const agreementSignedAt = new Date().toISOString();
 
     try {
+      let resolvedBaseAmountCents = baseAmountCents;
+      let resolvedDiscountCents = discountCents;
+      let resolvedFinalAmountCents = finalAmountCents;
+      let resolvedDiscountCode = normalizedDiscountCode;
+
+      if (normalizedDiscountCode) {
+        const { data: quoteData, error: quoteError } = await supabase.functions.invoke("contracts", {
+          body: {
+            action: "validate-discount-code",
+            contractType: "intervention",
+            discountCode: normalizedDiscountCode,
+            clientEmail: data.clientEmail.trim().toLowerCase(),
+          },
+        });
+        if (quoteError) throw quoteError;
+        if (quoteData?.success && quoteData.discountCode === normalizedDiscountCode) {
+          resolvedBaseAmountCents = quoteData.baseAmountCents;
+          resolvedDiscountCents = quoteData.discountCents;
+          resolvedFinalAmountCents = quoteData.finalAmountCents;
+          resolvedDiscountCode = quoteData.discountCode;
+          setDiscountQuote({
+            code: quoteData.discountCode,
+            email: data.clientEmail.trim().toLowerCase(),
+            baseAmountCents: quoteData.baseAmountCents,
+            discountCents: quoteData.discountCents,
+            finalAmountCents: quoteData.finalAmountCents,
+          });
+        } else {
+          resolvedBaseAmountCents = STANDARD_INTERVENTION_FEE_CENTS;
+          resolvedDiscountCents = resolveDiscountCents(normalizedDiscountCode);
+          resolvedFinalAmountCents = Math.max(STANDARD_INTERVENTION_FEE_CENTS - resolvedDiscountCents, 0);
+          resolvedDiscountCode = resolvedDiscountCents > 0 ? normalizedDiscountCode : "";
+          setDiscountQuote(null);
+        }
+      }
+
+      const agreementText = buildAgreementText(data, resolvedBaseAmountCents, resolvedFinalAmountCents, resolvedDiscountCents, resolvedDiscountCode);
       const pdfBlob = generateContractPdf({
         contractTitle: "Freedom Interventions Services Agreement",
         contractVersion: INTERVENTION_CONTRACT_VERSION,
@@ -151,9 +237,9 @@ const StartContract = () => {
         signerName: data.signerName.trim(),
         signedAt: agreementSignedAt,
         bookingTypeLabel: "Intervention Contract",
-        amountLabel: formatUsdFromCents(finalAmountCents),
-        discountCode: normalizedDiscountCode || undefined,
-        discountLabel: discountCents > 0 ? formatUsdFromCents(discountCents) : undefined,
+        amountLabel: formatUsdFromCents(resolvedFinalAmountCents),
+        discountCode: resolvedDiscountCode || undefined,
+        discountLabel: resolvedDiscountCents > 0 ? formatUsdFromCents(resolvedDiscountCents) : undefined,
         metadata: {
           "Loved One": data.lovedOneName.trim(),
           "Loved One DOB": data.lovedOneDateOfBirth?.trim() || "Not provided",
@@ -188,9 +274,9 @@ const StartContract = () => {
           signedAt: agreementSignedAt,
           agreementText,
           agreementVersion: INTERVENTION_CONTRACT_VERSION,
-          amountCents: finalAmountCents,
-          discountCode: normalizedDiscountCode || null,
-          discountCents,
+          amountCents: resolvedFinalAmountCents,
+          discountCode: resolvedDiscountCode || null,
+          discountCents: resolvedDiscountCents,
           contractPdfPath: pdfPath,
           contractPdfBase64: pdfBase64,
           metadata: {
@@ -199,7 +285,7 @@ const StartContract = () => {
             relationship: data.relationship.trim(),
             referralSource: data.referralSource?.trim() || null,
             notes: data.notes?.trim() || null,
-            baseFeeCents: STANDARD_INTERVENTION_FEE_CENTS,
+            baseFeeCents: resolvedBaseAmountCents,
             createdDate: bookingDate,
             localContractId: contractId,
           },
@@ -227,8 +313,8 @@ const StartContract = () => {
       setSubmittedSummary({
         clientName: data.clientName.trim(),
         lovedOneName: data.lovedOneName.trim(),
-        finalAmountCents,
-        discountCode: normalizedDiscountCode,
+        finalAmountCents: resolvedFinalAmountCents,
+        discountCode: resolvedDiscountCode,
       });
 
       window.location.href = checkoutResponse.data.checkoutUrl;
@@ -400,7 +486,7 @@ const StartContract = () => {
                         <p className="mb-2 text-sm font-medium uppercase tracking-[0.18em] text-primary">Amount due</p>
                         <p className="text-3xl font-bold text-foreground">{formatUsdFromCents(finalAmountCents)}</p>
                         <p className="mt-2 text-sm text-muted-foreground">
-                          Standard fee {formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}
+                          Standard fee {formatUsdFromCents(baseAmountCents)}
                           {discountCents > 0 ? ` adjusted to ${formatUsdFromCents(finalAmountCents)}.` : "."}
                         </p>
                       </div>
@@ -433,7 +519,7 @@ const StartContract = () => {
                           <p className="text-sm text-muted-foreground">Version {INTERVENTION_CONTRACT_VERSION}</p>
                         </div>
                       </div>
-                      <Textarea value={buildAgreementText(form.getValues(), finalAmountCents, discountCents, normalizedDiscountCode)} readOnly className="min-h-[420px] resize-none text-sm leading-6 bg-muted/40" />
+                      <Textarea value={buildAgreementText(form.getValues(), baseAmountCents, finalAmountCents, discountCents, normalizedDiscountCode)} readOnly className="min-h-[420px] resize-none text-sm leading-6 bg-muted/40" />
                     </div>
 
                     <div className="rounded-2xl border border-border bg-background p-5 text-sm text-muted-foreground">
@@ -477,7 +563,7 @@ const StartContract = () => {
                 <div className="rounded-3xl border border-border bg-card p-8">
                   <h2 className="mb-5 font-serif text-2xl font-semibold text-foreground">Agreement summary</h2>
                   <ul className="space-y-3 text-muted-foreground">
-                    <li>• Standard intervention fee: {formatUsdFromCents(STANDARD_INTERVENTION_FEE_CENTS)}</li>
+                    <li>• Standard intervention fee: {formatUsdFromCents(baseAmountCents)}</li>
                     <li>• The full agreement is reviewed before signature and payment</li>
                     <li>• Agreement becomes part of the stored contract record after signing</li>
                     <li>• Payment is completed on secure Square-hosted checkout</li>
