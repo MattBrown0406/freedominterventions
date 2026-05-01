@@ -160,10 +160,6 @@ export const BookingCalendar = () => {
     const returnedPhone = params.get("phone");
 
     if (squareStatus === 'success' && returnedBookingId) {
-      trackEvent('booking_payment_completed', {
-        booking_id: returnedBookingId,
-        booking_type: returnedType,
-      });
       if (returnedType && (returnedType === 'consultation' || returnedType === 'crisis-coaching' || returnedType === 'readiness-intensive' || returnedType === 'fri-contract')) {
         setBookingType(returnedType === 'fri-contract' ? 'readiness-intensive' : returnedType);
       }
@@ -176,23 +172,42 @@ export const BookingCalendar = () => {
       if (returnedName || returnedEmail || returnedPhone) {
         setCustomerInfo({ name: returnedName || '', email: returnedEmail || '', phone: returnedPhone || '' });
       }
-      if (returnedType === 'fri-contract') {
-        setContractId(returnedBookingId);
-        supabase.functions.invoke('contracts', {
-          body: {
-            action: 'mark-paid',
-            contractId: returnedBookingId,
-          }
-        }).catch((error) => {
-          console.error('Failed to mark FRI contract paid:', error);
+      setLoading(true);
+      const verifyPayment = returnedType === 'fri-contract'
+        ? supabase.functions.invoke('contracts', {
+            body: {
+              action: 'mark-paid',
+              contractId: returnedBookingId,
+            }
+          })
+        : supabase.functions.invoke('square-booking', {
+            body: {
+              action: 'verify-booking-payment',
+              bookingId: returnedBookingId,
+            }
+          });
+
+      verifyPayment.then(({ error }) => {
+        if (error) throw error;
+        trackEvent('booking_payment_completed', {
+          booking_id: returnedBookingId,
+          booking_type: returnedType,
         });
-      } else {
-        setBookingId(returnedBookingId);
-      }
-      setStep('confirmation');
-      toast.success('Payment completed successfully.');
-      const cleanUrl = window.location.pathname + window.location.hash;
-      window.history.replaceState({}, '', cleanUrl);
+        if (returnedType === 'fri-contract') {
+          setContractId(returnedBookingId);
+        } else {
+          setBookingId(returnedBookingId);
+        }
+        setStep('confirmation');
+        toast.success('Payment completed successfully.');
+        const cleanUrl = window.location.pathname + window.location.hash;
+        window.history.replaceState({}, '', cleanUrl);
+      }).catch((error) => {
+        console.error('Failed to verify Square payment:', error);
+        toast.error('Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.');
+      }).finally(() => {
+        setLoading(false);
+      });
       return;
     }
 
@@ -491,7 +506,6 @@ export const BookingCalendar = () => {
           body: {
             action: 'create-payment-link',
             contractId: data.contract.id,
-            amount: offer.priceCents,
             customerEmail: customerInfo.email,
             customerName: customerInfo.name,
             redirectPath: `/?square_status=success&contract_status=success&contract_id=${data.contract.id}&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}#booking`,

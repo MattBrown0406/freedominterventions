@@ -75,11 +75,6 @@ export default function ContractsManager() {
   }, [contracts, query]);
 
   const handleOpenPdf = async (row: ContractRow) => {
-    if (row.contract_pdf_url) {
-      window.open(row.contract_pdf_url, "_blank", "noopener,noreferrer");
-      return;
-    }
-
     if (!row.contract_pdf_path) {
       toast({ title: "No PDF stored", description: "This contract does not have a stored PDF yet.", variant: "destructive" });
       return;

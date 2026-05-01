@@ -114,20 +114,27 @@ const StartContract = () => {
     const returnedContractId = params.get("contract_id");
 
     if (contractStatus === "success") {
-      setPaymentComplete(true);
-
       if (returnedContractId) {
         supabase.functions.invoke("contracts", {
           body: {
             action: "mark-paid",
             contractId: returnedContractId,
           },
+        }).then(({ error }) => {
+          if (error) throw error;
+          setPaymentComplete(true);
+          window.history.replaceState({}, "", window.location.pathname);
         }).catch((error) => {
-          console.error("Failed to mark contract paid:", error);
+          console.error("Failed to verify contract payment:", error);
+          toast({
+            title: "Payment verification pending",
+            description: "Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.",
+            variant: "destructive",
+          });
         });
       }
     }
-  }, []);
+  }, [toast]);
 
   const onSubmit = async (data: ContractFormData) => {
     setIsLaunching(true);
@@ -206,7 +213,6 @@ const StartContract = () => {
       const checkoutResponse = await supabase.functions.invoke("contracts", {
         body: {
           action: "create-payment-link",
-          amount: finalAmountCents,
           customerEmail: data.clientEmail.trim().toLowerCase(),
           customerName: data.clientName.trim(),
           contractId: savedContractId,

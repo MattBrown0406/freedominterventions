@@ -850,8 +850,10 @@ export type Database = {
           duration_minutes: number
           id: string
           notes: string | null
+          payment_link_id: string | null
           payment_id: string | null
           reminder_sent: boolean
+          square_order_id: string | null
           status: string
           updated_at: string
         }
@@ -872,8 +874,10 @@ export type Database = {
           duration_minutes?: number
           id?: string
           notes?: string | null
+          payment_link_id?: string | null
           payment_id?: string | null
           reminder_sent?: boolean
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -894,8 +898,10 @@ export type Database = {
           duration_minutes?: number
           id?: string
           notes?: string | null
+          payment_link_id?: string | null
           payment_id?: string | null
           reminder_sent?: boolean
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -1053,6 +1059,7 @@ export type Database = {
           payment_link_id: string | null
           signed_at: string
           signer_name: string
+          square_order_id: string | null
           status: string
           updated_at: string
         }
@@ -1075,6 +1082,7 @@ export type Database = {
           payment_link_id?: string | null
           signed_at?: string
           signer_name: string
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -1097,6 +1105,7 @@ export type Database = {
           payment_link_id?: string | null
           signed_at?: string
           signer_name?: string
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
