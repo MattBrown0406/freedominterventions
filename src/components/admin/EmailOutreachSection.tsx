@@ -54,7 +54,7 @@ export default function EmailOutreachSection() {
 
   const loadCodes = useCallback(async () => {
     setLoadingCodes(true);
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from("discount_codes")
       .select("id, code, base_amount_cents, amount_cents, issued_to_name, issued_to_email, expires_at, used_at, used_by_email, created_at")
       .order("created_at", { ascending: false })
@@ -70,7 +70,7 @@ export default function EmailOutreachSection() {
   }, [toast]);
 
   const previewCount = useCallback(async () => {
-    let query: any = (supabase as any)
+    let query = supabase
       .from("crm_contacts")
       .select("id", { count: "exact", head: true })
       .eq("unsubscribed", false);
