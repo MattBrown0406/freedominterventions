@@ -8,11 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Image, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
-import BlogImageManager from "@/components/admin/BlogImageManager";
-import BlogEditorialManager from "@/components/admin/BlogEditorialManager";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
 import TestimonialManager from "@/components/admin/TestimonialManager";
 import AvailabilityManager from "@/components/admin/AvailabilityManager";
@@ -326,14 +324,6 @@ const AdminDashboard = () => {
               <MessageSquare className="w-4 h-4" />
               Testimonials
             </TabsTrigger>
-            <TabsTrigger value="blog-images" className="gap-2">
-              <Image className="w-4 h-4" />
-              Blog Images
-            </TabsTrigger>
-            <TabsTrigger value="blog-editorial" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Blog Editorial
-            </TabsTrigger>
             <TabsTrigger value="abandoned-carts" className="gap-2">
               <ShoppingCart className="w-4 h-4" />
               Abandoned Carts
@@ -520,14 +510,6 @@ const AdminDashboard = () => {
 
             <TabsContent value="availability">
               <AvailabilityManager />
-            </TabsContent>
-
-            <TabsContent value="blog-images">
-              <BlogImageManager />
-            </TabsContent>
-
-            <TabsContent value="blog-editorial">
-              <BlogEditorialManager />
             </TabsContent>
 
             <TabsContent value="testimonials">
