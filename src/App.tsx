@@ -185,6 +185,7 @@ const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const StartContract = lazy(() => import("./pages/StartContract"));
 const StartHere = lazy(() => import("./pages/StartHere"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-background flex items-center justify-center px-6">
@@ -237,6 +238,7 @@ const App = () => (
           <Route path="/start-here" element={<StartHere />} />
           <Route path="/start-contract" element={<StartContract />} />
           <Route path="/intervention-agreement" element={<StartContract />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/hipaa-compliance" element={<HipaaCompliance />} />

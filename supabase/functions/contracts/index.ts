@@ -39,17 +39,49 @@ function normalizeDiscountCode(code: unknown): string {
   return typeof code === "string" ? code.trim().toUpperCase() : "";
 }
 
-function resolveContractAmount(contractType: string, discountCode: unknown) {
+async function resolveContractAmount(supabase: ReturnType<typeof createClient>, contractType: string, discountCode: unknown, clientEmail?: string) {
   if (contractType === "readiness-intensive") {
-    return { amountCents: READINESS_INTENSIVE_FEE_CENTS, discountCode: null, discountCents: 0 };
+    return {
+      amountCents: READINESS_INTENSIVE_FEE_CENTS,
+      baseAmountCents: READINESS_INTENSIVE_FEE_CENTS,
+      discountCode: null,
+      discountCents: 0,
+      discountCodeId: null,
+    };
   }
 
   const normalizedDiscountCode = normalizeDiscountCode(discountCode);
+  if (normalizedDiscountCode) {
+    const { data: dynamicCode } = await supabase
+      .from("discount_codes")
+      .select("id, code, base_amount_cents, amount_cents, issued_to_email, expires_at, used_at")
+      .eq("code", normalizedDiscountCode)
+      .maybeSingle();
+
+    if (dynamicCode && !dynamicCode.used_at) {
+      const isExpired = dynamicCode.expires_at && new Date(dynamicCode.expires_at).getTime() < Date.now();
+      const emailMatches = !dynamicCode.issued_to_email || !clientEmail || dynamicCode.issued_to_email.toLowerCase().trim() === clientEmail.toLowerCase().trim();
+      if (!isExpired && emailMatches) {
+        const baseAmountCents = typeof dynamicCode.base_amount_cents === "number" ? dynamicCode.base_amount_cents : STANDARD_INTERVENTION_FEE_CENTS;
+        const discountCents = Math.min(dynamicCode.amount_cents, baseAmountCents - 1);
+        return {
+          amountCents: Math.max(baseAmountCents - discountCents, 0),
+          baseAmountCents,
+          discountCode: dynamicCode.code,
+          discountCents,
+          discountCodeId: dynamicCode.id,
+        };
+      }
+    }
+  }
+
   const discountCents = INTERVENTION_DISCOUNT_CODES[normalizedDiscountCode] ?? 0;
   return {
     amountCents: Math.max(STANDARD_INTERVENTION_FEE_CENTS - discountCents, 0),
+    baseAmountCents: STANDARD_INTERVENTION_FEE_CENTS,
     discountCode: discountCents > 0 ? normalizedDiscountCode : null,
     discountCents,
+    discountCodeId: null,
   };
 }
 
@@ -123,7 +155,10 @@ serve(async (req) => {
         if (!validateString(signerName, 100)) throw new Error("Signer name is required");
         if (!validateString(agreementText, 30000)) throw new Error("Agreement text is required");
         if (!validateString(agreementVersion, 50)) throw new Error("Agreement version is required");
-        const resolvedAmount = resolveContractAmount(contractType, discountCode);
+        const resolvedAmount = await resolveContractAmount(supabase, contractType, discountCode, clientEmail);
+        if (contractType === "intervention" && !agreementText.includes(`Base Intervention Fee: ${formatUsdFromCents(resolvedAmount.baseAmountCents)}`)) {
+          throw new Error("Agreement base amount does not match approved contract amount");
+        }
         if (contractType === "intervention" && !agreementText.includes(`Final Intervention Fee Due: ${formatUsdFromCents(resolvedAmount.amountCents)}`)) {
           throw new Error("Agreement amount does not match approved contract amount");
         }
@@ -170,6 +205,25 @@ serve(async (req) => {
 
         if (error) throw error;
 
+        if (resolvedAmount.discountCodeId) {
+          const { error: claimError } = await supabase
+            .from("discount_codes")
+            .update({
+              used_at: new Date().toISOString(),
+              used_by_email: clientEmail.toLowerCase().trim(),
+              used_by_contract_id: data.id,
+            })
+            .eq("id", resolvedAmount.discountCodeId)
+            .is("used_at", null)
+            .select("id")
+            .single();
+          if (claimError) {
+            await supabase.from("contracts").delete().eq("id", data.id);
+            if (resolvedPdfPath) await supabase.storage.from("contracts").remove([resolvedPdfPath]);
+            throw new Error("This discount code was already used. Please refresh and try again.");
+          }
+        }
+
         try {
           await supabase.functions.invoke("send-contract-notification", {
             body: { contractId: data.id, event: "signed" },
@@ -179,6 +233,22 @@ serve(async (req) => {
         }
 
         return new Response(JSON.stringify({ success: true, contract: data }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      case "validate-discount-code": {
+        const { contractType = "intervention", discountCode, clientEmail } = params;
+        if (!["intervention", "readiness-intensive"].includes(contractType)) throw new Error("Valid contract type is required");
+        if (clientEmail && !validateEmail(clientEmail)) throw new Error("Invalid email address");
+        const resolvedAmount = await resolveContractAmount(supabase, contractType, discountCode, clientEmail);
+        return new Response(JSON.stringify({
+          success: true,
+          baseAmountCents: resolvedAmount.baseAmountCents,
+          discountCode: resolvedAmount.discountCode,
+          discountCents: resolvedAmount.discountCents,
+          finalAmountCents: resolvedAmount.amountCents,
+        }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

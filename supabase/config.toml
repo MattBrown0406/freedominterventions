@@ -6,6 +6,18 @@ verify_jwt = false
 [functions.contracts]
 verify_jwt = false
 
+[functions.send-prospect-contract]
+verify_jwt = false
+
+[functions.send-campaign]
+verify_jwt = false
+
+[functions.crm-unsubscribe]
+verify_jwt = false
+
+[functions.square-webhook]
+verify_jwt = false
+
 [functions.send-booking-confirmation]
 verify_jwt = false
 
