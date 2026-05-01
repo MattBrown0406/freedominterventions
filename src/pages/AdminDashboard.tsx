@@ -522,14 +522,6 @@ const AdminDashboard = () => {
               <AvailabilityManager />
             </TabsContent>
 
-            <TabsContent value="blog-images">
-              <BlogImageManager />
-            </TabsContent>
-
-            <TabsContent value="blog-editorial">
-              <BlogEditorialManager />
-            </TabsContent>
-
             <TabsContent value="testimonials">
               <TestimonialManager />
             </TabsContent>
