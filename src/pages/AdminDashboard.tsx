@@ -326,14 +326,6 @@ const AdminDashboard = () => {
               <MessageSquare className="w-4 h-4" />
               Testimonials
             </TabsTrigger>
-            <TabsTrigger value="blog-images" className="gap-2">
-              <Image className="w-4 h-4" />
-              Blog Images
-            </TabsTrigger>
-            <TabsTrigger value="blog-editorial" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Blog Editorial
-            </TabsTrigger>
             <TabsTrigger value="abandoned-carts" className="gap-2">
               <ShoppingCart className="w-4 h-4" />
               Abandoned Carts
