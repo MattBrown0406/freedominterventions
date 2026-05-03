@@ -13,6 +13,7 @@
   { "path": "/before-you-call", "priority": "0.8", "changefreq": "monthly" },
   { "path": "/testimonials", "priority": "0.7", "changefreq": "monthly" },
   { "path": "/contact", "priority": "0.8", "changefreq": "monthly" },
+  { "path": "/from-sober-helpline", "priority": "0.8", "changefreq": "monthly" },
   { "path": "/party-wreckers-podcast", "priority": "0.7", "changefreq": "weekly" },
   { "path": "/blog", "priority": "0.8", "changefreq": "weekly" },
   { "path": "/assessment", "priority": "0.6", "changefreq": "monthly" },

@@ -16,6 +16,7 @@ import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
 import Testimonials from "./pages/Testimonials";
 import Contact from "./pages/Contact";
+import FromSoberHelpline from "./pages/FromSoberHelpline";
 import PartyWreckersPodcast from "./pages/PartyWreckersPodcast";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -217,6 +218,7 @@ const App = () => (
           <Route path="/aftercare-guidance" element={<AftercareGuidance />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/from-sober-helpline" element={<FromSoberHelpline />} />
           <Route path="/party-wreckers-podcast" element={<PartyWreckersPodcast />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />

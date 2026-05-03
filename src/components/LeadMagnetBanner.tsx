@@ -1,5 +1,7 @@
 import { ClipboardList, ArrowRight, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics";
 
 const LeadMagnetBanner = () => {
   return (
@@ -28,7 +30,7 @@ const LeadMagnetBanner = () => {
                 </h2>
 
                 <p className="text-muted-foreground mb-6">
-                  Answer 6 questions and get a personalized recommendation for your family's next step — free, no commitment, no sales pitch.
+                  Complete the family assessment so Matt has the clearest possible picture before a consultation, coaching session, or intervention planning call.
                 </p>
 
                 <ul className="space-y-3 text-sm">
@@ -42,7 +44,7 @@ const LeadMagnetBanner = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-foreground">Get a clear next step — intervention, support, or resources</span>
+                    <span className="text-foreground">Help Matt understand urgency, treatment history, leverage, and family alignment</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
@@ -58,23 +60,22 @@ const LeadMagnetBanner = () => {
                   Free Family Situation Assessment
                 </h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Personalized guidance based on your specific situation. No account needed.
+                  A high-signal intake for families who may need professional intervention planning.
                 </p>
 
-                <a
-                  href="https://soberhelpline.com/family-situation-assessment"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/assessment"
                   className="w-full"
+                  onClick={() => trackEvent("assessment_click", { source: "lead_magnet_banner" })}
                 >
                   <Button size="lg" className="w-full gap-2">
-                    Schedule Free Consultation
+                    Complete the Assessment
                     <ArrowRight className="w-4 h-4" />
                   </Button>
-                </a>
+                </Link>
 
                 <p className="text-xs text-muted-foreground mt-4">
-                  Free · 2 minutes · No account required
+                  Confidential intake · Helps prioritize the right next step
                 </p>
               </div>
 

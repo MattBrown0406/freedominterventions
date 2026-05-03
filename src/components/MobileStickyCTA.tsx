@@ -1,6 +1,7 @@
 import { Calendar, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import { trackEvent } from "@/lib/analytics";
 
 const MobileStickyCTA = () => {
   return (
@@ -13,11 +14,12 @@ const MobileStickyCTA = () => {
           </span>
         </TrackedPhoneLink>
         <Link
-          to="/start-here"
+          to="/?type=consultation#booking"
+          onClick={() => trackEvent("mobile_free_consult_click", { location: "mobile_sticky_cta" })}
           className="flex h-12 items-center justify-center gap-2 rounded-md border border-primary/30 bg-background text-sm font-semibold text-primary"
         >
           <Calendar className="h-4 w-4" />
-          Start Here
+          Free Consult
         </Link>
       </div>
     </div>
