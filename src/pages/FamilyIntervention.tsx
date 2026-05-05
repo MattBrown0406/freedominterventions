@@ -213,6 +213,7 @@ const breadcrumbItems = [
 
 const jumpLinks = [
   { label: "Overview", href: "#overview" },
+  { label: "Engagement", href: "#full-engagement" },
   { label: "How It Works", href: "#process" },
   { label: "What to Expect", href: "#what-to-expect" },
   { label: "FAQ", href: "#faq" },
@@ -304,6 +305,65 @@ const FamilyIntervention = () => {
                 {link.label}
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24 bg-background" id="full-engagement">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-5">
+                <ClipboardList className="h-4 w-4" aria-hidden="true" />
+                Full intervention engagement
+              </div>
+              <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-5">
+                When the free consultation points to intervention, the work becomes practical fast.
+              </h2>
+              <div className="space-y-4 text-muted-foreground leading-relaxed">
+                <p>
+                  A full engagement is for families where the loved one is refusing help, the family is divided, safety or relapse risk is rising, and someone needs to coordinate the moving parts.
+                </p>
+                <p>
+                  Matt helps the family line up treatment, align decision makers, prepare boundaries, plan logistics, facilitate the intervention, and support follow-through after the conversation ends.
+                </p>
+                <p>
+                  If the situation is not intervention-level, Matt will tell you that. If it is, the family should understand the process before the next crisis takes away options.
+                </p>
+              </div>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                  <Link to="/after-consultation">
+                    What Happens After the Consult
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/intervention-readiness">
+                    Check Intervention Readiness
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-border bg-card p-6 md:p-8 shadow-sm">
+              <h3 className="text-xl font-bold text-foreground mb-5">The paid intervention path is built around four outcomes</h3>
+              <div className="grid gap-4">
+                {[
+                  ["A unified family", "The family knows what it is asking for, what it will stop doing, and who is responsible for each next step."],
+                  ["A real treatment plan", "The recommendation is matched to clinical need, budget, geography, insurance reality, and urgency."],
+                  ["A prepared intervention", "The conversation is structured before it happens, including resistance, refusal, transport, and safety planning."],
+                  ["Follow-through after the yes or no", "The family does not collapse back into rescuing, arguing, or negotiating once the intervention is over."],
+                ].map(([title, body]) => (
+                  <div key={title} className="rounded-md border border-border bg-background p-4">
+                    <h4 className="font-semibold text-foreground mb-1">{title}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 text-sm text-muted-foreground leading-relaxed">
+                Professional interventions are typically discussed after the consultation because travel, urgency, treatment options, and family complexity affect the final plan.
+              </p>
+            </div>
           </div>
         </div>
       </section>

@@ -85,6 +85,9 @@ const BeforeYouCall = () => {
                 <p>
                   Matt will ask questions about the situation, give you a straight read on what he is hearing, and tell you what makes sense as a next step, whether that is intervention or something else. It usually takes 20 to 30 minutes, and you should leave with more clarity than you had when you started.
                 </p>
+                <p>
+                  If you want to understand the paths that can come after that call, read <Link to="/after-consultation" className="text-primary underline underline-offset-4">What Happens After the Free Consultation</Link>.
+                </p>
               </div>
             </section>
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format, isBefore, parseISO } from "date-fns";
-import { CalendarClock, Columns3, Mail, Phone, RefreshCw } from "lucide-react";
+import { CalendarClock, Columns3, Mail, MailPlus, Phone, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,8 @@ const pipelineStages = [
   { id: "lost", label: "Lost", nextAction: "Archive or add nurture note" },
 ];
 
+const SITE_URL = "https://freedominterventions.com";
+
 const revenueStageIds = new Set(["consultation_booked", "readiness_intensive", "contract_sent", "contract_signed", "paid"]);
 
 const sourceTitle = (source: string) => {
@@ -74,6 +76,17 @@ const getLeadName = (lead: RevenueLead) => {
   return [lead.first_name, lead.last_name].filter(Boolean).join(" ") || lead.email;
 };
 
+const escapeHtml = (value: string) => value
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#039;");
+
+const getFirstName = (lead: RevenueLead) => {
+  return lead.first_name || getLeadName(lead).trim().split(/\s+/)[0] || "there";
+};
+
 const priorityClass = (score: number) => {
   if (score >= 80) return "bg-red-600 text-white hover:bg-red-600";
   if (score >= 60) return "bg-amber-500 text-white hover:bg-amber-500";
@@ -93,10 +106,239 @@ const fromDatetimeLocal = (value: string) => {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 };
 
+type FollowupInsert = {
+  lead_type: "assessment" | "contact_message" | "consultation" | "paid_booking" | "contract" | "abandoned_cart";
+  lead_id: string;
+  contact_email: string;
+  contact_name: string;
+  contact_phone: string | null;
+  recipient_type?: "lead" | "owner";
+  followup_reason: string;
+  priority: "normal" | "high" | "urgent";
+  sequence_step: number;
+  subject: string;
+  body_html: string;
+  source_attribution: Json;
+  due_at: string;
+};
+
+const dueIn = (minutes: number) => new Date(Date.now() + minutes * 60 * 1000).toISOString();
+
+const leadTypeForStatus = (status: string): FollowupInsert["lead_type"] => {
+  if (status.includes("contract")) return "contract";
+  if (status === "paid") return "paid_booking";
+  if (status === "consultation_booked") return "consultation";
+  return "contact_message";
+};
+
+const priorityForLead = (lead: RevenueLead): FollowupInsert["priority"] => {
+  if (lead.lead_score >= 80) return "urgent";
+  if (lead.lead_score >= 60) return "high";
+  return "normal";
+};
+
+const buildStageFollowups = (lead: RevenueLead, status: string): FollowupInsert[] => {
+  const firstName = escapeHtml(getFirstName(lead));
+  const contactName = getLeadName(lead);
+  const priority = priorityForLead(lead);
+  const leadType = leadTypeForStatus(status);
+  const consultUrl = `${SITE_URL}/?type=consultation&email=${encodeURIComponent(lead.email)}${lead.phone ? `&phone=${encodeURIComponent(lead.phone)}` : ""}#booking`;
+  const assessmentUrl = `${SITE_URL}/assessment?email=${encodeURIComponent(lead.email)}`;
+  const readinessUrl = `${SITE_URL}/intervention-readiness?source=pipeline_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=${status}`;
+  const afterConsultUrl = `${SITE_URL}/after-consultation?source=pipeline_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=${status}`;
+  const contractUrl = `${SITE_URL}/start-contract`;
+
+  const base = {
+    lead_type: leadType,
+    lead_id: lead.id,
+    contact_email: lead.email,
+    contact_name: contactName,
+    contact_phone: lead.phone,
+    priority,
+    source_attribution: lead.source_attribution,
+  };
+
+  switch (status) {
+    case "contacted":
+      return [
+        {
+          ...base,
+          sequence_step: 1,
+          followup_reason: "pipeline_contacted_consult_invite",
+          subject: `${firstName}, the next step is a clear plan`,
+          body_html: `
+            <p>Hi ${firstName},</p>
+            <p>I wanted to follow up after your family reached out. The first goal is not to force a decision. It is to understand whether this calls for consultation, family readiness work, or full intervention planning.</p>
+            <p>If you have not booked a time yet, start here:</p>
+            <p><a href="${consultUrl}">Book a free consultation</a></p>
+            <p>If things are moving quickly, call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+            <p>- Matt</p>
+          `,
+          due_at: dueIn(120),
+        },
+        {
+          ...base,
+          sequence_step: 2,
+          followup_reason: "pipeline_contacted_readiness_prompt",
+          subject: "If the family is divided, do not wait for everyone to agree",
+          body_html: `
+            <p>Hi ${firstName},</p>
+            <p>Families often wait until everyone agrees, but addiction uses family division as cover. If refusal, relapse, or safety risk is already present, it may be time to look at intervention readiness.</p>
+            <p><a href="${readinessUrl}">Check intervention readiness</a></p>
+            <p><a href="${consultUrl}">Or book the free consultation</a></p>
+            <p>- Matt</p>
+          `,
+          due_at: dueIn(48 * 60),
+        },
+      ];
+    case "consultation_booked":
+      return [
+        {
+          ...base,
+          lead_type: "consultation",
+          sequence_step: 1,
+          followup_reason: "pipeline_consultation_assessment_prompt",
+          subject: `${firstName}, one thing before our consultation`,
+          body_html: `
+            <p>Hi ${firstName},</p>
+            <p>Before our consultation, please complete the family assessment if you have not already. It helps me understand urgency, safety, treatment history, leverage, and where the family may need to get aligned.</p>
+            <p><a href="${assessmentUrl}">Complete the family assessment</a></p>
+            <p>If things escalate before our call, call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+            <p>- Matt</p>
+          `,
+          due_at: dueIn(15),
+        },
+        {
+          ...base,
+          lead_type: "consultation",
+          recipient_type: "owner",
+          sequence_step: 2,
+          followup_reason: "pipeline_consultation_owner_prep",
+          subject: `Prep consultation: ${contactName}`,
+          body_html: `
+            <p>${escapeHtml(contactName)} has been moved to consultation booked.</p>
+            <p>Prep points: review source, assessment status, phone number, prior treatment, family readiness, and whether this looks like coaching, intensive, or intervention work.</p>
+            <p>Lead source: ${escapeHtml(sourceTitle(getSource(lead)))}</p>
+          `,
+          due_at: dueIn(5),
+        },
+      ];
+    case "readiness_intensive":
+      return [
+        {
+          ...base,
+          sequence_step: 1,
+          followup_reason: "pipeline_readiness_intensive_prep",
+          subject: `${firstName}, what to gather before the Family Readiness Intensive`,
+          body_html: `
+            <p>Hi ${firstName},</p>
+            <p>Before the intensive, gather the facts that usually matter most: recent incidents, treatment history, safety concerns, who has been enabling what, and who needs to participate in the family plan.</p>
+            <p>This page explains what happens after the first consultation and how the readiness path fits:</p>
+            <p><a href="${afterConsultUrl}">What happens after the consultation</a></p>
+            <p>- Matt</p>
+          `,
+          due_at: dueIn(30),
+        },
+        {
+          ...base,
+          recipient_type: "owner",
+          sequence_step: 2,
+          followup_reason: "pipeline_readiness_owner_prep",
+          subject: `Readiness intensive prep: ${contactName}`,
+          body_html: `
+            <p>${escapeHtml(contactName)} is in the readiness intensive stage.</p>
+            <p>Prep the family system questions: decision makers, leverage, safety, treatment fit, intervention readiness, and likely resistance points.</p>
+          `,
+          due_at: dueIn(10),
+        },
+      ];
+    case "contract_sent":
+      return [
+        {
+          ...base,
+          lead_type: "contract",
+          sequence_step: 1,
+          followup_reason: "pipeline_contract_sent_lead",
+          subject: `${firstName}, next step on the intervention agreement`,
+          body_html: `
+            <p>Hi ${firstName},</p>
+            <p>I wanted to follow up on the intervention agreement. At this stage, the goal is to move from uncertainty into a clear plan: family preparation, treatment coordination, the intervention process, and follow-through.</p>
+            <p>If you have questions before signing, reply here or call me directly.</p>
+            <p><a href="${contractUrl}">Review the intervention agreement</a></p>
+            <p>- Matt</p>
+          `,
+          due_at: dueIn(24 * 60),
+        },
+        {
+          ...base,
+          lead_type: "contract",
+          recipient_type: "owner",
+          sequence_step: 2,
+          followup_reason: "pipeline_contract_sent_owner",
+          subject: `Contract follow-up due: ${contactName}`,
+          body_html: `
+            <p>The intervention agreement is marked sent for ${escapeHtml(contactName)}.</p>
+            <p>If they have not signed within 24 hours, call before the family loses momentum.</p>
+          `,
+          due_at: dueIn(26 * 60),
+        },
+      ];
+    case "contract_signed":
+      return [
+        {
+          ...base,
+          lead_type: "contract",
+          recipient_type: "owner",
+          sequence_step: 1,
+          followup_reason: "pipeline_contract_signed_owner",
+          subject: `Signed agreement: collect payment and schedule ${contactName}`,
+          body_html: `
+            <p>${escapeHtml(contactName)} is marked contract signed.</p>
+            <p>Next actions: confirm payment, schedule family preparation, gather treatment options, and lock intervention logistics.</p>
+          `,
+          due_at: dueIn(5),
+        },
+        {
+          ...base,
+          lead_type: "contract",
+          sequence_step: 2,
+          followup_reason: "pipeline_contract_signed_lead",
+          subject: `${firstName}, next we organize the family plan`,
+          body_html: `
+            <p>Hi ${firstName},</p>
+            <p>Now that the agreement is in motion, the next step is getting the family organized. We will clarify decision makers, treatment options, boundaries, logistics, and how we handle resistance.</p>
+            <p>I will help you move this from fear and confusion into a practical plan.</p>
+            <p>- Matt</p>
+          `,
+          due_at: dueIn(30),
+        },
+      ];
+    case "paid":
+      return [
+        {
+          ...base,
+          lead_type: "paid_booking",
+          recipient_type: "owner",
+          sequence_step: 1,
+          followup_reason: "pipeline_paid_owner_onboarding",
+          subject: `Paid case onboarding: ${contactName}`,
+          body_html: `
+            <p>${escapeHtml(contactName)} is marked paid.</p>
+            <p>Start onboarding: schedule prep session, collect family participant list, verify treatment path, and document immediate safety concerns.</p>
+          `,
+          due_at: dueIn(5),
+        },
+      ];
+    default:
+      return [];
+  }
+};
+
 const RevenuePipelineManager = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [queuingId, setQueuingId] = useState<string | null>(null);
   const [leads, setLeads] = useState<RevenueLead[]>([]);
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [actionDrafts, setActionDrafts] = useState<Record<string, string>>({});
@@ -163,6 +405,63 @@ const RevenuePipelineManager = () => {
       next_action: nextAction,
       last_engagement_at: new Date().toISOString(),
     }, `Moved to ${stage?.label || status}`);
+  };
+
+  const queueStageFollowups = async (lead: RevenueLead) => {
+    const rows = buildStageFollowups(lead, lead.pipeline_status);
+    if (!rows.length) {
+      toast({
+        title: "No stage sequence",
+        description: "This stage does not have a follow-up sequence attached.",
+      });
+      return;
+    }
+
+    setQueuingId(lead.id);
+    const reasons = rows.map((row) => row.followup_reason);
+    const { data: existing, error: existingError } = await supabase
+      .from("freedom_followup_queue")
+      .select("followup_reason")
+      .eq("contact_email", lead.email)
+      .in("followup_reason", reasons);
+
+    if (existingError) {
+      toast({
+        title: "Could not check existing follow-ups",
+        description: "Try refreshing the pipeline before queueing again.",
+        variant: "destructive",
+      });
+      setQueuingId(null);
+      return;
+    }
+
+    const existingReasons = new Set((existing ?? []).map((row) => row.followup_reason));
+    const rowsToInsert = rows.filter((row) => !existingReasons.has(row.followup_reason));
+
+    if (!rowsToInsert.length) {
+      toast({
+        title: "Already queued",
+        description: "This lead already has the follow-ups for the current stage.",
+      });
+      setQueuingId(null);
+      return;
+    }
+
+    const { error } = await supabase.from("freedom_followup_queue").insert(rowsToInsert);
+
+    if (error) {
+      toast({
+        title: "Could not queue follow-ups",
+        description: "The follow-up table may need the latest Lovable migration or admin policy.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Stage follow-ups queued",
+        description: `${rowsToInsert.length} follow-up${rowsToInsert.length === 1 ? "" : "s"} added for ${getLeadName(lead)}.`,
+      });
+    }
+    setQueuingId(null);
   };
 
   const saveAction = async (lead: RevenueLead) => {
@@ -324,6 +623,16 @@ const RevenuePipelineManager = () => {
                           </Button>
                           <Button size="sm" onClick={() => saveNotes(lead)} disabled={savingId === lead.id}>
                             Save Notes
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => queueStageFollowups(lead)}
+                            disabled={queuingId === lead.id}
+                            className="gap-2"
+                          >
+                            <MailPlus className="h-4 w-4" />
+                            Queue Stage Emails
                           </Button>
                         </div>
 

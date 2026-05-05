@@ -42,6 +42,7 @@ import WhatIfTheyRefuse from "./pages/WhatIfTheyRefuse";
 import WhatMakesMattDifferent from "./pages/WhatMakesMattDifferent";
 import InterventionCost from "./pages/InterventionCost";
 import BeforeYouCall from "./pages/BeforeYouCall";
+import AfterConsultation from "./pages/AfterConsultation";
 import MobileStickyCTA from "./components/MobileStickyCTA";
 
 const Alabama = lazy(() => import("./pages/Alabama"));
@@ -241,6 +242,7 @@ const App = () => (
           <Route path="/what-makes-matt-different" element={<WhatMakesMattDifferent />} />
           <Route path="/intervention-cost" element={<InterventionCost />} />
           <Route path="/before-you-call" element={<BeforeYouCall />} />
+          <Route path="/after-consultation" element={<AfterConsultation />} />
           <Route path="/start-here" element={<StartHere />} />
           <Route path="/start-contract" element={<StartContract />} />
           <Route path="/intervention-agreement" element={<StartContract />} />
