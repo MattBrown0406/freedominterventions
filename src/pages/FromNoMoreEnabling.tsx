@@ -6,6 +6,8 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import ClosePathProof from "@/components/ClosePathProof";
+import RevenuePathTriage from "@/components/RevenuePathTriage";
 import { trackEvent } from "@/lib/analytics";
 
 const nextSteps = [
@@ -154,6 +156,9 @@ const FromNoMoreEnabling = () => {
             </div>
           </div>
         </section>
+
+        <RevenuePathTriage source="no_more_enabling_bridge" className="bg-muted/20 border-y border-border" compact />
+        <ClosePathProof source="no_more_enabling_bridge" />
       </main>
 
       <Footer />

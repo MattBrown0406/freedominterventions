@@ -6,6 +6,8 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import ClosePathProof from "@/components/ClosePathProof";
+import RevenuePathTriage from "@/components/RevenuePathTriage";
 import { trackEvent } from "@/lib/analytics";
 
 const paths = [
@@ -166,6 +168,9 @@ const FromSoberHelpline = () => {
             </div>
           </div>
         </section>
+
+        <RevenuePathTriage source="sober_helpline_bridge" className="bg-muted/20 border-y border-border" compact />
+        <ClosePathProof source="sober_helpline_bridge" />
       </main>
 
       <Footer />

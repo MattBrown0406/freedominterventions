@@ -15,6 +15,8 @@ import WorkWithMatt from "@/components/WorkWithMatt";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import ClosePathProof from "@/components/ClosePathProof";
+import RevenuePathTriage from "@/components/RevenuePathTriage";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, AggregateRatingSchema } from "@/components/StructuredData";
 import LeadMagnetPopup from "@/components/LeadMagnetPopup";
@@ -156,6 +158,8 @@ const Index = () => {
         <ToolkitBanner />
         <About />
         <WorkWithMatt />
+        <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
+        <ClosePathProof source="homepage" />
         <BookingCalendar />
         <section className="py-16 md:py-24 bg-muted/20">
           <div className="container px-6">

@@ -6,6 +6,8 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import ClosePathProof from "@/components/ClosePathProof";
+import RevenuePathTriage from "@/components/RevenuePathTriage";
 import { trackEvent } from "@/lib/analytics";
 
 const readinessSignals = [
@@ -152,6 +154,9 @@ const InterventionReadiness = () => {
             </div>
           </div>
         </section>
+
+        <RevenuePathTriage source="intervention_readiness" compact />
+        <ClosePathProof source="intervention_readiness" className="bg-muted/20 border-y border-border" />
 
         <section className="py-16 md:py-24">
           <div className="container px-6 max-w-3xl mx-auto text-center">

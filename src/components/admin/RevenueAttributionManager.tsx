@@ -114,6 +114,11 @@ const formatUsd = (cents: number) => {
   }).format(cents / 100);
 };
 
+const formatPercent = (numerator: number, denominator: number) => {
+  if (!denominator) return "0%";
+  return `${Math.round((numerator / denominator) * 100)}%`;
+};
+
 const sourceTitle = (source: string) => {
   const labels: Record<string, string> = {
     sober_helpline: "Sober Helpline",
@@ -351,6 +356,9 @@ const RevenueAttributionManager = () => {
                         <h3 className="font-semibold capitalize">{sourceTitle(row.source)}</h3>
                         <p className="text-sm text-muted-foreground">
                           {row.contacts} leads · {row.calls} calls · {row.assessments} assessments · {row.consultations} consults
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Consult rate {formatPercent(row.consultations, row.contacts)} · paid close rate {formatPercent(row.paidBookings + row.contractsPaid, row.contacts)} · revenue per lead {formatUsd(row.contacts ? Math.round((row.bookedRevenueCents + row.contractRevenueCents) / row.contacts) : 0)}
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-2">

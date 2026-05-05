@@ -42,6 +42,7 @@ async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient
   const priority = leadScore >= 80 ? "urgent" : leadScore >= 60 ? "high" : "normal";
   const firstName = String(assessmentData.contact_name || "there").trim().split(/\s+/)[0] || "there";
   const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(assessmentData.contact_name || "")}&email=${encodeURIComponent(assessmentData.contact_email || "")}${assessmentData.contact_phone ? `&phone=${encodeURIComponent(assessmentData.contact_phone)}` : ""}#booking`;
+  const readinessUrl = `${SITE_URL}/intervention-readiness?source=assessment_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness`;
 
   await supabase
     .from("crm_contacts")
@@ -90,7 +91,8 @@ async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient
       subject: "The next step is getting the family aligned",
       body_html: `
         <p>Hi ${escapeHtml(firstName)},</p>
-        <p>After a family submits an assessment, the next useful move is usually getting clear on whether this calls for a free consultation, a crisis coaching session, or deeper intervention readiness work.</p>
+        <p>After a family submits an assessment, the next useful move is usually getting clear on whether this calls for a free consultation, a crisis coaching session, a Family Readiness Intensive, or a full intervention process.</p>
+        <p>On the first call, we are looking for the real category of the problem: safety risk, treatment refusal, family division, logistics, or a boundary pattern that keeps collapsing.</p>
         <p>If you have not already scheduled, this is the easiest starting point:</p>
         <p><a href="${consultUrl}">Choose a free consultation time</a></p>
         <p>- Matt</p>
@@ -111,12 +113,36 @@ async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient
       body_html: `
         <p>Hi ${escapeHtml(firstName)},</p>
         <p>I wanted to check back once more. These situations can change quickly, and families often wait longer than they should because nobody wants to overreact.</p>
-        <p>If your loved one is refusing help, the family is divided, or the risk is rising, call me at <a href="tel:5418386009">541-838-6009</a> or use this consultation link:</p>
+        <p>If your loved one is refusing help, the family is divided, or the risk is rising, waiting usually costs leverage. It becomes easier for everyone to drift back into rescuing, threatening, minimizing, or arguing.</p>
+        <p>You can review the intervention readiness path here:</p>
+        <p><a href="${readinessUrl}">Check intervention readiness</a></p>
+        <p>Or call me at <a href="tel:5418386009">541-838-6009</a> or use this consultation link:</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
         <p>- Matt</p>
       `,
       source_attribution: sourceAttribution,
       due_at: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "assessment",
+      lead_id: assessmentId,
+      contact_email: assessmentData.contact_email,
+      contact_name: assessmentData.contact_name,
+      contact_phone: assessmentData.contact_phone || null,
+      followup_reason: "assessment_readiness_close_path",
+      priority,
+      sequence_step: 4,
+      subject: "What happens if this really is intervention-level?",
+      body_html: `
+        <p>Hi ${escapeHtml(firstName)},</p>
+        <p>If this situation is intervention-level, the first step is not a surprise confrontation. It is preparation: family alignment, treatment options, boundaries, logistics, and a clear plan for resistance.</p>
+        <p>That is what the readiness path is designed to sort. If it is not the right level of help, I will tell you that. If it is, the family should know before the next crisis makes the decision for you.</p>
+        <p><a href="${readinessUrl}">Review the intervention readiness path</a></p>
+        <p><a href="${consultUrl}">Book a free consultation</a></p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(),
     },
   ];
 

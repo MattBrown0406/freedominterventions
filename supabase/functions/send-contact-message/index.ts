@@ -78,6 +78,7 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
   }, { onConflict: "email" });
 
   const consultUrl = `${SITE_URL}/?type=consultation#booking`;
+  const readinessUrl = `${SITE_URL}/intervention-readiness?source=contact_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness`;
   const rows = [
     {
       lead_type: "contact_message",
@@ -112,12 +113,35 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
       subject: "Still need help deciding the next step?",
       body_html: `
         <p>Hi ${escapeHtml(firstName(payload.name))},</p>
-        <p>I wanted to follow up in case the situation has changed since you reached out. A short consultation can help sort whether your family needs coaching, treatment planning, or intervention preparation.</p>
+        <p>I wanted to follow up in case the situation has changed since you reached out. A short consultation can help sort whether your family needs coaching, treatment planning, a Family Readiness Intensive, or intervention preparation.</p>
+        <p>If refusal, relapse, safety risk, or family division are the main issues, this page may help you decide whether the situation has moved past general support:</p>
+        <p><a href="${readinessUrl}">Check intervention readiness</a></p>
         <p><a href="${consultUrl}">Choose a free consultation time</a></p>
         <p>- Matt</p>
       `,
       source_attribution: sourceAttribution,
       due_at: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "contact_message",
+      lead_id: messageRow.id,
+      contact_email: payload.email.toLowerCase().trim(),
+      contact_name: payload.name,
+      contact_phone: payload.phone || null,
+      followup_reason: "contact_message_readiness_path",
+      priority: "normal",
+      sequence_step: 3,
+      subject: "If waiting is starting to feel dangerous",
+      body_html: `
+        <p>Hi ${escapeHtml(firstName(payload.name))},</p>
+        <p>Families often wait because they do not want to overreact. But if the same crisis keeps repeating, the practical question becomes: what has waiting already cost?</p>
+        <p>The first conversation is meant to clarify the right level of help, not pressure you into the wrong one.</p>
+        <p><a href="${consultUrl}">Book a free consultation</a></p>
+        <p>Or call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
     },
   ];
 

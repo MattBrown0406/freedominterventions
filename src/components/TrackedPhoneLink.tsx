@@ -6,13 +6,15 @@ interface TrackedPhoneLinkProps {
   children: ReactNode;
   className?: string;
   metadata?: Record<string, unknown>;
+  onClick?: () => void;
 }
 
 const TrackedPhoneLink = ({ 
   phoneNumber = '+15418386009', 
   children, 
   className,
-  metadata = {}
+  metadata = {},
+  onClick,
 }: TrackedPhoneLinkProps) => {
   const { trackCallClick } = useCallTracking();
 
@@ -21,6 +23,7 @@ const TrackedPhoneLink = ({
     const displayNumber = phoneNumber.replace(/\D/g, '').slice(-10);
     const formattedNumber = `${displayNumber.slice(0, 3)}-${displayNumber.slice(3, 6)}-${displayNumber.slice(6)}`;
     trackCallClick(formattedNumber, metadata);
+    onClick?.();
   };
 
   return (
