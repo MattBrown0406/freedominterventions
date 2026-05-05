@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck, BarChart3 } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
@@ -19,6 +19,7 @@ import AbandonedCartsManager from "@/components/admin/AbandonedCartsManager";
 import ContractsManager from "@/components/admin/ContractsManager";
 import EmailOutreachSection from "@/components/admin/EmailOutreachSection";
 import FreedomFollowupsManager from "@/components/admin/FreedomFollowupsManager";
+import RevenueAttributionManager from "@/components/admin/RevenueAttributionManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -353,6 +354,10 @@ const AdminDashboard = () => {
               <MailCheck className="w-4 h-4" />
               Follow-Ups
             </TabsTrigger>
+            <TabsTrigger value="attribution" className="gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Attribution
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="assessments">
@@ -494,7 +499,7 @@ const AdminDashboard = () => {
                       size="sm"
                       onClick={async () => {
                         toast({ title: "Generating PDF...", description: "Please wait while insurance card images are being fetched." });
-                        await generateAssessmentPdf(assessment as any);
+                        await generateAssessmentPdf(assessment as Parameters<typeof generateAssessmentPdf>[0]);
                       }}
                     >
                       <Download className="w-4 h-4 mr-1" /> Download PDF
@@ -544,6 +549,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="followups">
               <FreedomFollowupsManager />
+            </TabsContent>
+
+            <TabsContent value="attribution">
+              <RevenueAttributionManager />
             </TabsContent>
 
             <TabsContent value="abandoned-carts">
