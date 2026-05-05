@@ -27,6 +27,7 @@ export type Database = {
           id: string
           recovered_at: string | null
           recovery_email_sent_at: string | null
+          source_attribution: Json
           status: string
           updated_at: string
         }
@@ -42,6 +43,7 @@ export type Database = {
           id?: string
           recovered_at?: string | null
           recovery_email_sent_at?: string | null
+          source_attribution?: Json
           status?: string
           updated_at?: string
         }
@@ -57,6 +59,7 @@ export type Database = {
           id?: string
           recovered_at?: string | null
           recovery_email_sent_at?: string | null
+          source_attribution?: Json
           status?: string
           updated_at?: string
         }
@@ -302,6 +305,7 @@ export type Database = {
           severity_level: string | null
           sleep_problems: string | null
           sober_living_interest: string | null
+          source_attribution: Json
           special_considerations: string | null
           stable_living: string | null
           stage_of_change: string | null
@@ -511,6 +515,7 @@ export type Database = {
           severity_level?: string | null
           sleep_problems?: string | null
           sober_living_interest?: string | null
+          source_attribution?: Json
           special_considerations?: string | null
           stable_living?: string | null
           stage_of_change?: string | null
@@ -720,6 +725,7 @@ export type Database = {
           severity_level?: string | null
           sleep_problems?: string | null
           sober_living_interest?: string | null
+          source_attribution?: Json
           special_considerations?: string | null
           stable_living?: string | null
           stage_of_change?: string | null
@@ -852,6 +858,7 @@ export type Database = {
           notes: string | null
           payment_id: string | null
           reminder_sent: boolean
+          source_attribution: Json
           status: string
           updated_at: string
         }
@@ -874,6 +881,7 @@ export type Database = {
           notes?: string | null
           payment_id?: string | null
           reminder_sent?: boolean
+          source_attribution?: Json
           status?: string
           updated_at?: string
         }
@@ -896,6 +904,7 @@ export type Database = {
           notes?: string | null
           payment_id?: string | null
           reminder_sent?: boolean
+          source_attribution?: Json
           status?: string
           updated_at?: string
         }
@@ -950,6 +959,7 @@ export type Database = {
           screen_height: number | null
           screen_width: number | null
           session_id: string | null
+          source_attribution: Json
           user_agent: string | null
         }
         Insert: {
@@ -964,6 +974,7 @@ export type Database = {
           screen_height?: number | null
           screen_width?: number | null
           session_id?: string | null
+          source_attribution?: Json
           user_agent?: string | null
         }
         Update: {
@@ -978,6 +989,7 @@ export type Database = {
           screen_height?: number | null
           screen_width?: number | null
           session_id?: string | null
+          source_attribution?: Json
           user_agent?: string | null
         }
         Relationships: []
@@ -1033,6 +1045,45 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          page_path: string | null
+          phone: string | null
+          source_attribution: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          page_path?: string | null
+          phone?: string | null
+          source_attribution?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          page_path?: string | null
+          phone?: string | null
+          source_attribution?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           agreement_text: string
@@ -1053,6 +1104,7 @@ export type Database = {
           payment_link_id: string | null
           signed_at: string
           signer_name: string
+          source_attribution: Json
           status: string
           updated_at: string
         }
@@ -1075,6 +1127,7 @@ export type Database = {
           payment_link_id?: string | null
           signed_at?: string
           signer_name: string
+          source_attribution?: Json
           status?: string
           updated_at?: string
         }
@@ -1097,6 +1150,7 @@ export type Database = {
           payment_link_id?: string | null
           signed_at?: string
           signer_name?: string
+          source_attribution?: Json
           status?: string
           updated_at?: string
         }
@@ -1109,10 +1163,17 @@ export type Database = {
           first_name: string | null
           id: string
           last_contacted_at: string | null
+          last_engagement_at: string | null
           last_name: string | null
+          lead_score: number
+          next_action: string | null
+          next_action_due_at: string | null
           notes: string | null
           phone: string | null
+          pipeline_status: string
+          revenue_path: string | null
           source: string
+          source_attribution: Json
           unsubscribe_token: string
           unsubscribed: boolean
           unsubscribed_at: string | null
@@ -1124,10 +1185,17 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_contacted_at?: string | null
+          last_engagement_at?: string | null
           last_name?: string | null
+          lead_score?: number
+          next_action?: string | null
+          next_action_due_at?: string | null
           notes?: string | null
           phone?: string | null
+          pipeline_status?: string
+          revenue_path?: string | null
           source?: string
+          source_attribution?: Json
           unsubscribe_token?: string
           unsubscribed?: boolean
           unsubscribed_at?: string | null
@@ -1139,10 +1207,17 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_contacted_at?: string | null
+          last_engagement_at?: string | null
           last_name?: string | null
+          lead_score?: number
+          next_action?: string | null
+          next_action_due_at?: string | null
           notes?: string | null
           phone?: string | null
+          pipeline_status?: string
+          revenue_path?: string | null
           source?: string
+          source_attribution?: Json
           unsubscribe_token?: string
           unsubscribed?: boolean
           unsubscribed_at?: string | null
@@ -1345,6 +1420,72 @@ export type Database = {
           review_text?: string
           reviewer_type?: string
           state?: string | null
+        }
+        Relationships: []
+      }
+      freedom_followup_queue: {
+        Row: {
+          body_html: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          created_at: string
+          due_at: string
+          error_message: string | null
+          followup_reason: string
+          id: string
+          lead_id: string | null
+          lead_type: string
+          priority: string
+          recipient_type: string
+          sent_at: string | null
+          sequence_step: number
+          source_attribution: Json
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body_html: string
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          created_at?: string
+          due_at?: string
+          error_message?: string | null
+          followup_reason: string
+          id?: string
+          lead_id?: string | null
+          lead_type: string
+          priority?: string
+          recipient_type?: string
+          sent_at?: string | null
+          sequence_step?: number
+          source_attribution?: Json
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          created_at?: string
+          due_at?: string
+          error_message?: string | null
+          followup_reason?: string
+          id?: string
+          lead_id?: string | null
+          lead_type?: string
+          priority?: string
+          recipient_type?: string
+          sent_at?: string | null
+          sequence_step?: number
+          source_attribution?: Json
+          status?: string
+          subject?: string
+          updated_at?: string
         }
         Relationships: []
       }
