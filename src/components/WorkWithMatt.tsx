@@ -67,7 +67,7 @@ const WorkWithMatt = () => {
                 asChild
                 onClick={() => trackEvent("cta_book_call", { location: "work_with_matt" })}
               >
-                <a href="#booking">
+                <a href="/?type=consultation#booking">
                   <Calendar className="w-5 h-5" />
                   Schedule a Strategy Call
                 </a>

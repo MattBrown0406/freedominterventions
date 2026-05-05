@@ -66,7 +66,7 @@ const Hero = () => {
               </TrackedPhoneLink>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <a href="#booking">
+              <a href="/?type=crisis-coaching#booking">
                 <Button variant="hero-outline" size="xl">
                   <Calendar className="w-5 h-5" />
                   Book a Crisis Coaching Session

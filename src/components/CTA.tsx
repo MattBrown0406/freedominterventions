@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
-import CallbackRequestDialog from "./CallbackRequestDialog";
+import { Calendar, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import { trackEvent } from "@/lib/analytics";
 
 const CTA = () => {
   return (
@@ -32,15 +33,18 @@ const CTA = () => {
                 Call Now: (541) 838-6009
               </Button>
             </TrackedPhoneLink>
-            <CallbackRequestDialog>
-              <Button 
-                variant="outline" 
-                size="xl"
-                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-              >
+            <Button 
+              asChild
+              variant="outline" 
+              size="xl"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => trackEvent("cta_free_consult_click", { location: "cta_section" })}
+            >
+              <Link to="/?type=consultation#booking">
+                <Calendar className="w-5 h-5" />
                 Schedule Free Consultation
-              </Button>
-            </CallbackRequestDialog>
+              </Link>
+            </Button>
           </div>
 
           <p className="text-sm text-primary-foreground/60">
