@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck, BarChart3 } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck, BarChart3, Columns3 } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
@@ -20,6 +20,7 @@ import ContractsManager from "@/components/admin/ContractsManager";
 import EmailOutreachSection from "@/components/admin/EmailOutreachSection";
 import FreedomFollowupsManager from "@/components/admin/FreedomFollowupsManager";
 import RevenueAttributionManager from "@/components/admin/RevenueAttributionManager";
+import RevenuePipelineManager from "@/components/admin/RevenuePipelineManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -354,6 +355,10 @@ const AdminDashboard = () => {
               <MailCheck className="w-4 h-4" />
               Follow-Ups
             </TabsTrigger>
+            <TabsTrigger value="revenue-pipeline" className="gap-2">
+              <Columns3 className="w-4 h-4" />
+              Revenue Pipeline
+            </TabsTrigger>
             <TabsTrigger value="attribution" className="gap-2">
               <BarChart3 className="w-4 h-4" />
               Attribution
@@ -549,6 +554,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="followups">
               <FreedomFollowupsManager />
+            </TabsContent>
+
+            <TabsContent value="revenue-pipeline">
+              <RevenuePipelineManager />
             </TabsContent>
 
             <TabsContent value="attribution">

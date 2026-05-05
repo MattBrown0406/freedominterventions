@@ -21,15 +21,24 @@ const getDeviceType = (): string => {
   return 'desktop';
 };
 
+const normalizePhoneNumber = (phoneNumber: string) => phoneNumber.replace(/[^\d+]/g, '');
+
 export const useCallTracking = () => {
   const location = useLocation();
 
   const trackCallClick = useCallback(async (phoneNumber: string = '541-838-6009', metadata: Record<string, unknown> = {}) => {
     const sourceAttribution = getFunnelAttribution();
+    const attributionForTracking = sourceAttribution ?? { source: 'direct' };
+    const source = attributionForTracking.source || sourceAttribution?.utm_source || 'direct';
+    const callLocation = typeof metadata.location === 'string' ? metadata.location : 'unknown';
+    const normalizedPhoneNumber = normalizePhoneNumber(phoneNumber);
+    const openClawCallSource = `${source}:${callLocation}`;
 
     trackEvent('phone_call_click', {
       page_path: location.pathname,
       phone_number: phoneNumber,
+      call_source: openClawCallSource,
+      normalized_phone_number: normalizedPhoneNumber,
       ...metadata,
     });
 
@@ -47,10 +56,15 @@ export const useCallTracking = () => {
         screen_height: window.innerHeight,
         device_type: getDeviceType(),
         session_id: getSessionId(),
-        source_attribution: sourceAttribution,
+        source_attribution: attributionForTracking,
         metadata: {
           ...metadata,
-          source_attribution: sourceAttribution,
+          call_source: openClawCallSource,
+          call_location: callLocation,
+          display_phone_number: phoneNumber,
+          normalized_phone_number: normalizedPhoneNumber,
+          openclaw_ready: true,
+          source_attribution: attributionForTracking,
         },
       });
     } catch (error) {

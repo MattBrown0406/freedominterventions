@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Phone } from "lucide-react";
+import { Calendar, ClipboardCheck, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
@@ -38,7 +39,7 @@ const Hero = () => {
             style={{ animationDelay: "0.1s" }}
           >
             When Addiction Has Your Family in Crisis,
-            <span className="block text-primary mt-2">Waiting Makes It Worse</span>
+            <span className="block text-primary mt-2">Get a Clear Plan Now</span>
           </h1>
 
           {/* Subheadline */}
@@ -46,7 +47,7 @@ const Hero = () => {
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-up"
             style={{ animationDelay: "0.3s" }}
           >
-            If your loved one is spiraling and your family is scared, exhausted, or divided, you do not need more guesswork. You need experienced professional guidance now. We help families take the right next step before the situation gets worse.
+            If your loved one is spiraling and your family is scared, exhausted, or divided, the next step matters. Call now, book a confidential consultation, or check whether your family is ready for a professional intervention.
           </p>
 
           {/* CTAs */}
@@ -61,26 +62,26 @@ const Hero = () => {
               >
                 <Button variant="hero" size="xl">
                   <Phone className="w-5 h-5" />
-                  Get Help Now
+                  Call Now
                 </Button>
               </TrackedPhoneLink>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <a href="/?type=crisis-coaching#booking">
+              <Link to="/?type=consultation#booking">
                 <Button variant="hero-outline" size="xl">
                   <Calendar className="w-5 h-5" />
-                  Book a Crisis Coaching Session
+                  Book Free Consultation
                 </Button>
-              </a>
-              <a href="/family-readiness-intensive">
+              </Link>
+              <Link to="/intervention-readiness">
                 <Button variant="hero-outline" size="xl">
-                  <Calendar className="w-5 h-5" />
-                  Book a Family Readiness Intensive
+                  <ClipboardCheck className="w-5 h-5" />
+                  Check Intervention Readiness
                 </Button>
-              </a>
+              </Link>
             </div>
             <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto pt-2">
-              Confidential help for families in crisis. Professional intervention and coaching options available.
+              Confidential help for families in crisis. Professional intervention, treatment planning, and family coaching options available.
             </p>
           </div>
 

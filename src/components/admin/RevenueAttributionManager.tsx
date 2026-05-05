@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { BarChart3, RefreshCw, TrendingUp } from "lucide-react";
+import { BarChart3, PhoneCall, RefreshCw, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -63,6 +63,9 @@ interface ContractRow {
 interface CallRow {
   id: string;
   source_attribution: Json;
+  metadata: Json | null;
+  page_path: string;
+  phone_number: string;
   created_at: string;
 }
 
@@ -101,9 +104,21 @@ const asSourceAttribution = (value: Json | null | undefined): SourceAttribution 
   return {};
 };
 
+const asRecord = (value: Json | null | undefined): Record<string, unknown> => {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  return {};
+};
+
 const sourceKey = (value: Json | null | undefined, fallback = "unknown") => {
   const attribution = asSourceAttribution(value);
   return attribution.source || attribution.utm_source || fallback;
+};
+
+const stringFromMetadata = (metadata: Json | null | undefined, key: string) => {
+  const value = asRecord(metadata)[key];
+  return typeof value === "string" && value.trim().length > 0 ? value : null;
 };
 
 const formatUsd = (cents: number) => {
@@ -136,6 +151,17 @@ const sourceTitle = (source: string) => {
   return labels[source] || source.replace(/_/g, " ");
 };
 
+const locationTitle = (location: string) => {
+  const labels: Record<string, string> = {
+    hero_primary_cta: "Homepage hero",
+    header_phone: "Header phone",
+    footer_phone: "Footer phone",
+    mobile_sticky_cta: "Mobile sticky CTA",
+    contact_page: "Contact page",
+  };
+  return labels[location] || location.replace(/_/g, " ");
+};
+
 const RevenueAttributionManager = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -162,7 +188,7 @@ const RevenueAttributionManager = () => {
       supabase.from("assessments").select("id,contact_email,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
       supabase.from("bookings").select("id,customer_email,booking_type,status,amount_cents,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
       supabase.from("contracts").select("id,client_email,contract_type,status,amount_cents,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("call_analytics").select("id,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
+      supabase.from("call_analytics").select("id,source_attribution,metadata,page_path,phone_number,created_at").order("created_at", { ascending: false }).limit(500),
       supabase.from("contact_messages").select("id,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
       supabase.from("freedom_followup_queue").select("id,status,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
     ]);
@@ -281,6 +307,48 @@ const RevenueAttributionManager = () => {
       .slice(0, 12);
   }, [contacts]);
 
+  const callSourceStats = useMemo(() => {
+    const map = new Map<string, {
+      key: string;
+      count: number;
+      phoneNumber: string;
+      source: string;
+      location: string;
+      pagePath: string;
+      latestAt: string;
+    }>();
+
+    calls.forEach((call) => {
+      const location = stringFromMetadata(call.metadata, "call_location") || stringFromMetadata(call.metadata, "location") || "unknown";
+      const source = sourceKey(call.source_attribution);
+      const key = `${call.phone_number}|${source}|${location}`;
+      const existing = map.get(key);
+      if (existing) {
+        existing.count += 1;
+        if (new Date(call.created_at).getTime() > new Date(existing.latestAt).getTime()) {
+          existing.latestAt = call.created_at;
+          existing.pagePath = call.page_path;
+        }
+        return;
+      }
+
+      map.set(key, {
+        key,
+        count: 1,
+        phoneNumber: call.phone_number,
+        source,
+        location,
+        pagePath: call.page_path,
+        latestAt: call.created_at,
+      });
+    });
+
+    return [...map.values()].sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return new Date(b.latestAt).getTime() - new Date(a.latestAt).getTime();
+    });
+  }, [calls]);
+
   const totals = useMemo(() => {
     return sourceStats.reduce(
       (acc, row) => ({
@@ -298,11 +366,17 @@ const RevenueAttributionManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <Card>
           <CardContent className="p-4">
             <p className="text-xs uppercase text-muted-foreground">Attributed Leads</p>
             <p className="text-2xl font-bold">{totals.contacts}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs uppercase text-muted-foreground">Tracked Calls</p>
+            <p className="text-2xl font-bold">{totals.calls}</p>
           </CardContent>
         </Card>
         <Card>
@@ -375,43 +449,76 @@ const RevenueAttributionManager = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                Highest-Intent Leads
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {topLeads.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No CRM leads yet.</p>
-              ) : (
-                topLeads.map((lead) => (
-                  <div key={lead.id} className="rounded-xl border border-border p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-semibold">
-                          {[lead.first_name, lead.last_name].filter(Boolean).join(" ") || lead.email}
-                        </p>
-                        <p className="text-sm text-muted-foreground">{lead.email}</p>
-                        {lead.phone && <p className="text-sm text-muted-foreground">{lead.phone}</p>}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <PhoneCall className="h-5 w-5 text-primary" />
+                  OpenClaw Call Clarity
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {callSourceStats.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No tracked calls yet.</p>
+                ) : (
+                  callSourceStats.map((row) => (
+                    <div key={row.key} className="rounded-lg border border-border p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold">{row.phoneNumber}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {sourceTitle(row.source)} · {locationTitle(row.location)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Last click: {format(new Date(row.latestAt), "MMM d, h:mm a")} · {row.pagePath}
+                          </p>
+                        </div>
+                        <Badge>{row.count}</Badge>
                       </div>
-                      <Badge>{lead.lead_score}</Badge>
                     </div>
-                    <div className="mt-3 space-y-1 text-sm">
-                      <p><span className="text-muted-foreground">Source:</span> {sourceTitle(sourceKey(lead.source_attribution, lead.source))}</p>
-                      <p><span className="text-muted-foreground">Path:</span> {lead.revenue_path || "Not set"}</p>
-                      <p><span className="text-muted-foreground">Status:</span> {lead.pipeline_status}</p>
-                      {lead.next_action && <p><span className="text-muted-foreground">Next:</span> {lead.next_action}</p>}
-                      {lead.next_action_due_at && (
-                        <p className="text-muted-foreground">Due {format(new Date(lead.next_action_due_at), "MMM d, h:mm a")}</p>
-                      )}
+                  ))
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Highest-Intent Leads
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {topLeads.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No CRM leads yet.</p>
+                ) : (
+                  topLeads.map((lead) => (
+                    <div key={lead.id} className="rounded-lg border border-border p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold">
+                            {[lead.first_name, lead.last_name].filter(Boolean).join(" ") || lead.email}
+                          </p>
+                          <p className="text-sm text-muted-foreground">{lead.email}</p>
+                          {lead.phone && <p className="text-sm text-muted-foreground">{lead.phone}</p>}
+                        </div>
+                        <Badge>{lead.lead_score}</Badge>
+                      </div>
+                      <div className="mt-3 space-y-1 text-sm">
+                        <p><span className="text-muted-foreground">Source:</span> {sourceTitle(sourceKey(lead.source_attribution, lead.source))}</p>
+                        <p><span className="text-muted-foreground">Path:</span> {lead.revenue_path || "Not set"}</p>
+                        <p><span className="text-muted-foreground">Status:</span> {lead.pipeline_status}</p>
+                        {lead.next_action && <p><span className="text-muted-foreground">Next:</span> {lead.next_action}</p>}
+                        {lead.next_action_due_at && (
+                          <p className="text-muted-foreground">Due {format(new Date(lead.next_action_due_at), "MMM d, h:mm a")}</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       )}
     </div>
