@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { trackEvent } from '@/lib/analytics';
+import { getFunnelAttribution } from '@/lib/funnelAttribution';
 
 // Generate or retrieve session ID for grouping clicks
 const getSessionId = (): string => {
@@ -24,6 +25,8 @@ export const useCallTracking = () => {
   const location = useLocation();
 
   const trackCallClick = useCallback(async (phoneNumber: string = '541-838-6009', metadata: Record<string, unknown> = {}) => {
+    const sourceAttribution = getFunnelAttribution();
+
     trackEvent('phone_call_click', {
       page_path: location.pathname,
       phone_number: phoneNumber,
@@ -44,7 +47,11 @@ export const useCallTracking = () => {
         screen_height: window.innerHeight,
         device_type: getDeviceType(),
         session_id: getSessionId(),
-        metadata: metadata,
+        source_attribution: sourceAttribution,
+        metadata: {
+          ...metadata,
+          source_attribution: sourceAttribution,
+        },
       });
     } catch (error) {
       // Silently fail - don't interrupt user's call action

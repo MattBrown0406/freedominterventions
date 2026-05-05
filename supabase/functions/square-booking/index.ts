@@ -19,6 +19,7 @@ const BOOKING_FEES_CENTS: Record<string, number> = {
   'crisis-coaching': 15000,
   'readiness-intensive': 250000,
 };
+const SITE_URL = 'https://freedominterventions.com';
 
 // Simple in-memory rate limiter for payment attempts
 const paymentAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -64,6 +65,85 @@ function validateString(value: string, maxLength: number): boolean {
 
 function sanitizeString(value: string): string {
   return value.trim().slice(0, 255);
+}
+
+function normalizeAttribution(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
+async function upsertBookingCrm(
+  supabase: ReturnType<typeof createClient>,
+  booking: { id: string },
+  payload: {
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string | null;
+    bookingType: string;
+    sourceAttribution: Record<string, unknown>;
+  }
+) {
+  const nameParts = payload.customerName.trim().split(/\s+/);
+  const firstName = nameParts[0] || null;
+  const lastName = nameParts.slice(1).join(' ') || null;
+  const revenuePath = payload.bookingType === 'consultation'
+    ? 'free_consultation'
+    : payload.bookingType === 'readiness-intensive'
+    ? 'family_readiness_intensive'
+    : 'crisis_coaching';
+  const leadScore = payload.bookingType === 'consultation' ? 50 : payload.bookingType === 'readiness-intensive' ? 95 : 70;
+
+  await supabase.from('crm_contacts').upsert({
+    email: payload.customerEmail,
+    first_name: firstName,
+    last_name: lastName,
+    phone: payload.customerPhone,
+    source: 'booking',
+    source_id: booking.id,
+    source_attribution: payload.sourceAttribution,
+    lead_score: leadScore,
+    revenue_path: revenuePath,
+    pipeline_status: payload.bookingType === 'consultation' ? 'consultation_booked' : 'paid_booking_started',
+    next_action: payload.bookingType === 'consultation'
+      ? 'Review source, assessment status, and prepare for consultation'
+      : 'Confirm payment and prepare paid session',
+    next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    last_engagement_at: new Date().toISOString(),
+  }, { onConflict: 'email' });
+}
+
+async function queueConsultationPrep(
+  supabase: ReturnType<typeof createClient>,
+  booking: { id: string },
+  payload: {
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string | null;
+    sourceAttribution: Record<string, unknown>;
+  }
+) {
+  const firstName = payload.customerName.trim().split(/\s+/)[0] || 'there';
+  const assessmentUrl = `${SITE_URL}/assessment`;
+  const { error } = await supabase.from('freedom_followup_queue').insert({
+    lead_type: 'consultation',
+    lead_id: booking.id,
+    contact_email: payload.customerEmail,
+    contact_name: payload.customerName,
+    contact_phone: payload.customerPhone,
+    followup_reason: 'consultation_assessment_prompt',
+    priority: 'high',
+    sequence_step: 1,
+    subject: `${firstName}, one thing before our consultation`,
+    body_html: `
+      <p>Hi ${firstName},</p>
+      <p>Before our consultation, please complete the family assessment if you have not already. It gives me the clearest picture of urgency, safety, treatment history, leverage, and family alignment before we talk.</p>
+      <p><a href="${assessmentUrl}">Complete the family assessment</a></p>
+      <p>If things escalate before our call, you can call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+      <p>- Matt Brown<br>Freedom Interventions</p>
+    `,
+    source_attribution: payload.sourceAttribution,
+    due_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+  });
+  if (error) console.error('Failed to queue consultation prep followup:', error);
 }
 
 function resolveBookingAmountCents(bookingType: string): number {
@@ -263,7 +343,9 @@ serve(async (req) => {
           discountCode,
           discountCents,
           contractMetadata,
+          sourceAttribution,
         } = params;
+        const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
 
         if (!validateEmail(customerEmail)) {
           throw new Error('Invalid email address');
@@ -464,6 +546,7 @@ serve(async (req) => {
           discount_code: typeof discountCode === 'string' && discountCode.trim().length > 0 ? sanitizeString(discountCode).slice(0, 40) : null,
           discount_cents: typeof discountCents === 'number' && discountCents >= 0 ? discountCents : null,
           contract_metadata: contractMetadata && typeof contractMetadata === 'object' ? contractMetadata : {},
+          source_attribution: normalizedSourceAttribution,
         };
 
         const { data: booking, error: bookingError } = await supabase
@@ -476,6 +559,14 @@ serve(async (req) => {
           console.error('Error creating booking for checkout link:', bookingError);
           throw new Error('Failed to create booking before checkout');
         }
+
+        await upsertBookingCrm(supabase, booking, {
+          customerName: sanitizedName,
+          customerEmail: sanitizedEmail,
+          customerPhone: sanitizedPhone,
+          bookingType: normalizedBookingType,
+          sourceAttribution: normalizedSourceAttribution,
+        });
 
         const origin = req.headers.get('origin') || 'https://freedominterventions.com';
         const successUrl = new URL(normalizedBookingType === 'intervention-contract' ? '/start-contract' : '/#booking', origin);
@@ -627,7 +718,8 @@ serve(async (req) => {
           });
         }
 
-        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion, discountCode, discountCents, contractMetadata } = params;
+        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion, discountCode, discountCents, contractMetadata, sourceAttribution } = params;
+        const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
 
         // Validate required fields
         if (!validateString(customerName, 100)) {
@@ -688,6 +780,7 @@ serve(async (req) => {
           discount_code: typeof discountCode === 'string' && discountCode.trim().length > 0 ? sanitizeString(discountCode).slice(0, 40) : null,
           discount_cents: typeof discountCents === 'number' && discountCents >= 0 ? discountCents : null,
           contract_metadata: contractMetadata && typeof contractMetadata === 'object' ? contractMetadata : {},
+          source_attribution: normalizedSourceAttribution,
         };
 
         console.log('Creating booking:', { 
@@ -709,6 +802,23 @@ serve(async (req) => {
         }
 
         console.log('Booking created successfully:', { bookingId: booking.id });
+
+        await upsertBookingCrm(supabase, booking, {
+          customerName: sanitizedData.customer_name,
+          customerEmail: sanitizedData.customer_email,
+          customerPhone: sanitizedData.customer_phone,
+          bookingType: sanitizedData.booking_type,
+          sourceAttribution: normalizedSourceAttribution,
+        });
+
+        if (sanitizedData.booking_type === 'consultation') {
+          await queueConsultationPrep(supabase, booking, {
+            customerName: sanitizedData.customer_name,
+            customerEmail: sanitizedData.customer_email,
+            customerPhone: sanitizedData.customer_phone,
+            sourceAttribution: normalizedSourceAttribution,
+          });
+        }
 
         // Sync booking to Notion CRM (async, don't block response)
         try {

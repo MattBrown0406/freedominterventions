@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
@@ -18,6 +18,7 @@ import CaseDocumentsManager from "@/components/admin/CaseDocumentsManager";
 import AbandonedCartsManager from "@/components/admin/AbandonedCartsManager";
 import ContractsManager from "@/components/admin/ContractsManager";
 import EmailOutreachSection from "@/components/admin/EmailOutreachSection";
+import FreedomFollowupsManager from "@/components/admin/FreedomFollowupsManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -79,6 +80,7 @@ interface Assessment {
   age_first_used: number | null;
   use_increased: string | null;
   loved_one_gender: string | null;
+  source_attribution?: Record<string, unknown> | null;
 }
 
 // Helper to cast JSON fields
@@ -129,6 +131,13 @@ const getFollowUpLabel = (assessment: Assessment) => {
   if (assessment.status === "new" && hoursOld >= 4) return "Same-day follow-up";
   if (assessment.status === "in_progress") return "Active follow-up";
   return "New lead";
+};
+
+const getSourceLabel = (sourceAttribution: Record<string, unknown> | null | undefined) => {
+  if (!sourceAttribution) return "Unknown";
+  const source = sourceAttribution.source;
+  const campaign = sourceAttribution.utm_campaign;
+  return [source, campaign].filter(Boolean).join(" / ") || "Unknown";
 };
 
 const AdminDashboard = () => {
@@ -340,6 +349,10 @@ const AdminDashboard = () => {
               <Mail className="w-4 h-4" />
               Outreach
             </TabsTrigger>
+            <TabsTrigger value="followups" className="gap-2">
+              <MailCheck className="w-4 h-4" />
+              Follow-Ups
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="assessments">
@@ -405,6 +418,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className="flex flex-wrap items-center justify-end gap-2">
                       <Badge className={priority.className}>{priority.label} · {leadScore}</Badge>
+                      <Badge variant="outline">{getSourceLabel(assessment.source_attribution)}</Badge>
                       <Badge variant={followUpLabel === "Overdue" ? "destructive" : "outline"}>{followUpLabel}</Badge>
                       {getStatusBadge(assessment.status)}
                     </div>
@@ -526,6 +540,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="outreach">
               <EmailOutreachSection />
+            </TabsContent>
+
+            <TabsContent value="followups">
+              <FreedomFollowupsManager />
             </TabsContent>
 
             <TabsContent value="abandoned-carts">

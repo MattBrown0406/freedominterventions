@@ -35,6 +35,41 @@ function sanitizeString(value: string): string {
   return value.trim().slice(0, 255);
 }
 
+function normalizeAttribution(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
+async function upsertContractCrm(
+  supabase: ReturnType<typeof createClient>,
+  contract: { id: string },
+  payload: {
+    clientName: string;
+    clientEmail: string;
+    clientPhone: string | null;
+    contractType: string;
+    sourceAttribution: Record<string, unknown>;
+  }
+) {
+  const nameParts = payload.clientName.trim().split(/\s+/);
+  const firstName = nameParts[0] || null;
+  const lastName = nameParts.slice(1).join(" ") || null;
+  await supabase.from("crm_contacts").upsert({
+    email: payload.clientEmail,
+    first_name: firstName,
+    last_name: lastName,
+    phone: payload.clientPhone,
+    source: "contract",
+    source_id: contract.id,
+    source_attribution: payload.sourceAttribution,
+    lead_score: payload.contractType === "intervention" ? 100 : 95,
+    revenue_path: payload.contractType === "intervention" ? "intervention_contract" : "family_readiness_intensive",
+    pipeline_status: "contract_signed",
+    next_action: "Confirm payment and prepare fulfillment",
+    next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    last_engagement_at: new Date().toISOString(),
+  }, { onConflict: "email" });
+}
+
 function normalizeDiscountCode(code: unknown): string {
   return typeof code === "string" ? code.trim().toUpperCase() : "";
 }
@@ -144,7 +179,9 @@ serve(async (req) => {
           contractPdfPath,
           contractPdfBase64,
           metadata,
+          sourceAttribution,
         } = params;
+        const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
 
         if (!["intervention", "readiness-intensive"].includes(contractType)) {
           throw new Error("Valid contract type is required");
@@ -199,11 +236,20 @@ serve(async (req) => {
             contract_pdf_path: resolvedPdfPath,
             contract_pdf_url: null,
             metadata: metadata && typeof metadata === "object" ? metadata : {},
+            source_attribution: normalizedSourceAttribution,
           })
           .select()
           .single();
 
         if (error) throw error;
+
+        await upsertContractCrm(supabase, data, {
+          clientName: sanitizeString(clientName),
+          clientEmail: clientEmail.toLowerCase().trim(),
+          clientPhone: clientPhone ? sanitizeString(clientPhone).slice(0, 25) : null,
+          contractType,
+          sourceAttribution: normalizedSourceAttribution,
+        });
 
         if (resolvedAmount.discountCodeId) {
           const { error: claimError } = await supabase

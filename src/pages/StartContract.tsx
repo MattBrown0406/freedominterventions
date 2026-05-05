@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { ArrowRight, BadgeDollarSign, CheckCircle2, Clock3, FileSignature, Lock, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getFunnelAttribution } from "@/lib/funnelAttribution";
 import { useToast } from "@/hooks/use-toast";
 import {
   formatUsdFromCents,
@@ -288,7 +289,9 @@ const StartContract = () => {
             baseFeeCents: resolvedBaseAmountCents,
             createdDate: bookingDate,
             localContractId: contractId,
+            sourceAttribution: getFunnelAttribution(),
           },
+          sourceAttribution: getFunnelAttribution(),
         },
       });
       if (contractResponse.error) throw contractResponse.error;

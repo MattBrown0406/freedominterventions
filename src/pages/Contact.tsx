@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { trackEvent } from "@/lib/analytics";
+import { getFunnelAttribution } from "@/lib/funnelAttribution";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -61,6 +62,8 @@ const Contact = () => {
             email: data.email,
             phone: data.phone || undefined,
             message: data.message,
+            pagePath: window.location.pathname,
+            sourceAttribution: getFunnelAttribution(),
           }),
         }
       );

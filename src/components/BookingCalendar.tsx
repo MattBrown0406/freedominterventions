@@ -12,6 +12,7 @@ import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, C
 import { format } from "date-fns";
 import { z } from "zod";
 import { trackEvent } from "@/lib/analytics";
+import { getFunnelAttribution } from "@/lib/funnelAttribution";
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
@@ -304,6 +305,7 @@ export const BookingCalendar = () => {
   const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationErrors({});
+    const sourceAttribution = getFunnelAttribution();
     const validation = customerInfoSchema.safeParse(customerInfo);
     if (!validation.success) {
       const errors: { name?: string; email?: string; phone?: string } = {};
@@ -337,7 +339,8 @@ export const BookingCalendar = () => {
             booking_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
             booking_time: selectedTime || null,
             amount_cents: offer!.priceCents,
-          })
+            source_attribution: sourceAttribution,
+          } as never)
           .select('id')
           .single();
         if (cartData?.id) setAbandonedCartId(cartData.id);
@@ -396,6 +399,7 @@ export const BookingCalendar = () => {
           bookingDate,
           bookingTime: selectedTime,
           durationMinutes: offer.durationMinutes,
+          sourceAttribution: getFunnelAttribution(),
         }
       });
       if (error) throw error;
@@ -481,14 +485,16 @@ export const BookingCalendar = () => {
             amountCents: offer.priceCents,
             contractPdfPath: pdfPath,
             contractPdfBase64: pdfBase64,
-            metadata: {
-              bookingDate,
-              bookingTime: selectedTime,
-              durationMinutes: offer.durationMinutes,
-              followUpIncluded: true,
-            },
-          }
-        });
+          metadata: {
+            bookingDate,
+            bookingTime: selectedTime,
+            durationMinutes: offer.durationMinutes,
+            followUpIncluded: true,
+            sourceAttribution: getFunnelAttribution(),
+          },
+          sourceAttribution: getFunnelAttribution(),
+        }
+      });
         error = contractResponse.error;
         data = contractResponse.data;
         if (error) throw error;
@@ -526,6 +532,7 @@ export const BookingCalendar = () => {
             bookingTime: selectedTime,
             bookingType,
             durationMinutes: offer.durationMinutes,
+            sourceAttribution: getFunnelAttribution(),
           }
         });
         error = response.error;

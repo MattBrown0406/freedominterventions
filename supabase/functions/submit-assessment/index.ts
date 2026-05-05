@@ -6,6 +6,124 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const SITE_URL = "https://freedominterventions.com";
+
+function escapeHtml(value: string) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function includesYes(value: unknown) {
+  return typeof value === "string" && /\b(yes|true|high|urgent|immediate|active|current|critical)\b/i.test(value);
+}
+
+function scoreAssessment(data: Record<string, any>) {
+  let score = 25;
+  if (/urgent|high|immediate|critical/i.test(data.urgency_level || "")) score += 25;
+  if ((data.dsm_yes_count || 0) >= 6) score += 20;
+  if (includesYes(data.overdose_history)) score += 20;
+  if (includesYes(data.suicide_ideation) || includesYes(data.suicide_attempts_history)) score += 25;
+  if (includesYes(data.violence_history)) score += 15;
+  if (includesYes(data.immediate_safety_concerns)) score += 20;
+  if (includesYes(data.family_ready_intervention)) score += 15;
+  if (data.contact_phone) score += 5;
+  return Math.min(score, 100);
+}
+
+async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient>, assessmentId: string, assessmentData: Record<string, any>) {
+  const sourceAttribution = assessmentData.source_attribution && typeof assessmentData.source_attribution === "object"
+    ? assessmentData.source_attribution
+    : {};
+  const leadScore = scoreAssessment(assessmentData);
+  const priority = leadScore >= 80 ? "urgent" : leadScore >= 60 ? "high" : "normal";
+  const firstName = String(assessmentData.contact_name || "there").trim().split(/\s+/)[0] || "there";
+  const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(assessmentData.contact_name || "")}&email=${encodeURIComponent(assessmentData.contact_email || "")}${assessmentData.contact_phone ? `&phone=${encodeURIComponent(assessmentData.contact_phone)}` : ""}#booking`;
+
+  await supabase
+    .from("crm_contacts")
+    .update({
+      source_attribution: sourceAttribution,
+      lead_score: leadScore,
+      revenue_path: leadScore >= 75 ? "intervention_or_readiness" : "consultation_or_coaching",
+      pipeline_status: "new",
+      next_action: leadScore >= 75 ? "Call this assessment lead first" : "Review assessment and invite to consultation",
+      next_action_due_at: new Date(Date.now() + (leadScore >= 75 ? 30 : 180) * 60 * 1000).toISOString(),
+      last_engagement_at: new Date().toISOString(),
+    })
+    .eq("email", assessmentData.contact_email);
+
+  const rows = [
+    {
+      lead_type: "assessment",
+      lead_id: assessmentId,
+      contact_email: assessmentData.contact_email,
+      contact_name: assessmentData.contact_name,
+      contact_phone: assessmentData.contact_phone || null,
+      followup_reason: "assessment_confirmation",
+      priority,
+      sequence_step: 1,
+      subject: `${firstName}, I received your family assessment`,
+      body_html: `
+        <p>Hi ${escapeHtml(firstName)},</p>
+        <p>I received your family assessment. Thank you for taking the time to lay out what is happening. That information helps me understand urgency, safety, treatment history, and where the family may need to get aligned.</p>
+        <p>If things are escalating or you need answers sooner, you can book a free consultation here:</p>
+        <p><a href="${consultUrl}">Book a free consultation</a></p>
+        <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, you can call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+        <p>- Matt Brown<br>Freedom Interventions</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "assessment",
+      lead_id: assessmentId,
+      contact_email: assessmentData.contact_email,
+      contact_name: assessmentData.contact_name,
+      contact_phone: assessmentData.contact_phone || null,
+      followup_reason: "assessment_next_step",
+      priority,
+      sequence_step: 2,
+      subject: "The next step is getting the family aligned",
+      body_html: `
+        <p>Hi ${escapeHtml(firstName)},</p>
+        <p>After a family submits an assessment, the next useful move is usually getting clear on whether this calls for a free consultation, a crisis coaching session, or deeper intervention readiness work.</p>
+        <p>If you have not already scheduled, this is the easiest starting point:</p>
+        <p><a href="${consultUrl}">Choose a free consultation time</a></p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "assessment",
+      lead_id: assessmentId,
+      contact_email: assessmentData.contact_email,
+      contact_name: assessmentData.contact_name,
+      contact_phone: assessmentData.contact_phone || null,
+      followup_reason: "assessment_escalation",
+      priority,
+      sequence_step: 3,
+      subject: "If the situation changed, do not wait",
+      body_html: `
+        <p>Hi ${escapeHtml(firstName)},</p>
+        <p>I wanted to check back once more. These situations can change quickly, and families often wait longer than they should because nobody wants to overreact.</p>
+        <p>If your loved one is refusing help, the family is divided, or the risk is rising, call me at <a href="tel:5418386009">541-838-6009</a> or use this consultation link:</p>
+        <p><a href="${consultUrl}">Book a free consultation</a></p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(),
+    },
+  ];
+
+  const { error } = await supabase.from("freedom_followup_queue").insert(rows);
+  if (error) console.error("Failed to queue assessment followups:", error);
+}
+
 // Simple in-memory rate limiting (resets on function restart)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 3; // Max 3 submissions per hour per IP
@@ -239,6 +357,9 @@ serve(async (req) => {
       immediate_safety_concerns: body.immediate_safety_concerns || null,
       additional_information: body.additional_information || null,
       family_signature: body.family_signature || null,
+      source_attribution: (body.source_attribution || body.sourceAttribution || {}) && typeof (body.source_attribution || body.sourceAttribution || {}) === "object"
+        ? (body.source_attribution || body.sourceAttribution || {})
+        : {},
     };
 
     console.log(`Inserting assessment for: ${assessmentData.loved_one_name}`);
@@ -258,6 +379,12 @@ serve(async (req) => {
     }
 
     console.log(`Assessment saved successfully with ID: ${data.id}`);
+
+    try {
+      await queueAssessmentFollowups(supabase, data.id, assessmentData);
+    } catch (followupError) {
+      console.error("Assessment followup queue failed:", followupError);
+    }
 
     // Send email notification via SendGrid API
     try {

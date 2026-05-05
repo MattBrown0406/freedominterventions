@@ -19,6 +19,7 @@ import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-r
 import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION, PHYSICAL_WITHDRAWAL_SYMPTOMS, PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS } from "@/components/assessment/types";
 import InsuranceCardUpload from "@/components/assessment/InsuranceCardUpload";
 import { trackEvent } from "@/lib/analytics";
+import { getFunnelAttribution } from "@/lib/funnelAttribution";
 
 interface TreatmentEntry {
   programName: string;
@@ -469,6 +470,7 @@ const Assessment = () => {
         immediate_safety_concerns: formData.immediateSafetyConcerns || null,
         additional_information: formData.additionalInformation || null,
         family_signature: formData.familySignature || null,
+        source_attribution: getFunnelAttribution(),
       };
 
       const { error } = await supabase.functions.invoke("submit-assessment", { body: assessmentData });

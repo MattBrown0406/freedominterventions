@@ -1,3 +1,5 @@
+import { getAnalyticsAttributionParams } from "@/lib/funnelAttribution";
+
 let scriptLoaded = false;
 
 export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-WCT7G4VSJP";
@@ -38,12 +40,17 @@ export const initAnalytics = () => {
 export const trackEvent = (action: string, params: Record<string, unknown> = {}) => {
   if (typeof window === "undefined") return;
 
+  const enrichedParams = {
+    ...getAnalyticsAttributionParams(),
+    ...params,
+  };
+
   if (typeof window.gtag === "function") {
-    window.gtag("event", action, params);
+    window.gtag("event", action, enrichedParams);
     return;
   }
 
   if (import.meta.env.DEV) {
-    console.debug(`[analytics] ${action}`, params);
+    console.debug(`[analytics] ${action}`, enrichedParams);
   }
 };
