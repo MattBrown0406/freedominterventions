@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { subDays } from "date-fns";
-import { AlertCircle, BarChart3, ExternalLink, PhoneCall, RefreshCw, Settings, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, BarChart3, CheckCircle2, DollarSign, ExternalLink, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 
 interface SourceAttribution {
@@ -73,6 +74,21 @@ interface RemoteSiteConfig {
   report?: RemoteReport;
 }
 
+interface OpenClawNumberConfig {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  status: "pending" | "active";
+  notes: string;
+}
+
+interface CommandCenterSettingsRow {
+  id: string;
+  remote_sites: Json;
+  openclaw_numbers: Json;
+  updated_at: string;
+}
+
 interface ChannelStats {
   source: string;
   leads: number;
@@ -85,6 +101,8 @@ interface ChannelStats {
 }
 
 const settingsKey = "freedom_cross_site_revenue_settings";
+const openClawSettingsKey = "freedom_openclaw_number_settings";
+const commandCenterSettingsId = "default";
 
 const defaultRemoteSites = [
   {
@@ -103,6 +121,31 @@ const defaultRemoteSites = [
     url: "https://ctqbadyfhcoxhywrkorf.supabase.co/functions/v1/nme-revenue-report",
   },
 ];
+
+const defaultOpenClawNumbers = defaultRemoteSites.map((site) => ({
+  id: site.id,
+  name: site.name,
+  phoneNumber: "",
+  status: "pending" as const,
+  notes: "",
+}));
+
+const commandCenterSettingsTable = () => supabase.from("admin_command_center_settings" as never) as unknown as {
+  select: (columns: string) => {
+    eq: (column: string, value: string) => {
+      maybeSingle: () => Promise<{ data: CommandCenterSettingsRow | null; error: { message?: string } | null }>;
+    };
+  };
+  upsert: (
+    values: {
+      id: string;
+      remote_sites: Array<{ id: string; url: string; secret: string }>;
+      openclaw_numbers: Array<{ id: string; phoneNumber: string; status: OpenClawNumberConfig["status"]; notes: string }>;
+      updated_at: string;
+    },
+    options?: { onConflict?: string },
+  ) => Promise<{ error: { message?: string } | null }>;
+};
 
 const asSourceAttribution = (value: Json | null | undefined): SourceAttribution => {
   if (value && typeof value === "object" && !Array.isArray(value)) return value as SourceAttribution;
@@ -154,7 +197,32 @@ const numberFromTotals = (report: RemoteReport | undefined, keys: string[]) => {
   return keys.reduce((sum, key) => sum + (Number(report.totals?.[key]) || 0), 0);
 };
 
+const topRemotePages = (remoteSites: RemoteSiteConfig[]) =>
+  remoteSites
+    .flatMap((site) => (site.report?.top_pages ?? []).map((page) => ({ ...page, site: site.name })))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+const safeRemoteSettings = (value: Json): Array<{ id: string; url?: string; secret?: string }> => {
+  if (!Array.isArray(value)) return [];
+  return value.filter((site): site is { id: string; url?: string; secret?: string } => {
+    if (!site || typeof site !== "object" || Array.isArray(site)) return false;
+    const row = site as Record<string, unknown>;
+    return typeof row.id === "string";
+  });
+};
+
+const safeOpenClawSettings = (value: Json): Array<{ id: string; phoneNumber?: string; status?: OpenClawNumberConfig["status"]; notes?: string }> => {
+  if (!Array.isArray(value)) return [];
+  return value.filter((site): site is { id: string; phoneNumber?: string; status?: OpenClawNumberConfig["status"]; notes?: string } => {
+    if (!site || typeof site !== "object" || Array.isArray(site)) return false;
+    const row = site as Record<string, unknown>;
+    return typeof row.id === "string";
+  });
+};
+
 const CrossSiteRevenueDashboard = () => {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [contacts, setContacts] = useState<CrmContactRow[]>([]);
   const [assessments, setAssessments] = useState<AssessmentRow[]>([]);
@@ -162,6 +230,8 @@ const CrossSiteRevenueDashboard = () => {
   const [contracts, setContracts] = useState<ContractRow[]>([]);
   const [calls, setCalls] = useState<CallRow[]>([]);
   const [dataIssues, setDataIssues] = useState<string[]>([]);
+  const [settingsStatus, setSettingsStatus] = useState<"local" | "backend" | "missing_backend">("local");
+  const [settingsBusy, setSettingsBusy] = useState(false);
   const [remoteSites, setRemoteSites] = useState<RemoteSiteConfig[]>(() => {
     if (typeof window === "undefined") {
       return defaultRemoteSites.map((site) => ({ ...site, secret: "", status: "idle" }));
@@ -187,6 +257,29 @@ const CrossSiteRevenueDashboard = () => {
       status: "idle",
     }));
   });
+  const [openClawNumbers, setOpenClawNumbers] = useState<OpenClawNumberConfig[]>(() => {
+    if (typeof window === "undefined") return defaultOpenClawNumbers;
+
+    const saved = window.localStorage.getItem(openClawSettingsKey);
+    const savedMap = new Map<string, { id: string; phoneNumber?: string; status?: OpenClawNumberConfig["status"]; notes?: string }>();
+
+    if (saved) {
+      try {
+        (JSON.parse(saved) as Array<{ id: string; phoneNumber?: string; status?: OpenClawNumberConfig["status"]; notes?: string }>).forEach((site) => {
+          savedMap.set(site.id, site);
+        });
+      } catch {
+        window.localStorage.removeItem(openClawSettingsKey);
+      }
+    }
+
+    return defaultOpenClawNumbers.map((site) => ({
+      ...site,
+      phoneNumber: savedMap.get(site.id)?.phoneNumber || "",
+      status: savedMap.get(site.id)?.status || "pending",
+      notes: savedMap.get(site.id)?.notes || "",
+    }));
+  });
 
   const saveRemoteSites = useCallback((next: RemoteSiteConfig[]) => {
     setRemoteSites(next);
@@ -198,8 +291,86 @@ const CrossSiteRevenueDashboard = () => {
     );
   }, []);
 
+  const saveOpenClawNumbers = useCallback((next: OpenClawNumberConfig[]) => {
+    setOpenClawNumbers(next);
+    if (typeof window === "undefined") return;
+
+    window.localStorage.setItem(
+      openClawSettingsKey,
+      JSON.stringify(next.map(({ id, phoneNumber, status, notes }) => ({ id, phoneNumber, status, notes }))),
+    );
+  }, []);
+
   const updateRemoteSite = (id: string, patch: Partial<RemoteSiteConfig>) => {
     saveRemoteSites(remoteSites.map((site) => (site.id === id ? { ...site, ...patch } : site)));
+  };
+
+  const updateOpenClawNumber = (id: string, patch: Partial<OpenClawNumberConfig>) => {
+    saveOpenClawNumbers(openClawNumbers.map((site) => (site.id === id ? { ...site, ...patch } : site)));
+  };
+
+  const loadSavedSettings = useCallback(async () => {
+    setSettingsBusy(true);
+    const { data, error } = await commandCenterSettingsTable()
+      .select("id,remote_sites,openclaw_numbers,updated_at")
+      .eq("id", commandCenterSettingsId)
+      .maybeSingle();
+
+    if (error) {
+      setSettingsStatus("missing_backend");
+      setSettingsBusy(false);
+      return;
+    }
+
+    if (data) {
+      const remoteMap = new Map(safeRemoteSettings(data.remote_sites).map((site) => [site.id, site]));
+      const openClawMap = new Map(safeOpenClawSettings(data.openclaw_numbers).map((site) => [site.id, site]));
+      const nextRemoteSites = defaultRemoteSites.map((site) => ({
+        ...site,
+        url: remoteMap.get(site.id)?.url || site.url,
+        secret: remoteMap.get(site.id)?.secret || "",
+        status: "idle" as const,
+      }));
+      const nextOpenClawNumbers = defaultOpenClawNumbers.map((site) => ({
+        ...site,
+        phoneNumber: openClawMap.get(site.id)?.phoneNumber || "",
+        status: openClawMap.get(site.id)?.status || "pending",
+        notes: openClawMap.get(site.id)?.notes || "",
+      }));
+
+      saveRemoteSites(nextRemoteSites);
+      saveOpenClawNumbers(nextOpenClawNumbers);
+      setSettingsStatus("backend");
+    }
+
+    setSettingsBusy(false);
+  }, [saveOpenClawNumbers, saveRemoteSites]);
+
+  const saveSettingsToBackend = async () => {
+    setSettingsBusy(true);
+    const { error } = await commandCenterSettingsTable().upsert({
+      id: commandCenterSettingsId,
+      remote_sites: remoteSites.map(({ id, url, secret }) => ({ id, url, secret })),
+      openclaw_numbers: openClawNumbers.map(({ id, phoneNumber, status, notes }) => ({ id, phoneNumber, status, notes })),
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "id" });
+
+    setSettingsBusy(false);
+
+    if (error) {
+      setSettingsStatus("missing_backend");
+      toast({
+        title: "Settings saved in this browser",
+        description: "The durable backend settings table still needs to be applied in Lovable.",
+      });
+      return;
+    }
+
+    setSettingsStatus("backend");
+    toast({
+      title: "Command Center settings saved",
+      description: "Report URLs, secrets, and OpenClaw numbers are now stored for admin use.",
+    });
   };
 
   const fetchFreedomData = useCallback(async () => {
@@ -262,6 +433,10 @@ const CrossSiteRevenueDashboard = () => {
   useEffect(() => {
     fetchFreedomData();
   }, [fetchFreedomData]);
+
+  useEffect(() => {
+    void loadSavedSettings();
+  }, [loadSavedSettings]);
 
   const channelStats = useMemo(() => {
     const map = new Map<string, ChannelStats>();
@@ -345,6 +520,18 @@ const CrossSiteRevenueDashboard = () => {
   }, [channelStats, remoteSites]);
 
   const bestChannel = channelStats[0];
+  const connectedReports = remoteSites.filter((site) => site.status === "ready").length;
+  const missingSecrets = remoteSites.filter((site) => !site.secret).length;
+  const openClawReady = openClawNumbers.filter((site) => site.phoneNumber.trim().length > 0).length;
+  const remoteTotals = useMemo(() => {
+    const events = remoteSites.reduce((sum, site) => sum + numberFromTotals(site.report, ["events", "total_events", "page_views"]), 0);
+    const pageViews = remoteSites.reduce((sum, site) => sum + numberFromTotals(site.report, ["page_views"]), 0);
+    const registrations = remoteSites.reduce((sum, site) => sum + numberFromTotals(site.report, ["registrations"]), 0);
+    const advertiserInquiries = remoteSites.reduce((sum, site) => sum + numberFromTotals(site.report, ["advertiser_inquiries"]), 0);
+    const consultationRequests = remoteSites.reduce((sum, site) => sum + numberFromTotals(site.report, ["consultation_requests"]), 0);
+    return { events, pageViews, registrations, advertiserInquiries, consultationRequests };
+  }, [remoteSites]);
+  const advertiserPages = topRemotePages(remoteSites);
 
   return (
     <div className="space-y-6">
@@ -395,6 +582,56 @@ const CrossSiteRevenueDashboard = () => {
         </Card>
       )}
 
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <CheckCircle2 className="h-4 w-4 text-green-700" />
+              Command Center QA
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            <QaLine good={connectedReports === remoteSites.length} label={`${connectedReports}/${remoteSites.length} upstream reports connected`} />
+            <QaLine good={missingSecrets === 0} label={missingSecrets === 0 ? "All report secrets are entered" : `${missingSecrets} report secret${missingSecrets === 1 ? "" : "s"} missing`} />
+            <QaLine good={dataIssues.length === 0} label={dataIssues.length === 0 ? "Freedom-side admin data is readable" : "Some Freedom-side data is partially unavailable"} />
+            <QaLine good={settingsStatus === "backend"} label={settingsStatus === "backend" ? "Settings are saved durably" : "Settings are currently local to this browser"} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <DollarSign className="h-4 w-4 text-green-700" />
+              Weekly Revenue Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p><span className="font-semibold text-foreground">{totals.remoteRevenueIntent}</span> upstream revenue-intent signals are visible.</p>
+            <p><span className="font-semibold text-foreground">{totals.highIntentLeads}</span> Freedom leads are high-intent and should be worked first.</p>
+            <p><span className="font-semibold text-foreground">{remoteTotals.consultationRequests}</span> upstream consultation requests and <span className="font-semibold text-foreground">{remoteTotals.registrations}</span> registrations are in the reporting window.</p>
+            <p className="pt-1 text-xs">Best next action: {bestChannel ? `inspect ${sourceTitle(bestChannel.source)} and call the highest-scored leads first.` : "load upstream reports and refresh Freedom data."}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Megaphone className="h-4 w-4 text-primary" />
+              Advertiser Readiness
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p><span className="font-semibold text-foreground">{remoteTotals.events}</span> reportable upstream events.</p>
+            <p><span className="font-semibold text-foreground">{remoteTotals.pageViews}</span> tracked page views and <span className="font-semibold text-foreground">{remoteTotals.advertiserInquiries}</span> advertiser inquiries.</p>
+            <p className="pt-1 text-xs">
+              {connectedReports >= 2
+                ? "Enough report coverage to start building an advertiser snapshot."
+                : "Connect at least two upstream reports before using this as advertiser proof."}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <Card>
           <CardHeader>
@@ -442,6 +679,28 @@ const CrossSiteRevenueDashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-muted/30 p-3">
+                <div>
+                  <p className="text-sm font-semibold">Saved Settings</p>
+                  <p className="text-xs text-muted-foreground">
+                    {settingsStatus === "backend"
+                      ? "Report credentials and OpenClaw numbers are stored for admin use."
+                      : settingsStatus === "missing_backend"
+                        ? "Durable settings need the Lovable backend table; local browser settings still work."
+                        : "Settings are saved in this browser until backend storage is applied."}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" onClick={() => void loadSavedSettings()} disabled={settingsBusy} className="gap-2">
+                    <RefreshCw className={`h-4 w-4 ${settingsBusy ? "animate-spin" : ""}`} />
+                    Load Saved
+                  </Button>
+                  <Button size="sm" onClick={() => void saveSettingsToBackend()} disabled={settingsBusy} className="gap-2">
+                    <Save className="h-4 w-4" />
+                    Save Settings
+                  </Button>
+                </div>
+              </div>
               {remoteSites.map((site) => (
                 <div key={site.id} className="rounded-lg border border-border p-4">
                   <div className="flex flex-col gap-3">
@@ -475,6 +734,41 @@ const CrossSiteRevenueDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
+                <PhoneCall className="h-5 w-5 text-primary" />
+                OpenClaw Call Attribution
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
+                <p className="font-semibold">{openClawReady}/{openClawNumbers.length} routing numbers entered</p>
+                <p className="text-xs text-muted-foreground">Add each OpenClaw number here as you receive it. This gives us the map for call-tracking clarity once routing is dialed in.</p>
+              </div>
+              {openClawNumbers.map((site) => (
+                <div key={site.id} className="rounded-lg border border-border p-4">
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-semibold">{site.name}</h3>
+                      <Badge variant={site.phoneNumber ? "default" : "outline"}>{site.phoneNumber ? "Number Set" : "Pending"}</Badge>
+                    </div>
+                    <Input
+                      value={site.phoneNumber}
+                      onChange={(event) => updateOpenClawNumber(site.id, { phoneNumber: event.target.value })}
+                      placeholder="OpenClaw tracking number"
+                    />
+                    <Input
+                      value={site.notes}
+                      onChange={(event) => updateOpenClawNumber(site.id, { notes: event.target.value })}
+                      placeholder="Routing notes or campaign label"
+                    />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-primary" />
                 Next Revenue Moves
               </CardTitle>
@@ -499,6 +793,41 @@ const CrossSiteRevenueDashboard = () => {
           </Card>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Megaphone className="h-5 w-5 text-primary" />
+            Advertiser Snapshot Builder
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
+          <div className="space-y-3 text-sm">
+            <SnapshotMetric label="Connected reports" value={`${connectedReports}/${remoteSites.length}`} />
+            <SnapshotMetric label="Revenue-intent signals" value={totals.remoteRevenueIntent.toLocaleString()} />
+            <SnapshotMetric label="Advertiser inquiries" value={remoteTotals.advertiserInquiries.toLocaleString()} />
+            <SnapshotMetric label="Reportable events" value={remoteTotals.events.toLocaleString()} />
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <h3 className="font-semibold">Top advertiser-facing pages to inspect</h3>
+            {advertiserPages.length === 0 ? (
+              <p className="mt-2 text-sm text-muted-foreground">Load upstream reports to populate top pages.</p>
+            ) : (
+              <div className="mt-3 space-y-2">
+                {advertiserPages.map((page) => (
+                  <div key={`${page.site}-${page.name}`} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="truncate">{page.site}: {page.name}</span>
+                    <Badge variant="outline">{page.count}</Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="mt-4 text-xs text-muted-foreground">
+              Use this to build the media kit: audience volume, intent signals, top content, and advertiser inquiry count.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
@@ -510,6 +839,20 @@ const MetricCard = ({ label, value, highlight = false }: { label: string; value:
       <p className={`text-2xl font-bold ${highlight ? "text-green-700" : ""}`}>{value}</p>
     </CardContent>
   </Card>
+);
+
+const QaLine = ({ good, label }: { good: boolean; label: string }) => (
+  <div className="flex items-center gap-2">
+    {good ? <CheckCircle2 className="h-4 w-4 text-green-700" /> : <AlertCircle className="h-4 w-4 text-amber-600" />}
+    <span className={good ? "text-foreground" : "text-muted-foreground"}>{label}</span>
+  </div>
+);
+
+const SnapshotMetric = ({ label, value }: { label: string; value: string }) => (
+  <div className="rounded-lg border border-border p-4">
+    <p className="text-xs uppercase text-muted-foreground">{label}</p>
+    <p className="text-2xl font-bold">{value}</p>
+  </div>
 );
 
 const RemoteStatusBadge = ({ site }: { site: RemoteSiteConfig }) => {
