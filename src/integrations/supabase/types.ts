@@ -65,6 +65,30 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_command_center_settings: {
+        Row: {
+          created_at: string
+          id: string
+          openclaw_numbers: Json
+          remote_sites: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          openclaw_numbers?: Json
+          remote_sites?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          openclaw_numbers?: Json
+          remote_sites?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       assessment_access_audit: {
         Row: {
           action: string
