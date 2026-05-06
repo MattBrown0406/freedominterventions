@@ -294,15 +294,29 @@ export const BreadcrumbSchema = ({
 }: {
   items: { name: string; url: string }[];
 }) => {
+  const SITE_ORIGIN = "https://freedominterventions.com";
+  const toAbsolute = (url: string) => {
+    if (!url) return SITE_ORIGIN;
+    if (/^https?:\/\//i.test(url)) return url;
+    return `${SITE_ORIGIN}${url.startsWith("/") ? "" : "/"}${url}`;
+  };
   const schema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: item.url,
-    })),
+    itemListElement: items.map((item, index) => {
+      const absolute = toAbsolute(item.url);
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: {
+          "@type": "WebPage",
+          "@id": absolute,
+          url: absolute,
+          name: item.name,
+        },
+      };
+    }),
   };
 
   return (
