@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { BarChart3, PhoneCall, RefreshCw, TrendingUp } from "lucide-react";
+import { AlertCircle, BarChart3, PhoneCall, RefreshCw, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 
 interface SourceAttribution {
@@ -172,7 +171,6 @@ const locationTitle = (location: string) => {
 };
 
 const RevenueAttributionManager = () => {
-  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [contacts, setContacts] = useState<CrmContactRow[]>([]);
   const [assessments, setAssessments] = useState<AssessmentRow[]>([]);
@@ -181,6 +179,7 @@ const RevenueAttributionManager = () => {
   const [calls, setCalls] = useState<CallRow[]>([]);
   const [contactMessages, setContactMessages] = useState<ContactMessageRow[]>([]);
   const [followups, setFollowups] = useState<FollowupRow[]>([]);
+  const [dataIssues, setDataIssues] = useState<string[]>([]);
 
   const fetchAttribution = useCallback(async () => {
     setLoading(true);
@@ -202,35 +201,25 @@ const RevenueAttributionManager = () => {
       supabase.from("freedom_followup_queue").select("id,status,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
     ]);
 
-    const error = [
-      contactsResult.error,
-      assessmentsResult.error,
-      bookingsResult.error,
-      contractsResult.error,
-      callsResult.error,
-      contactMessagesResult.error,
-      followupsResult.error,
-    ].find(Boolean);
+    const issues: string[] = [];
+    if (contactsResult.error) issues.push("CRM contacts");
+    if (assessmentsResult.error) issues.push("assessments");
+    if (bookingsResult.error) issues.push("bookings");
+    if (contractsResult.error) issues.push("contracts");
+    if (callsResult.error) issues.push("call tracking");
+    if (contactMessagesResult.error) issues.push("contact messages");
+    if (followupsResult.error) issues.push("follow-up queue");
 
-    if (error) {
-      toast({
-        title: "Could not load attribution",
-        description: "Make sure the latest Freedom attribution migration is applied in Lovable.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
-    setContacts((contactsResult.data ?? []) as CrmContactRow[]);
-    setAssessments((assessmentsResult.data ?? []) as AssessmentRow[]);
-    setBookings((bookingsResult.data ?? []) as BookingRow[]);
-    setContracts((contractsResult.data ?? []) as ContractRow[]);
-    setCalls((callsResult.data ?? []) as CallRow[]);
-    setContactMessages((contactMessagesResult.data ?? []) as ContactMessageRow[]);
-    setFollowups((followupsResult.data ?? []) as FollowupRow[]);
+    setContacts((contactsResult.error ? [] : contactsResult.data ?? []) as CrmContactRow[]);
+    setAssessments((assessmentsResult.error ? [] : assessmentsResult.data ?? []) as AssessmentRow[]);
+    setBookings((bookingsResult.error ? [] : bookingsResult.data ?? []) as BookingRow[]);
+    setContracts((contractsResult.error ? [] : contractsResult.data ?? []) as ContractRow[]);
+    setCalls((callsResult.error ? [] : callsResult.data ?? []) as CallRow[]);
+    setContactMessages((contactMessagesResult.error ? [] : contactMessagesResult.data ?? []) as ContactMessageRow[]);
+    setFollowups((followupsResult.error ? [] : followupsResult.data ?? []) as FollowupRow[]);
+    setDataIssues(issues);
     setLoading(false);
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     fetchAttribution();
@@ -414,6 +403,20 @@ const RevenueAttributionManager = () => {
           Refresh
         </Button>
       </div>
+
+      {dataIssues.length > 0 && (
+        <Card className="border-amber-300 bg-amber-50 text-amber-950">
+          <CardContent className="flex flex-col gap-2 p-4 md:flex-row md:items-start">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div className="text-sm">
+              <p className="font-semibold">Some attribution data is not available yet.</p>
+              <p className="mt-1">
+                This tab is still usable. These sources could not be read from the current backend session: {dataIssues.join(", ")}.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {loading ? (
         <Card>

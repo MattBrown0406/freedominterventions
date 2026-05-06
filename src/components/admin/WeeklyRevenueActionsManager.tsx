@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 
 interface CrmContactRow {
@@ -213,12 +212,12 @@ const ActionList = ({ title, icon: Icon, actions, empty }: {
 );
 
 const WeeklyRevenueActionsManager = () => {
-  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [contacts, setContacts] = useState<CrmContactRow[]>([]);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [contracts, setContracts] = useState<ContractRow[]>([]);
   const [followups, setFollowups] = useState<FollowupRow[]>([]);
+  const [dataIssues, setDataIssues] = useState<string[]>([]);
 
   const fetchActions = useCallback(async () => {
     setLoading(true);
@@ -246,23 +245,19 @@ const WeeklyRevenueActionsManager = () => {
         .limit(500),
     ]);
 
-    const error = [contactsResult.error, bookingsResult.error, contractsResult.error, followupsResult.error].find(Boolean);
-    if (error) {
-      toast({
-        title: "Could not load revenue actions",
-        description: "The admin data tables may need the latest Lovable publish or admin policy.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
+    const issues: string[] = [];
+    if (contactsResult.error) issues.push("CRM contacts");
+    if (bookingsResult.error) issues.push("bookings");
+    if (contractsResult.error) issues.push("contracts");
+    if (followupsResult.error) issues.push("follow-up queue");
 
-    setContacts((contactsResult.data ?? []) as CrmContactRow[]);
-    setBookings((bookingsResult.data ?? []) as BookingRow[]);
-    setContracts((contractsResult.data ?? []) as ContractRow[]);
-    setFollowups((followupsResult.data ?? []) as FollowupRow[]);
+    setContacts((contactsResult.error ? [] : contactsResult.data ?? []) as CrmContactRow[]);
+    setBookings((bookingsResult.error ? [] : bookingsResult.data ?? []) as BookingRow[]);
+    setContracts((contractsResult.error ? [] : contractsResult.data ?? []) as ContractRow[]);
+    setFollowups((followupsResult.error ? [] : followupsResult.data ?? []) as FollowupRow[]);
+    setDataIssues(issues);
     setLoading(false);
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     fetchActions();
@@ -469,6 +464,20 @@ const WeeklyRevenueActionsManager = () => {
           </Button>
         </CardContent>
       </Card>
+
+      {dataIssues.length > 0 && (
+        <Card className="border-amber-300 bg-amber-50 text-amber-950">
+          <CardContent className="flex flex-col gap-2 p-4 md:flex-row md:items-start">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div className="text-sm">
+              <p className="font-semibold">Some revenue-action data is not available yet.</p>
+              <p className="mt-1">
+                This tab is still usable. These sources could not be read from the current backend session: {dataIssues.join(", ")}.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {loading ? (
         <Card>
