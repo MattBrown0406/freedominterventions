@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { subDays } from "date-fns";
-import { AlertCircle, BarChart3, CheckCircle2, DollarSign, ExternalLink, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, BarChart3, CheckCircle2, DollarSign, ExternalLink, Mail, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -232,6 +232,8 @@ const CrossSiteRevenueDashboard = () => {
   const [dataIssues, setDataIssues] = useState<string[]>([]);
   const [settingsStatus, setSettingsStatus] = useState<"local" | "backend" | "missing_backend">("local");
   const [settingsBusy, setSettingsBusy] = useState(false);
+  const [weeklySummarySending, setWeeklySummarySending] = useState(false);
+  const [weeklySummaryStatus, setWeeklySummaryStatus] = useState<string | null>(null);
   const [remoteSites, setRemoteSites] = useState<RemoteSiteConfig[]>(() => {
     if (typeof window === "undefined") {
       return defaultRemoteSites.map((site) => ({ ...site, secret: "", status: "idle" }));
@@ -430,6 +432,34 @@ const CrossSiteRevenueDashboard = () => {
     saveRemoteSites(next);
   }, [remoteSites, saveRemoteSites]);
 
+  const sendWeeklyOwnerSummary = async () => {
+    setWeeklySummarySending(true);
+    setWeeklySummaryStatus(null);
+
+    const { data, error } = await supabase.functions.invoke("send-weekly-owner-summary", {
+      body: { manual: true, source: "freedom_command_center" },
+    });
+
+    setWeeklySummarySending(false);
+
+    if (error) {
+      setWeeklySummaryStatus("Could not send weekly email. The Lovable backend function may need to be deployed.");
+      toast({
+        title: "Weekly email was not sent",
+        description: error.message || "Deploy the weekly owner summary function in Lovable, then try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const sentTo = typeof data === "object" && data && "sent_to" in data ? String(data.sent_to) : "Matt";
+    setWeeklySummaryStatus(`Last sent to ${sentTo}.`);
+    toast({
+      title: "Weekly owner email sent",
+      description: "The Freedom revenue summary has been emailed.",
+    });
+  };
+
   useEffect(() => {
     fetchFreedomData();
   }, [fetchFreedomData]);
@@ -610,6 +640,11 @@ const CrossSiteRevenueDashboard = () => {
             <p><span className="font-semibold text-foreground">{totals.highIntentLeads}</span> Freedom leads are high-intent and should be worked first.</p>
             <p><span className="font-semibold text-foreground">{remoteTotals.consultationRequests}</span> upstream consultation requests and <span className="font-semibold text-foreground">{remoteTotals.registrations}</span> registrations are in the reporting window.</p>
             <p className="pt-1 text-xs">Best next action: {bestChannel ? `inspect ${sourceTitle(bestChannel.source)} and call the highest-scored leads first.` : "load upstream reports and refresh Freedom data."}</p>
+            <Button size="sm" onClick={() => void sendWeeklyOwnerSummary()} disabled={weeklySummarySending} className="mt-2 w-full gap-2">
+              {weeklySummarySending ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+              Email Summary Now
+            </Button>
+            {weeklySummaryStatus && <p className="text-xs text-muted-foreground">{weeklySummaryStatus}</p>}
           </CardContent>
         </Card>
 

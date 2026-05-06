@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.assessment-to-notion]
 verify_jwt = false
+
+[functions.send-weekly-owner-summary]
+verify_jwt = false
