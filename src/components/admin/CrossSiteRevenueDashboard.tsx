@@ -91,7 +91,7 @@ const defaultRemoteSites = [
   {
     id: "party_wreckers",
     name: "Party Wreckers",
-    url: "https://bvqqxopmnuwzeyusnrsi.supabase.co/functions/v1/party-wreckers-funnel-report",
+    url: "https://bvqqxopmnuwzeyusnrsi.supabase.co/functions/v1/party-wreckers-revenue-report",
   },
   {
     id: "sober_helpline",
