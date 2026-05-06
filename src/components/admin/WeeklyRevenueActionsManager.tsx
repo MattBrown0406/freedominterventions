@@ -80,7 +80,7 @@ interface RevenueAction {
 
 const revenueStages = new Set(["consultation_booked", "readiness_intensive", "contract_sent", "contract_signed", "paid_booking_started"]);
 const closedStages = new Set(["paid", "lost", "closed"]);
-const funnelSources = new Set(["no_more_enabling", "sober_helpline"]);
+const funnelSources = new Set(["no_more_enabling", "sober_helpline", "party_wreckers"]);
 
 const asSourceAttribution = (value: Json | null | undefined) => {
   if (value && typeof value === "object" && !Array.isArray(value)) {
@@ -94,10 +94,18 @@ const sourceKey = (value: Json | null | undefined, fallback = "unknown") => {
   return attribution.source || attribution.utm_source || fallback;
 };
 
+const sourceFamily = (source: string) => {
+  if (source.includes("no_more_enabling") || source.includes("nme")) return "no_more_enabling";
+  if (source.includes("sober_helpline") || source.includes("family_squares")) return "sober_helpline";
+  if (source.includes("party_wreckers")) return "party_wreckers";
+  return source;
+};
+
 const sourceTitle = (source: string) => {
   const labels: Record<string, string> = {
     sober_helpline: "Sober Helpline",
     no_more_enabling: "No More Enabling",
+    party_wreckers: "Party Wreckers",
     organic_google: "Google Organic",
     organic_bing: "Bing Organic",
     direct: "Direct",
@@ -107,7 +115,8 @@ const sourceTitle = (source: string) => {
     assessment: "Assessment",
     unknown: "Unknown",
   };
-  return labels[source] || source.replace(/_/g, " ");
+  const key = sourceFamily(source);
+  return labels[key] || key.replace(/_/g, " ");
 };
 
 const contactName = (lead: CrmContactRow) => {
@@ -374,7 +383,7 @@ const WeeklyRevenueActionsManager = () => {
 
   const attributedOpportunities = useMemo(() => {
     return contacts
-      .filter((lead) => funnelSources.has(sourceKey(lead.source_attribution, lead.source)))
+      .filter((lead) => funnelSources.has(sourceFamily(sourceKey(lead.source_attribution, lead.source))))
       .filter((lead) => revenueStages.has(lead.pipeline_status) || lead.lead_score >= 60 || Boolean(lead.revenue_path))
       .sort((a, b) => {
         if (revenueStages.has(b.pipeline_status) !== revenueStages.has(a.pipeline_status)) {

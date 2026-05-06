@@ -116,6 +116,13 @@ const sourceKey = (value: Json | null | undefined, fallback = "unknown") => {
   return attribution.source || attribution.utm_source || fallback;
 };
 
+const sourceFamily = (source: string) => {
+  if (source.includes("no_more_enabling") || source.includes("nme")) return "no_more_enabling";
+  if (source.includes("sober_helpline") || source.includes("family_squares")) return "sober_helpline";
+  if (source.includes("party_wreckers")) return "party_wreckers";
+  return source;
+};
+
 const stringFromMetadata = (metadata: Json | null | undefined, key: string) => {
   const value = asRecord(metadata)[key];
   return typeof value === "string" && value.trim().length > 0 ? value : null;
@@ -138,6 +145,7 @@ const sourceTitle = (source: string) => {
   const labels: Record<string, string> = {
     sober_helpline: "Sober Helpline",
     no_more_enabling: "No More Enabling",
+    party_wreckers: "Party Wreckers",
     organic_google: "Google Organic",
     organic_bing: "Bing Organic",
     direct: "Direct",
@@ -148,7 +156,8 @@ const sourceTitle = (source: string) => {
     contract: "Contract",
     unknown: "Unknown",
   };
-  return labels[source] || source.replace(/_/g, " ");
+  const key = sourceFamily(source);
+  return labels[key] || key.replace(/_/g, " ");
 };
 
 const locationTitle = (location: string) => {
@@ -251,23 +260,23 @@ const RevenueAttributionManager = () => {
     };
 
     contacts.forEach((row) => {
-      get(sourceKey(row.source_attribution, row.source)).contacts += 1;
+      get(sourceFamily(sourceKey(row.source_attribution, row.source))).contacts += 1;
     });
 
     calls.forEach((row) => {
-      get(sourceKey(row.source_attribution)).calls += 1;
+      get(sourceFamily(sourceKey(row.source_attribution))).calls += 1;
     });
 
     contactMessages.forEach((row) => {
-      get(sourceKey(row.source_attribution, "contact_message")).contactMessages += 1;
+      get(sourceFamily(sourceKey(row.source_attribution, "contact_message"))).contactMessages += 1;
     });
 
     assessments.forEach((row) => {
-      get(sourceKey(row.source_attribution, "assessment")).assessments += 1;
+      get(sourceFamily(sourceKey(row.source_attribution, "assessment"))).assessments += 1;
     });
 
     bookings.forEach((row) => {
-      const stats = get(sourceKey(row.source_attribution, "booking"));
+      const stats = get(sourceFamily(sourceKey(row.source_attribution, "booking")));
       if (row.booking_type === "consultation") {
         stats.consultations += 1;
       } else {
@@ -277,7 +286,7 @@ const RevenueAttributionManager = () => {
     });
 
     contracts.forEach((row) => {
-      const stats = get(sourceKey(row.source_attribution, "contract"));
+      const stats = get(sourceFamily(sourceKey(row.source_attribution, "contract")));
       if (row.status === "paid") {
         stats.contractsPaid += 1;
         stats.contractRevenueCents += row.amount_cents || 0;
@@ -287,7 +296,7 @@ const RevenueAttributionManager = () => {
     });
 
     followups.forEach((row) => {
-      if (row.status === "pending") get(sourceKey(row.source_attribution)).followupsPending += 1;
+      if (row.status === "pending") get(sourceFamily(sourceKey(row.source_attribution))).followupsPending += 1;
     });
 
     return [...map.values()].sort((a, b) => {
@@ -320,7 +329,7 @@ const RevenueAttributionManager = () => {
 
     calls.forEach((call) => {
       const location = stringFromMetadata(call.metadata, "call_location") || stringFromMetadata(call.metadata, "location") || "unknown";
-      const source = sourceKey(call.source_attribution);
+      const source = sourceFamily(sourceKey(call.source_attribution));
       const key = `${call.phone_number}|${source}|${location}`;
       const existing = map.get(key);
       if (existing) {

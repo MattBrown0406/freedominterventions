@@ -19,6 +19,7 @@ import AbandonedCartsManager from "@/components/admin/AbandonedCartsManager";
 import ContractsManager from "@/components/admin/ContractsManager";
 import EmailOutreachSection from "@/components/admin/EmailOutreachSection";
 import FreedomFollowupsManager from "@/components/admin/FreedomFollowupsManager";
+import CrossSiteRevenueDashboard from "@/components/admin/CrossSiteRevenueDashboard";
 import RevenueAttributionManager from "@/components/admin/RevenueAttributionManager";
 import RevenuePipelineManager from "@/components/admin/RevenuePipelineManager";
 import WeeklyRevenueActionsManager from "@/components/admin/WeeklyRevenueActionsManager";
@@ -364,6 +365,10 @@ const AdminDashboard = () => {
               <Target className="w-4 h-4" />
               Revenue Actions
             </TabsTrigger>
+            <TabsTrigger value="cross-site-revenue" className="gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Command Center
+            </TabsTrigger>
             <TabsTrigger value="attribution" className="gap-2">
               <BarChart3 className="w-4 h-4" />
               Attribution
@@ -567,6 +572,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="revenue-actions">
               <WeeklyRevenueActionsManager />
+            </TabsContent>
+
+            <TabsContent value="cross-site-revenue">
+              <CrossSiteRevenueDashboard />
             </TabsContent>
 
             <TabsContent value="attribution">
