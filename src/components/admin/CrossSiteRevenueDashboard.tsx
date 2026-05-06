@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { subDays } from "date-fns";
-import { BarChart3, ExternalLink, PhoneCall, RefreshCw, Settings, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, BarChart3, ExternalLink, PhoneCall, RefreshCw, Settings, Target, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 
 interface SourceAttribution {
@@ -156,13 +155,13 @@ const numberFromTotals = (report: RemoteReport | undefined, keys: string[]) => {
 };
 
 const CrossSiteRevenueDashboard = () => {
-  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [contacts, setContacts] = useState<CrmContactRow[]>([]);
   const [assessments, setAssessments] = useState<AssessmentRow[]>([]);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [contracts, setContracts] = useState<ContractRow[]>([]);
   const [calls, setCalls] = useState<CallRow[]>([]);
+  const [dataIssues, setDataIssues] = useState<string[]>([]);
   const [remoteSites, setRemoteSites] = useState<RemoteSiteConfig[]>(() => {
     if (typeof window === "undefined") {
       return defaultRemoteSites.map((site) => ({ ...site, secret: "", status: "idle" }));
@@ -215,24 +214,22 @@ const CrossSiteRevenueDashboard = () => {
       supabase.from("call_analytics").select("id,source_attribution,phone_number,page_path,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
     ]);
 
-    const error = [contactsResult.error, assessmentsResult.error, bookingsResult.error, contractsResult.error, callsResult.error].find(Boolean);
-    if (error) {
-      toast({
-        title: "Could not load Freedom revenue data",
-        description: "The dashboard is waiting on the latest Freedom backend tables.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
+    const issues: string[] = [];
 
-    setContacts((contactsResult.data ?? []) as CrmContactRow[]);
-    setAssessments((assessmentsResult.data ?? []) as AssessmentRow[]);
-    setBookings((bookingsResult.data ?? []) as BookingRow[]);
-    setContracts((contractsResult.data ?? []) as ContractRow[]);
-    setCalls((callsResult.data ?? []) as CallRow[]);
+    if (contactsResult.error) issues.push("CRM contacts");
+    if (assessmentsResult.error) issues.push("assessments");
+    if (bookingsResult.error) issues.push("bookings");
+    if (contractsResult.error) issues.push("contracts");
+    if (callsResult.error) issues.push("call tracking");
+
+    setContacts((contactsResult.error ? [] : contactsResult.data ?? []) as CrmContactRow[]);
+    setAssessments((assessmentsResult.error ? [] : assessmentsResult.data ?? []) as AssessmentRow[]);
+    setBookings((bookingsResult.error ? [] : bookingsResult.data ?? []) as BookingRow[]);
+    setContracts((contractsResult.error ? [] : contractsResult.data ?? []) as ContractRow[]);
+    setCalls((callsResult.error ? [] : callsResult.data ?? []) as CallRow[]);
+    setDataIssues(issues);
     setLoading(false);
-  }, [toast]);
+  }, []);
 
   const fetchRemoteReports = useCallback(async () => {
     const loadingSites = remoteSites.map((site) => (site.url && site.secret ? { ...site, status: "loading" as const } : site));
@@ -383,6 +380,20 @@ const CrossSiteRevenueDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {dataIssues.length > 0 && (
+        <Card className="border-amber-300 bg-amber-50 text-amber-950">
+          <CardContent className="flex flex-col gap-2 p-4 md:flex-row md:items-start">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div className="text-sm">
+              <p className="font-semibold">Some Freedom-side data is not available yet.</p>
+              <p className="mt-1">
+                The Command Center is still usable. These sources could not be read from the current backend session: {dataIssues.join(", ")}.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <Card>
