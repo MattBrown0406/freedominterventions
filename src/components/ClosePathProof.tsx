@@ -14,6 +14,13 @@ const proof = [
   "No promise that someone will say yes; a process that changes what the family does next",
 ];
 
+const ladder = [
+  { step: "Free consult", outcome: "Know whether paid help is actually needed." },
+  { step: "Crisis coaching", outcome: "Get a concrete script, boundary, and next move." },
+  { step: "Readiness intensive", outcome: "Align the family before intervention decisions." },
+  { step: "Full intervention", outcome: "Retain Matt for planning, treatment coordination, and intervention." },
+];
+
 export default function ClosePathProof({ source, className = "" }: ClosePathProofProps) {
   return (
     <section className={`py-12 md:py-16 ${className}`}>
@@ -25,8 +32,16 @@ export default function ClosePathProof({ source, className = "" }: ClosePathProo
             </div>
             <h2 className="font-serif text-3xl font-bold text-foreground">Why families call before they are fully ready</h2>
             <p className="mt-3 text-muted-foreground">
-              A good first call does not force a sale. It tells the family what level of help fits the actual risk.
+              A good first call does not force a sale. It tells the family what level of help fits the actual risk and what to do next.
             </p>
+            <div className="mt-5 space-y-2">
+              {ladder.map((item) => (
+                <div key={item.step} className="rounded-lg border border-border bg-background p-3">
+                  <p className="text-sm font-semibold text-foreground">{item.step}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.outcome}</p>
+                </div>
+              ))}
+            </div>
             <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: `${source}_proof_block` }}>
               <Button className="mt-5">
                 <PhoneCall className="h-4 w-4" />

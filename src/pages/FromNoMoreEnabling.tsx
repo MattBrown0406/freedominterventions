@@ -13,6 +13,7 @@ import { trackEvent } from "@/lib/analytics";
 const nextSteps = [
   {
     icon: ClipboardCheck,
+    label: "Structured read",
     title: "You need Matt to see the whole picture",
     description: "Complete the assessment when you need a structured read on urgency, risk, family leverage, and whether intervention planning makes sense.",
     cta: "Complete Assessment",
@@ -21,6 +22,7 @@ const nextSteps = [
   },
   {
     icon: Calendar,
+    label: "Free first step",
     title: "You need a first conversation",
     description: "Book a free consultation when you know the family cannot keep doing the same thing and you need a clear recommendation.",
     cta: "Book Free Consultation",
@@ -29,6 +31,7 @@ const nextSteps = [
   },
   {
     icon: Users,
+    label: "$150 coaching",
     title: "The family needs coaching now",
     description: "Book crisis coaching if the family is divided, enabling has escalated, or you need a plan before the next hard conversation.",
     cta: "Book Crisis Coaching",
@@ -37,6 +40,7 @@ const nextSteps = [
   },
   {
     icon: ShieldCheck,
+    label: "$2,500 qualifier",
     title: "Intervention may be next",
     description: "Use the intervention readiness path when treatment refusal, serious risk, and family exhaustion are all present.",
     cta: "Check Intervention Readiness",
@@ -143,6 +147,9 @@ const FromNoMoreEnabling = () => {
                       <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
                         <Icon className="h-6 w-6" />
                       </div>
+                      <p className="mb-3 w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                        {path.label}
+                      </p>
                       <h3 className="font-serif text-2xl font-bold text-foreground mb-3">{path.title}</h3>
                       <p className="text-muted-foreground leading-relaxed mb-6">{path.description}</p>
                       <span className="inline-flex items-center gap-2 font-semibold text-primary">

@@ -4,8 +4,11 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
-import { Phone, Play, Clock, Calendar, Users} from "lucide-react";
+import { Phone, Play, Clock, Calendar, Users } from "lucide-react";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
+import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import RevenuePathTriage from "@/components/RevenuePathTriage";
+import ClosePathProof from "@/components/ClosePathProof";
 
 import { Link } from "react-router-dom";
 interface Episode {
@@ -166,22 +169,39 @@ const PartyWreckersPodcast = () => {
               
               <div className="bg-card p-8 rounded-2xl border border-border mt-12 text-center">
                 <h3 className="font-serif text-xl font-bold text-foreground mb-4">
-                  Need Help Now?
+                  Heard something that sounded like your family?
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  If you need help with a loved one struggling with addiction, we're here for you.
+                  The podcast can give you language. The next step is choosing the right level of help before the next crisis or treatment window passes.
                 </p>
-                <a href="tel:+15418386009">
-                  <Button variant="hero" size="lg">
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Us Now
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+                  <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "party_wreckers_podcast_help_card" }}>
+                    <Button variant="hero" size="lg">
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call Matt Now
+                    </Button>
+                  </TrackedPhoneLink>
+                  <Button asChild variant="outline" size="lg">
+                    <Link to="/?type=consultation#booking">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Book Free Consultation
+                    </Link>
                   </Button>
-                </a>
+                  <Button asChild variant="outline" size="lg">
+                    <Link to="/intervention-readiness">
+                      <Users className="w-4 h-4 mr-2" />
+                      Check Intervention Readiness
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <RevenuePathTriage source="party_wreckers_podcast" className="bg-muted/20 border-y border-border" compact />
+      <ClosePathProof source="party_wreckers_podcast" />
 
       {/* Family Intervention Link */}
       <section className="py-8 bg-primary/5 border-y border-primary/10">
@@ -189,14 +209,22 @@ const PartyWreckersPodcast = () => {
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <p className="font-semibold text-foreground">Need help planning a family intervention?</p>
-              <p className="text-sm text-muted-foreground">Learn how our family intervention services work — and what to expect.</p>
+              <p className="text-sm text-muted-foreground">Learn how our family intervention services work and what to expect.</p>
             </div>
-            <Link to="/family-intervention" className="shrink-0">
-              <Button variant="outline" className="gap-2 whitespace-nowrap">
-                <Users className="h-4 w-4" />
-                Family Intervention Services
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
+              <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "party_wreckers_family_intervention_strip" }}>
+                <Button variant="hero" className="gap-2 whitespace-nowrap">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Call Now
+                </Button>
+              </TrackedPhoneLink>
+              <Link to="/family-intervention" className="shrink-0">
+                <Button variant="outline" className="gap-2 whitespace-nowrap">
+                  <Users className="h-4 w-4" />
+                  Family Intervention Services
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

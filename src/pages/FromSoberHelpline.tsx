@@ -13,6 +13,7 @@ import { trackEvent } from "@/lib/analytics";
 const paths = [
   {
     icon: Phone,
+    label: "Immediate",
     title: "The situation is moving fast",
     description: "Call Matt directly when safety, treatment entry, relapse, disappearance, or family conflict is escalating.",
     cta: "Call Matt Now",
@@ -21,6 +22,7 @@ const paths = [
   },
   {
     icon: Calendar,
+    label: "Free",
     title: "You need a first conversation",
     description: "Use the free consultation if you need a quick read on whether this is coaching, treatment planning, or intervention work.",
     cta: "Book Free Consultation",
@@ -29,6 +31,7 @@ const paths = [
   },
   {
     icon: Users,
+    label: "$150",
     title: "The family needs a plan",
     description: "Book crisis coaching when the family is divided, enabling is intensifying, or you need a script before the next conversation.",
     cta: "Book Crisis Coaching",
@@ -37,6 +40,7 @@ const paths = [
   },
   {
     icon: ShieldCheck,
+    label: "$2,500",
     title: "Intervention may be the next step",
     description: "Start the Family Readiness Intensive when treatment refusal, risk, and family alignment need deeper preparation.",
     cta: "Review Readiness Intensive",
@@ -142,6 +146,9 @@ const FromSoberHelpline = () => {
                     <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Icon className="h-6 w-6" />
                     </div>
+                    <p className="mb-3 w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                      {path.label}
+                    </p>
                     <h3 className="font-serif text-2xl font-bold text-foreground mb-3">{path.title}</h3>
                     <p className="text-muted-foreground leading-relaxed mb-6">{path.description}</p>
                     <span className="inline-flex items-center gap-2 font-semibold text-primary">

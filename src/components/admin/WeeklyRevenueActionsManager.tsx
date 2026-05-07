@@ -193,12 +193,34 @@ const dueText = (value: string | null) => {
   return `Due ${format(date, "MMM d")}`;
 };
 
-const sourceBoost = (source: string) => {
-  const family = sourceFamily(source);
-  if (family === "no_more_enabling") return 12;
-  if (family === "sober_helpline") return 10;
-  if (family === "party_wreckers") return 7;
+const revenuePathBoost = (revenuePath: string | null | undefined) => {
+  const path = (revenuePath || "").toLowerCase();
+  if (/contract|full[_\s-]?intervention|intervention[_\s-]?agreement/.test(path)) return 24;
+  if (/intervention|readiness|intensive/.test(path)) return 18;
+  if (/crisis|coaching|family[_\s-]?coaching/.test(path)) return 12;
+  if (/consult|assessment/.test(path)) return 8;
   return 0;
+};
+
+const sourceBoost = (source: string, revenuePath?: string | null) => {
+  const family = sourceFamily(source);
+  const path = (revenuePath || "").toLowerCase();
+  if (family === "no_more_enabling") return 14 + (/intervention|readiness|enabling|assessment/.test(path) ? 6 : 0);
+  if (family === "sober_helpline") return 13 + (/coaching|consult|family|readiness/.test(path) ? 5 : 0);
+  if (family === "party_wreckers") return 9 + (/intervention|consult|readiness/.test(path) ? 4 : 0);
+  if (family === "organic_google") return 8;
+  if (family === "direct") return 6;
+  if (family === "referral") return 6;
+  return 0;
+};
+
+const sourceIntentNote = (source: string, revenuePath?: string | null) => {
+  const family = sourceFamily(source);
+  const pathLabel = revenuePath ? revenuePath.replace(/_/g, " ") : "no path set";
+  if (family === "no_more_enabling") return `NME intervention/enabling intent · ${pathLabel}`;
+  if (family === "sober_helpline") return `Sober Helpline support-to-paid-help intent · ${pathLabel}`;
+  if (family === "party_wreckers") return `Party Wreckers audience bridge · ${pathLabel}`;
+  return `${sourceTitle(source)} · ${pathLabel}`;
 };
 
 const dueBoost = (dueAt: string | null) => {
@@ -739,9 +761,10 @@ const WeeklyRevenueActionsManager = () => {
           lead.lead_score +
           stageBoost(lead.pipeline_status) +
           dueBoost(lead.next_action_due_at) +
-          sourceBoost(source) +
+          sourceBoost(source, lead.revenue_path) +
+          revenuePathBoost(lead.revenue_path) +
           (lead.phone ? 8 : 0) +
-          (lead.revenue_path ? 6 : 0),
+          (lead.revenue_path ? 4 : 0),
         );
 
         let lane: MoneyListItem["lane"] = "nurture";
@@ -766,7 +789,7 @@ const WeeklyRevenueActionsManager = () => {
           moneyScore: score,
           lane,
           valueLabel: contractValue ? formatUsd(contractValue) : lead.revenue_path ? lead.revenue_path.replace(/_/g, " ") : "Unknown, qualify on call",
-          evidence: `${statusLabel(lead.pipeline_status)} · lead score ${lead.lead_score} · ${sourceTitle(source)}`,
+          evidence: `${sourceIntentNote(source, lead.revenue_path)} · ${statusLabel(lead.pipeline_status)} · lead score ${lead.lead_score}`,
           crmContactId: lead.id,
         });
       });
@@ -903,7 +926,7 @@ const WeeklyRevenueActionsManager = () => {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">NME/SH Opps</p>
+            <p className="text-xs uppercase text-muted-foreground">Funnel Opps</p>
             <p className="text-2xl font-bold text-green-700">{totals.attributed}</p>
           </CardContent>
         </Card>
@@ -986,10 +1009,10 @@ const WeeklyRevenueActionsManager = () => {
           />
           <div className="xl:col-span-2">
             <ActionList
-              title="NME and Sober Helpline Revenue Opportunities"
+              title="Connected Funnel Revenue Opportunities"
               icon={Target}
               actions={attributedOpportunities}
-              empty="No attributed NME or Sober Helpline opportunities yet."
+              empty="No attributed NME, Sober Helpline, or Party Wreckers opportunities yet."
             />
           </div>
           <Card className="xl:col-span-2">
