@@ -1,0 +1,1 @@
+DELETE FROM assessments WHERE id = '707da3ad-e90c-4d2c-af01-1b2f8850a64d';
