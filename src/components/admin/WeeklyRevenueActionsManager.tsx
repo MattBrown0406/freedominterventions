@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { differenceInCalendarDays, format, isBefore, parseISO, startOfToday } from "date-fns";
-import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, FileSignature, Mail, Phone, RefreshCw, Target, Users } from "lucide-react";
+import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, FileSignature, Mail, Phone, RefreshCw, Save, Target, Trash2, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
 
 interface CrmContactRow {
@@ -20,6 +24,7 @@ interface CrmContactRow {
   pipeline_status: string;
   next_action: string | null;
   next_action_due_at: string | null;
+  notes: string | null;
   last_engagement_at: string | null;
   created_at: string;
   updated_at: string;
@@ -82,7 +87,19 @@ interface MoneyListItem extends RevenueAction {
   lane: "close" | "book" | "recover" | "nurture";
   valueLabel: string;
   evidence: string;
+  crmContactId?: string;
 }
+
+const pipelineStages = [
+  { id: "new", label: "New", nextAction: "Call within 15 minutes" },
+  { id: "contacted", label: "Contacted", nextAction: "Book consultation or readiness call" },
+  { id: "consultation_booked", label: "Consult Booked", nextAction: "Prepare call notes" },
+  { id: "readiness_intensive", label: "Readiness Intensive", nextAction: "Confirm family decision makers" },
+  { id: "contract_sent", label: "Contract Sent", nextAction: "Follow up on agreement" },
+  { id: "contract_signed", label: "Contract Signed", nextAction: "Collect payment and schedule intervention" },
+  { id: "paid", label: "Paid", nextAction: "Start case onboarding" },
+  { id: "lost", label: "Lost", nextAction: "Archive or add nurture note" },
+];
 
 const revenueStages = new Set(["consultation_booked", "readiness_intensive", "contract_sent", "contract_signed", "paid_booking_started"]);
 const closedStages = new Set(["paid", "lost", "closed"]);
@@ -209,6 +226,19 @@ const stageBoost = (status: string) => {
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+const toDatetimeLocal = (value: string | null) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 16);
+};
+
+const fromDatetimeLocal = (value: string) => {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+};
+
 const actionSort = (a: MoneyListItem, b: MoneyListItem) => {
   if (b.moneyScore !== a.moneyScore) return b.moneyScore - a.moneyScore;
   const laneOrder: Record<MoneyListItem["lane"], number> = { close: 4, book: 3, recover: 2, nurture: 1 };
@@ -274,7 +304,35 @@ const ActionList = ({ title, icon: Icon, actions, empty }: {
   </Card>
 );
 
-const DailyMoneyList = ({ items }: { items: MoneyListItem[] }) => (
+const DailyMoneyList = ({
+  items,
+  contactsById,
+  noteDrafts,
+  actionDrafts,
+  dueDrafts,
+  savingId,
+  deletingId,
+  onNoteChange,
+  onActionChange,
+  onDueChange,
+  onStatusChange,
+  onSaveLead,
+  onDeleteLead,
+}: {
+  items: MoneyListItem[];
+  contactsById: Map<string, CrmContactRow>;
+  noteDrafts: Record<string, string>;
+  actionDrafts: Record<string, string>;
+  dueDrafts: Record<string, string>;
+  savingId: string | null;
+  deletingId: string | null;
+  onNoteChange: (leadId: string, value: string) => void;
+  onActionChange: (leadId: string, value: string) => void;
+  onDueChange: (leadId: string, value: string) => void;
+  onStatusChange: (lead: CrmContactRow, status: string) => void;
+  onSaveLead: (lead: CrmContactRow) => void;
+  onDeleteLead: (lead: CrmContactRow) => void;
+}) => (
   <Card className="border-green-200 bg-green-50/60">
     <CardHeader>
       <CardTitle className="flex flex-col gap-3 text-base md:flex-row md:items-center md:justify-between">
@@ -293,6 +351,9 @@ const DailyMoneyList = ({ items }: { items: MoneyListItem[] }) => (
       ) : (
         items.map((item, index) => (
           <div key={item.id} className="rounded-lg border border-green-200 bg-white p-4 shadow-sm">
+            {(() => {
+              const lead = item.crmContactId ? contactsById.get(item.crmContactId) : null;
+              return (
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
@@ -311,6 +372,57 @@ const DailyMoneyList = ({ items }: { items: MoneyListItem[] }) => (
                   <p><span className="font-semibold text-foreground">Timing:</span> {item.dueLabel}</p>
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">{item.evidence}</p>
+                {lead && (
+                  <div className="mt-4 space-y-3 rounded-lg border border-border bg-muted/20 p-3">
+                    <div className="grid gap-3 lg:grid-cols-[0.75fr_1.25fr_0.8fr]">
+                      <Select
+                        value={pipelineStages.some((stage) => stage.id === lead.pipeline_status) ? lead.pipeline_status : "new"}
+                        onValueChange={(value) => onStatusChange(lead, value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {pipelineStages.map((stage) => (
+                            <SelectItem key={stage.id} value={stage.id}>{stage.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        value={actionDrafts[lead.id] || ""}
+                        onChange={(event) => onActionChange(lead.id, event.target.value)}
+                        placeholder="Next revenue action"
+                      />
+                      <Input
+                        type="datetime-local"
+                        value={dueDrafts[lead.id] || ""}
+                        onChange={(event) => onDueChange(lead.id, event.target.value)}
+                      />
+                    </div>
+                    <Textarea
+                      value={noteDrafts[lead.id] || ""}
+                      onChange={(event) => onNoteChange(lead.id, event.target.value)}
+                      placeholder="Private notes for this intervention prospect or coaching client"
+                      rows={3}
+                    />
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="sm" onClick={() => onSaveLead(lead)} disabled={savingId === lead.id} className="gap-2">
+                        <Save className="h-4 w-4" />
+                        Save Edits
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => onDeleteLead(lead)}
+                        disabled={deletingId === lead.id}
+                        className="gap-2"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete Lead
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex shrink-0 flex-wrap gap-2">
                 {item.phone && (
@@ -329,6 +441,8 @@ const DailyMoneyList = ({ items }: { items: MoneyListItem[] }) => (
                 </Button>
               </div>
             </div>
+              );
+            })()}
           </div>
         ))
       )}
@@ -337,19 +451,25 @@ const DailyMoneyList = ({ items }: { items: MoneyListItem[] }) => (
 );
 
 const WeeklyRevenueActionsManager = () => {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [contacts, setContacts] = useState<CrmContactRow[]>([]);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [contracts, setContracts] = useState<ContractRow[]>([]);
   const [followups, setFollowups] = useState<FollowupRow[]>([]);
   const [dataIssues, setDataIssues] = useState<string[]>([]);
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [actionDrafts, setActionDrafts] = useState<Record<string, string>>({});
+  const [dueDrafts, setDueDrafts] = useState<Record<string, string>>({});
 
   const fetchActions = useCallback(async () => {
     setLoading(true);
     const [contactsResult, bookingsResult, contractsResult, followupsResult] = await Promise.all([
       supabase
         .from("crm_contacts")
-        .select("id,email,first_name,last_name,phone,source,source_attribution,lead_score,revenue_path,pipeline_status,next_action,next_action_due_at,last_engagement_at,created_at,updated_at")
+        .select("id,email,first_name,last_name,phone,source,source_attribution,lead_score,revenue_path,pipeline_status,next_action,next_action_due_at,notes,last_engagement_at,created_at,updated_at")
         .order("next_action_due_at", { ascending: true, nullsFirst: false })
         .limit(750),
       supabase
@@ -376,10 +496,14 @@ const WeeklyRevenueActionsManager = () => {
     if (contractsResult.error) issues.push("contracts");
     if (followupsResult.error) issues.push("follow-up queue");
 
-    setContacts((contactsResult.error ? [] : contactsResult.data ?? []) as CrmContactRow[]);
+    const contactRows = (contactsResult.error ? [] : contactsResult.data ?? []) as CrmContactRow[];
+    setContacts(contactRows);
     setBookings((bookingsResult.error ? [] : bookingsResult.data ?? []) as BookingRow[]);
     setContracts((contractsResult.error ? [] : contractsResult.data ?? []) as ContractRow[]);
     setFollowups((followupsResult.error ? [] : followupsResult.data ?? []) as FollowupRow[]);
+    setNoteDrafts(Object.fromEntries(contactRows.map((lead) => [lead.id, lead.notes || ""])));
+    setActionDrafts(Object.fromEntries(contactRows.map((lead) => [lead.id, lead.next_action || ""])));
+    setDueDrafts(Object.fromEntries(contactRows.map((lead) => [lead.id, toDatetimeLocal(lead.next_action_due_at)])));
     setDataIssues(issues);
     setLoading(false);
   }, []);
@@ -390,6 +514,70 @@ const WeeklyRevenueActionsManager = () => {
 
   const contractEmails = useMemo(() => new Set(contracts.map((row) => row.client_email.toLowerCase())), [contracts]);
   const paidEmails = useMemo(() => new Set(contracts.filter((row) => row.status === "paid").map((row) => row.client_email.toLowerCase())), [contracts]);
+  const contactsById = useMemo(() => new Map(contacts.map((lead) => [lead.id, lead])), [contacts]);
+
+  const updateLead = async (lead: CrmContactRow, patch: Partial<CrmContactRow>, successMessage: string) => {
+    setSavingId(lead.id);
+    const { error } = await supabase
+      .from("crm_contacts")
+      .update({ ...patch, updated_at: new Date().toISOString() })
+      .eq("id", lead.id);
+
+    if (error) {
+      toast({
+        title: "Lead update failed",
+        description: "The lead was not changed. Refresh the Money List and try again.",
+        variant: "destructive",
+      });
+      setSavingId(null);
+      return;
+    }
+
+    setContacts((current) => current.map((row) => (row.id === lead.id ? { ...row, ...patch, updated_at: new Date().toISOString() } : row)));
+    toast({ title: successMessage });
+    setSavingId(null);
+  };
+
+  const handleMoneyStatusChange = async (lead: CrmContactRow, status: string) => {
+    const stage = pipelineStages.find((item) => item.id === status);
+    const nextAction = stage?.nextAction || lead.next_action || "";
+    setActionDrafts((current) => ({ ...current, [lead.id]: nextAction }));
+    await updateLead(lead, {
+      pipeline_status: status,
+      next_action: nextAction,
+      last_engagement_at: new Date().toISOString(),
+    }, `Moved to ${stage?.label || status}`);
+  };
+
+  const saveMoneyLead = async (lead: CrmContactRow) => {
+    await updateLead(lead, {
+      next_action: actionDrafts[lead.id] || null,
+      next_action_due_at: fromDatetimeLocal(dueDrafts[lead.id] || ""),
+      notes: noteDrafts[lead.id] || null,
+      last_engagement_at: new Date().toISOString(),
+    }, "Money List edits saved");
+  };
+
+  const deleteMoneyLead = async (lead: CrmContactRow) => {
+    const confirmed = window.confirm(`Delete ${contactName(lead)} from CRM? This removes the lead from Money List and Revenue Pipeline.`);
+    if (!confirmed) return;
+
+    setDeletingId(lead.id);
+    const { error } = await supabase.from("crm_contacts").delete().eq("id", lead.id);
+    if (error) {
+      toast({
+        title: "Lead was not deleted",
+        description: "The CRM record could not be deleted. Refresh and try again.",
+        variant: "destructive",
+      });
+      setDeletingId(null);
+      return;
+    }
+
+    setContacts((current) => current.filter((row) => row.id !== lead.id));
+    toast({ title: "Lead deleted from CRM" });
+    setDeletingId(null);
+  };
 
   const callToday = useMemo(() => {
     const now = new Date();
@@ -535,6 +723,7 @@ const WeeklyRevenueActionsManager = () => {
   const dailyMoneyList = useMemo(() => {
     const candidates: MoneyListItem[] = [];
     const contractValueByEmail = new Map<string, number>();
+    const contactByEmail = new Map(contacts.map((contact) => [normalizeEmail(contact.email), contact]));
 
     contracts.forEach((contract) => {
       const email = normalizeEmail(contract.client_email);
@@ -578,6 +767,7 @@ const WeeklyRevenueActionsManager = () => {
           lane,
           valueLabel: contractValue ? formatUsd(contractValue) : lead.revenue_path ? lead.revenue_path.replace(/_/g, " ") : "Unknown, qualify on call",
           evidence: `${statusLabel(lead.pipeline_status)} · lead score ${lead.lead_score} · ${sourceTitle(source)}`,
+          crmContactId: lead.id,
         });
       });
 
@@ -585,6 +775,7 @@ const WeeklyRevenueActionsManager = () => {
       .filter((contract) => contract.status !== "paid")
       .forEach((contract) => {
         const daysSinceSignature = differenceInCalendarDays(new Date(), parseISO(contract.signed_at || contract.created_at));
+        const contact = contactByEmail.get(normalizeEmail(contract.client_email));
         candidates.push({
           id: `money-contract-${contract.id}`,
           title: "Signed contract needs payment or final close",
@@ -600,6 +791,7 @@ const WeeklyRevenueActionsManager = () => {
           lane: "close",
           valueLabel: formatUsd(contract.amount_cents),
           evidence: `${contract.contract_type.replace(/-/g, " ")} · ${statusLabel(contract.status)}`,
+          crmContactId: contact?.id,
         });
       });
 
@@ -609,6 +801,7 @@ const WeeklyRevenueActionsManager = () => {
       .filter((booking) => isBefore(parseISO(booking.booking_date), startOfToday()))
       .forEach((booking) => {
         const daysSinceConsult = differenceInCalendarDays(startOfToday(), parseISO(booking.booking_date));
+        const contact = contactByEmail.get(normalizeEmail(booking.customer_email));
         candidates.push({
           id: `money-consult-${booking.id}`,
           title: "Past consultation needs a revenue decision",
@@ -624,6 +817,7 @@ const WeeklyRevenueActionsManager = () => {
           lane: "recover",
           valueLabel: "Post-consult opportunity",
           evidence: `Consultation completed · no contract found`,
+          crmContactId: contact?.id,
         });
       });
 
@@ -633,6 +827,7 @@ const WeeklyRevenueActionsManager = () => {
       .forEach((row) => {
         const source = sourceKey(row.source_attribution, "followup");
         const priorityScore = row.priority === "urgent" ? 34 : row.priority === "high" ? 22 : 10;
+        const contact = contactByEmail.get(normalizeEmail(row.contact_email));
         candidates.push({
           id: `money-followup-${row.id}`,
           title: "Automated follow-up is due now",
@@ -648,6 +843,7 @@ const WeeklyRevenueActionsManager = () => {
           lane: row.priority === "urgent" ? "book" : "nurture",
           valueLabel: "Follow-up due",
           evidence: `${row.priority} priority · ${row.followup_reason.replace(/_/g, " ")}`,
+          crmContactId: contact?.id,
         });
       });
 
@@ -748,7 +944,21 @@ const WeeklyRevenueActionsManager = () => {
         </Card>
       ) : (
         <div className="space-y-6">
-          <DailyMoneyList items={dailyMoneyList} />
+          <DailyMoneyList
+            items={dailyMoneyList}
+            contactsById={contactsById}
+            noteDrafts={noteDrafts}
+            actionDrafts={actionDrafts}
+            dueDrafts={dueDrafts}
+            savingId={savingId}
+            deletingId={deletingId}
+            onNoteChange={(leadId, value) => setNoteDrafts((current) => ({ ...current, [leadId]: value }))}
+            onActionChange={(leadId, value) => setActionDrafts((current) => ({ ...current, [leadId]: value }))}
+            onDueChange={(leadId, value) => setDueDrafts((current) => ({ ...current, [leadId]: value }))}
+            onStatusChange={(lead, status) => void handleMoneyStatusChange(lead, status)}
+            onSaveLead={(lead) => void saveMoneyLead(lead)}
+            onDeleteLead={(lead) => void deleteMoneyLead(lead)}
+          />
           <div className="grid gap-6 xl:grid-cols-2">
           <ActionList
             title="Leads Needing a Call Today"
