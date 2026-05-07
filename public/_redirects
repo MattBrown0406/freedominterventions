@@ -1,0 +1,6 @@
+# Canonicalize Freedom Interventions URLs for search engines.
+# Cloudflare Pages / Netlify-style hosts read this file at deploy time.
+
+http://freedominterventions.com/* https://freedominterventions.com/:splat 301
+http://www.freedominterventions.com/* https://freedominterventions.com/:splat 301
+https://www.freedominterventions.com/* https://freedominterventions.com/:splat 301

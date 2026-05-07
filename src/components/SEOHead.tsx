@@ -22,6 +22,15 @@ interface SEOHeadProps {
 
 const BASE_URL = "https://freedominterventions.com";
 
+const normalizeCanonicalUrl = (url: string) => {
+  const normalizedDomain = url.replace(/^https?:\/\/www\.freedominterventions\.com/i, BASE_URL);
+  if (normalizedDomain === `${BASE_URL}/`) return BASE_URL;
+  if (normalizedDomain.startsWith(`${BASE_URL}/`) && normalizedDomain.endsWith("/")) {
+    return normalizedDomain.replace(/\/+$/, "");
+  }
+  return normalizedDomain;
+};
+
 const SEOHead = ({
   title,
   description,
@@ -46,7 +55,7 @@ const SEOHead = ({
   // Normalize: strip trailing slashes and ensure lowercase
   const rawPath = location.pathname === "/" ? "" : location.pathname.replace(/\/+$/, "");
   const normalizedPath = rawPath.toLowerCase();
-  const resolvedCanonical = canonical || `${BASE_URL}${normalizedPath}`;
+  const resolvedCanonical = normalizeCanonicalUrl(canonical || `${BASE_URL}${normalizedPath}`);
   
   const fullTitle = title.includes("Freedom Interventions")
     ? title

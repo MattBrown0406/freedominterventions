@@ -35,12 +35,12 @@ const FamilyReadinessIntensive = () => {
       <SEOHead
         title="Family Readiness Intensive | 90-Min Plan + 7 Days Support"
         description="A 90-minute Zoom intensive with Matt Brown, CIP. Walk away with a clear family action plan plus 7 days of follow-up support by Zoom, phone, text, or email. $2,500."
-        canonical="https://www.freedominterventions.com/family-readiness-intensive"
+        canonical="https://freedominterventions.com/family-readiness-intensive"
       />
       <OrganizationSchema />
       <BreadcrumbSchema items={breadcrumbItems} />
       <Navbar />
-      <BreadcrumbNav items={breadcrumbItems as any} />
+      <BreadcrumbNav items={breadcrumbItems} />
 
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-20">
