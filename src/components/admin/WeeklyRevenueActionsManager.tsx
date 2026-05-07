@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { differenceInCalendarDays, format, isBefore, parseISO, startOfToday } from "date-fns";
-import { AlertTriangle, CalendarClock, CheckCircle2, FileSignature, Mail, Phone, RefreshCw, Target, Users } from "lucide-react";
+import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, FileSignature, Mail, Phone, RefreshCw, Target, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,6 +77,13 @@ interface RevenueAction {
   meta: string;
 }
 
+interface MoneyListItem extends RevenueAction {
+  moneyScore: number;
+  lane: "close" | "book" | "recover" | "nurture";
+  valueLabel: string;
+  evidence: string;
+}
+
 const revenueStages = new Set(["consultation_booked", "readiness_intensive", "contract_sent", "contract_signed", "paid_booking_started"]);
 const closedStages = new Set(["paid", "lost", "closed"]);
 const funnelSources = new Set(["no_more_enabling", "sober_helpline", "party_wreckers"]);
@@ -141,6 +148,23 @@ const formatUsd = (cents: number | null) => {
   }).format(cents / 100);
 };
 
+const laneLabel = (lane: MoneyListItem["lane"]) => {
+  const labels: Record<MoneyListItem["lane"], string> = {
+    close: "Close",
+    book: "Book",
+    recover: "Recover",
+    nurture: "Nurture",
+  };
+  return labels[lane];
+};
+
+const laneClass = (lane: MoneyListItem["lane"]) => {
+  if (lane === "close") return "bg-green-700 text-white hover:bg-green-700";
+  if (lane === "book") return "bg-blue-700 text-white hover:bg-blue-700";
+  if (lane === "recover") return "bg-amber-500 text-white hover:bg-amber-500";
+  return "bg-muted text-foreground hover:bg-muted";
+};
+
 const dueText = (value: string | null) => {
   if (!value) return "No due date";
   const date = parseISO(value);
@@ -150,6 +174,45 @@ const dueText = (value: string | null) => {
   if (diff === 0) return "Due today";
   if (diff === 1) return "Due tomorrow";
   return `Due ${format(date, "MMM d")}`;
+};
+
+const sourceBoost = (source: string) => {
+  const family = sourceFamily(source);
+  if (family === "no_more_enabling") return 12;
+  if (family === "sober_helpline") return 10;
+  if (family === "party_wreckers") return 7;
+  return 0;
+};
+
+const dueBoost = (dueAt: string | null) => {
+  if (!dueAt) return 6;
+  const date = parseISO(dueAt);
+  if (Number.isNaN(date.getTime())) return 0;
+  const diff = differenceInCalendarDays(date, startOfToday());
+  if (diff < 0) return 18;
+  if (diff === 0) return 14;
+  if (diff === 1) return 6;
+  return 0;
+};
+
+const stageBoost = (status: string) => {
+  const boost: Record<string, number> = {
+    contract_signed: 55,
+    contract_sent: 48,
+    readiness_intensive: 36,
+    consultation_booked: 30,
+    contacted: 18,
+    new: 16,
+  };
+  return boost[status] || 0;
+};
+
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+const actionSort = (a: MoneyListItem, b: MoneyListItem) => {
+  if (b.moneyScore !== a.moneyScore) return b.moneyScore - a.moneyScore;
+  const laneOrder: Record<MoneyListItem["lane"], number> = { close: 4, book: 3, recover: 2, nurture: 1 };
+  return laneOrder[b.lane] - laneOrder[a.lane];
 };
 
 const ActionList = ({ title, icon: Icon, actions, empty }: {
@@ -198,6 +261,68 @@ const ActionList = ({ title, icon: Icon, actions, empty }: {
                 )}
                 <Button asChild size="sm" variant="outline" className="gap-2">
                   <a href={`mailto:${action.email}`}>
+                    <Mail className="h-4 w-4" />
+                    Email
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))
+      )}
+    </CardContent>
+  </Card>
+);
+
+const DailyMoneyList = ({ items }: { items: MoneyListItem[] }) => (
+  <Card className="border-green-200 bg-green-50/60">
+    <CardHeader>
+      <CardTitle className="flex flex-col gap-3 text-base md:flex-row md:items-center md:justify-between">
+        <span className="flex items-center gap-2">
+          <CircleDollarSign className="h-5 w-5 text-green-700" />
+          Daily Money List
+        </span>
+        <Badge className="w-fit bg-green-700 text-white hover:bg-green-700">{items.length} priority actions</Badge>
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-3">
+      {items.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-green-200 bg-white/70 p-4 text-sm text-muted-foreground">
+          No money-list actions are due right now. Refresh after new leads, calls, consults, or contracts come in.
+        </p>
+      ) : (
+        items.map((item, index) => (
+          <div key={item.id} className="rounded-lg border border-green-200 bg-white p-4 shadow-sm">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline">#{index + 1}</Badge>
+                  <Badge className={laneClass(item.lane)}>{laneLabel(item.lane)}</Badge>
+                  {urgencyBadge(item.urgency)}
+                  <Badge variant="outline">Score {item.moneyScore}</Badge>
+                </div>
+                <h3 className="mt-3 text-lg font-semibold text-foreground">{item.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{item.person} · {item.email}</p>
+                {item.phone && <p className="text-sm text-muted-foreground">{item.phone}</p>}
+                <p className="mt-3 text-sm leading-relaxed text-foreground">{item.reason}</p>
+                <div className="mt-3 grid gap-2 text-xs text-muted-foreground md:grid-cols-3">
+                  <p><span className="font-semibold text-foreground">Source:</span> {sourceTitle(item.source)}</p>
+                  <p><span className="font-semibold text-foreground">Value:</span> {item.valueLabel}</p>
+                  <p><span className="font-semibold text-foreground">Timing:</span> {item.dueLabel}</p>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">{item.evidence}</p>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2">
+                {item.phone && (
+                  <Button asChild size="sm" className="gap-2">
+                    <a href={formatPhoneHref(item.phone)}>
+                      <Phone className="h-4 w-4" />
+                      Call
+                    </a>
+                  </Button>
+                )}
+                <Button asChild size="sm" variant="outline" className="gap-2">
+                  <a href={`mailto:${item.email}`}>
                     <Mail className="h-4 w-4" />
                     Email
                   </a>
@@ -407,17 +532,155 @@ const WeeklyRevenueActionsManager = () => {
     return followups.filter((row) => isBefore(parseISO(row.due_at), now)).length;
   }, [followups]);
 
+  const dailyMoneyList = useMemo(() => {
+    const candidates: MoneyListItem[] = [];
+    const contractValueByEmail = new Map<string, number>();
+
+    contracts.forEach((contract) => {
+      const email = normalizeEmail(contract.client_email);
+      contractValueByEmail.set(email, Math.max(contractValueByEmail.get(email) || 0, contract.amount_cents || 0));
+    });
+
+    contacts
+      .filter((lead) => !closedStages.has(lead.pipeline_status))
+      .forEach((lead) => {
+        const source = sourceKey(lead.source_attribution, lead.source);
+        const due = dueText(lead.next_action_due_at);
+        const score = Math.round(
+          lead.lead_score +
+          stageBoost(lead.pipeline_status) +
+          dueBoost(lead.next_action_due_at) +
+          sourceBoost(source) +
+          (lead.phone ? 8 : 0) +
+          (lead.revenue_path ? 6 : 0),
+        );
+
+        let lane: MoneyListItem["lane"] = "nurture";
+        if (["contract_sent", "contract_signed"].includes(lead.pipeline_status)) lane = "close";
+        else if (["consultation_booked", "readiness_intensive"].includes(lead.pipeline_status)) lane = "book";
+        else if (lead.lead_score >= 60 || funnelSources.has(sourceFamily(source))) lane = "book";
+
+        const contractValue = contractValueByEmail.get(normalizeEmail(lead.email)) || 0;
+        candidates.push({
+          id: `money-lead-${lead.id}`,
+          title: lead.next_action || (lane === "close" ? "Close the next revenue step" : "Call and create the next revenue step"),
+          person: contactName(lead),
+          email: lead.email,
+          phone: lead.phone,
+          reason: lane === "close"
+            ? "This is already in the contract or payment lane. Call first and remove the final blocker."
+            : "This lead has enough intent to justify same-day human follow-up. Move them toward consult, readiness, or contract.",
+          source,
+          urgency: score >= 120 ? "critical" : score >= 85 ? "high" : "normal",
+          dueLabel: due,
+          meta: lead.revenue_path ? lead.revenue_path.replace(/_/g, " ") : statusLabel(lead.pipeline_status),
+          moneyScore: score,
+          lane,
+          valueLabel: contractValue ? formatUsd(contractValue) : lead.revenue_path ? lead.revenue_path.replace(/_/g, " ") : "Unknown, qualify on call",
+          evidence: `${statusLabel(lead.pipeline_status)} · lead score ${lead.lead_score} · ${sourceTitle(source)}`,
+        });
+      });
+
+    contracts
+      .filter((contract) => contract.status !== "paid")
+      .forEach((contract) => {
+        const daysSinceSignature = differenceInCalendarDays(new Date(), parseISO(contract.signed_at || contract.created_at));
+        candidates.push({
+          id: `money-contract-${contract.id}`,
+          title: "Signed contract needs payment or final close",
+          person: contract.client_name,
+          email: contract.client_email,
+          phone: contract.client_phone,
+          reason: "This is closest to revenue. Call to confirm payment, remove hesitation, and schedule the next intervention preparation step.",
+          source: sourceKey(contract.source_attribution, "contract"),
+          urgency: "critical",
+          dueLabel: `${daysSinceSignature} day${daysSinceSignature === 1 ? "" : "s"} since signature`,
+          meta: `Status ${contract.status}`,
+          moneyScore: 150 + Math.min(Math.round((contract.amount_cents || 0) / 10000), 40) + Math.max(daysSinceSignature, 0),
+          lane: "close",
+          valueLabel: formatUsd(contract.amount_cents),
+          evidence: `${contract.contract_type.replace(/-/g, " ")} · ${statusLabel(contract.status)}`,
+        });
+      });
+
+    bookings
+      .filter((booking) => booking.booking_type === "consultation")
+      .filter((booking) => !contractEmails.has(booking.customer_email.toLowerCase()))
+      .filter((booking) => isBefore(parseISO(booking.booking_date), startOfToday()))
+      .forEach((booking) => {
+        const daysSinceConsult = differenceInCalendarDays(startOfToday(), parseISO(booking.booking_date));
+        candidates.push({
+          id: `money-consult-${booking.id}`,
+          title: "Past consultation needs a revenue decision",
+          person: booking.customer_name,
+          email: booking.customer_email,
+          phone: booking.customer_phone,
+          reason: "Do not let a completed consult drift. Follow up with the recommended lane: no paid help, coaching, readiness intensive, or intervention.",
+          source: sourceKey(booking.source_attribution, "booking"),
+          urgency: daysSinceConsult <= 2 ? "high" : "normal",
+          dueLabel: `${daysSinceConsult} day${daysSinceConsult === 1 ? "" : "s"} since consult`,
+          meta: `${booking.status} · ${booking.booking_date}`,
+          moneyScore: 92 - Math.min(daysSinceConsult, 21) + sourceBoost(sourceKey(booking.source_attribution, "booking")) + (booking.customer_phone ? 8 : 0),
+          lane: "recover",
+          valueLabel: "Post-consult opportunity",
+          evidence: `Consultation completed · no contract found`,
+        });
+      });
+
+    followups
+      .filter((row) => row.status === "pending")
+      .filter((row) => !isBefore(new Date(), parseISO(row.due_at)))
+      .forEach((row) => {
+        const source = sourceKey(row.source_attribution, "followup");
+        const priorityScore = row.priority === "urgent" ? 34 : row.priority === "high" ? 22 : 10;
+        candidates.push({
+          id: `money-followup-${row.id}`,
+          title: "Automated follow-up is due now",
+          person: row.contact_name || row.contact_email,
+          email: row.contact_email,
+          phone: row.contact_phone,
+          reason: "The system says this follow-up is due. If it is high-priority, pair the email with a personal call or text.",
+          source,
+          urgency: row.priority === "urgent" ? "critical" : row.priority === "high" ? "high" : "normal",
+          dueLabel: dueText(row.due_at),
+          meta: row.followup_reason.replace(/_/g, " "),
+          moneyScore: 62 + priorityScore + dueBoost(row.due_at) + sourceBoost(source) + (row.contact_phone ? 8 : 0),
+          lane: row.priority === "urgent" ? "book" : "nurture",
+          valueLabel: "Follow-up due",
+          evidence: `${row.priority} priority · ${row.followup_reason.replace(/_/g, " ")}`,
+        });
+      });
+
+    const byEmail = new Map<string, MoneyListItem>();
+    candidates.forEach((item) => {
+      const key = normalizeEmail(item.email);
+      const existing = byEmail.get(key);
+      if (!existing || actionSort(item, existing) < 0) {
+        byEmail.set(key, item);
+      }
+    });
+
+    return [...byEmail.values()].sort(actionSort).slice(0, 12);
+  }, [bookings, contacts, contractEmails, contracts, followups]);
+
   const totals = useMemo(() => ({
     callToday: callToday.length,
     staleContracts: staleContracts.length,
     consults: consultsNotConverted.length,
     readiness: readinessProspects.length,
     attributed: attributedOpportunities.length,
-  }), [attributedOpportunities.length, callToday.length, consultsNotConverted.length, readinessProspects.length, staleContracts.length]);
+    moneyList: dailyMoneyList.length,
+  }), [attributedOpportunities.length, callToday.length, consultsNotConverted.length, dailyMoneyList.length, readinessProspects.length, staleContracts.length]);
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-6">
+        <Card className="border-green-200 bg-green-50/70">
+          <CardContent className="p-4">
+            <p className="text-xs uppercase text-muted-foreground">Money List</p>
+            <p className="text-2xl font-bold text-green-700">{totals.moneyList}</p>
+          </CardContent>
+        </Card>
         <Card>
           <CardContent className="p-4">
             <p className="text-xs uppercase text-muted-foreground">Call Today</p>
@@ -453,9 +716,9 @@ const WeeklyRevenueActionsManager = () => {
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="font-serif text-2xl font-bold text-foreground">This week's revenue actions</h2>
+            <h2 className="font-serif text-2xl font-bold text-foreground">Daily money list</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Prioritize calls and stuck money first. There are {dueFollowups} automated follow-up emails due now.
+              Work the top row first: closest money, fastest response, highest attribution value. There are {dueFollowups} automated follow-up emails due now.
             </p>
           </div>
           <Button variant="outline" onClick={fetchActions} disabled={loading} className="gap-2">
@@ -481,10 +744,12 @@ const WeeklyRevenueActionsManager = () => {
 
       {loading ? (
         <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">Loading weekly revenue actions...</CardContent>
+          <CardContent className="py-10 text-center text-muted-foreground">Loading daily money list...</CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 xl:grid-cols-2">
+        <div className="space-y-6">
+          <DailyMoneyList items={dailyMoneyList} />
+          <div className="grid gap-6 xl:grid-cols-2">
           <ActionList
             title="Leads Needing a Call Today"
             icon={Phone}
@@ -529,6 +794,7 @@ const WeeklyRevenueActionsManager = () => {
               </p>
             </CardContent>
           </Card>
+          </div>
         </div>
       )}
     </div>

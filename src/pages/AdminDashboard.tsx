@@ -363,7 +363,7 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="revenue-actions" className="gap-2">
               <Target className="w-4 h-4" />
-              Revenue Actions
+              Money List
             </TabsTrigger>
             <TabsTrigger value="cross-site-revenue" className="gap-2">
               <BarChart3 className="w-4 h-4" />
