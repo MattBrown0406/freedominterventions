@@ -23,6 +23,14 @@ const getDeviceType = (): string => {
 
 const normalizePhoneNumber = (phoneNumber: string) => phoneNumber.replace(/[^\d+]/g, '');
 
+const openClawSiteKey = (source: string) => {
+  if (source.includes('no_more_enabling') || source.includes('nme')) return 'no_more_enabling';
+  if (source.includes('sober_helpline') || source.includes('family_squares')) return 'sober_helpline';
+  if (source.includes('party_wreckers')) return 'party_wreckers';
+  if (source.includes('openclaw')) return 'openclaw';
+  return 'freedom_interventions';
+};
+
 export const useCallTracking = () => {
   const location = useLocation();
 
@@ -32,6 +40,7 @@ export const useCallTracking = () => {
     const source = attributionForTracking.source || sourceAttribution?.utm_source || 'direct';
     const callLocation = typeof metadata.location === 'string' ? metadata.location : 'unknown';
     const normalizedPhoneNumber = normalizePhoneNumber(phoneNumber);
+    const openClawSite = openClawSiteKey(source);
     const openClawCallSource = `${source}:${callLocation}`;
 
     trackEvent('phone_call_click', {
@@ -39,6 +48,8 @@ export const useCallTracking = () => {
       phone_number: phoneNumber,
       call_source: openClawCallSource,
       normalized_phone_number: normalizedPhoneNumber,
+      openclaw_site: openClawSite,
+      openclaw_campaign_key: `${openClawSite}:${callLocation}`,
       ...metadata,
     });
 
@@ -61,9 +72,12 @@ export const useCallTracking = () => {
           ...metadata,
           call_source: openClawCallSource,
           call_location: callLocation,
+          openclaw_site: openClawSite,
+          openclaw_campaign_key: `${openClawSite}:${callLocation}`,
           display_phone_number: phoneNumber,
           normalized_phone_number: normalizedPhoneNumber,
           openclaw_ready: true,
+          routing_number_status: 'pending_openclaw_number',
           source_attribution: attributionForTracking,
         },
       });

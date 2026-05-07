@@ -163,6 +163,19 @@ const fullName = (contact: ContactRow) => {
   return name || contact.email;
 };
 
+const revenuePathLabel = (value: string | null) => value ? value.replaceAll("_", " ") : "no revenue path set";
+
+const sourceNextAction = (contact: ContactRow) => {
+  const source = sourceFamily(sourceKey(contact.source_attribution, contact.source));
+  const path = (contact.revenue_path || "").toLowerCase();
+  if (["contract_sent", "contract_signed"].includes(contact.pipeline_status)) return "Close agreement or payment today";
+  if (source === "no_more_enabling") return /intervention|readiness/.test(path) ? "Qualify intervention readiness" : "Move insight into consult/coaching";
+  if (source === "sober_helpline") return "Bridge from free support into private paid help";
+  if (source === "party_wreckers") return "Turn podcast intent into a direct conversation";
+  if (/intervention|readiness/.test(path)) return "Confirm readiness and decision makers";
+  return contact.next_action || "Call or text with a direct next step";
+};
+
 async function isAdminRequest(req: Request, supabase: SupabaseClient) {
   const authHeader = req.headers.get("authorization") || "";
   const token = authHeader.replace(/^Bearer\s+/i, "").trim();
@@ -284,7 +297,7 @@ function renderLeadList(contacts: ContactRow[]) {
           <strong>${escapeHtml(fullName(contact))}</strong>
           <span style="color:#6b7280;">(${escapeHtml(sourceTitle(sourceFamily(sourceKey(contact.source_attribution, contact.source))))}, score ${escapeHtml(contact.lead_score)})</span><br>
           <span>${escapeHtml(contact.phone || contact.email)}</span><br>
-          <span style="color:#6b7280;">${escapeHtml(contact.next_action || "Call or text with a direct next step")} · ${escapeHtml(formatDate(contact.next_action_due_at))}</span>
+          <span style="color:#6b7280;">${escapeHtml(sourceNextAction(contact))} · ${escapeHtml(revenuePathLabel(contact.revenue_path))} · ${escapeHtml(formatDate(contact.next_action_due_at))}</span>
         </li>
       `).join("")}
     </ol>
@@ -325,6 +338,7 @@ function buildEmailHtml(params: {
   dataIssues: string[];
 }) {
   const bestChannel = params.channelStats[0];
+  const callToConsultGap = Math.max(params.totals.calls - params.totals.consultations, 0);
   const range = `${params.start.toLocaleDateString("en-US", { month: "short", day: "numeric" })} - ${params.end.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
   const rows = params.channelStats.slice(0, 6).map((row) => `
     <tr>
@@ -361,6 +375,7 @@ function buildEmailHtml(params: {
       </table>
 
       <h2 style="font-size:20px;margin:24px 0 8px;color:#111827;">Call First</h2>
+      <p style="margin:0 0 8px;color:#6b7280;">Each lead below now includes source, revenue path, and the most likely money move.</p>
       ${renderLeadList(params.topLeads)}
 
       <h2 style="font-size:20px;margin:24px 0 8px;color:#111827;">Follow-Ups Due</h2>
@@ -392,7 +407,7 @@ function buildEmailHtml(params: {
       <div style="margin-top:28px;padding:16px;border-radius:8px;background:#eff6ff;border:1px solid #bfdbfe;">
         <strong>Best next move:</strong>
         ${bestChannel
-          ? `Work ${escapeHtml(sourceTitle(bestChannel.source))} leads first, then clear pending follow-ups before the next ad/content push.`
+          ? `Work ${escapeHtml(sourceTitle(bestChannel.source))} leads first, compare ${params.totals.calls} calls to ${params.totals.consultations} consults${callToConsultGap ? ` (${callToConsultGap} call-to-consult gap)` : ""}, then clear pending follow-ups before the next ad/content push.`
           : "Refresh attribution and make sure the upstream report secrets are connected in Command Center."}
       </div>
 

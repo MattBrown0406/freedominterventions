@@ -127,7 +127,11 @@ const defaultOpenClawNumbers = defaultRemoteSites.map((site) => ({
   name: site.name,
   phoneNumber: "",
   status: "pending" as const,
-  notes: "",
+  notes: site.id === "no_more_enabling"
+    ? "Route NME education/intervention calls to Matt; use label no_more_enabling:openclaw."
+    : site.id === "sober_helpline"
+      ? "Route Sober Helpline support/coaching calls; use label sober_helpline:openclaw."
+      : "Route Party Wreckers listener calls; use label party_wreckers:openclaw.",
 }));
 
 const commandCenterSettingsTable = () => supabase.from("admin_command_center_settings" as never) as unknown as {
@@ -202,6 +206,8 @@ const topRemotePages = (remoteSites: RemoteSiteConfig[]) =>
     .flatMap((site) => (site.report?.top_pages ?? []).map((page) => ({ ...page, site: site.name })))
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
+
+const openClawCampaignKey = (siteId: string) => `${siteId}:openclaw`;
 
 const safeRemoteSettings = (value: Json): Array<{ id: string; url?: string; secret?: string }> => {
   if (!Array.isArray(value)) return [];
@@ -625,6 +631,7 @@ const CrossSiteRevenueDashboard = () => {
             <QaLine good={missingSecrets === 0} label={missingSecrets === 0 ? "All report secrets are entered" : `${missingSecrets} report secret${missingSecrets === 1 ? "" : "s"} missing`} />
             <QaLine good={dataIssues.length === 0} label={dataIssues.length === 0 ? "Freedom-side admin data is readable" : "Some Freedom-side data is partially unavailable"} />
             <QaLine good={settingsStatus === "backend"} label={settingsStatus === "backend" ? "Settings are saved durably" : "Settings are currently local to this browser"} />
+            <QaLine good={openClawReady === openClawNumbers.length} label={openClawReady === openClawNumbers.length ? "OpenClaw numbers are fully mapped" : `${openClawNumbers.length - openClawReady} OpenClaw number${openClawNumbers.length - openClawReady === 1 ? "" : "s"} still pending`} />
           </CardContent>
         </Card>
 
@@ -639,7 +646,11 @@ const CrossSiteRevenueDashboard = () => {
             <p><span className="font-semibold text-foreground">{totals.remoteRevenueIntent}</span> upstream revenue-intent signals are visible.</p>
             <p><span className="font-semibold text-foreground">{totals.highIntentLeads}</span> Freedom leads are high-intent and should be worked first.</p>
             <p><span className="font-semibold text-foreground">{remoteTotals.consultationRequests}</span> upstream consultation requests and <span className="font-semibold text-foreground">{remoteTotals.registrations}</span> registrations are in the reporting window.</p>
-            <p className="pt-1 text-xs">Best next action: {bestChannel ? `inspect ${sourceTitle(bestChannel.source)} and call the highest-scored leads first.` : "load upstream reports and refresh Freedom data."}</p>
+            <p className="pt-1 text-xs">
+              Best next action: {bestChannel
+                ? `inspect ${sourceTitle(bestChannel.source)}, compare call volume to booked consults, and work the Money List top to bottom.`
+                : "load upstream reports and refresh Freedom data."}
+            </p>
             <Button size="sm" onClick={() => void sendWeeklyOwnerSummary()} disabled={weeklySummarySending} className="mt-2 w-full gap-2">
               {weeklySummarySending ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
               Email Summary Now
@@ -784,6 +795,10 @@ const CrossSiteRevenueDashboard = () => {
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-semibold">{site.name}</h3>
                       <Badge variant={site.phoneNumber ? "default" : "outline"}>{site.phoneNumber ? "Number Set" : "Pending"}</Badge>
+                    </div>
+                    <div className="rounded-md border border-dashed border-border bg-muted/30 p-3 text-xs text-muted-foreground">
+                      <p><span className="font-semibold text-foreground">OpenClaw label:</span> {openClawCampaignKey(site.id)}</p>
+                      <p className="mt-1">Use this label in OpenClaw notes/campaign naming so calls reconcile cleanly with Freedom attribution.</p>
                     </div>
                     <Input
                       value={site.phoneNumber}

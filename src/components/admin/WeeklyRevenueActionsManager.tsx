@@ -223,6 +223,51 @@ const sourceIntentNote = (source: string, revenuePath?: string | null) => {
   return `${sourceTitle(source)} · ${pathLabel}`;
 };
 
+const sourceRevenueRecommendation = (source: string, revenuePath: string | null | undefined, status: string) => {
+  const family = sourceFamily(source);
+  const path = (revenuePath || "").toLowerCase();
+
+  if (["contract_sent", "contract_signed"].includes(status)) {
+    return {
+      title: status === "contract_sent" ? "Close the sent agreement" : "Collect payment and start onboarding",
+      reason: "This is already in the close lane. Call first, remove the final blocker, and document the next commitment.",
+    };
+  }
+
+  if (family === "no_more_enabling") {
+    return {
+      title: /intervention|readiness|intensive/.test(path) ? "Call and qualify intervention readiness" : "Call and move NME insight into a paid next step",
+      reason: "NME leads usually arrive after recognizing enabling. Clarify risk, family alignment, and whether the right next step is consultation, readiness intensive, or full intervention.",
+    };
+  }
+
+  if (family === "sober_helpline") {
+    return {
+      title: /coaching|consult/.test(path) ? "Book or confirm the private coaching path" : "Move support-seeking family into a clear paid option",
+      reason: "Sober Helpline leads often need a gentle bridge from free support into private help. Offer the lowest safe next step: consult, crisis coaching, or readiness intensive.",
+    };
+  }
+
+  if (family === "party_wreckers") {
+    return {
+      title: "Turn podcast intent into a direct conversation",
+      reason: "Party Wreckers leads may be high-emotion and early in decision-making. Anchor the call around what episode hit home, then offer consult or readiness if risk is escalating.",
+    };
+  }
+
+  if (/intervention|readiness|intensive/.test(path)) {
+    return {
+      title: "Clarify readiness and decision makers",
+      reason: "This lead already shows intervention/readiness intent. Confirm safety, family alignment, treatment refusal, and who needs to be on the next call.",
+    };
+  }
+
+  return {
+    title: "Call and create the next revenue step",
+    reason: "This lead has enough intent to justify same-day human follow-up. Move them toward consult, coaching, readiness, or contract.",
+  };
+};
+
 const dueBoost = (dueAt: string | null) => {
   if (!dueAt) return 6;
   const date = parseISO(dueAt);
@@ -757,6 +802,7 @@ const WeeklyRevenueActionsManager = () => {
       .forEach((lead) => {
         const source = sourceKey(lead.source_attribution, lead.source);
         const due = dueText(lead.next_action_due_at);
+        const recommendation = sourceRevenueRecommendation(source, lead.revenue_path, lead.pipeline_status);
         const score = Math.round(
           lead.lead_score +
           stageBoost(lead.pipeline_status) +
@@ -775,13 +821,11 @@ const WeeklyRevenueActionsManager = () => {
         const contractValue = contractValueByEmail.get(normalizeEmail(lead.email)) || 0;
         candidates.push({
           id: `money-lead-${lead.id}`,
-          title: lead.next_action || (lane === "close" ? "Close the next revenue step" : "Call and create the next revenue step"),
+          title: lead.next_action || recommendation.title,
           person: contactName(lead),
           email: lead.email,
           phone: lead.phone,
-          reason: lane === "close"
-            ? "This is already in the contract or payment lane. Call first and remove the final blocker."
-            : "This lead has enough intent to justify same-day human follow-up. Move them toward consult, readiness, or contract.",
+          reason: recommendation.reason,
           source,
           urgency: score >= 120 ? "critical" : score >= 85 ? "high" : "normal",
           dueLabel: due,
