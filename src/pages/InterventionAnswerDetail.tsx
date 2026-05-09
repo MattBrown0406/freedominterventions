@@ -75,6 +75,12 @@ export default function InterventionAnswerDetail() {
       action: "phone",
     },
     {
+      label: "Which help fits?",
+      description: "Use this if you need to choose between a call, consult, coaching, readiness, or full intervention.",
+      href: "/which-help-do-we-need",
+      action: "decision_path",
+    },
+    {
       label: "Start Here",
       description: "Use this if you need help choosing between coaching, readiness work, crisis support, or intervention.",
       href: "/start-here",

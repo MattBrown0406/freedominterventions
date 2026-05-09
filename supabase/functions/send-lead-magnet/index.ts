@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,7 +9,15 @@ const corsHeaders = {
 interface LeadMagnetRequest {
   name: string;
   email: string;
+  phone?: string;
+  urgency?: string;
+  leadMagnet?: string;
+  source?: string;
+  pagePath?: string;
+  sourceAttribution?: Record<string, unknown>;
 }
+
+const SITE_URL = "https://freedominterventions.com";
 
 // Rate limiting map
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -32,13 +41,129 @@ function isRateLimited(email: string): boolean {
   return false;
 }
 
+function escapeHtml(value: unknown) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function firstName(name: string) {
+  return name.trim().split(/\s+/)[0] || "there";
+}
+
+function urgencyLabel(value: string | undefined) {
+  const labels: Record<string, string> = {
+    not_sure: "Not sure what level of help fits",
+    safety_or_overdose: "Safety, overdose, or disappearance risk",
+    refusing_treatment: "Refusing or delaying treatment",
+    family_divided: "Family is divided or enabling keeps repeating",
+    ready_for_intervention: "Family may be ready for intervention planning",
+  };
+  return labels[value || ""] || value || "Not specified";
+}
+
+async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName: string, cleanEmail: string, cleanPhone: string | null) {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceKey) return;
+
+  const supabase = createClient(supabaseUrl, serviceKey);
+  const sourceAttribution = payload.sourceAttribution && typeof payload.sourceAttribution === "object"
+    ? {
+      ...payload.sourceAttribution,
+      source: payload.source || payload.sourceAttribution.source || "lead_magnet",
+      lead_magnet: payload.leadMagnet || "intervention_readiness_checklist",
+      urgency: payload.urgency || "not_sure",
+      page_path: payload.pagePath || null,
+    }
+    : {
+      source: payload.source || "lead_magnet",
+      lead_magnet: payload.leadMagnet || "intervention_readiness_checklist",
+      urgency: payload.urgency || "not_sure",
+      page_path: payload.pagePath || null,
+    };
+
+  const nameParts = cleanName.split(/\s+/);
+  const leadScore = payload.urgency === "safety_or_overdose" ? 70 :
+    payload.urgency === "ready_for_intervention" ? 65 :
+    payload.urgency === "refusing_treatment" ? 55 :
+    payload.urgency === "family_divided" ? 45 : 35;
+
+  await supabase.from("crm_contacts").upsert({
+    email: cleanEmail,
+    first_name: nameParts[0] || null,
+    last_name: nameParts.slice(1).join(" ") || null,
+    phone: cleanPhone,
+    source: "lead_magnet",
+    source_attribution: sourceAttribution,
+    lead_score: leadScore,
+    revenue_path: leadScore >= 60 ? "intervention_or_readiness" : "consultation_or_coaching",
+    pipeline_status: "new",
+    next_action: leadScore >= 60 ? "Review checklist lead and offer readiness/consultation path" : "Send checklist and invite to consultation",
+    next_action_due_at: new Date(Date.now() + (leadScore >= 60 ? 60 : 240) * 60 * 1000).toISOString(),
+    last_engagement_at: new Date().toISOString(),
+  }, { onConflict: "email" });
+
+  const first = firstName(cleanName);
+  const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(cleanName)}&email=${encodeURIComponent(cleanEmail)}${cleanPhone ? `&phone=${encodeURIComponent(cleanPhone)}` : ""}#booking`;
+  const decisionUrl = `${SITE_URL}/which-help-do-we-need?source=checklist_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness_checklist`;
+
+  const rows = [
+    {
+      lead_type: "contact_message",
+      contact_email: cleanEmail,
+      contact_name: cleanName,
+      contact_phone: cleanPhone,
+      followup_reason: "lead_magnet_checklist_confirmation",
+      priority: leadScore >= 60 ? "high" : "normal",
+      sequence_step: 1,
+      subject: `${first}, your intervention readiness checklist`,
+      body_html: `
+        <p>Hi ${escapeHtml(first)},</p>
+        <p>I sent the intervention readiness checklist. If the situation is moving quickly, do not wait on email. Call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+        <p>If you are not sure which level of help fits, this page will route you to the safest next step:</p>
+        <p><a href="${decisionUrl}">Choose the right help path</a></p>
+        <p>- Matt Brown<br>Freedom Interventions</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "contact_message",
+      contact_email: cleanEmail,
+      contact_name: cleanName,
+      contact_phone: cleanPhone,
+      followup_reason: "lead_magnet_checklist_consult",
+      priority: leadScore >= 60 ? "high" : "normal",
+      sequence_step: 2,
+      subject: "Do you need help deciding the next move?",
+      body_html: `
+        <p>Hi ${escapeHtml(first)},</p>
+        <p>Families often download a checklist because they are trying to avoid making the wrong move. That is wise. It is also easy to wait too long.</p>
+        <p>If there is treatment refusal, overdose concern, family division, or a pattern that keeps repeating, a consultation can help sort whether this is coaching, readiness work, or intervention planning.</p>
+        <p><a href="${consultUrl}">Book a free consultation</a></p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 36 * 60 * 60 * 1000).toISOString(),
+    },
+  ];
+
+  const { error } = await supabase.from("freedom_followup_queue").insert(rows);
+  if (error) console.error("Failed to queue lead magnet followups:", error);
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { name, email }: LeadMagnetRequest = await req.json();
+    const payload: LeadMagnetRequest = await req.json();
+    const { name, email, phone } = payload;
 
     // Validate inputs
     if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
@@ -50,6 +175,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const cleanName = name.trim();
     const cleanEmail = email.trim().toLowerCase();
+    const cleanPhone = typeof phone === "string" && phone.trim().length > 0 ? phone.trim().slice(0, 40) : null;
 
     // Check rate limit
     if (isRateLimited(cleanEmail)) {
@@ -80,7 +206,7 @@ const handler = async (req: Request): Promise<Response> => {
     <p style="color: #64748b;">From Freedom Interventions</p>
   </div>
 
-  <p>Hi ${cleanName},</p>
+  <p>Hi ${escapeHtml(cleanName)},</p>
   
   <p>Thank you for downloading our Intervention Planning Checklist. This is the same framework we use when helping families prepare for successful interventions.</p>
 
@@ -142,7 +268,7 @@ const handler = async (req: Request): Promise<Response> => {
   <div style="background-color: #1a365d; color: white; padding: 25px; border-radius: 8px; text-align: center; margin: 30px 0;">
     <h3 style="margin-top: 0;">Need Professional Help?</h3>
     <p style="margin-bottom: 20px;">Interventions are more successful with professional guidance. We've helped over 1,000 families.</p>
-    <a href="https://freedominterventions.com" style="display: inline-block; background-color: white; color: #1a365d; padding: 12px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">Schedule a Free Consultation</a>
+    <a href="${SITE_URL}/which-help-do-we-need" style="display: inline-block; background-color: white; color: #1a365d; padding: 12px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">Choose the Right Next Step</a>
     <p style="margin-top: 15px; margin-bottom: 0; font-size: 18px;">📞 (541) 838-6009</p>
   </div>
 
@@ -161,7 +287,7 @@ const handler = async (req: Request): Promise<Response> => {
   
   <p style="color: #94a3b8; font-size: 12px; text-align: center;">
     Freedom Interventions | Based in Oregon, Serving Families Nationwide<br>
-    <a href="https://freedominterventions.com" style="color: #94a3b8;">freedominterventions.com</a>
+    <a href="${SITE_URL}" style="color: #94a3b8;">freedominterventions.com</a>
   </p>
 </body>
 </html>
@@ -177,7 +303,7 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         personalizations: [{ to: [{ email: cleanEmail }] }],
         from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-        subject: `${cleanName}, your intervention checklist is ready`,
+        subject: `${firstName(cleanName)}, your intervention checklist is ready`,
         content: [{ type: "text/html", value: emailHtml }],
       }),
     });
@@ -205,8 +331,12 @@ const handler = async (req: Request): Promise<Response> => {
           type: "text/html", 
           value: `
             <h2>New Lead Magnet Download</h2>
-            <p><strong>Name:</strong> ${cleanName}</p>
-            <p><strong>Email:</strong> ${cleanEmail}</p>
+            <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
+            <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
+            <p><strong>Phone:</strong> ${escapeHtml(cleanPhone || "Not provided")}</p>
+            <p><strong>Urgency:</strong> ${escapeHtml(urgencyLabel(payload.urgency))}</p>
+            <p><strong>Source:</strong> ${escapeHtml(payload.source || "lead_magnet")}</p>
+            <p><strong>Page:</strong> ${escapeHtml(payload.pagePath || "Unknown")}</p>
             <p><strong>Downloaded:</strong> Intervention Planning Checklist</p>
             <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
             <hr>
@@ -216,14 +346,17 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    await storeLeadAndQueueFollowups(payload, cleanName, cleanEmail, cleanPhone);
+
     return new Response(
       JSON.stringify({ success: true }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in send-lead-magnet:", error);
+    const message = error instanceof Error ? error.message : "Unknown lead magnet error";
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: message }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }

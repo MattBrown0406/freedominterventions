@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 import ClosePathProof from "@/components/ClosePathProof";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
+import InterventionReadinessChecklist from "@/components/InterventionReadinessChecklist";
+import MoneyPathCTA from "@/components/MoneyPathCTA";
 import { trackEvent } from "@/lib/analytics";
 
 const readinessSignals = [
@@ -156,6 +158,12 @@ const InterventionReadiness = () => {
         </section>
 
         <RevenuePathTriage source="intervention_readiness" compact />
+        <InterventionReadinessChecklist source="intervention_readiness" className="bg-muted/20 border-y border-border" />
+        <MoneyPathCTA
+          source="intervention_readiness"
+          title="If this feels intervention-level, do not let the next move be improvised."
+          description="Get the checklist, choose the decision path, or talk to Matt before the family confronts, threatens, rescues, or waits again."
+        />
         <ClosePathProof source="intervention_readiness" className="bg-muted/20 border-y border-border" />
 
         <section className="py-16 md:py-24">

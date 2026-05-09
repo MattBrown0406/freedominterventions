@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
+import MoneyPathCTA from "@/components/MoneyPathCTA";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Calendar, Phone } from "lucide-react";
@@ -145,6 +146,13 @@ const InterventionCost = () => {
             "is-consultation-confidential",
             "can-you-do-intervention-without-rock-bottom",
           ]}
+        />
+
+        <MoneyPathCTA
+          source="intervention_cost"
+          title="Before comparing intervention cost, make sure you are pricing the right level of help."
+          description="Some families need a free consult, some need coaching, some need readiness work, and some need full intervention planning. This path helps sort that before money becomes the only question."
+          className="bg-muted/20 border-y border-border"
         />
 
         <section className="py-16 md:py-20 bg-muted/30 border-y border-border/50">

@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
+import MoneyPathCTA from "@/components/MoneyPathCTA";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Calendar, CheckCircle2, Phone } from "lucide-react";
@@ -161,6 +162,13 @@ const HowInterventionWorks = () => {
             "what-happens-before-intervention",
             "does-intervention-still-work-if-they-are-angry",
           ]}
+        />
+
+        <MoneyPathCTA
+          source="how_intervention_works"
+          title="If the process sounds like what your family needs, choose the next step now."
+          description="The decision path helps route you to consultation, coaching, readiness work, or formal intervention planning without guessing."
+          className="bg-muted/20 border-y border-border"
         />
 
         <section className="py-16 md:py-20 bg-muted/30 border-y border-border/50">

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { trackEvent } from '@/lib/analytics';
 import { getFunnelAttribution } from '@/lib/funnelAttribution';
+import { getOpenClawCampaignKey, getOpenClawRoutingNumber, getOpenClawRoutingStatus, openClawSiteKey } from '@/config/callRouting';
 
 // Generate or retrieve session ID for grouping clicks
 const getSessionId = (): string => {
@@ -23,14 +24,6 @@ const getDeviceType = (): string => {
 
 const normalizePhoneNumber = (phoneNumber: string) => phoneNumber.replace(/[^\d+]/g, '');
 
-const openClawSiteKey = (source: string) => {
-  if (source.includes('no_more_enabling') || source.includes('nme')) return 'no_more_enabling';
-  if (source.includes('sober_helpline') || source.includes('family_squares')) return 'sober_helpline';
-  if (source.includes('party_wreckers')) return 'party_wreckers';
-  if (source.includes('openclaw')) return 'openclaw';
-  return 'freedom_interventions';
-};
-
 export const useCallTracking = () => {
   const location = useLocation();
 
@@ -41,7 +34,10 @@ export const useCallTracking = () => {
     const callLocation = typeof metadata.location === 'string' ? metadata.location : 'unknown';
     const normalizedPhoneNumber = normalizePhoneNumber(phoneNumber);
     const openClawSite = openClawSiteKey(source);
+    const openClawCampaignKey = getOpenClawCampaignKey(openClawSite, callLocation);
     const openClawCallSource = `${source}:${callLocation}`;
+    const openClawRoutingNumber = getOpenClawRoutingNumber(openClawSite);
+    const openClawRoutingStatus = getOpenClawRoutingStatus(openClawSite);
 
     trackEvent('phone_call_click', {
       page_path: location.pathname,
@@ -49,7 +45,9 @@ export const useCallTracking = () => {
       call_source: openClawCallSource,
       normalized_phone_number: normalizedPhoneNumber,
       openclaw_site: openClawSite,
-      openclaw_campaign_key: `${openClawSite}:${callLocation}`,
+      openclaw_campaign_key: openClawCampaignKey,
+      openclaw_routing_number: openClawRoutingNumber,
+      openclaw_routing_status: openClawRoutingStatus,
       ...metadata,
     });
 
@@ -73,11 +71,12 @@ export const useCallTracking = () => {
           call_source: openClawCallSource,
           call_location: callLocation,
           openclaw_site: openClawSite,
-          openclaw_campaign_key: `${openClawSite}:${callLocation}`,
+          openclaw_campaign_key: openClawCampaignKey,
+          openclaw_routing_number: openClawRoutingNumber,
           display_phone_number: phoneNumber,
           normalized_phone_number: normalizedPhoneNumber,
           openclaw_ready: true,
-          routing_number_status: 'pending_openclaw_number',
+          routing_number_status: openClawRoutingStatus,
           source_attribution: attributionForTracking,
         },
       });

@@ -67,10 +67,10 @@ const Hero = () => {
               </TrackedPhoneLink>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <Link to="/?type=consultation#booking">
+              <Link to="/which-help-do-we-need">
                 <Button variant="hero-outline" size="xl">
                   <Calendar className="w-5 h-5" />
-                  Book Free Consultation
+                  Which Help Fits?
                 </Button>
               </Link>
               <Link to="/intervention-readiness">

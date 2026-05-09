@@ -21,6 +21,7 @@ import oregonCrisisBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
+import MoneyPathCTA from "@/components/MoneyPathCTA";
 import {
   OrganizationSchema,
   BreadcrumbSchema,
@@ -512,6 +513,13 @@ const FamilyIntervention = () => {
           "does-family-need-to-agree",
           "what-if-they-refuse-treatment",
         ]}
+      />
+
+      <MoneyPathCTA
+        source="family_intervention"
+        title="Not sure whether this is coaching, readiness work, or a full intervention?"
+        description="Use the decision path before your family spends money or makes another confrontation. It routes you to the lowest safe next step."
+        className="bg-muted/20 border-y border-border"
       />
 
       {/* FAQ Section */}

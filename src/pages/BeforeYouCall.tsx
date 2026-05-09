@@ -3,6 +3,8 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
+import InterventionReadinessChecklist from "@/components/InterventionReadinessChecklist";
+import MoneyPathCTA from "@/components/MoneyPathCTA";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { AlertTriangle, Calendar, Phone } from "lucide-react";
@@ -145,6 +147,13 @@ const BeforeYouCall = () => {
             "how-fast-can-intervention-happen",
             "when-to-call-interventionist",
           ]}
+        />
+
+        <InterventionReadinessChecklist source="before_you_call" className="bg-muted/20 border-y border-border" />
+        <MoneyPathCTA
+          source="before_you_call"
+          title="Before you call, choose the cleanest next step."
+          description="If the family is scared, divided, or about to confront, use the decision path or book a consultation so the next move is structured."
         />
 
         <section className="py-16 md:py-20 bg-muted/30 border-y border-border/50">
