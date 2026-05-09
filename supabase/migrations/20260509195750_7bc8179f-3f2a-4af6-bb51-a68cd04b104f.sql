@@ -1,0 +1,2 @@
+DELETE FROM public.freedom_funnel_events WHERE source='verify_test';
+DELETE FROM public.freedom_followup_queue WHERE contact_email='matt@freedominterventions.com' AND followup_reason IN ('lead_magnet_checklist_confirmation','lead_magnet_checklist_consult') AND status='pending' AND created_at > now() - interval '10 minutes';
