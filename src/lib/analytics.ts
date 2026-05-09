@@ -41,7 +41,7 @@ export const initAnalytics = () => {
 export const trackEvent = (action: string, params: Record<string, unknown> = {}) => {
   if (typeof window === "undefined") return;
 
-  const enrichedParams = {
+  const enrichedParams: Record<string, unknown> = {
     ...getAnalyticsAttributionParams(),
     ...params,
   };

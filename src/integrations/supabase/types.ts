@@ -1513,6 +1513,42 @@ export type Database = {
         }
         Relationships: []
       }
+      freedom_funnel_events: {
+        Row: {
+          created_at: string
+          event_name: string
+          id: string
+          metadata: Json
+          page_path: string | null
+          page_title: string | null
+          referrer: string | null
+          source: string | null
+          target_href: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          id?: string
+          metadata?: Json
+          page_path?: string | null
+          page_title?: string | null
+          referrer?: string | null
+          source?: string | null
+          target_href?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          id?: string
+          metadata?: Json
+          page_path?: string | null
+          page_title?: string | null
+          referrer?: string | null
+          source?: string | null
+          target_href?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
