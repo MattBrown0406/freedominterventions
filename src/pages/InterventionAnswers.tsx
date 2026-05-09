@@ -1,5 +1,6 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Clock, HelpCircle, Phone, ShieldAlert, Users } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, HelpCircle, Phone, Search, ShieldAlert, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -32,6 +33,28 @@ const decisionSteps = [
 const faqs = interventionAnswers.slice(0, 8).map(({ question, shortAnswer }) => ({ question, answer: shortAnswer }));
 
 export default function InterventionAnswers() {
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const categories = useMemo(() => ["All", ...Array.from(new Set(interventionAnswers.map((answer) => answer.category)))], []);
+  const filteredAnswers = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return interventionAnswers.filter((answer) => {
+      const matchesCategory = activeCategory === "All" || answer.category === activeCategory;
+      const searchableText = [
+        answer.question,
+        answer.shortAnswer,
+        answer.category,
+        answer.nextStepLabel,
+        ...answer.keywords,
+        ...(answer.signs || []),
+      ].join(" ").toLowerCase();
+      const matchesQuery = !normalizedQuery || searchableText.includes(normalizedQuery);
+
+      return matchesCategory && matchesQuery;
+    });
+  }, [activeCategory, query]);
+
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
@@ -148,8 +171,46 @@ export default function InterventionAnswers() {
                   These dedicated answer pages are built for families and answer engines. Each one gives a direct answer, warning signals, and the next safest revenue path.
                 </p>
               </div>
+              <div className="mb-8 rounded-xl border border-primary/15 bg-card p-4">
+                <label htmlFor="intervention-answer-search" className="text-sm font-semibold text-foreground">
+                  Search intervention questions
+                </label>
+                <div className="mt-3 flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2">
+                  <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <input
+                    id="intervention-answer-search"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Search refusal, cost, anger, rock bottom, overdose, family agreement..."
+                    className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  />
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => setActiveCategory(category)}
+                      className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+                        activeCategory === category
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-primary"
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {interventionAnswers.map((answer) => (
+                {filteredAnswers.length === 0 ? (
+                  <article className="rounded-xl border border-border bg-card p-5 shadow-sm md:col-span-2 lg:col-span-3">
+                    <h3 className="font-serif text-xl font-bold text-foreground">No exact match yet</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Try a shorter phrase like refusal, cost, anger, treatment, family, or intervention.
+                    </p>
+                  </article>
+                ) : filteredAnswers.map((answer) => (
                   <Link
                     key={answer.slug}
                     to={interventionAnswerPath(answer)}
