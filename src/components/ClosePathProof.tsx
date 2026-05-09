@@ -21,6 +21,13 @@ const ladder = [
   { step: "Full intervention", outcome: "Retain Matt for planning, treatment coordination, and intervention." },
 ];
 
+const firstCallDecisions = [
+  "Is this emergency, coaching, readiness work, or intervention-level?",
+  "Who in the family must be aligned before the next conversation?",
+  "What treatment or safety option needs to be ready before anyone confronts?",
+  "What is the next paid step only if the family actually needs it?",
+];
+
 export default function ClosePathProof({ source, className = "" }: ClosePathProofProps) {
   return (
     <section className={`py-12 md:py-16 ${className}`}>
@@ -41,6 +48,17 @@ export default function ClosePathProof({ source, className = "" }: ClosePathProo
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.outcome}</p>
                 </div>
               ))}
+            </div>
+            <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4">
+              <p className="text-sm font-semibold text-foreground">What gets decided on the first call</p>
+              <div className="mt-3 space-y-2">
+                {firstCallDecisions.map((item) => (
+                  <div key={item} className="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
             <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: `${source}_proof_block` }}>
               <Button className="mt-5">

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { subDays } from "date-fns";
-import { AlertCircle, BarChart3, CheckCircle2, DollarSign, ExternalLink, Mail, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, BarChart3, CheckCircle2, ClipboardCheck, DollarSign, ExternalLink, Mail, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -122,16 +122,26 @@ const defaultRemoteSites = [
   },
 ];
 
-const defaultOpenClawNumbers = defaultRemoteSites.map((site) => ({
+const defaultOpenClawSites = [
+  {
+    id: "freedom_interventions",
+    name: "Freedom Interventions",
+  },
+  ...defaultRemoteSites.map(({ id, name }) => ({ id, name })),
+];
+
+const defaultOpenClawNumbers = defaultOpenClawSites.map((site) => ({
   id: site.id,
   name: site.name,
   phoneNumber: "",
   status: "pending" as const,
-  notes: site.id === "no_more_enabling"
-    ? "Route NME education/intervention calls to Matt; use label no_more_enabling:openclaw."
-    : site.id === "sober_helpline"
-      ? "Route Sober Helpline support/coaching calls; use label sober_helpline:openclaw."
-      : "Route Party Wreckers listener calls; use label party_wreckers:openclaw.",
+  notes: site.id === "freedom_interventions"
+    ? "Route direct intervention calls to Matt; use label freedom_interventions:openclaw."
+    : site.id === "no_more_enabling"
+      ? "Route NME education/intervention calls to Matt; use label no_more_enabling:openclaw."
+      : site.id === "sober_helpline"
+        ? "Route Sober Helpline support/coaching calls; use label sober_helpline:openclaw."
+        : "Route Party Wreckers listener calls; use label party_wreckers:openclaw.",
 }));
 
 const commandCenterSettingsTable = () => supabase.from("admin_command_center_settings" as never) as unknown as {
@@ -568,6 +578,50 @@ const CrossSiteRevenueDashboard = () => {
     return { events, pageViews, registrations, advertiserInquiries, consultationRequests };
   }, [remoteSites]);
   const advertiserPages = topRemotePages(remoteSites);
+  const callToConsultGap = Math.max(totals.calls - totals.consultations, 0);
+  const highIntentToConsultGap = Math.max(totals.highIntentLeads - totals.consultations, 0);
+  const reviewChecklist = [
+    {
+      label: "Load upstream reports",
+      detail: `${connectedReports}/${remoteSites.length} report sources connected.`,
+      done: connectedReports === remoteSites.length,
+    },
+    {
+      label: "Work the Freedom Money List",
+      detail: `${totals.highIntentLeads} high-intent Freedom leads in the current window.`,
+      done: totals.highIntentLeads === 0 || totals.consultations >= Math.min(totals.highIntentLeads, 1),
+    },
+    {
+      label: "Compare calls to consultations",
+      detail: callToConsultGap > 0 ? `${callToConsultGap} call click${callToConsultGap === 1 ? "" : "s"} have not become consults yet.` : "Call-to-consult gap is closed for the current data.",
+      done: callToConsultGap === 0,
+    },
+    {
+      label: "Check answer/content winners",
+      detail: advertiserPages[0] ? `${advertiserPages[0].site}: ${advertiserPages[0].name}` : "Load upstream reports to reveal top pages.",
+      done: advertiserPages.length > 0,
+    },
+    {
+      label: "Update OpenClaw map",
+      detail: `${openClawReady}/${openClawNumbers.length} routing numbers entered.`,
+      done: openClawReady === openClawNumbers.length,
+    },
+  ];
+  const sourceRows = defaultRemoteSites.map((site) => {
+    const local = channelStats.find((row) => row.source === site.id);
+    const remote = remoteSites.find((row) => row.id === site.id);
+    const upstreamIntent = numberFromTotals(remote?.report, ["revenue_intent_clicks", "consultation_requests", "intervention_readiness_clicks", "advertiser_inquiries", "registrations"]);
+
+    return {
+      id: site.id,
+      name: site.name,
+      upstreamIntent,
+      leads: local?.leads ?? 0,
+      calls: local?.calls ?? 0,
+      consultations: local?.consultations ?? 0,
+      revenueCents: local?.revenueCents ?? 0,
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -603,6 +657,59 @@ const CrossSiteRevenueDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <ClipboardCheck className="h-4 w-4 text-primary" />
+              Friday Money Path Review
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            {reviewChecklist.map((item) => (
+              <div key={item.label} className="rounded-lg border border-border p-3">
+                <div className="flex items-start gap-2">
+                  {item.done ? <CheckCircle2 className="mt-0.5 h-4 w-4 text-green-700" /> : <AlertCircle className="mt-0.5 h-4 w-4 text-amber-600" />}
+                  <div>
+                    <p className="font-semibold text-foreground">{item.label}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{item.detail}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              Cross-Site Revenue Attribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {sourceRows.map((row) => (
+              <div key={row.id} className="rounded-lg border border-border p-4">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <p className="font-semibold text-foreground">{row.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {row.upstreamIntent} upstream intent · {row.leads} FI leads · {row.calls} calls · {row.consultations} consults
+                    </p>
+                  </div>
+                  <Badge className="bg-green-700 text-white hover:bg-green-700">{formatUsd(row.revenueCents)}</Badge>
+                </div>
+              </div>
+            ))}
+            <div className="rounded-lg border border-amber-300/70 bg-amber-50 p-3 text-sm text-amber-950">
+              {highIntentToConsultGap > 0
+                ? `${highIntentToConsultGap} high-intent lead${highIntentToConsultGap === 1 ? "" : "s"} still need a booked consult, readiness decision, or close note.`
+                : "Current high-intent leads are not outpacing consult volume in this window."}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {dataIssues.length > 0 && (
         <Card className="border-amber-300 bg-amber-50 text-amber-950">
