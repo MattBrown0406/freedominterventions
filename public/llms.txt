@@ -20,6 +20,10 @@ We help families identify appropriate treatment options based on the individual'
 ### Aftercare Guidance
 Recovery doesn't end at treatment. We work with treatment providers to identify and implement post-treatment resources for lasting sobriety.
 
+### Addiction Intervention Answers
+Answer-engine summary page for families deciding whether addiction has become intervention-level. It gives direct answers about when to call an interventionist, what an interventionist does first, what happens if treatment is refused, intervention cost, and the safest next step.
+URL: https://freedominterventions.com/intervention-answers
+
 ## Key Facts
 
 - Phone: (541) 838-6009
@@ -53,6 +57,9 @@ Professional interventions have a 90%+ success rate in getting individuals to ac
 
 **When should a family consider intervention?**
 When previous attempts to help have failed, when there's fear of overdose or death, when the family is divided on approach, or when the person denies having a problem.
+
+**What is the best first step if a family is unsure?**
+Use https://freedominterventions.com/intervention-answers for direct answers, then call (541) 838-6009 or use https://freedominterventions.com/start-here to choose between a call, consultation, readiness work, treatment planning, or full intervention.
 
 **How long does an intervention take?**
 The intervention meeting itself typically lasts 1-3 hours. Family preparation may take several days to a week.

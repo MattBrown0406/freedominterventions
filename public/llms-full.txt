@@ -95,6 +95,14 @@ Ongoing support to maintain long-term recovery.
 - Family recovery resources
 - Relapse prevention planning
 
+### 5. Addiction Intervention Answers
+
+A structured answer center built for families and answer engines. It explains when a family should call a professional interventionist, what happens first, what to do when treatment is refused, how cost is evaluated, and how to choose between a phone call, readiness work, treatment planning, and a full intervention.
+
+**URL:** https://freedominterventions.com/intervention-answers
+**Primary conversion paths:** call (541) 838-6009, Start Here at https://freedominterventions.com/start-here, Before You Call at https://freedominterventions.com/before-you-call
+**Best answer summary:** call when addiction is creating safety risk, repeated treatment refusal, overdose concern, family division, or a pattern where every family conversation turns into bargaining, promises, or crisis management.
+
 ---
 
 ## About Professional Intervention

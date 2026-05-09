@@ -33,6 +33,10 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
     title: "Intervention FAQ — Common Questions Answered | Freedom Interventions",
     description: "Common questions about addiction intervention answered. What to expect, how it works, outcomes, costs, and how to get started.",
   },
+  "/intervention-answers": {
+    title: "Addiction Intervention Answers for Families | Freedom Interventions",
+    description: "Clear answers for families deciding whether addiction has become intervention-level, what to do first, and when to call Freedom Interventions.",
+  },
   "/interventionist": {
     title: "About Matt Brown — Professional Interventionist | Freedom Interventions",
     description: "Meet Matt Brown — professional interventionist with 20+ years experience, 22 years of personal recovery, and over 1,000 interventions conducted.",

@@ -47,6 +47,13 @@ const staticMetadata = {
     heading: "About Matt Brown",
     body: "Matt Brown brings professional intervention experience, personal recovery, and direct family guidance to serious addiction situations.",
   },
+  "/intervention-answers": {
+    title: "Addiction Intervention Answers for Families | Freedom Interventions",
+    description:
+      "Clear answers for families deciding whether addiction has become intervention-level, what to do first, and when to call Freedom Interventions.",
+    heading: "Addiction Intervention Answers",
+    body: "Freedom Interventions gives families direct answers about intervention readiness, treatment refusal, cost, preparation, and the safest next step.",
+  },
   "/crisis-support": {
     title: "Crisis Support | Immediate Addiction Help for Families",
     description:
