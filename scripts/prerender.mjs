@@ -16,6 +16,7 @@ const interventionAnswersFile = path.join(root, 'src', 'data', 'interventionAnsw
 const envFile = path.join(root, '.env');
 const previewPort = Number(process.env.PRERENDER_PREVIEW_PORT || 4273);
 const previewOrigin = `http://127.0.0.1:${previewPort}`;
+const heavyAssetPattern = /\.(png|jpe?g|webp|gif|svg|ico|woff2?|ttf|otf|mp4|webm|mov)(\?.*)?$/i;
 
 const loadEnv = async () => {
   const env = {
@@ -83,9 +84,9 @@ const toOutputPath = (route) => {
 
 const waitForAppReady = async (page, route) => {
   try {
-    await page.waitForLoadState('networkidle', { timeout: 10000 });
+    await page.waitForLoadState('networkidle', { timeout: 2500 });
   } catch {
-    // some pages keep background work alive, so fall back to content checks
+    // some pages keep background work alive, so fall back to content checks quickly
   }
 
   await page.waitForFunction(() => {
@@ -101,7 +102,7 @@ const waitForAppReady = async (page, route) => {
     await page.waitForFunction(() => /Back to Blog/.test(document.body.innerText), { timeout: 30000 });
   }
 
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(150);
 };
 
 const startPreviewServer = () => {
@@ -176,12 +177,19 @@ const main = async () => {
 
   const { child, ready } = startPreviewServer();
   const browser = await chromium.launch(resolveChromiumLaunchOptions());
+  const context = await browser.newContext();
+  await context.route(heavyAssetPattern, (route) => route.abort());
 
   try {
     await ready;
+    console.log(`Prerendering ${routes.length} routes (${blogRoutes.length} blog posts)`);
 
-    for (const route of routes) {
-      const page = await browser.newPage();
+    for (const [index, route] of routes.entries()) {
+      if (index === 0 || index % 25 === 0 || index === routes.length - 1) {
+        console.log(`  ${index + 1}/${routes.length}: ${route}`);
+      }
+
+      const page = await context.newPage();
       page.setDefaultNavigationTimeout(30000);
       page.setDefaultTimeout(30000);
 
@@ -207,6 +215,7 @@ const main = async () => {
 
     console.log(`✅ Prerendered ${routes.length} routes (${blogRoutes.length} blog posts)`);
   } finally {
+    await context.close();
     await browser.close();
     child.kill('SIGTERM');
   }

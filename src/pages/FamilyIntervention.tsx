@@ -20,6 +20,7 @@ import { usStates, usRegions } from "@/data/locations";
 import oregonCrisisBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
 import {
   OrganizationSchema,
   BreadcrumbSchema,
@@ -503,6 +504,15 @@ const FamilyIntervention = () => {
           </div>
         </div>
       </section>
+
+      <InterventionAnswerLinks
+        source="family_intervention"
+        slugs={[
+          "when-to-call-interventionist",
+          "does-family-need-to-agree",
+          "what-if-they-refuse-treatment",
+        ]}
+      />
 
       {/* FAQ Section */}
       <section className="py-16 md:py-24 bg-card" id="faq">

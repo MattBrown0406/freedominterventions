@@ -65,3 +65,6 @@ verify_jwt = false
 
 [functions.send-weekly-owner-summary]
 verify_jwt = false
+
+[functions.track-freedom-event]
+verify_jwt = false

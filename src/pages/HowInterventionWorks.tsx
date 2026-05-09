@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Calendar, CheckCircle2, Phone } from "lucide-react";
@@ -152,6 +153,15 @@ const HowInterventionWorks = () => {
             </section>
           </div>
         </section>
+
+        <InterventionAnswerLinks
+          source="how_intervention_works"
+          slugs={[
+            "what-does-interventionist-do-first",
+            "what-happens-before-intervention",
+            "does-intervention-still-work-if-they-are-angry",
+          ]}
+        />
 
         <section className="py-16 md:py-20 bg-muted/30 border-y border-border/50">
           <div className="container px-6">

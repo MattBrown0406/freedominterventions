@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck, BarChart3, Columns3, Target } from "lucide-react";
+import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck, BarChart3, Columns3, Target, HelpCircle } from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
@@ -23,6 +23,7 @@ import CrossSiteRevenueDashboard from "@/components/admin/CrossSiteRevenueDashbo
 import RevenueAttributionManager from "@/components/admin/RevenueAttributionManager";
 import RevenuePipelineManager from "@/components/admin/RevenuePipelineManager";
 import WeeklyRevenueActionsManager from "@/components/admin/WeeklyRevenueActionsManager";
+import AnswerPagePerformance from "@/components/admin/AnswerPagePerformance";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -373,6 +374,10 @@ const AdminDashboard = () => {
               <BarChart3 className="w-4 h-4" />
               Attribution
             </TabsTrigger>
+            <TabsTrigger value="answer-aeo" className="gap-2">
+              <HelpCircle className="w-4 h-4" />
+              Answer AEO
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="assessments">
@@ -580,6 +585,10 @@ const AdminDashboard = () => {
 
             <TabsContent value="attribution">
               <RevenueAttributionManager />
+            </TabsContent>
+
+            <TabsContent value="answer-aeo">
+              <AnswerPagePerformance />
             </TabsContent>
 
             <TabsContent value="abandoned-carts">

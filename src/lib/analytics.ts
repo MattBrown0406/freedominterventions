@@ -1,4 +1,5 @@
 import { getAnalyticsAttributionParams } from "@/lib/funnelAttribution";
+import { supabase } from "@/integrations/supabase/client";
 
 let scriptLoaded = false;
 
@@ -47,10 +48,20 @@ export const trackEvent = (action: string, params: Record<string, unknown> = {})
 
   if (typeof window.gtag === "function") {
     window.gtag("event", action, enrichedParams);
-    return;
-  }
-
-  if (import.meta.env.DEV) {
+  } else if (import.meta.env.DEV) {
     console.debug(`[analytics] ${action}`, enrichedParams);
   }
+
+  supabase.functions.invoke("track-freedom-event", {
+    body: {
+      event_name: action,
+      page_path: window.location.pathname,
+      page_title: document.title,
+      referrer: document.referrer || null,
+      target_href: typeof enrichedParams.target_href === "string" ? enrichedParams.target_href : null,
+      metadata: enrichedParams,
+    },
+  }).catch(() => {
+    // Event tracking should never interrupt calls, booking, or public page behavior.
+  });
 };

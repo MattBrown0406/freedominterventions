@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { AlertTriangle, Calendar, Phone } from "lucide-react";
@@ -136,6 +137,15 @@ const BeforeYouCall = () => {
             </section>
           </div>
         </section>
+
+        <InterventionAnswerLinks
+          source="before_you_call"
+          slugs={[
+            "is-consultation-confidential",
+            "how-fast-can-intervention-happen",
+            "when-to-call-interventionist",
+          ]}
+        />
 
         <section className="py-16 md:py-20 bg-muted/30 border-y border-border/50">
           <div className="container px-6 max-w-3xl mx-auto text-center">

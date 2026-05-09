@@ -82,6 +82,15 @@ interface FollowupRow {
   created_at: string;
 }
 
+interface EventRow {
+  id: string;
+  event_name: string;
+  page_path: string | null;
+  target_href: string | null;
+  metadata: JsonValue;
+  created_at: string;
+}
+
 interface ChannelStats {
   source: string;
   leads: number;
@@ -92,6 +101,15 @@ interface ChannelStats {
   revenueCents: number;
   highIntentLeads: number;
   followupsDue: number;
+}
+
+interface AnswerPageStats {
+  pagePath: string;
+  views: number;
+  calls: number;
+  nextStepClicks: number;
+  startHereClicks: number;
+  readinessClicks: number;
 }
 
 const json = (body: unknown, status = 200) =>
@@ -164,6 +182,12 @@ const fullName = (contact: ContactRow) => {
 };
 
 const revenuePathLabel = (value: string | null) => value ? value.replaceAll("_", " ") : "no revenue path set";
+
+const answerPathFromEvent = (event: EventRow) => {
+  const metadata = asRecord(event.metadata);
+  const pagePath = String(event.page_path || metadata.page_path || "");
+  return pagePath.startsWith("/intervention-answers/") ? pagePath : null;
+};
 
 const sourceNextAction = (contact: ContactRow) => {
   const source = sourceFamily(sourceKey(contact.source_attribution, contact.source));
@@ -278,6 +302,50 @@ function buildChannelStats(
   });
 }
 
+function buildAnswerPageStats(events: EventRow[], calls: CallRow[]) {
+  const map = new Map<string, AnswerPageStats>();
+  const get = (pagePath: string) => {
+    const existing = map.get(pagePath);
+    if (existing) return existing;
+    const next = {
+      pagePath,
+      views: 0,
+      calls: 0,
+      nextStepClicks: 0,
+      startHereClicks: 0,
+      readinessClicks: 0,
+    };
+    map.set(pagePath, next);
+    return next;
+  };
+
+  events.forEach((event) => {
+    const pagePath = answerPathFromEvent(event);
+    if (!pagePath) return;
+    const stats = get(pagePath);
+    const metadata = asRecord(event.metadata);
+
+    if (event.event_name === "intervention_answer_view" || event.event_name === "page_view") stats.views += 1;
+    if (event.event_name === "phone_call_click") stats.calls += 1;
+    if (event.event_name === "intervention_answer_click") {
+      if (metadata.click_type === "primary_next_step") stats.nextStepClicks += 1;
+      if (metadata.click_type === "start_here" || event.target_href === "/start-here") stats.startHereClicks += 1;
+      if (event.target_href === "/intervention-readiness") stats.readinessClicks += 1;
+    }
+  });
+
+  calls.forEach((call) => {
+    if (call.page_path.startsWith("/intervention-answers/")) get(call.page_path).calls += 1;
+  });
+
+  return [...map.values()].sort((a, b) => {
+    const aIntent = a.calls + a.nextStepClicks + a.startHereClicks + a.readinessClicks;
+    const bIntent = b.calls + b.nextStepClicks + b.startHereClicks + b.readinessClicks;
+    if (bIntent !== aIntent) return bIntent - aIntent;
+    return b.views - a.views;
+  });
+}
+
 function renderMetric(label: string, value: string) {
   return `
     <td style="padding:14px;border:1px solid #e5e7eb;border-radius:8px;background:#f9fafb;">
@@ -319,6 +387,35 @@ function renderFollowups(followups: FollowupRow[]) {
   `;
 }
 
+function renderAnswerPageStats(stats: AnswerPageStats[]) {
+  if (!stats.length) return `<p style="color:#6b7280;">No tracked answer-page activity was found in this week's window.</p>`;
+
+  return `
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="color:#6b7280;text-align:right;">
+          <th style="padding:10px;text-align:left;border-bottom:1px solid #d1d5db;">Answer page</th>
+          <th style="padding:10px;border-bottom:1px solid #d1d5db;">Views</th>
+          <th style="padding:10px;border-bottom:1px solid #d1d5db;">Calls</th>
+          <th style="padding:10px;border-bottom:1px solid #d1d5db;">Next step</th>
+          <th style="padding:10px;border-bottom:1px solid #d1d5db;">Readiness</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${stats.slice(0, 8).map((row) => `
+          <tr>
+            <td style="padding:10px;border-bottom:1px solid #e5e7eb;"><strong>${escapeHtml(row.pagePath.replace("/intervention-answers/", "").replaceAll("-", " "))}</strong></td>
+            <td style="padding:10px;border-bottom:1px solid #e5e7eb;text-align:right;">${row.views}</td>
+            <td style="padding:10px;border-bottom:1px solid #e5e7eb;text-align:right;">${row.calls}</td>
+            <td style="padding:10px;border-bottom:1px solid #e5e7eb;text-align:right;">${row.nextStepClicks + row.startHereClicks}</td>
+            <td style="padding:10px;border-bottom:1px solid #e5e7eb;text-align:right;">${row.readinessClicks}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
 function buildEmailHtml(params: {
   start: Date;
   end: Date;
@@ -331,8 +428,11 @@ function buildEmailHtml(params: {
     revenueCents: number;
     assessments: number;
     followupsDue: number;
+    answerPageViews: number;
+    answerPageClicks: number;
   };
   channelStats: ChannelStats[];
+  answerPageStats: AnswerPageStats[];
   topLeads: ContactRow[];
   dueFollowups: FollowupRow[];
   dataIssues: string[];
@@ -372,6 +472,11 @@ function buildEmailHtml(params: {
           ${renderMetric("Paid closes", params.totals.paidConversions.toLocaleString())}
           ${renderMetric("Tracked revenue", formatUsd(params.totals.revenueCents))}
         </tr>
+        <tr>
+          ${renderMetric("Answer views", params.totals.answerPageViews.toLocaleString())}
+          ${renderMetric("Answer clicks", params.totals.answerPageClicks.toLocaleString())}
+          ${renderMetric("Follow-ups due", params.totals.followupsDue.toLocaleString())}
+        </tr>
       </table>
 
       <h2 style="font-size:20px;margin:24px 0 8px;color:#111827;">Call First</h2>
@@ -380,6 +485,10 @@ function buildEmailHtml(params: {
 
       <h2 style="font-size:20px;margin:24px 0 8px;color:#111827;">Follow-Ups Due</h2>
       ${renderFollowups(params.dueFollowups)}
+
+      <h2 style="font-size:20px;margin:24px 0 8px;color:#111827;">Intervention Answer Pages</h2>
+      <p style="margin:0 0 8px;color:#6b7280;">These pages are the new AEO layer. Work the pages creating calls, readiness checks, and next-step clicks first.</p>
+      ${renderAnswerPageStats(params.answerPageStats)}
 
       <h2 style="font-size:20px;margin:24px 0 8px;color:#111827;">Channel Breakdown</h2>
       ${params.channelStats.length ? `
@@ -463,7 +572,7 @@ serve(async (req: Request) => {
     const now = end.toISOString();
     const dataIssues: string[] = [];
 
-    const [contacts, assessments, bookings, contracts, calls, dueFollowups] = await Promise.all([
+    const [contacts, assessments, bookings, contracts, calls, dueFollowups, answerEvents] = await Promise.all([
       queryRows<ContactRow>(
         "CRM contacts",
         supabase
@@ -526,9 +635,28 @@ serve(async (req: Request) => {
           .limit(50),
         dataIssues,
       ),
+      queryRows<EventRow>(
+        "answer funnel events",
+        supabase
+          .from("freedom_funnel_events")
+          .select("id,event_name,page_path,target_href,metadata,created_at")
+          .in("event_name", ["page_view", "phone_call_click", "intervention_answer_view", "intervention_answer_click", "intervention_answer_service_link_click"])
+          .gte("created_at", since)
+          .order("created_at", { ascending: false })
+          .limit(1000),
+        dataIssues,
+      ),
     ]);
 
     const channelStats = buildChannelStats(contacts, assessments, bookings, contracts, calls, dueFollowups);
+    const answerPageStats = buildAnswerPageStats(answerEvents, calls);
+    const answerPageTotals = answerPageStats.reduce(
+      (acc, row) => ({
+        views: acc.views + row.views,
+        clicks: acc.clicks + row.nextStepClicks + row.startHereClicks + row.readinessClicks,
+      }),
+      { views: 0, clicks: 0 },
+    );
     const totals = channelStats.reduce(
       (acc, row) => ({
         leads: acc.leads + row.leads,
@@ -539,8 +667,21 @@ serve(async (req: Request) => {
         revenueCents: acc.revenueCents + row.revenueCents,
         highIntentLeads: acc.highIntentLeads + row.highIntentLeads,
         followupsDue: acc.followupsDue + row.followupsDue,
+        answerPageViews: acc.answerPageViews,
+        answerPageClicks: acc.answerPageClicks,
       }),
-      { leads: 0, assessments: 0, calls: 0, consultations: 0, paidConversions: 0, revenueCents: 0, highIntentLeads: 0, followupsDue: 0 },
+      {
+        leads: 0,
+        assessments: 0,
+        calls: 0,
+        consultations: 0,
+        paidConversions: 0,
+        revenueCents: 0,
+        highIntentLeads: 0,
+        followupsDue: 0,
+        answerPageViews: answerPageTotals.views,
+        answerPageClicks: answerPageTotals.clicks,
+      },
     );
 
     const topLeads = contacts
@@ -554,6 +695,7 @@ serve(async (req: Request) => {
       end,
       totals,
       channelStats,
+      answerPageStats,
       topLeads,
       dueFollowups,
       dataIssues,
@@ -566,6 +708,7 @@ serve(async (req: Request) => {
       window_days: 7,
       sent_to: Deno.env.get("OWNER_EMAIL") || "matt@freedominterventions.com",
       totals,
+      answer_page_totals: answerPageTotals,
       top_channel: channelStats[0]?.source ?? null,
       data_issues: dataIssues,
     });

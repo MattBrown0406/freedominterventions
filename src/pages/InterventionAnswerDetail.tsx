@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CheckCircle2, HelpCircle, Phone, ShieldAlert } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, HelpCircle, Phone, ShieldAlert } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -66,6 +66,33 @@ export default function InterventionAnswerDetail() {
       page_path: canonicalPath,
     });
   };
+
+  const pathFitLinks = [
+    {
+      label: "Call Matt now",
+      description: "Use this if safety, overdose risk, treatment refusal, or family conflict cannot wait.",
+      href: "tel:+15418386009",
+      action: "phone",
+    },
+    {
+      label: "Start Here",
+      description: "Use this if you need help choosing between coaching, readiness work, crisis support, or intervention.",
+      href: "/start-here",
+      action: "start_here",
+    },
+    {
+      label: "Check Intervention Readiness",
+      description: "Use this if the family is close to action but unsure whether intervention-level help fits.",
+      href: "/intervention-readiness",
+      action: "readiness",
+    },
+    {
+      label: "What to Know Before Calling",
+      description: "Use this if you need to organize facts and avoid making a rushed move tonight.",
+      href: "/before-you-call",
+      action: "before_call",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -199,6 +226,42 @@ export default function InterventionAnswerDetail() {
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                     </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <h2 className="flex items-center gap-2 font-serif text-2xl font-bold text-foreground">
+                      <ClipboardCheck className="h-5 w-5 text-primary" />
+                      Which path fits?
+                    </h2>
+                    <div className="mt-4 space-y-3">
+                      {pathFitLinks.map((item) => (
+                        <Button
+                          key={item.action}
+                          asChild
+                          variant={item.action === "phone" ? "hero" : "outline"}
+                          className="h-auto w-full justify-start whitespace-normal p-4 text-left"
+                        >
+                          {item.href.startsWith("tel:") ? (
+                            <a href={item.href} onClick={() => trackAnswerClick(item.action, item.href)}>
+                              <span>
+                                <span className="block font-semibold">{item.label}</span>
+                                <span className="mt-1 block text-xs font-normal opacity-80">{item.description}</span>
+                              </span>
+                            </a>
+                          ) : (
+                            <Link to={item.href} onClick={() => trackAnswerClick(item.action, item.href)}>
+                              <span>
+                                <span className="block font-semibold">{item.label}</span>
+                                <span className="mt-1 block text-xs font-normal opacity-80">{item.description}</span>
+                              </span>
+                              <ArrowRight className="ml-auto h-4 w-4 shrink-0" />
+                            </Link>
+                          )}
+                        </Button>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </aside>
