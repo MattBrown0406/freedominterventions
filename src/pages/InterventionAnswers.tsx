@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Clock, HelpCircle, Phone, Search, ShieldAlert, Users } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, CheckCircle2, Clock, HelpCircle, Phone, Search, ShieldAlert, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -27,6 +27,21 @@ const decisionSteps = [
     icon: Users,
     title: "Family confusion",
     body: "If the family is split, start with readiness work so everyone understands the same plan before speaking to your loved one.",
+  },
+];
+
+const revenuePathSignals = [
+  {
+    title: "Free first call",
+    body: "Use the first call to decide whether this is education, crisis coaching, readiness work, treatment planning, or intervention-level.",
+  },
+  {
+    title: "Readiness work",
+    body: "Use paid readiness support when the family is split, scared, or likely to undermine the plan without preparation.",
+  },
+  {
+    title: "Full intervention path",
+    body: "Use the formal intervention path when refusal, safety risk, treatment logistics, and family alignment need professional structure.",
   },
 ];
 
@@ -125,6 +140,33 @@ export default function InterventionAnswers() {
                   </article>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-y border-border bg-primary/5 py-12 md:py-16">
+          <div className="container px-6">
+            <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <div>
+                <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-background px-4 py-2 text-sm font-semibold text-primary">
+                  <BadgeDollarSign className="h-4 w-4" />
+                  High-intent intervention funnel
+                </p>
+                <h2 className="mt-4 font-serif text-3xl font-bold text-foreground md:text-4xl">
+                  The job of this page is to turn fear into the right level of paid help.
+                </h2>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  Families arriving here are usually closer to action than education. The page should make the free call feel safe while clearly showing the path into readiness work or formal intervention when the situation warrants it.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                {revenuePathSignals.map((signal) => (
+                  <article key={signal.title} className="rounded-xl border border-border bg-background p-5">
+                    <h3 className="font-serif text-xl font-bold text-foreground">{signal.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{signal.body}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>

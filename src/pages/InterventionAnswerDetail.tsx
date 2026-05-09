@@ -235,6 +235,21 @@ export default function InterventionAnswerDetail() {
                   </CardContent>
                 </Card>
 
+                <Card className="border-amber-300/50 bg-amber-50/70 dark:border-amber-800/50 dark:bg-amber-950/20">
+                  <CardContent className="p-6">
+                    <h2 className="font-serif text-2xl font-bold text-foreground">When this becomes intervention work</h2>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      If the family already has refusal, safety concern, repeated relapse, or deep disagreement, the next useful move is not more reading. It is a confidential first call that sorts whether readiness work or a full intervention plan is appropriate.
+                    </p>
+                    <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "intervention_answer_high_intent", answer: answer.slug }}>
+                      <Button className="mt-5 w-full" variant="hero" onClick={() => trackAnswerClick("high_intent_phone", "tel:+15418386009")}>
+                        <Phone className="h-4 w-4" />
+                        Call about this situation
+                      </Button>
+                    </TrackedPhoneLink>
+                  </CardContent>
+                </Card>
+
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="flex items-center gap-2 font-serif text-2xl font-bold text-foreground">
