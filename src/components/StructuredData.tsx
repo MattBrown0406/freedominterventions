@@ -237,6 +237,44 @@ export const FAQSchema = ({ faqs }: { faqs: FAQItem[] }) => {
   );
 };
 
+export const QAPageSchema = ({
+  question,
+  answer,
+  url,
+}: {
+  question: string;
+  answer: string;
+  url: string;
+}) => {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "QAPage",
+    mainEntity: {
+      "@type": "Question",
+      name: question,
+      answerCount: 1,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answer,
+        author: {
+          "@type": "Person",
+          name: "Matt Brown",
+          url: "https://freedominterventions.com/interventionist",
+        },
+      },
+    },
+    url,
+    isPartOf: { "@id": "https://freedominterventions.com/#website" },
+    publisher: { "@id": "https://freedominterventions.com/#organization" },
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+};
+
 // Article Schema for blog posts
 export const ArticleSchema = ({
   title,

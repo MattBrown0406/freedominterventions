@@ -6,33 +6,10 @@ import SEOHead from "@/components/SEOHead";
 import { BreadcrumbSchema, FAQSchema, OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import { interventionAnswerPath, interventionAnswers } from "@/data/interventionAnswers";
+import { trackEvent } from "@/lib/analytics";
 
-const quickAnswers = [
-  {
-    question: "When is it time to call a professional interventionist?",
-    answer:
-      "Call when addiction is creating safety risk, repeated treatment refusal, overdose concern, family division, or a pattern where every family conversation turns into bargaining, promises, or crisis management.",
-    href: "/when-is-it-time-for-an-intervention",
-  },
-  {
-    question: "What does an interventionist do first?",
-    answer:
-      "The first job is not confrontation. It is assessment, family alignment, treatment planning, and deciding whether intervention, coaching, or another next step is the safest fit.",
-    href: "/how-intervention-works",
-  },
-  {
-    question: "What if they refuse treatment?",
-    answer:
-      "A refusal is not the end of the process. The family needs a unified plan, clear boundaries, and follow-through so the addiction is no longer protected from reality.",
-    href: "/what-if-they-refuse-treatment",
-  },
-  {
-    question: "How much does an intervention cost?",
-    answer:
-      "Cost depends on urgency, travel, treatment planning, and the amount of preparation needed. The right first step is a confidential conversation before assuming a full intervention is required.",
-    href: "/intervention-cost",
-  },
-];
+const quickAnswers = interventionAnswers.slice(0, 6);
 
 const decisionSteps = [
   {
@@ -52,7 +29,7 @@ const decisionSteps = [
   },
 ];
 
-const faqs = quickAnswers.map(({ question, answer }) => ({ question, answer }));
+const faqs = interventionAnswers.slice(0, 8).map(({ question, shortAnswer }) => ({ question, answer: shortAnswer }));
 
 export default function InterventionAnswers() {
   return (
@@ -140,9 +117,16 @@ export default function InterventionAnswers() {
                 {quickAnswers.map((item) => (
                   <article key={item.question} className="rounded-xl border border-border bg-background p-6">
                     <h3 className="font-serif text-xl font-bold text-foreground">{item.question}</h3>
-                    <p className="mt-3 leading-relaxed text-muted-foreground">{item.answer}</p>
-                    <Link to={item.href} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                      Read the deeper answer
+                    <p className="mt-3 leading-relaxed text-muted-foreground">{item.shortAnswer}</p>
+                    <Link
+                      to={interventionAnswerPath(item)}
+                      className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary"
+                      onClick={() => trackEvent("intervention_answer_hub_click", {
+                        answer_slug: item.slug,
+                        answer_category: item.category,
+                      })}
+                    >
+                      Open the dedicated answer
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </article>
@@ -153,6 +137,39 @@ export default function InterventionAnswers() {
         </section>
 
         <section className="py-12 md:py-16">
+          <div className="container px-6">
+            <div className="mx-auto max-w-6xl">
+              <div className="mb-8 max-w-3xl">
+                <p className="text-sm font-semibold uppercase tracking-wide text-primary">Answer clusters</p>
+                <h2 className="mt-2 font-serif text-3xl font-bold text-foreground md:text-4xl">
+                  Follow the question closest to what is happening now
+                </h2>
+                <p className="mt-3 text-muted-foreground">
+                  These dedicated answer pages are built for families and answer engines. Each one gives a direct answer, warning signals, and the next safest revenue path.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {interventionAnswers.map((answer) => (
+                  <Link
+                    key={answer.slug}
+                    to={interventionAnswerPath(answer)}
+                    onClick={() => trackEvent("intervention_answer_cluster_click", {
+                      answer_slug: answer.slug,
+                      answer_category: answer.category,
+                    })}
+                    className="rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/40"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">{answer.category}</p>
+                    <h3 className="mt-2 font-serif text-xl font-bold text-foreground">{answer.question}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{answer.shortAnswer}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-border py-12 md:py-16">
           <div className="container px-6">
             <div className="mx-auto grid max-w-5xl gap-8 rounded-2xl border border-primary/20 bg-card p-6 shadow-sm md:grid-cols-[1fr_320px] md:p-8">
               <div>

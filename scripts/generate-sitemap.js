@@ -11,6 +11,7 @@ const routeManifest = JSON.parse(
 )
 
 const appContent = readFileSync(join(__dirname, '../src/App.tsx'), 'utf8')
+const interventionAnswerContent = readFileSync(join(__dirname, '../src/data/interventionAnswers.ts'), 'utf8')
 const routeMatches = [...appContent.matchAll(/path="([^"]+)"/g)]
 const appRoutes = routeMatches
   .map((match) => match[1])
@@ -22,9 +23,11 @@ const appRoutes = routeMatches
       path !== '/reschedule' &&
       path !== '/404',
   )
+const interventionAnswerRoutes = [...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g)]
+  .map((match) => `/intervention-answers/${match[1]}`)
 
 const manifestMap = new Map(routeManifest.map((route) => [route.path, route]))
-const routes = [...new Set(appRoutes)].map((path) => {
+const routes = [...new Set([...appRoutes, ...interventionAnswerRoutes])].map((path) => {
   const configured = manifestMap.get(path)
   return {
     path,

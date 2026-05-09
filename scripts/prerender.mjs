@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, '..');
 const distDir = path.join(root, 'dist');
 const appFile = path.join(root, 'src', 'App.tsx');
+const interventionAnswersFile = path.join(root, 'src', 'data', 'interventionAnswers.ts');
 const envFile = path.join(root, '.env');
 const previewPort = Number(process.env.PRERENDER_PREVIEW_PORT || 4273);
 const previewOrigin = `http://127.0.0.1:${previewPort}`;
@@ -47,7 +48,12 @@ const loadEnv = async () => {
 
 const getStaticRoutes = async () => {
   const appContent = await readFile(appFile, 'utf8');
-  return [...new Set([...appContent.matchAll(/path="([^"]+)"/g)].map((match) => match[1]))]
+  const answerContent = await readFile(interventionAnswersFile, 'utf8');
+  const appRoutes = [...appContent.matchAll(/path="([^"]+)"/g)].map((match) => match[1]);
+  const interventionAnswerRoutes = [...answerContent.matchAll(/slug:\s*"([^"]+)"/g)]
+    .map((match) => `/intervention-answers/${match[1]}`);
+
+  return [...new Set([...appRoutes, ...interventionAnswerRoutes])]
     .filter((route) => !route.includes(':'))
     .filter((route) => !route.includes('*'))
     .filter((route) => !route.startsWith('/admin'))

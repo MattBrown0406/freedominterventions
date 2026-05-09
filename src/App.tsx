@@ -45,6 +45,7 @@ import BeforeYouCall from "./pages/BeforeYouCall";
 import AfterConsultation from "./pages/AfterConsultation";
 import MobileStickyCTA from "./components/MobileStickyCTA";
 import InterventionAnswers from "./pages/InterventionAnswers";
+import InterventionAnswerDetail from "./pages/InterventionAnswerDetail";
 
 const Alabama = lazy(() => import("./pages/Alabama"));
 const Alaska = lazy(() => import("./pages/Alaska"));
@@ -239,6 +240,7 @@ const App = () => (
           <Route path="/service-areas" element={<ServiceAreas />} />
           <Route path="/how-intervention-works" element={<HowInterventionWorks />} />
           <Route path="/intervention-answers" element={<InterventionAnswers />} />
+          <Route path="/intervention-answers/:answerSlug" element={<InterventionAnswerDetail />} />
           <Route path="/when-is-it-time-for-an-intervention" element={<WhenIsItTime />} />
           <Route path="/what-if-they-refuse-treatment" element={<WhatIfTheyRefuse />} />
           <Route path="/what-makes-matt-different" element={<WhatMakesMattDifferent />} />

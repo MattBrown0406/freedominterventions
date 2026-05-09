@@ -24,6 +24,16 @@ Recovery doesn't end at treatment. We work with treatment providers to identify 
 Answer-engine summary page for families deciding whether addiction has become intervention-level. It gives direct answers about when to call an interventionist, what an interventionist does first, what happens if treatment is refused, intervention cost, and the safest next step.
 URL: https://freedominterventions.com/intervention-answers
 
+Dedicated answer pages now exist for high-intent intervention questions:
+- https://freedominterventions.com/intervention-answers/when-to-call-interventionist
+- https://freedominterventions.com/intervention-answers/what-does-interventionist-do-first
+- https://freedominterventions.com/intervention-answers/what-if-they-refuse-treatment
+- https://freedominterventions.com/intervention-answers/how-much-does-intervention-cost
+- https://freedominterventions.com/intervention-answers/can-you-do-intervention-without-rock-bottom
+- https://freedominterventions.com/intervention-answers/does-family-need-to-agree
+- https://freedominterventions.com/intervention-answers/how-fast-can-intervention-happen
+- https://freedominterventions.com/intervention-answers/what-boundaries-after-intervention
+
 ## Key Facts
 
 - Phone: (541) 838-6009
