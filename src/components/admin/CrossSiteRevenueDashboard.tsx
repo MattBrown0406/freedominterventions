@@ -611,15 +611,30 @@ const CrossSiteRevenueDashboard = () => {
     const local = channelStats.find((row) => row.source === site.id);
     const remote = remoteSites.find((row) => row.id === site.id);
     const upstreamIntent = numberFromTotals(remote?.report, ["revenue_intent_clicks", "consultation_requests", "intervention_readiness_clicks", "advertiser_inquiries", "registrations"]);
+    const leads = local?.leads ?? 0;
+    const calls = local?.calls ?? 0;
+    const consultations = local?.consultations ?? 0;
+    let nextAction = "Load the report secret and watch for source-attributed Freedom leads.";
+
+    if (upstreamIntent > 0 && leads === 0) {
+      nextAction = "Improve the bridge CTA from this site into Freedom's consultation page.";
+    } else if (leads > 0 && calls === 0 && consultations === 0) {
+      nextAction = "Work these leads from the Money List before they cool off.";
+    } else if (calls > consultations) {
+      nextAction = "Match call activity to booked consults or add a follow-up note.";
+    } else if (consultations > 0) {
+      nextAction = "Move consult outcomes into contract, readiness intensive, or nurture status.";
+    }
 
     return {
       id: site.id,
       name: site.name,
       upstreamIntent,
-      leads: local?.leads ?? 0,
-      calls: local?.calls ?? 0,
-      consultations: local?.consultations ?? 0,
+      leads,
+      calls,
+      consultations,
       revenueCents: local?.revenueCents ?? 0,
+      nextAction,
     };
   });
 
@@ -697,6 +712,7 @@ const CrossSiteRevenueDashboard = () => {
                     <p className="text-sm text-muted-foreground">
                       {row.upstreamIntent} upstream intent · {row.leads} FI leads · {row.calls} calls · {row.consultations} consults
                     </p>
+                    <p className="mt-2 text-xs font-medium text-primary">{row.nextAction}</p>
                   </div>
                   <Badge className="bg-green-700 text-white hover:bg-green-700">{formatUsd(row.revenueCents)}</Badge>
                 </div>

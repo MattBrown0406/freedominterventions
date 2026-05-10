@@ -11,6 +11,7 @@
   { "path": "/what-if-they-refuse-treatment", "priority": "0.8", "changefreq": "monthly" },
   { "path": "/what-makes-matt-different", "priority": "0.8", "changefreq": "monthly" },
   { "path": "/intervention-cost", "priority": "0.8", "changefreq": "monthly" },
+  { "path": "/book-intervention-consultation", "priority": "0.9", "changefreq": "monthly" },
   { "path": "/before-you-call", "priority": "0.8", "changefreq": "monthly" },
   { "path": "/testimonials", "priority": "0.7", "changefreq": "monthly" },
   { "path": "/contact", "priority": "0.8", "changefreq": "monthly" },
