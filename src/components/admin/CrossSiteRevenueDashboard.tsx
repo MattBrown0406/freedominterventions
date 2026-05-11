@@ -617,6 +617,24 @@ const CrossSiteRevenueDashboard = () => {
       done: openClawReady === openClawNumbers.length,
     },
   ];
+  const publishChecklist = [
+    {
+      label: "Key pages load",
+      detail: "Check FI /book-intervention-consultation, NME /answers, and the newest answer pages after each publish.",
+    },
+    {
+      label: "Money CTAs route correctly",
+      detail: "Confirm homepage consult clicks, NME urgent-answer clicks, Family Squares clicks, and intervention readiness clicks land in the right place.",
+    },
+    {
+      label: "Forms still open",
+      detail: "Spot-check FI booking calendar, NME consultation request, Sober Helpline Family Squares registration, and advertiser inquiry forms.",
+    },
+    {
+      label: "Revenue dashboard reads",
+      detail: "Open Command Center, refresh upstream reports, and confirm the Daily Money List is visible before calling the publish done.",
+    },
+  ];
   const sourceRows = useMemo(() => defaultRemoteSites.map((site) => {
     const local = channelStats.find((row) => row.source === site.id);
     const remote = remoteSites.find((row) => row.id === site.id);
@@ -864,7 +882,7 @@ const CrossSiteRevenueDashboard = () => {
         </Card>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -878,6 +896,28 @@ const CrossSiteRevenueDashboard = () => {
             <QaLine good={dataIssues.length === 0} label={dataIssues.length === 0 ? "Freedom-side admin data is readable" : "Some Freedom-side data is partially unavailable"} />
             <QaLine good={settingsStatus === "backend"} label={settingsStatus === "backend" ? "Settings are saved durably" : "Settings are currently local to this browser"} />
             <QaLine good={openClawReady === openClawNumbers.length} label={openClawReady === openClawNumbers.length ? "OpenClaw numbers are fully mapped" : `${openClawNumbers.length - openClawReady} OpenClaw number${openClawNumbers.length - openClawReady === 1 ? "" : "s"} still pending`} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <ClipboardCheck className="h-4 w-4 text-primary" />
+              Publish QA Checklist
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            {publishChecklist.map((item, index) => (
+              <div key={item.label} className="rounded-lg border border-border p-3">
+                <div className="flex items-start gap-2">
+                  <Badge variant="outline" className="mt-0.5 shrink-0">{index + 1}</Badge>
+                  <div>
+                    <p className="font-semibold text-foreground">{item.label}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.detail}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
