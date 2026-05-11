@@ -81,6 +81,10 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
     title: "Privacy Policy | Freedom Interventions",
     description: "Freedom Interventions privacy policy covering data collection, usage, cookies, third-party services, and your rights.",
   },
+  "/terms": {
+    title: "Terms and SMS Policy | Freedom Interventions",
+    description: "Terms, service disclaimers, and SMS messaging policy for requested Freedom Interventions follow-up texts and booking links.",
+  },
   "/terms-of-service": {
     title: "Terms of Service | Freedom Interventions",
     description: "Terms of service for Freedom Interventions website and professional addiction intervention services.",

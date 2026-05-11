@@ -34,6 +34,7 @@ import DefaultSEO from "./components/DefaultSEO";
 import RouteAnalytics from "./components/RouteAnalytics";
 import TrailingSlashRedirect from "./components/TrailingSlashRedirect";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
 import TermsOfService from "./pages/TermsOfService";
 import HipaaCompliance from "./pages/HipaaCompliance";
 import HowInterventionWorks from "./pages/HowInterventionWorks";
@@ -217,6 +218,7 @@ const App = () => (
         <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/booking" element={<Index />} />
           <Route path="/interventionist" element={<Interventionist />} />
           <Route path="/family-intervention" element={<FamilyIntervention />} />
           <Route path="/family-readiness-intensive" element={<FamilyReadinessIntensive />} />
@@ -256,6 +258,7 @@ const App = () => (
           <Route path="/intervention-agreement" element={<StartContract />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/hipaa-compliance" element={<HipaaCompliance />} />
           

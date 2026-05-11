@@ -21,6 +21,7 @@ const Footer = () => {
     ],
     legal: [
       { name: "Privacy Policy", href: "/privacy-policy", isRoute: true },
+      { name: "Terms & SMS Policy", href: "/terms", isRoute: true },
       { name: "Terms of Service", href: "/terms-of-service", isRoute: true },
       { name: "HIPAA Compliance", href: "/hipaa-compliance", isRoute: true },
     ],
