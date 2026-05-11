@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { subDays } from "date-fns";
-import { AlertCircle, BarChart3, CheckCircle2, ClipboardCheck, DollarSign, ExternalLink, Mail, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
+import { AlertCircle, BarChart3, CheckCircle2, ClipboardCheck, DollarSign, ExternalLink, ListChecks, Mail, Megaphone, PhoneCall, RefreshCw, Save, Settings, Target, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -98,6 +98,16 @@ interface ChannelStats {
   paidConversions: number;
   revenueCents: number;
   highIntentLeads: number;
+}
+
+interface CrossSiteMoneyAction {
+  id: string;
+  source: string;
+  title: string;
+  action: string;
+  evidence: string;
+  priority: "critical" | "high" | "normal";
+  score: number;
 }
 
 const settingsKey = "freedom_cross_site_revenue_settings";
@@ -607,7 +617,7 @@ const CrossSiteRevenueDashboard = () => {
       done: openClawReady === openClawNumbers.length,
     },
   ];
-  const sourceRows = defaultRemoteSites.map((site) => {
+  const sourceRows = useMemo(() => defaultRemoteSites.map((site) => {
     const local = channelStats.find((row) => row.source === site.id);
     const remote = remoteSites.find((row) => row.id === site.id);
     const upstreamIntent = numberFromTotals(remote?.report, ["revenue_intent_clicks", "consultation_requests", "intervention_readiness_clicks", "advertiser_inquiries", "registrations"]);
@@ -636,7 +646,89 @@ const CrossSiteRevenueDashboard = () => {
       revenueCents: local?.revenueCents ?? 0,
       nextAction,
     };
-  });
+  }), [channelStats, remoteSites]);
+  const dailyMoneyActions = useMemo<CrossSiteMoneyAction[]>(() => {
+    const actions: CrossSiteMoneyAction[] = [];
+
+    if (highIntentToConsultGap > 0) {
+      actions.push({
+        id: "freedom-high-intent-gap",
+        source: "Freedom Interventions",
+        title: "Work high-intent Freedom leads first",
+        action: "Open the Money List tab and contact every high-intent lead without a booked consult or close note.",
+        evidence: `${highIntentToConsultGap} high-intent lead${highIntentToConsultGap === 1 ? "" : "s"} still need a booked consult, readiness decision, or status update.`,
+        priority: highIntentToConsultGap >= 3 ? "critical" : "high",
+        score: 100 + highIntentToConsultGap * 12,
+      });
+    }
+
+    if (callToConsultGap > 0) {
+      actions.push({
+        id: "freedom-call-gap",
+        source: "Freedom Interventions",
+        title: "Close the call-to-consult gap",
+        action: "Match tracked call clicks to consults, notes, or follow-up tasks before the lead goes cold.",
+        evidence: `${callToConsultGap} tracked call click${callToConsultGap === 1 ? "" : "s"} are not yet reflected as consultations.`,
+        priority: callToConsultGap >= 5 ? "critical" : "high",
+        score: 92 + callToConsultGap * 8,
+      });
+    }
+
+    sourceRows.forEach((row) => {
+      if (row.upstreamIntent === 0 && row.leads === 0 && row.calls === 0) return;
+      const leadGap = Math.max(row.leads - row.consultations, 0);
+      const score = row.upstreamIntent * 3 + row.leads * 18 + row.calls * 12 + row.consultations * 20 + Math.min(row.revenueCents / 10000, 40);
+      const priority: CrossSiteMoneyAction["priority"] = score >= 80 ? "high" : "normal";
+      let title = `Inspect ${row.name} revenue path`;
+      let action = row.nextAction;
+
+      if (row.upstreamIntent > 0 && row.leads === 0) {
+        title = `Tighten ${row.name} handoff into Freedom`;
+      } else if (leadGap > 0) {
+        title = `Work ${row.name} attributed leads`;
+        action = "Use the Money List and pipeline notes to move attributed leads into booked consults or nurture.";
+      } else if (row.consultations > 0) {
+        title = `Advance ${row.name} consult outcomes`;
+        action = "Move completed consults into readiness intensive, contract, closed, or nurture status.";
+      }
+
+      actions.push({
+        id: `source-${row.id}`,
+        source: row.name,
+        title,
+        action,
+        evidence: `${row.upstreamIntent} upstream intent · ${row.leads} Freedom leads · ${row.calls} calls · ${row.consultations} consults.`,
+        priority,
+        score,
+      });
+    });
+
+    if (connectedReports < remoteSites.length) {
+      actions.push({
+        id: "load-upstream-reports",
+        source: "Command Center",
+        title: "Load missing upstream reports",
+        action: "Enter or refresh report secrets so the daily money list can rank NME, SH, and Party Wreckers accurately.",
+        evidence: `${connectedReports}/${remoteSites.length} upstream reports are currently connected.`,
+        priority: connectedReports === 0 ? "high" : "normal",
+        score: 72 - connectedReports * 10,
+      });
+    }
+
+    if (actions.length === 0) {
+      actions.push({
+        id: "baseline-review",
+        source: "Command Center",
+        title: "Run the revenue review",
+        action: "Refresh Freedom data, load upstream reports, then inspect top answer/content pages for the next promotion push.",
+        evidence: "No urgent gap is visible in the current 30-day window.",
+        priority: "normal",
+        score: 20,
+      });
+    }
+
+    return actions.sort((a, b) => b.score - a.score).slice(0, 7);
+  }, [callToConsultGap, connectedReports, highIntentToConsultGap, remoteSites.length, sourceRows]);
 
   return (
     <div className="space-y-6">
@@ -670,6 +762,37 @@ const CrossSiteRevenueDashboard = () => {
               Refresh All
             </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-green-700/20 bg-green-50/60">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <ListChecks className="h-4 w-4 text-green-700" />
+            Cross-Site Daily Money List
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {dailyMoneyActions.map((item, index) => (
+            <div key={item.id} className="rounded-lg border border-border bg-background p-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline">#{index + 1}</Badge>
+                    <MoneyPriorityBadge priority={item.priority} />
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.source}</span>
+                  </div>
+                  <h3 className="mt-2 font-semibold text-foreground">{item.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{item.action}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{item.evidence}</p>
+                </div>
+                <Badge className="bg-green-700 text-white hover:bg-green-700">Score {Math.round(item.score)}</Badge>
+              </div>
+            </div>
+          ))}
+          <p className="text-xs text-muted-foreground">
+            Lead names still live in the Money List and pipeline tabs. This view ranks the cross-site source moves so each day starts with the highest revenue path.
+          </p>
         </CardContent>
       </Card>
 
@@ -1027,6 +1150,12 @@ const SnapshotMetric = ({ label, value }: { label: string; value: string }) => (
     <p className="text-2xl font-bold">{value}</p>
   </div>
 );
+
+const MoneyPriorityBadge = ({ priority }: { priority: CrossSiteMoneyAction["priority"] }) => {
+  if (priority === "critical") return <Badge variant="destructive">Critical</Badge>;
+  if (priority === "high") return <Badge className="bg-amber-500 text-white hover:bg-amber-500">High</Badge>;
+  return <Badge variant="outline">Normal</Badge>;
+};
 
 const RemoteStatusBadge = ({ site }: { site: RemoteSiteConfig }) => {
   if (site.status === "ready") return <Badge className="bg-green-700 text-white hover:bg-green-700">Connected</Badge>;
