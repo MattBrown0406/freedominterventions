@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck, HelpCircle, Phone, ShieldAlert } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, CheckCircle2, ClipboardCheck, HelpCircle, Phone, ShieldAlert } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -56,6 +56,7 @@ export default function InterventionAnswerDetail() {
   const canonicalUrl = `https://freedominterventions.com${canonicalPath}`;
   const relatedAnswers = getRelatedInterventionAnswers(answer);
   const signals = answer.signs ?? defaultSignals;
+  const consultHref = `/book-intervention-consultation?utm_source=freedom_interventions&utm_medium=answer_page&utm_campaign=answer_revenue_path&utm_content=${answer.slug}#booking`;
 
   const trackAnswerClick = (clickType: string, targetHref: string) => {
     trackEvent("intervention_answer_click", {
@@ -68,6 +69,12 @@ export default function InterventionAnswerDetail() {
   };
 
   const pathFitLinks = [
+    {
+      label: "Book an intervention consultation",
+      description: "Use this when the family needs a direct revenue-path conversation with Matt.",
+      href: consultHref,
+      action: "book_consult",
+    },
     {
       label: "Call Matt now",
       description: "Use this if safety, overdose risk, treatment refusal, or family conflict cannot wait.",
@@ -155,6 +162,12 @@ export default function InterventionAnswerDetail() {
                       <Link to={answer.nextStepHref} onClick={() => trackAnswerClick("primary_next_step", answer.nextStepHref)}>
                         Start here
                         <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button asChild className="mt-3 w-full" variant="outline">
+                      <Link to={consultHref} onClick={() => trackAnswerClick("book_consultation", consultHref)}>
+                        Book consultation
+                        <Calendar className="h-4 w-4" />
                       </Link>
                     </Button>
                     <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "intervention_answer_detail", answer: answer.slug }}>

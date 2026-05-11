@@ -198,9 +198,11 @@ const sourceTitle = (source: string) => {
 };
 
 const sourceFamily = (source: string) => {
-  if (source.includes("no_more_enabling") || source.includes("nme")) return "no_more_enabling";
-  if (source.includes("sober_helpline") || source.includes("family_squares")) return "sober_helpline";
-  if (source.includes("party_wreckers")) return "party_wreckers";
+  const key = source.toLowerCase().replace(/[\s-]+/g, "_");
+  if (key.includes("no_more_enabling") || key.includes("nomoreenabling") || key.includes("nme")) return "no_more_enabling";
+  if (key.includes("sober_helpline") || key.includes("soberhelpline") || key.includes("family_squares")) return "sober_helpline";
+  if (key.includes("party_wreckers") || key.includes("partywreckers") || key.includes("party_wreckera")) return "party_wreckers";
+  if (key.includes("freedom_interventions") || key.includes("freedominterventions")) return "freedom_interventions";
   return source;
 };
 
@@ -627,6 +629,10 @@ const CrossSiteRevenueDashboard = () => {
       detail: "Confirm homepage consult clicks, NME urgent-answer clicks, Family Squares clicks, and intervention readiness clicks land in the right place.",
     },
     {
+      label: "Source attribution buckets cleanly",
+      detail: "NME, SH, Party Wreckers, and direct Freedom traffic should appear under their source names in the Source of Money view.",
+    },
+    {
       label: "Forms still open",
       detail: "Spot-check FI booking calendar, NME consultation request, Sober Helpline Family Squares registration, and advertiser inquiry forms.",
     },
@@ -810,6 +816,44 @@ const CrossSiteRevenueDashboard = () => {
           ))}
           <p className="text-xs text-muted-foreground">
             Lead names still live in the Money List and pipeline tabs. This view ranks the cross-site source moves so each day starts with the highest revenue path.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <DollarSign className="h-4 w-4 text-green-700" />
+            Source of Money View
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid gap-3 md:grid-cols-3">
+            {sourceRows.map((row) => {
+              const leadToConsultRate = formatPercent(row.consultations, row.leads);
+              const hasMovement = row.upstreamIntent > 0 || row.leads > 0 || row.calls > 0 || row.consultations > 0 || row.revenueCents > 0;
+              return (
+                <div key={row.id} className={`rounded-lg border p-4 ${hasMovement ? "border-primary/30 bg-primary/5" : "border-border bg-background"}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-foreground">{row.name}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">Lead-to-consult: {leadToConsultRate}</p>
+                    </div>
+                    <Badge variant={hasMovement ? "default" : "outline"}>{formatUsd(row.revenueCents)}</Badge>
+                  </div>
+                  <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                    <span>{row.upstreamIntent} upstream intent</span>
+                    <span>{row.leads} FI leads</span>
+                    <span>{row.calls} calls</span>
+                    <span>{row.consultations} consults</span>
+                  </div>
+                  <p className="mt-3 text-xs font-medium text-primary">{row.nextAction}</p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            This is the simple revenue source read: which property created intent, whether that intent became a Freedom lead, and what needs to happen next.
           </p>
         </CardContent>
       </Card>

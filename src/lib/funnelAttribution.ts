@@ -73,6 +73,16 @@ const sourceFromKnownPath = (pathname: string) => {
   return null;
 };
 
+const normalizeSource = (source: string | null) => {
+  if (!source) return null;
+  const key = source.toLowerCase().trim().replace(/[\s-]+/g, "_");
+  if (["nomoreenabling", "no_more_enabling", "nme"].includes(key)) return "no_more_enabling";
+  if (["soberhelpline", "sober_helpline", "sh", "family_squares"].includes(key)) return "sober_helpline";
+  if (["partywreckers", "party_wreckers", "party_wreckera", "pw"].includes(key)) return "party_wreckers";
+  if (["freedominterventions", "freedom_interventions", "fi"].includes(key)) return "freedom_interventions";
+  return key;
+};
+
 const sourceFromReferrer = (referrer: string | null) => {
   if (!referrer) return null;
   try {
@@ -92,7 +102,7 @@ const sourceFromReferrer = (referrer: string | null) => {
 
 const resolveSource = (params: URLSearchParams, pathname: string, referrer: string | null, stored: FunnelAttribution | null) => {
   const explicitSource = getParam(params, "source") || getParam(params, "utm_source");
-  if (explicitSource) return explicitSource;
+  if (explicitSource) return normalizeSource(explicitSource) || explicitSource;
 
   const pathSource = sourceFromKnownPath(pathname);
   if (pathSource) return pathSource;
@@ -100,7 +110,7 @@ const resolveSource = (params: URLSearchParams, pathname: string, referrer: stri
   const referrerSource = sourceFromReferrer(referrer);
   if (referrerSource) return referrerSource;
 
-  return stored?.source || "direct";
+  return normalizeSource(stored?.source || null) || "direct";
 };
 
 export const captureFunnelAttribution = (): FunnelAttribution | null => {

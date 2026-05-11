@@ -63,6 +63,10 @@ const customerInfoSchema = z.object({
   phone: z.string().max(20, "Phone number must be less than 20 characters").optional().or(z.literal("")),
 });
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+  return error instanceof Error ? error.message : fallback;
+};
+
 const FRI_AGREEMENT_VERSION = "fri-v1";
 const FRI_AGREEMENT_TEXT = `FAMILY READINESS INTENSIVE AGREEMENT
 
@@ -271,7 +275,7 @@ export const BookingCalendar = () => {
       if (error) throw error;
       const filteredSlots = filterSameDaySlots(data.slots || [], date);
       setAvailableSlots(filteredSlots);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching slots:', error);
       toast.error('Failed to load available times');
     } finally {
@@ -413,9 +417,9 @@ export const BookingCalendar = () => {
       });
       toast.success('Consultation booked successfully!');
       await sendBookingConfirmation(data.booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Booking error:', error);
-      toast.error(error.message || 'Failed to book consultation. Please try again.');
+      toast.error(getErrorMessage(error, 'Failed to book consultation. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -561,9 +565,9 @@ export const BookingCalendar = () => {
         return;
       }
       throw new Error('Hosted checkout link was not returned.');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Hosted checkout error:', error);
-      toast.error(error.message || 'Failed to start payment. Please try again.');
+      toast.error(getErrorMessage(error, 'Failed to start payment. Please try again.'));
       setLoading(false);
     }
   }, [selectedDate, selectedTime, bookingType, offer, customerInfo, friAgreementAccepted, friSignerName, abandonedCartId]);
@@ -785,8 +789,22 @@ export const BookingCalendar = () => {
                     <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
                     {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-2">Your booking includes 7 days of follow-up support by Zoom, phone, text, or email.</p>}
                   </div>
+                  <div className="rounded-lg border border-primary/20 bg-primary/5 p-5 text-left space-y-3">
+                    <h4 className="font-semibold text-foreground flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary" />
+                      Before your appointment
+                    </h4>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p>Watch for the confirmation email with your meeting details.</p>
+                      <p>Complete the family assessment so Matt has the clearest picture before you talk.</p>
+                      <p>If the situation changes before your appointment, call directly instead of waiting.</p>
+                    </div>
+                    <Button asChild className="w-full" variant={bookingType === 'readiness-intensive' ? 'outline' : 'default'}>
+                      <a href="/assessment">Complete Assessment</a>
+                    </Button>
+                  </div>
                   {bookingType === 'readiness-intensive' ? (
-                    <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3"><h4 className="font-semibold text-primary flex items-center gap-2"><Sparkles className="w-5 h-5" />Important Next Step</h4><p className="text-sm text-foreground">Please complete the family assessment before your Family Readiness Intensive so Matt has the strongest possible picture of your situation before the session.</p><Button asChild className="w-full"><a href="/assessment">Complete Assessment</a></Button></div>
+                    <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3"><h4 className="font-semibold text-primary flex items-center gap-2"><Sparkles className="w-5 h-5" />Readiness Intensive reminder</h4><p className="text-sm text-foreground">Your intensive includes the session plus 7 days of follow-up support. Use the assessment to organize the facts that matter most.</p></div>
                   ) : null}
                   <div className="flex gap-2 justify-center"><Button variant="outline" onClick={resetForm}>Book Another Session</Button>{bookingId && <Button variant="secondary" asChild><a href={`/reschedule?bookingId=${bookingId}&email=${encodeURIComponent(customerInfo.email)}`}>Manage Booking</a></Button>}</div>
                   {contractId && bookingType === 'readiness-intensive' ? <p className="text-xs text-muted-foreground">Contract ID: {contractId}</p> : null}
