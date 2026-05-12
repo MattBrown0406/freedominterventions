@@ -641,6 +641,62 @@ const CrossSiteRevenueDashboard = () => {
       detail: "Open Command Center, refresh upstream reports, and confirm the Daily Money List is visible before calling the publish done.",
     },
   ];
+  const weeklyOperatingRhythm = [
+    {
+      day: "Monday",
+      focus: "Publish and crawl",
+      action: "Confirm the latest Lovable publishes are live, open the key pages, and resubmit any new sitemap URLs in Search Console.",
+    },
+    {
+      day: "Tuesday",
+      focus: "Lead follow-up",
+      action: "Work the Daily Money List, update pipeline status, and make sure every hot lead has a next action.",
+    },
+    {
+      day: "Wednesday",
+      focus: "Content to consult path",
+      action: "Review the top answer/content pages and strengthen one CTA, internal link, or bridge into the consult path.",
+    },
+    {
+      day: "Thursday",
+      focus: "Advertiser proof",
+      action: "Export NME and Party Wreckers sponsor metrics, note top pages, and prepare one proof point for outreach.",
+    },
+    {
+      day: "Friday",
+      focus: "Money review",
+      action: "Review Source of Money, follow-up gaps, advertiser pipeline, and next week's highest leverage site move.",
+    },
+  ];
+  const indexabilityChecklist = [
+    "Sitemaps return 200 for FI, NME, SH, and Party Wreckers.",
+    "Newest money pages are present in the sitemap after publish.",
+    "Critical pages return 200, not redirect chains or blank client shells.",
+    "Search Console indexing reports are checked after major AEO/SEO batches.",
+    "Canonical URLs point at the final live page, not a staging or alternate path.",
+  ];
+  const revenueMachineMap = [
+    {
+      source: "No More Enabling",
+      job: "SEO and AEO demand capture",
+      moneyPath: "Answer pages, articles, lead magnets, and consultation CTAs route family crisis intent into Sober Helpline or Freedom.",
+    },
+    {
+      source: "Sober Helpline",
+      job: "Support and trust conversion",
+      moneyPath: "Family Squares and coaching paths warm families up without replacing the free Monday meeting.",
+    },
+    {
+      source: "Freedom Interventions",
+      job: "High-value consult and intervention conversion",
+      moneyPath: "Booking, readiness, assessment, contracts, and follow-up automation turn high-intent families into paid work.",
+    },
+    {
+      source: "Party Wreckers",
+      job: "Audience and advertiser leverage",
+      moneyPath: "Podcast/listener paths feed the family-help funnel while sponsor inventory creates a separate revenue lane.",
+    },
+  ];
   const sourceRows = useMemo(() => defaultRemoteSites.map((site) => {
     const local = channelStats.find((row) => row.source === site.id);
     const remote = remoteSites.find((row) => row.id === site.id);
@@ -855,6 +911,72 @@ const CrossSiteRevenueDashboard = () => {
           <p className="text-xs text-muted-foreground">
             This is the simple revenue source read: which property created intent, whether that intent became a Freedom lead, and what needs to happen next.
           </p>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <Card className="border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Target className="h-4 w-4 text-primary" />
+              Revenue Machine Map
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {revenueMachineMap.map((item, index) => (
+              <div key={item.source} className="rounded-lg border border-border bg-background p-4">
+                <div className="flex items-start gap-3">
+                  <Badge className="mt-0.5 shrink-0 bg-primary text-primary-foreground hover:bg-primary">{index + 1}</Badge>
+                  <div>
+                    <p className="font-semibold text-foreground">{item.source}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{item.job}</p>
+                    <p className="mt-2 text-xs font-medium text-primary">{item.moneyPath}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <ClipboardCheck className="h-4 w-4 text-primary" />
+              Weekly Operating Rhythm
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {weeklyOperatingRhythm.map((item) => (
+              <div key={item.day} className="rounded-lg border border-border p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{item.day}: {item.focus}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.action}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="rounded-lg border border-amber-300/70 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+              Keep OpenClaw mapping out of this rhythm until the numbers are final. Once they are ready, add call reconciliation to Tuesday and Friday.
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <CheckCircle2 className="h-4 w-4 text-green-700" />
+            Indexing and Search Console Follow-Up
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+          {indexabilityChecklist.map((item) => (
+            <div key={item} className="rounded-lg border border-border bg-background p-3">
+              <CheckCircle2 className="h-4 w-4 text-green-700" />
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{item}</p>
+            </div>
+          ))}
         </CardContent>
       </Card>
 
