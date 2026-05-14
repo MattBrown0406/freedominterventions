@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { google } from "googleapis";
+import { jsPDF } from "jspdf";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -260,6 +261,120 @@ const rowTable = (rows, headers, mapper) => {
   return lines.join("\n");
 };
 
+const cleanText = (value) => String(value || "").replace(/\s+/g, " ").trim();
+
+const writePdfReport = async (filePath, { siteUrl, startDate, endDate, result }) => {
+  const pdf = new jsPDF({ unit: "pt", format: "letter" });
+  const margin = 42;
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const contentWidth = pageWidth - margin * 2;
+  const lineHeight = 13;
+  let y = margin;
+
+  const ensureSpace = (height = lineHeight) => {
+    if (y + height <= pageHeight - margin) return;
+    pdf.addPage();
+    y = margin;
+  };
+
+  const addText = (text, options = {}) => {
+    const {
+      size = 10,
+      style = "normal",
+      color = [35, 35, 35],
+      width = contentWidth,
+      gap = 4,
+    } = options;
+
+    pdf.setFont("helvetica", style);
+    pdf.setFontSize(size);
+    pdf.setTextColor(...color);
+
+    const lines = pdf.splitTextToSize(cleanText(text), width);
+    ensureSpace(lines.length * lineHeight + gap);
+    pdf.text(lines, margin, y);
+    y += lines.length * lineHeight + gap;
+  };
+
+  const addHeading = (text) => {
+    y += 8;
+    addText(text, { size: 14, style: "bold", color: [20, 64, 84], gap: 8 });
+  };
+
+  const addMetricLine = (label, row) => {
+    addText(
+      `${label}: ${num(row.clicks)} clicks | ${num(row.impressions)} impressions | ${pct(row.ctr)} CTR | avg position ${round(row.position)}`,
+      { size: 9, gap: 2 },
+    );
+  };
+
+  const addRowList = (title, rows, mapper, limit = 12) => {
+    addHeading(title);
+    if (!rows.length) {
+      addText("No matching rows in this report period.", { size: 9 });
+      return;
+    }
+
+    rows.slice(0, limit).forEach((row, index) => {
+      const mapped = mapper(row);
+      ensureSpace(52);
+      addText(`${index + 1}. ${mapped.title}`, { size: 10, style: "bold", gap: 1 });
+      if (mapped.detail) addText(mapped.detail, { size: 8, color: [80, 80, 80], gap: 1 });
+      addText(mapped.metrics, { size: 9, gap: 5 });
+    });
+  };
+
+  addText("GSC Weekly Report", { size: 22, style: "bold", color: [13, 50, 65], gap: 8 });
+  addText(`Property: ${siteUrl}`, { size: 10, color: [70, 70, 70], gap: 2 });
+  addText(`Date range: ${startDate} to ${endDate}`, { size: 10, color: [70, 70, 70], gap: 14 });
+
+  addHeading("Executive Read");
+  addMetricLine("Organic search", result.total);
+  addText(
+    "The main business question is whether non-branded search impressions are becoming phone calls, emails, or booked appointments. This report tracks the search side. GA4/event data should be connected next to close the loop on lead actions.",
+    { size: 9, gap: 8 },
+  );
+
+  addRowList("Priority Query Clusters", result.clusterRows, (row) => ({
+    title: row.cluster,
+    metrics: `${num(row.clicks)} clicks | ${num(row.impressions)} impressions | ${pct(row.ctr)} CTR | avg position ${round(row.position)}`,
+  }));
+
+  addRowList("Top Queries By Clicks", result.topQueries, (row) => ({
+    title: row.keys?.[0] || "",
+    metrics: `${num(row.clicks)} clicks | ${num(row.impressions)} impressions | ${pct(row.ctr)} CTR | avg position ${round(row.position)}`,
+  }));
+
+  addRowList("Top Pages By Clicks", result.topPages, (row) => ({
+    title: row.keys?.[0] || "",
+    metrics: `${num(row.clicks)} clicks | ${num(row.impressions)} impressions | ${pct(row.ctr)} CTR | avg position ${round(row.position)}`,
+  }));
+
+  addRowList("High-Impression Opportunities", result.opportunities, (row) => ({
+    title: row.keys?.[0] || "",
+    detail: row.keys?.[1] || "",
+    metrics: `${num(row.clicks)} clicks | ${num(row.impressions)} impressions | ${pct(row.ctr)} CTR | avg position ${round(row.position)}`,
+  }));
+
+  addRowList("Zero-Click Opportunities", result.noClickOpportunities, (row) => ({
+    title: row.keys?.[0] || "",
+    detail: row.keys?.[1] || "",
+    metrics: `${num(row.impressions)} impressions | avg position ${round(row.position)}`,
+  }));
+
+  addHeading("Recommended Next Action");
+  [
+    "If a priority cluster has impressions but CTR below 1%, rewrite the title/meta/H1 around that query.",
+    "If CTR is healthy but calls/bookings are low, adjust above-the-fold copy and CTA placement.",
+    "If average position is worse than 15, build supporting internal links or add content depth before changing the snippet again.",
+    "If a page is getting clicks from the wrong query intent, split or refocus the page.",
+  ].forEach((item, index) => addText(`${index + 1}. ${item}`, { size: 9, gap: 3 }));
+
+  const output = pdf.output("arraybuffer");
+  await writeFile(filePath, Buffer.from(output));
+};
+
 const createReport = ({ siteUrl, startDate, endDate, queryRows, pageRows, queryPageRows }) => {
   const total = aggregateRows(pageRows);
   const clusterRows = targetClusters.map((cluster) => ({
@@ -377,10 +492,10 @@ const main = async () => {
 
   const result = createReport({ siteUrl, startDate, endDate, queryRows, pageRows, queryPageRows });
   await mkdir(reportsDir, { recursive: true });
-  const reportPath = path.join(reportsDir, `${endDate}-weekly-gsc-report.md`);
+  const reportPath = path.join(reportsDir, `${endDate}-weekly-gsc-report.pdf`);
   const dataPath = path.join(reportsDir, `${endDate}-weekly-gsc-data.json`);
 
-  await writeFile(reportPath, result.report, "utf8");
+  await writePdfReport(reportPath, { siteUrl, startDate, endDate, result });
   await writeFile(
     dataPath,
     JSON.stringify(
