@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+secrets/
+Secrets/
+*token*.json
+*client_secret*.json
+docs/gsc-weekly-reports/
 
 # Editor directories and files
 .vscode/*

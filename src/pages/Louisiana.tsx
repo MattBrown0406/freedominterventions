@@ -3,10 +3,35 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema, LocationFAQSchema } from "@/components/StructuredData";
 
 const Louisiana = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Drug Intervention in Louisiana | Family Intervention Help"
+        description="Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (541) 838-6009."
+        canonical="https://freedominterventions.com/louisiana"
+        keywords="drug intervention Louisiana, Louisiana professional interventionist, Louisiana addiction intervention, Louisiana family intervention, fentanyl intervention Louisiana, alcohol intervention Louisiana"
+        geoRegion="US-LA"
+        geoPlacename="Louisiana"
+      />
+      <OrganizationSchema />
+      <ServiceAreaSchema
+        areaName="Louisiana"
+        areaType="AdministrativeArea"
+        url="https://freedominterventions.com/louisiana"
+        description="Professional drug and alcohol intervention services for families across Louisiana, including intervention preparation, treatment planning, and family guidance."
+      />
+      <LocationFAQSchema location="Louisiana" locationType="state" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Louisiana", url: "https://freedominterventions.com/louisiana" },
+        ]}
+      />
       <Navbar />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
@@ -16,22 +41,22 @@ const Louisiana = () => {
               Louisiana Addiction Crisis
             </span>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Louisiana's Addiction Crisis: Professional Intervention Services for Families
+              Drug Intervention in Louisiana for Families Who Need Help Now
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Louisiana families face significant challenges with opioid and stimulant addiction. Professional interventionists provide proven strategies to help loved ones find recovery.
+              If your family needs a drug intervention in Louisiana, Matt Brown helps you prepare the conversation, coordinate treatment entry, and stop the cycle of fear, rescuing, and relapse.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -82,11 +107,11 @@ const Louisiana = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Users className="h-8 w-8 text-primary" />
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Professional Intervention Support
+                  When to Call a Professional Interventionist in Louisiana
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Interventionists familiar with Louisiana's treatment landscape help families create effective plans and connect with quality programs throughout the Gulf region.
+                Call when fentanyl, opioids, cocaine, alcohol, or repeated relapse have the family reacting from crisis to crisis. A professional interventionist helps Louisiana families create a treatment-ready plan and a unified message.
               </p>
             </div>
 
@@ -128,15 +153,15 @@ const Louisiana = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
               <a href="tel:541-838-6009">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 838-6009
+                Call Matt Now
               </a>
             </Button>
           </div>

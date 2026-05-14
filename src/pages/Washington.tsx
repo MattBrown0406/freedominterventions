@@ -63,10 +63,10 @@ const Washington = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Services in Washington | Freedom Interventions"
-        description="Washington families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Washington prepare, intervene, and move loved ones toward treatment."
+        title="Drug Interventionist in Washington | Family Intervention Help"
+        description="Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 838-6009."
         canonical="https://freedominterventions.com/washington"
-        keywords="Washington addiction intervention, Washington interventionist, Seattle drug intervention, Spokane intervention services, family intervention Washington"
+        keywords="drug interventionist Washington, Washington interventionist, Washington addiction intervention, Seattle drug intervention, Spokane intervention services, family intervention Washington, fentanyl intervention Washington"
         geoRegion="US-WA"
         geoPlacename="Washington"
       />
@@ -111,19 +111,18 @@ const Washington = () => {
             Washington Intervention Services
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            When Addiction Keeps Escalating, the Family Needs a Plan Stronger
-            Than Fear
+            Drug Interventionist in Washington for Families Who Need Structure
           </h1>
           <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
-            Matt Brown works with families across Washington to prepare the
-            intervention, coordinate treatment, and stop the cycle of chaos,
-            rescuing, and repeated crisis.
+            Matt Brown helps Washington families prepare drug, alcohol, and
+            fentanyl interventions, coordinate treatment, and stop the cycle of
+            chaos, rescuing, and repeated crisis.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg" asChild>
-              <Link to="/#contact">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="w-5 h-5 mr-2" />
-                Schedule a Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button
@@ -134,7 +133,7 @@ const Washington = () => {
             >
               <a href="tel:+15418386009">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 838-6009
+                Call Matt Now
               </a>
             </Button>
           </div>
@@ -185,13 +184,13 @@ const Washington = () => {
           <div className="max-w-4xl mx-auto space-y-14">
             <section className="space-y-6">
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
-                Washington Families Usually Call After the Crisis Has Been
-                Running the House for Too Long
+                When to Call a Drug Interventionist in Washington
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Most families do not call at the beginning. They call after the
-                overdoses, disappearances, treatment failures, money problems,
-                and emotional exhaustion have already piled up.
+                Most families do not call at the beginning. They search for a
+                drug interventionist in Washington after overdoses,
+                disappearances, treatment failures, money problems, and
+                emotional exhaustion have already piled up.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 The family may look different from the outside depending on
@@ -306,15 +305,15 @@ const Washington = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg" asChild>
-              <Link to="/#contact">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="w-5 h-5 mr-2" />
-                Schedule a Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+15418386009">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 838-6009
+                Call Matt Now
               </a>
             </Button>
           </div>

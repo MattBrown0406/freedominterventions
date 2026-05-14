@@ -62,10 +62,10 @@ const SouthDakota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Services in South Dakota | Freedom Interventions"
-        description="South Dakota families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across South Dakota prepare, intervene, and move loved ones toward treatment."
+        title="Professional Interventionist in South Dakota | Drug & Alcohol Help"
+        description="Need a professional interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions. Call (541) 838-6009."
         canonical="https://freedominterventions.com/south-dakota"
-        keywords="South Dakota addiction intervention, South Dakota interventionist, Sioux Falls drug intervention, Rapid City family intervention, South Dakota alcohol intervention"
+        keywords="professional interventionist South Dakota, South Dakota interventionist, South Dakota addiction intervention, Sioux Falls drug intervention, Rapid City family intervention, South Dakota alcohol intervention, meth intervention South Dakota"
         geoRegion="US-SD"
         geoPlacename="South Dakota"
       />
@@ -106,8 +106,7 @@ const SouthDakota = () => {
               South Dakota Intervention Services
             </p>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              When Meth, Fentanyl, and Family Exhaustion Collide, Waiting Is a
-              Risk
+              Professional Interventionist in South Dakota for Drug and Alcohol Addiction
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               Matt Brown works with families across South Dakota to prepare the
@@ -116,15 +115,15 @@ const SouthDakota = () => {
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-lg" asChild>
-                <Link to="/#contact">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="w-5 h-5 mr-2" />
-                  Schedule a Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg" asChild>
                 <a href="tel:+15418386009">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -177,14 +176,14 @@ const SouthDakota = () => {
           <div className="max-w-4xl mx-auto space-y-14">
             <section className="space-y-6">
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
-                South Dakota Families Usually Reach Out After They Can No Longer
-                Pretend the Pattern Is Manageable
+                When to Call a Professional Interventionist in South Dakota
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Most families do not call at the first sign of trouble. They
-                call after the paranoia, the disappearances, the money loss, the
-                legal trouble, the treatment refusals, or the simple exhaustion
-                of living with constant crisis.
+                search for a professional interventionist in South Dakota after
+                the paranoia, the disappearances, the money loss, the legal
+                trouble, the treatment refusals, or the simple exhaustion of
+                living with constant crisis.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 In South Dakota, the isolation can be emotional as much as
@@ -298,15 +297,15 @@ const SouthDakota = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg" asChild>
-              <Link to="/#contact">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="w-5 h-5 mr-2" />
-                Schedule a Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+15418386009">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 838-6009
+                Call Matt Now
               </a>
             </Button>
           </div>

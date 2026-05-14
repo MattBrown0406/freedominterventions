@@ -3,10 +3,35 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/SEOHead";
+import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema, LocationFAQSchema } from "@/components/StructuredData";
 
 const Iowa = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Drug Intervention in Iowa | Professional Interventionist for Families"
+        description="Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 838-6009."
+        canonical="https://freedominterventions.com/iowa"
+        keywords="drug intervention Iowa, Iowa professional interventionist, Iowa addiction intervention, Iowa family intervention, alcohol intervention Iowa, meth intervention Iowa, fentanyl intervention Iowa"
+        geoRegion="US-IA"
+        geoPlacename="Iowa"
+      />
+      <OrganizationSchema />
+      <ServiceAreaSchema
+        areaName="Iowa"
+        areaType="AdministrativeArea"
+        url="https://freedominterventions.com/iowa"
+        description="Professional drug and alcohol intervention services for families across Iowa, including intervention preparation, treatment planning, and family guidance."
+      />
+      <LocationFAQSchema location="Iowa" locationType="state" />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://freedominterventions.com" },
+          { name: "Service Areas", url: "https://freedominterventions.com/service-areas" },
+          { name: "Iowa", url: "https://freedominterventions.com/iowa" },
+        ]}
+      />
       <Navbar />
       
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
@@ -16,22 +41,22 @@ const Iowa = () => {
               Iowa Addiction Crisis
             </span>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Iowa's Addiction Crisis: Professional Intervention Services for Families
+              Drug Intervention in Iowa for Families Who Need a Real Plan
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Iowa families face increasing challenges with methamphetamine and opioid addiction. Professional interventionists help guide loved ones toward effective treatment.
+              If your family needs a drug intervention in Iowa, Matt Brown helps you prepare the conversation, line up treatment, and set boundaries before another crisis narrows your options.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -82,11 +107,11 @@ const Iowa = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Users className="h-8 w-8 text-primary" />
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Statewide Intervention Support
+                  When to Call a Professional Interventionist in Iowa
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Professional interventionists serve Iowa families from Des Moines to rural communities, connecting them with treatment resources throughout the state and Midwest.
+                Call when meth, fentanyl, alcohol, pills, or repeated relapse have put the family into crisis management mode. A professional interventionist helps Iowa families get aligned, treatment-ready, and clear about what changes if help is refused.
               </p>
             </div>
 
@@ -128,15 +153,15 @@ const Iowa = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="mr-2 h-5 w-5" />
-                Schedule Free Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
               <a href="tel:541-838-6009">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 838-6009
+                Call Matt Now
               </a>
             </Button>
           </div>

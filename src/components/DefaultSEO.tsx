@@ -46,8 +46,44 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
     description: "Comprehensive guide to substances of abuse: alcohol, opioids, methamphetamine, cocaine, benzodiazepines, and more. What families need to know.",
   },
   "/family-intervention": {
-    title: "Family Intervention Services | Freedom Interventions",
-    description: "How family intervention works: the process, preparation, what to expect, and why professional guidance dramatically improves outcomes.",
+    title: "Family Intervention Services | Help a Loved One Accept Treatment",
+    description: "Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 838-6009.",
+  },
+  "/minneapolis-minnesota": {
+    title: "Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help",
+    description: "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009.",
+  },
+  "/boise-idaho": {
+    title: "Drug Intervention in Boise, Idaho | Professional Family Intervention Help",
+    description: "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families plan treatment entry, boundaries, and next steps. Call (541) 838-6009.",
+  },
+  "/oregon": {
+    title: "Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions",
+    description: "Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 838-6009.",
+  },
+  "/washington": {
+    title: "Drug Interventionist in Washington | Family Intervention Help",
+    description: "Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 838-6009.",
+  },
+  "/north-carolina": {
+    title: "Professional Interventionist in North Carolina | Drug & Alcohol Help",
+    description: "Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009.",
+  },
+  "/south-dakota": {
+    title: "Professional Interventionist in South Dakota | Drug & Alcohol Help",
+    description: "Need a professional interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions. Call (541) 838-6009.",
+  },
+  "/iowa": {
+    title: "Drug Intervention in Iowa | Professional Interventionist for Families",
+    description: "Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 838-6009.",
+  },
+  "/louisiana": {
+    title: "Drug Intervention in Louisiana | Family Intervention Help",
+    description: "Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (541) 838-6009.",
+  },
+  "/fort-worth-texas": {
+    title: "Fentanyl Intervention Help in Fort Worth | Treatment Planning Support",
+    description: "Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 838-6009.",
   },
   "/crisis-support": {
     title: "Crisis Support — Immediate Addiction Help | Freedom Interventions",

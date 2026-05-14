@@ -5,7 +5,7 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp, MapPin } from
 import { Link } from "react-router-dom";
 import boiseBanner from "@/assets/boise-idaho-banner.jpg";
 import SEOHead from "@/components/SEOHead";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 
@@ -13,13 +13,14 @@ const BoiseIdaho = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Boise Idaho Addiction Intervention Services | Freedom Interventions"
-        description="Professional addiction intervention services in Boise, Idaho. Help your loved one recover from methamphetamine, opioid, and alcohol addiction. Serving Ada County and the Treasure Valley."
+        title="Drug Intervention in Boise, Idaho | Professional Family Intervention Help"
+        description="Need a drug intervention in Boise? Matt Brown helps Treasure Valley families plan treatment entry, boundaries, and next steps. Call (541) 838-6009."
         canonical="https://freedominterventions.com/boise-idaho"
-        keywords="Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth crisis Idaho, addiction help Boise ID"
+        keywords="drug intervention in Boise, Boise professional interventionist, Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth intervention Boise, fentanyl intervention Boise"
       />
       <OrganizationSchema />
       <LocalBusinessSchema location="Boise" state="ID" />
+      <LocationFAQSchema location="Boise" locationType="city" />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
@@ -56,22 +57,22 @@ const BoiseIdaho = () => {
               Boise, Idaho
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Boise's Growing Addiction Crisis: Professional Intervention Services for Treasure Valley Families
+              Drug Intervention in Boise for Families Who Need a Real Plan
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Boise's rapid growth has brought opportunity—and a surge in addiction. Methamphetamine has long plagued Idaho, and now fentanyl is claiming lives at unprecedented rates. Families throughout the Treasure Valley watch loved ones struggle while feeling powerless to help. Freedom Interventions offers professional guidance to help your family find hope and recovery.
+              If your family needs a drug intervention in Boise, Matt Brown helps you prepare the conversation, line up treatment, and stop the cycle of rescuing, arguing, and waiting. Freedom Interventions serves Boise, Meridian, Nampa, Caldwell, Eagle, and the Treasure Valley.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -158,9 +159,12 @@ const BoiseIdaho = () => {
               </div>
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                  How Freedom Interventions Serves Boise Families
+                  When Boise Families Should Call an Interventionist
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Call when meth, fentanyl, alcohol, pills, or repeated relapse has taken over the family system and another private talk is unlikely to change anything. A professional interventionist helps the family get united, treatment-ready, and clear about what changes if help is refused.
+                  </p>
                   <p>
                     Freedom Interventions brings over 20 years of experience to Idaho families in crisis. As a Pacific Northwest-based organization, we understand the region and can be in Boise quickly when timing is critical. Our national treatment network compensates for Idaho's limited local resources.
                   </p>
@@ -218,15 +222,15 @@ const BoiseIdaho = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>

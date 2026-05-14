@@ -7,7 +7,7 @@ import minneapolisBanner from "@/assets/minneapolis-minnesota-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema } from "@/components/StructuredData";
 
 const MinneapolisMinnesota = () => {
   const breadcrumbItems = [
@@ -20,13 +20,14 @@ const MinneapolisMinnesota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Minneapolis Minnesota Addiction Intervention Services | Freedom Interventions"
-        description="Professional addiction intervention services in Minneapolis, Minnesota. Help your loved one recover from fentanyl, methamphetamine, and alcohol addiction. Serving the Twin Cities metro."
-        keywords="Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl crisis Minneapolis, opioid addiction Minnesota"
+        title="Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help"
+        description="Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009."
+        keywords="Minneapolis professional interventions, Minneapolis professional interventionist, Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl intervention Minneapolis, alcohol intervention Minneapolis"
         canonical="https://freedominterventions.com/minneapolis-minnesota"
       />
       <LocalBusinessSchema location="Minneapolis" state="Minnesota" />
       <OrganizationSchema />
+      <LocationFAQSchema location="Minneapolis" locationType="city" />
       <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
       
       <Navbar />
@@ -51,22 +52,22 @@ const MinneapolisMinnesota = () => {
               Minneapolis, Minnesota
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Twin Cities Addiction Crisis: Professional Intervention for Minnesota Families
+              Minneapolis Professional Interventionist for Drug, Alcohol, and Fentanyl Addiction
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Minnesota's reputation for healthy living masks a growing addiction crisis. The Twin Cities have seen dramatic increases in fentanyl deaths, and methamphetamine has spread from rural areas into Minneapolis and St. Paul neighborhoods. Freedom Interventions offers professional, compassionate help for families in crisis.
+              If you are looking for professional interventions in Minneapolis, Matt Brown helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis. Freedom Interventions serves Minneapolis, St. Paul, Bloomington, and surrounding communities with direct, confidential help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -153,11 +154,14 @@ const MinneapolisMinnesota = () => {
               </div>
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                  How Freedom Interventions Serves Twin Cities Families
+                  When to Call a Professional Interventionist in Minneapolis
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Freedom Interventions brings over 20 years of experience to Minnesota families in crisis. We understand Midwest culture and help families overcome the barriers that prevent them from seeking help.
+                    Call when the family is out of options, the loved one keeps refusing treatment, or fentanyl, meth, alcohol, or pills have made waiting unsafe. A professional interventionist helps the family get aligned before the conversation, so the intervention is not just another emotional attempt that gets negotiated away.
+                  </p>
+                  <p>
+                    Freedom Interventions brings over 20 years of experience to Minnesota families in crisis. We understand Midwest culture and help families overcome the privacy, shame, and conflict that prevent them from seeking help.
                   </p>
                   <p>
                     <strong className="text-foreground">Cultural Sensitivity:</strong> We work effectively with Minnesota's diverse communities, including immigrant families who may face additional barriers to treatment access.
@@ -213,15 +217,15 @@ const MinneapolisMinnesota = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>

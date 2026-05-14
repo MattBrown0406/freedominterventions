@@ -27,11 +27,74 @@ const staticMetadata = {
     body: "Start here if your family needs a simple next step: call Matt, book a free consultation, schedule crisis coaching, or begin intervention readiness support.",
   },
   "/family-intervention": {
-    title: "Family Intervention Services | Freedom Interventions",
+    title: "Family Intervention Services | Help a Loved One Accept Treatment",
     description:
-      "Professional family intervention services with preparation, treatment planning, intervention facilitation, and aftercare guidance.",
-    heading: "Family Intervention Services",
-    body: "A professional intervention gives the family structure, language, treatment options, and a calm plan before the conversation happens.",
+      "Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 838-6009.",
+    heading: "Family Intervention Services to Help a Loved One Accept Treatment",
+    body: "Matt Brown helps families plan the conversation, line up treatment, and set boundaries before addiction gets another chance to negotiate.",
+  },
+  "/minneapolis-minnesota": {
+    title: "Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help",
+    description:
+      "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009.",
+    heading: "Minneapolis Professional Interventionist for Drug, Alcohol, and Fentanyl Addiction",
+    body: "Freedom Interventions helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis.",
+  },
+  "/boise-idaho": {
+    title: "Drug Intervention in Boise, Idaho | Professional Family Intervention Help",
+    description:
+      "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families plan treatment entry, boundaries, and next steps. Call (541) 838-6009.",
+    heading: "Drug Intervention in Boise for Families Who Need a Real Plan",
+    body: "Freedom Interventions helps Boise families prepare the intervention, line up treatment, and stop the cycle of rescuing, arguing, and waiting.",
+  },
+  "/oregon": {
+    title: "Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions",
+    description:
+      "Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 838-6009.",
+    heading: "Oregon Interventionist for Drug, Alcohol, and Fentanyl Addiction",
+    body: "Matt Brown helps families across Oregon prepare the intervention, coordinate treatment, and stop the cycle of panic and repeated crisis.",
+  },
+  "/washington": {
+    title: "Drug Interventionist in Washington | Family Intervention Help",
+    description:
+      "Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 838-6009.",
+    heading: "Drug Interventionist in Washington for Families Who Need Structure",
+    body: "Matt Brown helps Washington families prepare drug, alcohol, and fentanyl interventions, coordinate treatment, and hold clear boundaries.",
+  },
+  "/north-carolina": {
+    title: "Professional Interventionist in North Carolina | Drug & Alcohol Help",
+    description:
+      "Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009.",
+    heading: "Professional Interventionist in North Carolina for Drug and Alcohol Addiction",
+    body: "Matt Brown helps North Carolina families prepare the intervention, line up treatment, and stop the cycle of panic, rescuing, and relapse.",
+  },
+  "/south-dakota": {
+    title: "Professional Interventionist in South Dakota | Drug & Alcohol Help",
+    description:
+      "Need a professional interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions. Call (541) 838-6009.",
+    heading: "Professional Interventionist in South Dakota for Drug and Alcohol Addiction",
+    body: "Matt Brown helps South Dakota families prepare the intervention, coordinate treatment, and stop living at addiction's pace.",
+  },
+  "/iowa": {
+    title: "Drug Intervention in Iowa | Professional Interventionist for Families",
+    description:
+      "Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 838-6009.",
+    heading: "Drug Intervention in Iowa for Families Who Need a Real Plan",
+    body: "Freedom Interventions helps Iowa families prepare drug and alcohol interventions, line up treatment, and set boundaries.",
+  },
+  "/louisiana": {
+    title: "Drug Intervention in Louisiana | Family Intervention Help",
+    description:
+      "Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (541) 838-6009.",
+    heading: "Drug Intervention in Louisiana for Families Who Need Help Now",
+    body: "Freedom Interventions helps Louisiana families prepare the intervention, coordinate treatment entry, and stop reacting from crisis to crisis.",
+  },
+  "/fort-worth-texas": {
+    title: "Fentanyl Intervention Help in Fort Worth | Treatment Planning Support",
+    description:
+      "Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 838-6009.",
+    heading: "Fentanyl Intervention and Treatment Planning Help in Fort Worth",
+    body: "Freedom Interventions helps Fort Worth families plan fentanyl intervention, treatment entry, and urgent next steps.",
   },
   "/contact": {
     title: "Contact Freedom Interventions | Free Addiction Intervention Consultation",

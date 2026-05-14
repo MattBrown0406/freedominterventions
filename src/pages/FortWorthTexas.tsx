@@ -7,7 +7,7 @@ import texasBanner from "@/assets/texas-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
-import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema } from "@/components/StructuredData";
 
 const FortWorthTexas = () => {
   const breadcrumbItems = [
@@ -20,13 +20,14 @@ const FortWorthTexas = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Services in Fort Worth, Texas | Freedom Interventions"
-        description="Fort Worth families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Tarrant County. Free consultation. (541) 838-6009."
-        keywords="Fort Worth addiction intervention, Tarrant County drug intervention, Fort Worth family intervention, opioid crisis Fort Worth TX, fentanyl Fort Worth, meth Tarrant County, DFW intervention specialist, intervention services Fort Worth"
+        title="Fentanyl Intervention Help in Fort Worth | Treatment Planning Support"
+        description="Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 838-6009."
+        keywords="fentanyl treatment Fort Worth, fentanyl intervention Fort Worth, Fort Worth addiction intervention, Tarrant County drug intervention, Fort Worth family intervention, opioid crisis Fort Worth TX, DFW intervention specialist"
         canonical="https://freedominterventions.com/fort-worth-texas"
       />
       <LocalBusinessSchema location="Fort Worth" state="Texas" />
       <OrganizationSchema />
+      <LocationFAQSchema location="Fort Worth" locationType="city" />
       <BreadcrumbSchema items={breadcrumbItems.map(item => ({ name: item.name, url: `https://freedominterventions.com${item.href}` }))} />
 
       <Navbar />
@@ -51,22 +52,22 @@ const FortWorthTexas = () => {
               Fort Worth, Texas
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Fort Worth's Fentanyl & Opioid Crisis: Professional Intervention Services for Tarrant County Families
+              Fentanyl Intervention and Treatment Planning Help in Fort Worth
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Fort Worth—the western anchor of the DFW Metroplex—is facing a significant and escalating fentanyl and opioid crisis. With a population approaching one million and a strong working-class identity, Tarrant County families are often the last to ask for help and among the hardest hit. Freedom Interventions provides expert, compassionate intervention services for Fort Worth families ready to break the cycle.
+              If you searched for fentanyl treatment in Fort Worth because someone you love is refusing help, Freedom Interventions helps families plan the intervention, coordinate treatment entry, and move quickly before the next crisis decides for you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -153,11 +154,11 @@ const FortWorthTexas = () => {
               </div>
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                  How Freedom Interventions Helps Fort Worth Families
+                  When Fort Worth Families Need Fentanyl Intervention Help
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Matt Brown brings over 20 years of professional intervention experience to Fort Worth and Tarrant County families. We work with the full spectrum of addiction presentations—from working-class families dealing with meth to suburban professionals hiding opioid dependency.
+                    Call when fentanyl, opioids, meth, alcohol, or pills are creating overdose risk and your loved one will not follow through on treatment. Matt Brown brings over 20 years of professional intervention experience to Fort Worth and Tarrant County families.
                   </p>
                   <p>
                     <strong className="text-foreground">Direct, No-Nonsense Approach:</strong> Fort Worth families appreciate honesty. We don't sugarcoat addiction's reality or what it takes to get better. We give families the truth and a concrete plan.
@@ -213,15 +214,15 @@ const FortWorthTexas = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>

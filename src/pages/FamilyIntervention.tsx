@@ -222,25 +222,58 @@ const jumpLinks = [
   { label: "Get Help", href: "#cta" },
 ];
 
+const priorityLocationLinks = [
+  {
+    label: "Minneapolis professional interventionist",
+    href: "/minneapolis-minnesota",
+    detail: "Drug, alcohol, and fentanyl intervention help for Twin Cities families.",
+  },
+  {
+    label: "Drug intervention in Boise",
+    href: "/boise-idaho",
+    detail: "Treasure Valley intervention planning, treatment entry, and family boundaries.",
+  },
+  {
+    label: "Oregon interventionist",
+    href: "/oregon",
+    detail: "Statewide drug, alcohol, and fentanyl intervention support.",
+  },
+  {
+    label: "Drug interventionist in Washington",
+    href: "/washington",
+    detail: "Washington family intervention help when the crisis keeps escalating.",
+  },
+  {
+    label: "Professional interventionist in North Carolina",
+    href: "/north-carolina",
+    detail: "Intervention planning for families in Charlotte, Raleigh, and statewide.",
+  },
+  {
+    label: "Fentanyl intervention help in Fort Worth",
+    href: "/fort-worth-texas",
+    detail: "Tarrant County treatment-entry planning when fentanyl risk is urgent.",
+  },
+];
+
 const FamilyIntervention = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Family Intervention Services | Certified Interventionist | Freedom Interventions"
-        description="Hire a certified family interventionist with 20+ years experience. Matt Brown helps families plan and execute successful drug & alcohol interventions nationwide. Free consultation. (541) 838-6009."
+        title="Family Intervention Services | Help a Loved One Accept Treatment"
+        description="Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 838-6009."
         keywords="family intervention, family intervention services, hire an interventionist, drug intervention, alcohol intervention, how to stage an intervention, intervention specialist, certified interventionist, family intervention cost, what happens during an intervention"
         canonical="https://freedominterventions.com/family-intervention"
       />
       <OrganizationSchema />
       <ServiceSchema
         name="Family Intervention Services"
-        description="Certified interventionist Matt Brown helps families plan and execute successful drug and alcohol interventions nationwide. 20+ years experience. Free consultation available."
+        description="Matt Brown helps families plan drug and alcohol interventions, treatment entry, and boundaries nationwide. 20+ years experience. Confidential consultation available."
         url="https://freedominterventions.com/family-intervention"
         serviceType="Family Intervention"
       />
       <WebPageSchema
-        name="Family Intervention Services | Certified Interventionist | Freedom Interventions"
-        description="Hire a certified family interventionist with 20+ years experience. Matt Brown helps families plan and execute successful drug & alcohol interventions nationwide. Free consultation. (541) 838-6009."
+        name="Family Intervention Services | Help a Loved One Accept Treatment"
+        description="Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 838-6009."
         url="https://freedominterventions.com/family-intervention"
       />
       <BreadcrumbSchema
@@ -275,22 +308,22 @@ const FamilyIntervention = () => {
               Certified Interventionist — 20+ Years Experience
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Family Intervention Services: How to Help a Loved One Accept Treatment
+              Family Intervention Services to Help a Loved One Accept Treatment
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-              Matt Brown has spent more than two decades sitting with families in crisis — families who have tried everything, been lied to, and are exhausted. He knows what works. If someone you love is destroying their life with drugs or alcohol, a professionally guided intervention is often the turning point that changes everything.
+              If your family needs intervention help, Matt Brown helps you plan the conversation, line up treatment, and set boundaries before addiction gets another chance to negotiate. These family intervention services are built for drug, alcohol, fentanyl, and mixed-substance situations where waiting has become dangerous.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" aria-hidden="true" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -541,6 +574,37 @@ const FamilyIntervention = () => {
         </div>
       </section>
 
+      <section className="py-16 bg-background" id="high-intent-locations">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
+                <MapPin className="w-4 h-4" />
+                Intervention Help by Location
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Families Looking for Intervention Help in These Areas Often Start Here
+              </h2>
+              <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                Matt works nationwide. These location pages give families a clearer first step when they are searching for a professional interventionist, drug intervention, alcohol intervention, or fentanyl treatment-entry help.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {priorityLocationLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className="rounded-lg border border-border bg-card p-5 hover:border-primary/40 hover:bg-accent/30 transition-colors"
+                >
+                  <h3 className="font-semibold text-foreground mb-2">{item.label}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.detail}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* State Internal Links — All 50 States by Region */}
       <section className="py-16 bg-background" id="service-areas">
         <div className="container mx-auto px-4">
@@ -595,15 +659,15 @@ const FamilyIntervention = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/#booking">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" aria-hidden="true" />
-                  Schedule Free Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href="tel:541-838-6009">
                   <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>

@@ -62,10 +62,10 @@ const NorthCarolina = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="North Carolina Addiction Intervention Services | Freedom Interventions"
-        description="North Carolina families dealing with addiction need a clear plan, not more panic. Matt Brown helps families across North Carolina prepare, intervene, and move loved ones toward treatment."
+        title="Professional Interventionist in North Carolina | Drug & Alcohol Help"
+        description="Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009."
         canonical="https://freedominterventions.com/north-carolina"
-        keywords="North Carolina addiction intervention, Charlotte intervention services, Raleigh drug intervention, North Carolina family intervention, NC fentanyl crisis"
+        keywords="professional interventionist North Carolina, North Carolina interventionist, North Carolina addiction intervention, Charlotte intervention services, Raleigh drug intervention, North Carolina family intervention, NC fentanyl crisis"
         geoRegion="US-NC"
         geoPlacename="North Carolina"
       />
@@ -104,25 +104,24 @@ const NorthCarolina = () => {
               North Carolina Intervention Services
             </p>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              When Addiction Has the Whole Family Reacting, You Need Structure,
-              Not Another Scare
+              Professional Interventionist in North Carolina for Drug and Alcohol Addiction
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Matt Brown works with families across North Carolina to prepare
-              the intervention, line up treatment, and stop the cycle of panic,
+              Matt Brown helps families across North Carolina prepare the
+              intervention, line up treatment, and stop the cycle of panic,
               rescuing, and relapse.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="text-lg">
-                <Link to="/#contact">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
-                  Schedule a Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="text-lg">
                 <a href="tel:+15418386009">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call Matt Now
                 </a>
               </Button>
             </div>
@@ -175,11 +174,11 @@ const NorthCarolina = () => {
           <div className="max-w-4xl mx-auto space-y-14">
             <section className="space-y-6">
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
-                North Carolina Families Usually Call After They Have Tried
-                Everything Except a Real Plan
+                When to Call a Professional Interventionist in North Carolina
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                By the time most families reach out, they have already spent a
+                By the time most families search for a professional
+                interventionist in North Carolina, they have already spent a
                 long time reacting. They have covered bills, softened
                 consequences, cleaned up messes, searched phones, worried at
                 night, and argued with each other about what to do next.
@@ -294,15 +293,15 @@ const NorthCarolina = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="text-lg">
-              <Link to="/#contact">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="mr-2 h-5 w-5" />
-                Schedule a Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg">
               <a href="tel:+15418386009">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 838-6009
+                Call Matt Now
               </a>
             </Button>
           </div>
