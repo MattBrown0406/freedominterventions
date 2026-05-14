@@ -13,7 +13,9 @@
     "preview": "vite preview",
     "generate-sitemap": "node scripts/generate-sitemap.js",
     "prerender": "node scripts/prerender.mjs",
-    "gsc:weekly": "node scripts/gsc-weekly-report.mjs"
+    "gsc:weekly": "node scripts/gsc-weekly-report.mjs",
+    "gsc:weekly:fi": "GSC_SITE_URL=sc-domain:freedominterventions.com GSC_REPORTS_DIR=\"/Users/matthewbrown/Desktop/FI/SEO\" node scripts/gsc-weekly-report.mjs",
+    "gsc:weekly:nme": "GSC_SITE_URL=sc-domain:nomoreenabling.com GSC_REPORTS_DIR=\"/Users/matthewbrown/Desktop/NME/SEO\" node scripts/gsc-weekly-report.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
