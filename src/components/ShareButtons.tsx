@@ -31,43 +31,25 @@ const XIcon = ({ className }: { className?: string }) => (
 const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
 
-  // Use the backend OG HTML endpoint for social sharing to ensure OG tags work
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const ogShareUrlBase = slug
-    ? `${supabaseUrl}/functions/v1/og-html?slug=${encodeURIComponent(slug)}`
-    : url;
-
-  // Add a cache-buster so platforms re-scrape when you share again
-  const ogShareUrl = `${ogShareUrlBase}${ogShareUrlBase.includes("?") ? "&" : "?"}t=${Date.now()}`;
-
-  const encodedOgUrl = encodeURIComponent(ogShareUrl);
+  const shareUrl = slug ? `https://freedominterventions.com/blog/${slug}` : url;
+  const encodedShareUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
   const encodedDescription = encodeURIComponent(description || "");
 
-  // Social media share URLs using the OG-enabled backend URL
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedOgUrl}`;
-  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodedOgUrl}&text=${encodedTitle}`;
-  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedOgUrl}`;
-  const emailLink = `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodeURIComponent(url)}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}`;
+  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedTitle}`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedShareUrl}`;
+  const emailLink = `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedShareUrl}`;
 
   const handleCopyLink = async () => {
     try {
-      // Copy the OG-enabled URL for proper social sharing
-      await navigator.clipboard.writeText(ogShareUrl);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      toast.success("Share link copied! This link will display properly on social media.");
+      toast.success("Article link copied.");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       toast.error("Failed to copy link");
     }
-  };
-
-  const openShareWindow = (shareUrl: string, platform: string) => {
-    window.open(
-      shareUrl,
-      `share-${platform}`,
-      "width=600,height=400,menubar=no,toolbar=no,resizable=yes,scrollbars=yes"
-    );
   };
 
   return (
@@ -78,13 +60,15 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              asChild
               variant="outline"
               size="icon"
               className="h-9 w-9 rounded-full hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-colors"
-              onClick={() => openShareWindow(facebookShareUrl, "facebook")}
               aria-label="Share on Facebook"
             >
-              <Facebook className="h-4 w-4" />
+              <a href={facebookShareUrl} target="_blank" rel="noopener noreferrer">
+                <Facebook className="h-4 w-4" />
+              </a>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Share on Facebook</TooltipContent>
@@ -93,13 +77,15 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              asChild
               variant="outline"
               size="icon"
               className="h-9 w-9 rounded-full hover:bg-black hover:text-white hover:border-black transition-colors"
-              onClick={() => openShareWindow(twitterShareUrl, "twitter")}
               aria-label="Share on X (Twitter)"
             >
-              <XIcon className="h-4 w-4" />
+              <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer">
+                <XIcon className="h-4 w-4" />
+              </a>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Share on X (Twitter)</TooltipContent>
@@ -108,13 +94,15 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              asChild
               variant="outline"
               size="icon"
               className="h-9 w-9 rounded-full hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] transition-colors"
-              onClick={() => openShareWindow(linkedinShareUrl, "linkedin")}
               aria-label="Share on LinkedIn"
             >
-              <Linkedin className="h-4 w-4" />
+              <a href={linkedinShareUrl} target="_blank" rel="noopener noreferrer">
+                <Linkedin className="h-4 w-4" />
+              </a>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Share on LinkedIn</TooltipContent>
@@ -123,13 +111,15 @@ const ShareButtons = ({ url, title, description, slug }: ShareButtonsProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              asChild
               variant="outline"
               size="icon"
               className="h-9 w-9 rounded-full"
-              onClick={() => window.location.href = emailLink}
               aria-label="Share via Email"
             >
-              <Mail className="h-4 w-4" />
+              <a href={emailLink}>
+                <Mail className="h-4 w-4" />
+              </a>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Share via Email</TooltipContent>
