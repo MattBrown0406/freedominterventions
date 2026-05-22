@@ -482,7 +482,7 @@ export const generateAssessmentPdf = async (assessment: Assessment): Promise<voi
   doc.text("Questions about this assessment?  Contact Matt Brown", margin + 2, 38);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
-  doc.text("503-836-2136  |  matt@freedominterventions.com", margin + 2, 44);
+  doc.text("541-668-8084  |  matt@freedominterventions.com", margin + 2, 44);
   doc.setFont("helvetica", "normal");
   doc.text("freedominterventions.com", pageWidth - margin - 2, 44, { align: "right" });
 
