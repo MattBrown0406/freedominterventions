@@ -21,7 +21,7 @@ const SanAntonioTexas = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in San Antonio, Texas | Freedom Interventions"
-        description="San Antonio families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Bexar County. Free consultation. (541) 838-6009."
+        description="San Antonio families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Bexar County. Free consultation. (541) 668-8084."
         keywords="San Antonio addiction intervention, Bexar County drug intervention, San Antonio family intervention, veteran addiction San Antonio, military addiction Texas, fentanyl San Antonio, meth crisis San Antonio TX, intervention specialist San Antonio"
         canonical="https://freedominterventions.com/san-antonio-texas"
       />
@@ -64,9 +64,9 @@ const SanAntonioTexas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const SanAntonioTexas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

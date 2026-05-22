@@ -21,7 +21,7 @@ const OgdenUtah = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Ogden, Utah | Freedom Interventions"
-        description="Ogden families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Weber County. Free consultation. (541) 838-6009."
+        description="Ogden families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Weber County. Free consultation. (541) 668-8084."
         keywords="Ogden addiction intervention, Weber County drug intervention, Ogden family intervention, meth opioid addiction Ogden, addiction help Ogden UT"
         canonical="https://freedominterventions.com/ogden-utah"
       />
@@ -64,9 +64,9 @@ const OgdenUtah = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -222,9 +222,9 @@ const OgdenUtah = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

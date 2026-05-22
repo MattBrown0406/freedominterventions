@@ -21,7 +21,7 @@ const AlbuquerqueNewMexico = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Albuquerque, New Mexico | Freedom Interventions"
-        description="Albuquerque families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Bernalillo County. Free consultation. (541) 838-6009."
+        description="Albuquerque families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Bernalillo County. Free consultation. (541) 668-8084."
         keywords="Albuquerque addiction intervention, Bernalillo County drug intervention, Albuquerque family intervention, fentanyl Albuquerque, heroin crisis Albuquerque, New Mexico overdose, intervention specialist Albuquerque NM"
         canonical="https://freedominterventions.com/albuquerque-new-mexico"
       />
@@ -64,9 +64,9 @@ const AlbuquerqueNewMexico = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const AlbuquerqueNewMexico = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

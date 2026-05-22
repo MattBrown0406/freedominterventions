@@ -21,7 +21,7 @@ const CorvallisOregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Corvallis, Oregon | Freedom Interventions"
-        description="Corvallis families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Benton County. Free consultation. (541) 838-6009."
+        description="Corvallis families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Benton County. Free consultation. (541) 668-8084."
         keywords="Corvallis Oregon addiction intervention, drug intervention Corvallis OR, alcohol intervention Corvallis, family intervention Corvallis Oregon, Benton County interventionist, OSU student addiction help, college town addiction intervention, professional intervention Corvallis"
         canonical="https://freedominterventions.com/corvallis-oregon"
       />
@@ -64,9 +64,9 @@ const CorvallisOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const CorvallisOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

@@ -39,7 +39,7 @@ const InterventionFAQPage = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Family Intervention FAQ: Your Questions Answered | Freedom Interventions"
-        description="Everything families ask about addiction intervention. How it works, what it costs, what to say, and what happens if they refuse. Free consultation: (541) 838-6009."
+        description="Everything families ask about addiction intervention. How it works, what it costs, what to say, and what happens if they refuse. Free consultation: (541) 668-8084."
         canonical="https://freedominterventions.com/intervention-faq"
         keywords="family intervention FAQ, intervention questions, how does an intervention work, intervention cost, what to say in an intervention, if they refuse treatment, family intervention process"
       />

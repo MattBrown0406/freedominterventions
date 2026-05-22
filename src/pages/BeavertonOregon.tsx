@@ -21,7 +21,7 @@ const BeavertonOregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Beaverton, Oregon | Freedom Interventions"
-        description="Beaverton families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 838-6009."
+        description="Beaverton families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 668-8084."
         keywords="Beaverton Oregon addiction intervention, drug intervention Beaverton OR, alcohol intervention Beaverton, family intervention Beaverton Oregon, Washington County interventionist, fentanyl Beaverton Oregon, suburban addiction help Portland metro, professional intervention Beaverton"
         canonical="https://freedominterventions.com/beaverton-oregon"
       />
@@ -64,9 +64,9 @@ const BeavertonOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const BeavertonOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

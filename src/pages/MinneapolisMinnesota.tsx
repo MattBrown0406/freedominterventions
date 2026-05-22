@@ -21,7 +21,7 @@ const MinneapolisMinnesota = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help"
-        description="Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009."
+        description="Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084."
         keywords="Minneapolis professional interventions, Minneapolis professional interventionist, Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl intervention Minneapolis, alcohol intervention Minneapolis"
         canonical="https://freedominterventions.com/minneapolis-minnesota"
       />
@@ -65,7 +65,7 @@ const MinneapolisMinnesota = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>
@@ -223,7 +223,7 @@ const MinneapolisMinnesota = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>

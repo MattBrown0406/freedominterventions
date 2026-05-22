@@ -52,8 +52,8 @@ export default function MoneyPathCTA({
                   Free consult
                 </Link>
               </Button>
-              <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: `${source}_money_path_cta` }}>
-                <Button size="lg" variant="outline" className="w-full" onClick={() => trackClick("phone", "tel:+15418386009")}>
+              <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: `${source}_money_path_cta` }}>
+                <Button size="lg" variant="outline" className="w-full" onClick={() => trackClick("phone", "tel:+15416688084")}>
                   <Phone className="h-4 w-4" />
                   Call now
                 </Button>

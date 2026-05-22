@@ -4,7 +4,7 @@ CREATE TABLE public.call_analytics (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   page_url TEXT NOT NULL,
   page_path TEXT NOT NULL,
-  phone_number TEXT NOT NULL DEFAULT '541-838-6009',
+  phone_number TEXT NOT NULL DEFAULT '541-668-8084',
   referrer TEXT,
   user_agent TEXT,
   screen_width INTEGER,

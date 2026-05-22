@@ -90,7 +90,7 @@ const FromSoberHelpline = () => {
                   Sober Helpline is a place to get grounded. Freedom Interventions is where families move into a professional plan when risk is rising, treatment refusal is continuing, or the family cannot keep guessing.
                 </p>
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "sober_helpline_bridge_hero" }}>
+                  <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "sober_helpline_bridge_hero" }}>
                     <Button size="xl" variant="hero">
                       <Phone className="h-5 w-5" />
                       Call Matt Now
@@ -160,7 +160,7 @@ const FromSoberHelpline = () => {
 
                 if (path.type === "phone") {
                   return (
-                    <TrackedPhoneLink key={path.title} phoneNumber="+15418386009" metadata={{ location: path.event }} className="block h-full">
+                    <TrackedPhoneLink key={path.title} phoneNumber="+15416688084" metadata={{ location: path.event }} className="block h-full">
                       {card}
                     </TrackedPhoneLink>
                   );

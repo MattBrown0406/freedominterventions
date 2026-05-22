@@ -21,7 +21,7 @@ const OaklandCalifornia = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Oakland, California | Freedom Interventions"
-        description="Oakland families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Alameda County. Free consultation. (541) 838-6009."
+        description="Oakland families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Alameda County. Free consultation. (541) 668-8084."
         keywords="Oakland addiction intervention, Oakland drug intervention, Oakland family intervention, intervention specialist Oakland CA, Alameda County interventionist, fentanyl intervention Oakland, Bay Area drug intervention"
         canonical="https://freedominterventions.com/oakland-california"
       />
@@ -64,9 +64,9 @@ const OaklandCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const OaklandCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

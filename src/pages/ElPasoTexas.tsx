@@ -21,7 +21,7 @@ const ElPasoTexas = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in El Paso, Texas | Freedom Interventions"
-        description="El Paso families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving El Paso County. Free consultation. (541) 838-6009."
+        description="El Paso families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving El Paso County. Free consultation. (541) 668-8084."
         keywords="El Paso addiction intervention, El Paso County drug intervention, El Paso family intervention, border fentanyl El Paso, meth crisis El Paso TX, bilingual intervention Texas, intervention specialist El Paso"
         canonical="https://freedominterventions.com/el-paso-texas"
       />
@@ -64,9 +64,9 @@ const ElPasoTexas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const ElPasoTexas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

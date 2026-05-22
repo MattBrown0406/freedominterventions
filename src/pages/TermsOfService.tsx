@@ -284,7 +284,7 @@ const TermsOfService = () => {
                   <p><strong>Freedom Interventions</strong><br />
                   Matt Brown, Professional Interventionist<br />
                   Email: matt@freedominterventions.com<br />
-                  Phone: (541) 838-6009<br />
+                  Phone: (541) 668-8084<br />
                   Website: https://freedominterventions.com</p>
                 </div>
               </section>

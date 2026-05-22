@@ -64,7 +64,7 @@ const Washington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Drug Interventionist in Washington | Family Intervention Help"
-        description="Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 838-6009."
+        description="Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 668-8084."
         canonical="https://freedominterventions.com/washington"
         keywords="drug interventionist Washington, Washington interventionist, Washington addiction intervention, Seattle drug intervention, Spokane intervention services, family intervention Washington, fentanyl intervention Washington"
         geoRegion="US-WA"
@@ -131,7 +131,7 @@ const Washington = () => {
               className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
               asChild
             >
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Phone className="w-5 h-5 mr-2" />
                 Call Matt Now
               </a>
@@ -311,7 +311,7 @@ const Washington = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Phone className="w-5 h-5 mr-2" />
                 Call Matt Now
               </a>

@@ -11,7 +11,7 @@ const Iowa = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Drug Intervention in Iowa | Professional Interventionist for Families"
-        description="Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 838-6009."
+        description="Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 668-8084."
         canonical="https://freedominterventions.com/iowa"
         keywords="drug intervention Iowa, Iowa professional interventionist, Iowa addiction intervention, Iowa family intervention, alcohol intervention Iowa, meth intervention Iowa, fentanyl intervention Iowa"
         geoRegion="US-IA"
@@ -54,7 +54,7 @@ const Iowa = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>
@@ -159,7 +159,7 @@ const Iowa = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
+              <a href="tel:541-668-8084">
                 <Phone className="mr-2 h-5 w-5" />
                 Call Matt Now
               </a>

@@ -21,7 +21,7 @@ const VancouverWashington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Vancouver, Washington | Freedom Interventions"
-        description="Vancouver WA families facing addiction get expert intervention support from Matt Brown. Serving Clark County. Free consultation. (541) 838-6009."
+        description="Vancouver WA families facing addiction get expert intervention support from Matt Brown. Serving Clark County. Free consultation. (541) 668-8084."
         keywords="Vancouver WA addiction intervention, Clark County drug intervention, Vancouver Washington intervention services, Portland fentanyl spillover Vancouver, addiction help Vancouver WA, Clark County intervention"
         canonical="https://freedominterventions.com/vancouver-washington"
       />
@@ -64,9 +64,9 @@ const VancouverWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const VancouverWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

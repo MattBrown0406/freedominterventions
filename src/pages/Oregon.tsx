@@ -65,7 +65,7 @@ const Oregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions"
-        description="Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 838-6009."
+        description="Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 668-8084."
         canonical="https://freedominterventions.com/oregon"
         keywords="Oregon interventionist, professional interventionist Oregon, alcohol intervention Oregon, Oregon addiction intervention, Portland drug intervention, Oregon family intervention, fentanyl intervention Oregon"
         geoRegion="US-OR"
@@ -134,7 +134,7 @@ const Oregon = () => {
               className="text-lg bg-white/10 border-white/30 text-white hover:bg-white hover:text-foreground"
               asChild
             >
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Phone className="w-5 h-5 mr-2" />
                 Call Matt Now
               </a>
@@ -312,7 +312,7 @@ const Oregon = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Phone className="w-5 h-5 mr-2" />
                 Call Matt Now
               </a>

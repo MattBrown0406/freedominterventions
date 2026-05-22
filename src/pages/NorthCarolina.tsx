@@ -63,7 +63,7 @@ const NorthCarolina = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Professional Interventionist in North Carolina | Drug & Alcohol Help"
-        description="Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 838-6009."
+        description="Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084."
         canonical="https://freedominterventions.com/north-carolina"
         keywords="professional interventionist North Carolina, North Carolina interventionist, North Carolina addiction intervention, Charlotte intervention services, Raleigh drug intervention, North Carolina family intervention, NC fentanyl crisis"
         geoRegion="US-NC"
@@ -119,7 +119,7 @@ const NorthCarolina = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="text-lg">
-                <a href="tel:+15418386009">
+                <a href="tel:+15416688084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>
@@ -299,7 +299,7 @@ const NorthCarolina = () => {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg">
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Phone className="mr-2 h-5 w-5" />
                 Call Matt Now
               </a>

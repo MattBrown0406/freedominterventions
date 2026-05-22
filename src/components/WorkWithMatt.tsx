@@ -79,9 +79,9 @@ const WorkWithMatt = () => {
                 asChild
                 onClick={() => trackEvent("cta_call", { location: "work_with_matt" })}
               >
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="w-5 h-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">

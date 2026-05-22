@@ -15,7 +15,7 @@ export const OrganizationSchema = () => {
         image: "https://freedominterventions.com/og-share.jpg",
         description:
           "Professional addiction intervention services led by Matt Brown, Certified Intervention Professional with 20+ years of experience.",
-        telephone: "+1-541-838-6009",
+        telephone: "+1-541-668-8084",
         email: "matt@freedominterventions.com",
         foundingDate: "2004",
         founder: {
@@ -130,7 +130,7 @@ export const LocalBusinessSchema = ({
     "@type": "ProfessionalService",
     name: "Freedom Interventions",
     description: `Professional addiction intervention services for families in ${servedName}${areaType === "City" ? `, ${state}` : ""}. Helping loved ones move toward treatment and recovery.`,
-    telephone: "+1-541-838-6009",
+    telephone: "+1-541-668-8084",
     email: "matt@freedominterventions.com",
     url,
     image: "https://freedominterventions.com/favicon.jpeg",
@@ -501,7 +501,7 @@ export const ServiceSchema = ({
       "@type": "ProfessionalService",
       name: "Freedom Interventions",
       url: "https://freedominterventions.com",
-      telephone: "+1-541-838-6009",
+      telephone: "+1-541-668-8084",
       email: "matt@freedominterventions.com",
     },
     areaServed: [
@@ -538,7 +538,7 @@ export const AggregateRatingSchema = ({
     "@type": "ProfessionalService",
     name: "Freedom Interventions",
     url: "https://freedominterventions.com",
-    telephone: "+1-541-838-6009",
+    telephone: "+1-541-668-8084",
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: ratingValue,
@@ -606,7 +606,7 @@ export const LocationFAQSchema = ({
     },
     {
       question: `How much does addiction intervention cost in ${location}?`,
-      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (541) 838-6009 for a confidential consultation.`,
+      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (541) 668-8084 for a confidential consultation.`,
     },
     {
       question: `How do professional interventions improve the chances of treatment entry in ${location}?`,
@@ -659,7 +659,7 @@ export const HowToSchema = () => {
       {
         "@type": "HowToStep",
         name: "Contact a Professional Interventionist",
-        text: "Call Freedom Interventions at (541) 838-6009 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
+        text: "Call Freedom Interventions at (541) 668-8084 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
         url: "https://freedominterventions.com/#booking",
       },
       {

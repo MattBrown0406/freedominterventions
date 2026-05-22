@@ -60,7 +60,7 @@ export default function ClosePathProof({ source, className = "" }: ClosePathProo
                 ))}
               </div>
             </div>
-            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: `${source}_proof_block` }}>
+            <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: `${source}_proof_block` }}>
               <Button className="mt-5">
                 <PhoneCall className="h-4 w-4" />
                 Call Matt directly

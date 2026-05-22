@@ -18,7 +18,7 @@ const paths = [
     title: "Call Matt now",
     description: "Use this when there is overdose risk, disappearance, violence, psychosis, a treatment window closing, or the family cannot safely wait.",
     bestFor: "Safety, timing, and fast treatment-window decisions.",
-    cta: "Call (541) 838-6009",
+    cta: "Call (541) 668-8084",
     type: "phone",
     event: "triage_call",
   },
@@ -121,7 +121,7 @@ export default function RevenuePathTriage({ source, className = "", compact = fa
 
               if (path.type === "phone") {
                 return (
-                  <TrackedPhoneLink key={path.title} phoneNumber="+15418386009" metadata={{ location: `${source}_${path.event}` }} className="block h-full" onClick={() => trackChoice(path.event)}>
+                  <TrackedPhoneLink key={path.title} phoneNumber="+15416688084" metadata={{ location: `${source}_${path.event}` }} className="block h-full" onClick={() => trackChoice(path.event)}>
                     {content}
                   </TrackedPhoneLink>
                 );

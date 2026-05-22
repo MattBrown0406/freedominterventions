@@ -78,7 +78,7 @@ export default function InterventionAnswerDetail() {
     {
       label: "Call Matt now",
       description: "Use this if safety, overdose risk, treatment refusal, or family conflict cannot wait.",
-      href: "tel:+15418386009",
+      href: "tel:+15416688084",
       action: "phone",
     },
     {
@@ -170,8 +170,8 @@ export default function InterventionAnswerDetail() {
                         <Calendar className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "intervention_answer_detail", answer: answer.slug }}>
-                      <Button className="mt-3 w-full" variant="outline" onClick={() => trackAnswerClick("phone", "tel:+15418386009")}>
+                    <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "intervention_answer_detail", answer: answer.slug }}>
+                      <Button className="mt-3 w-full" variant="outline" onClick={() => trackAnswerClick("phone", "tel:+15416688084")}>
                         <Phone className="h-4 w-4" />
                         Call Matt now
                       </Button>
@@ -254,8 +254,8 @@ export default function InterventionAnswerDetail() {
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                       If the family already has refusal, safety concern, repeated relapse, or deep disagreement, the next useful move is not more reading. It is a confidential first call that sorts whether readiness work or a full intervention plan is appropriate.
                     </p>
-                    <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "intervention_answer_high_intent", answer: answer.slug }}>
-                      <Button className="mt-5 w-full" variant="hero" onClick={() => trackAnswerClick("high_intent_phone", "tel:+15418386009")}>
+                    <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "intervention_answer_high_intent", answer: answer.slug }}>
+                      <Button className="mt-5 w-full" variant="hero" onClick={() => trackAnswerClick("high_intent_phone", "tel:+15416688084")}>
                         <Phone className="h-4 w-4" />
                         Call about this situation
                       </Button>

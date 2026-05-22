@@ -81,7 +81,7 @@ You don't have to manage this alone. And you don't have to wait until the situat
 
 If you're trying to figure out how to help someone you love who is struggling with compulsive spending or any behavioral addiction, I'm here to help. At Freedom Interventions, we specialize in working with families exactly like yours — families who are frightened, overwhelmed, and ready to do something real.
 
-Call us at 541-838-6009 or visit [FreedomInterventions.com](/contact) to start a conversation. There's no pressure and no script — just an honest talk about what's happening and what options are available to you.
+Call us at 541-668-8084 or visit [FreedomInterventions.com](/contact) to start a conversation. There's no pressure and no script — just an honest talk about what's happening and what options are available to you.
 
 ## Frequently Asked Questions
 

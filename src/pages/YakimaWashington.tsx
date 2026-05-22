@@ -21,7 +21,7 @@ const YakimaWashington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Yakima, Washington | Freedom Interventions"
-        description="Yakima families in Eastern Washington facing addiction get expert intervention support from Matt Brown. Serving Yakima County. Free consultation. (541) 838-6009."
+        description="Yakima families in Eastern Washington facing addiction get expert intervention support from Matt Brown. Serving Yakima County. Free consultation. (541) 668-8084."
         keywords="Yakima addiction intervention, Yakima County drug intervention, Eastern Washington intervention, meth heroin intervention Yakima, addiction help Yakima WA, Yakima Valley intervention services"
         canonical="https://freedominterventions.com/yakima-washington"
       />
@@ -64,9 +64,9 @@ const YakimaWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const YakimaWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

@@ -11,7 +11,7 @@ const Louisiana = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Drug Intervention in Louisiana | Family Intervention Help"
-        description="Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (541) 838-6009."
+        description="Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (541) 668-8084."
         canonical="https://freedominterventions.com/louisiana"
         keywords="drug intervention Louisiana, Louisiana professional interventionist, Louisiana addiction intervention, Louisiana family intervention, fentanyl intervention Louisiana, alcohol intervention Louisiana"
         geoRegion="US-LA"
@@ -54,7 +54,7 @@ const Louisiana = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>
@@ -159,7 +159,7 @@ const Louisiana = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-838-6009">
+              <a href="tel:541-668-8084">
                 <Phone className="mr-2 h-5 w-5" />
                 Call Matt Now
               </a>

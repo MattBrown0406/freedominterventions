@@ -21,7 +21,7 @@ const LasCrucesNewMexico = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Las Cruces, New Mexico | Freedom Interventions"
-        description="Las Cruces families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Doña Ana County. Free consultation. (541) 838-6009."
+        description="Las Cruces families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Doña Ana County. Free consultation. (541) 668-8084."
         keywords="Las Cruces addiction intervention, Doña Ana County drug intervention, Las Cruces family intervention, fentanyl border New Mexico, NMSU college addiction, border drug trafficking Las Cruces, intervention specialist Las Cruces NM"
         canonical="https://freedominterventions.com/las-cruces-new-mexico"
       />
@@ -64,9 +64,9 @@ const LasCrucesNewMexico = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const LasCrucesNewMexico = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

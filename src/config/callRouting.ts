@@ -5,7 +5,7 @@ export type CallRoutingSite =
   | "party_wreckers"
   | "openclaw";
 
-export const fallbackFreedomPhoneNumber = "+15418386009";
+export const fallbackFreedomPhoneNumber = "+15416688084";
 
 // OpenClaw numbers will be added here as each source-specific number is ready.
 export const openClawRoutingNumbers: Partial<Record<CallRoutingSite, string>> = {

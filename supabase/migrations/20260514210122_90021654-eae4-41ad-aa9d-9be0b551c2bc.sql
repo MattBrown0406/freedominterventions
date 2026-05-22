@@ -71,7 +71,7 @@ And now you have more information. Shame keeps people sick. Compassion — paire
 
 Recovery is possible. I have seen it happen for people who were far deeper in the hole than your loved one. The door to getting help is still open. Your next step is figuring out how to help them walk through it — and that's exactly what we do at Freedom Interventions.
 
-If your family is struggling and you don't know what to do next, please reach out. Call Freedom Interventions at 541-838-6009 or visit FreedomInterventions.com. You don't have to figure this out alone.
+If your family is struggling and you don't know what to do next, please reach out. Call Freedom Interventions at 541-668-8084 or visit FreedomInterventions.com. You don't have to figure this out alone.
 
 ## Frequently Asked Questions
 

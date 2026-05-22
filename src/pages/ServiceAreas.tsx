@@ -100,10 +100,10 @@ const ServiceAreas = () => {
               and Canada. Find your local service area below.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Button variant="hero" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call Now: (541) 838-6009
+                  Call Now: (541) 668-8084
                 </Button>
               </a>
               <Link to="/assessment">
@@ -144,7 +144,7 @@ const ServiceAreas = () => {
               </p>
               <p className="text-muted-foreground">
                 Don't see your area? We serve all of North America.{" "}
-                <a href="tel:+15418386009" className="text-primary hover:underline">
+                <a href="tel:+15416688084" className="text-primary hover:underline">
                   Call us directly
                 </a>{" "}
                 for assistance.
@@ -270,10 +270,10 @@ const ServiceAreas = () => {
               Contact us directly and we'll help you no matter where you are.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Button variant="hero" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  (541) 838-6009
+                  (541) 668-8084
                 </Button>
               </a>
               <Link to="/contact">

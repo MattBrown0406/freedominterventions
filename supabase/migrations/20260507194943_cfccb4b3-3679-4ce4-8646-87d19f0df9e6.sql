@@ -81,7 +81,7 @@ You're allowed to name this. You're allowed to be worried. And you're allowed to
 
 If you're watching someone you love disappear into their phone and you don't know what to do, reach out. At Freedom Interventions, I work with families in exactly this kind of situation — helping them find the right words, the right approach, and when needed, the right professional support to create real change.
 
-You don't have to figure this out alone. Call Freedom Interventions at [541-838-6009](tel:541-838-6009) or visit [FreedomInterventions.com](/) to talk through what you're seeing and get a clear path forward.
+You don't have to figure this out alone. Call Freedom Interventions at [541-668-8084](tel:541-668-8084) or visit [FreedomInterventions.com](/) to talk through what you're seeing and get a clear path forward.
 
 ## Frequently Asked Questions
 

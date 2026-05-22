@@ -272,7 +272,7 @@ const handler = async (req: Request): Promise<Response> => {
 
         <p>If you have any questions, please contact us at:</p>
         <ul>
-          <li>Phone: (541) 838-6009</li>
+          <li>Phone: (541) 668-8084</li>
           <li>Email: matt@freedominterventions.com</li>
         </ul>
 

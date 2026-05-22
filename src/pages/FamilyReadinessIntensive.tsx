@@ -64,10 +64,10 @@ const FamilyReadinessIntensive = () => {
                 Book the Intensive — $2,500
               </Button>
             </a>
-            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: 'readiness_intensive_hero' }}>
+            <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: 'readiness_intensive_hero' }}>
               <Button variant="hero-outline" size="xl">
                 <Phone className="w-5 h-5" />
-                Call (541) 838-6009
+                Call (541) 668-8084
               </Button>
             </TrackedPhoneLink>
           </div>

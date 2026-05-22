@@ -121,9 +121,9 @@ const Wyoming = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg" asChild>
-                <a href="tel:+15418386009">
+                <a href="tel:+15416688084">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -304,9 +304,9 @@ const Wyoming = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 838-6009
+                Call (541) 668-8084
               </a>
             </Button>
           </div>

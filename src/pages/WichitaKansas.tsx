@@ -21,7 +21,7 @@ const WichitaKansas = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Wichita, Kansas | Freedom Interventions"
-        description="Professional addiction intervention services in Wichita, KS. Matt Brown, certified interventionist with 20+ years experience, helps Sedgwick County families navigate meth and fentanyl addiction. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services in Wichita, KS. Matt Brown, certified interventionist with 20+ years experience, helps Sedgwick County families navigate meth and fentanyl addiction. Free consultation. Call (541) 668-8084."
         keywords="Wichita addiction intervention, Wichita Kansas interventionist, drug intervention Wichita KS, Sedgwick County addiction help, meth intervention Wichita, fentanyl Wichita Kansas"
         canonical="https://freedominterventions.com/wichita-kansas"
       />
@@ -64,9 +64,9 @@ const WichitaKansas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -178,7 +178,7 @@ const WichitaKansas = () => {
               Wichita Addiction Resources
             </h2>
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              These Wichita-area resources can provide immediate support. For professional intervention services, call Matt Brown at (541) 838-6009.
+              These Wichita-area resources can provide immediate support. For professional intervention services, call Matt Brown at (541) 668-8084.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {[
@@ -284,9 +284,9 @@ const WichitaKansas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

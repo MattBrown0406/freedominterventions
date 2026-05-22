@@ -152,10 +152,10 @@ const CrisisSupport = () => {
               This service is for families dealing with immediate danger: overdose risk, self-harm threats, acute mental health breaks, repeated hospital visits, jail, or a situation that is getting worse fast. Matt works directly with families to slow the chaos down, assess what is real, and move the situation toward stabilization and treatment.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+15418386009">
+              <a href="tel:+15416688084">
                 <Button variant="default" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call Now: (541) 838-6009
+                  Call Now: (541) 668-8084
                 </Button>
               </a>
               <Link to="/#booking">
@@ -258,10 +258,10 @@ const CrisisSupport = () => {
                 You do not need a dramatic speech. You need a plan. If your family is dealing with overdose risk, psychiatric instability, legal chaos, or a situation that is spinning faster than you can manage, call Matt. He will help you sort out what matters now and what the next move should be.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="tel:+15418386009">
+                <a href="tel:+15416688084">
                   <Button variant="default" size="lg" className="w-full sm:w-auto">
                     <Phone className="w-5 h-5 mr-2" />
-                    Call (541) 838-6009
+                    Call (541) 668-8084
                   </Button>
                 </a>
                 <Link to="/#booking">

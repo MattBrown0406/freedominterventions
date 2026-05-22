@@ -65,7 +65,7 @@ const SEOHead = ({
     ? description.substring(0, 157) + "..."
     : description;
 
-  const extendedAiDescription = aiDescription || `${description} Freedom Interventions provides professional addiction intervention services with over 20 years of experience. Call (541) 838-6009 for a free consultation. Serving all 50 US states and Canadian provinces 24/7.`;
+  const extendedAiDescription = aiDescription || `${description} Freedom Interventions provides professional addiction intervention services with over 20 years of experience. Call (541) 668-8084 for a free consultation. Serving all 50 US states and Canadian provinces 24/7.`;
 
   const ogImageAlt = imageAlt || `${title} - Freedom Interventions addiction intervention services`;
 
