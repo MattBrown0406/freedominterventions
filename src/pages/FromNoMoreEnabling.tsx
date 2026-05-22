@@ -90,7 +90,7 @@ const FromNoMoreEnabling = () => {
                   No More Enabling helps families name the pattern. Freedom Interventions helps families build the next move when love, fear, money, threats, and rescue have all become tangled together.
                 </p>
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "nme_bridge_hero" }}>
+                  <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "nme_bridge_hero" }}>
                     <Button size="xl" variant="hero">
                       <Phone className="h-5 w-5" />
                       Call Matt Now

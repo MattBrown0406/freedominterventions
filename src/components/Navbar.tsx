@@ -88,7 +88,7 @@ const Navbar = () => {
             <Dropdown label="Resources" items={resourceLinks} />
             <Link to="/assessment" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Assessment</Link>
             <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Contact</Link>
-            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "navbar_desktop" }}>
+            <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "navbar_desktop" }}>
               <Button variant="hero" size="default">
                 <Phone className="w-4 h-4 mr-2" />
                 Call Now
@@ -126,7 +126,7 @@ const Navbar = () => {
               <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 w-auto" width={1024} height={1024} />
               <span className="font-lobster">The Party Wreckers Podcast</span>
             </a>
-            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "navbar_mobile" }}>
+            <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "navbar_mobile" }}>
               <Button variant="hero" size="default" className="mt-2 w-full">
                 <Phone className="w-4 h-4 mr-2" />
                 Call Now

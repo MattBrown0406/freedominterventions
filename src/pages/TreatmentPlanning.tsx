@@ -258,10 +258,10 @@ const TreatmentPlanning = () => {
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   </Link>
-                  <a href="tel:+15418386009">
+                  <a href="tel:+15416688084">
                     <Button size="lg" variant="outline" className="gap-2">
                       <Phone className="w-4 h-4" />
-                      Call (541) 838-6009
+                      Call (541) 668-8084
                     </Button>
                   </a>
                 </div>

@@ -21,7 +21,7 @@ const TacomaWashington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Tacoma, Washington | Freedom Interventions"
-        description="Tacoma families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Pierce County. Free consultation. (541) 838-6009."
+        description="Tacoma families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Pierce County. Free consultation. (541) 668-8084."
         keywords="Tacoma addiction intervention, Pierce County drug intervention, Tacoma family intervention, fentanyl crisis Tacoma, meth intervention Tacoma, addiction help Tacoma WA"
         canonical="https://freedominterventions.com/tacoma-washington"
       />
@@ -64,9 +64,9 @@ const TacomaWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const TacomaWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

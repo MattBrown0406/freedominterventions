@@ -83,7 +83,7 @@ The good news is that both OCD and addiction are treatable. People recover from 
 
 You do not have to figure this out alone. That is exactly what I am here for.
 
-**If your loved one is struggling with addiction — and you suspect there may be a mental health condition underneath — I can help you understand what you are dealing with and what the right next step looks like. Call Freedom Interventions at 541-838-6009 or visit FreedomInterventions.com to start a conversation. No obligation. Just a chance to finally get clear.**
+**If your loved one is struggling with addiction — and you suspect there may be a mental health condition underneath — I can help you understand what you are dealing with and what the right next step looks like. Call Freedom Interventions at 541-668-8084 or visit FreedomInterventions.com to start a conversation. No obligation. Just a chance to finally get clear.**
 
 ## Frequently Asked Questions
 

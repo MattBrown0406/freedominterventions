@@ -21,7 +21,7 @@ const EverettWashington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Everett, Washington | Freedom Interventions"
-        description="Everett families in Snohomish County facing addiction get expert intervention support from Matt Brown. Free consultation. (541) 838-6009."
+        description="Everett families in Snohomish County facing addiction get expert intervention support from Matt Brown. Free consultation. (541) 668-8084."
         keywords="Everett addiction intervention, Snohomish County drug intervention, Everett opioid crisis, fentanyl intervention Everett, addiction help Everett WA, Snohomish County intervention services"
         canonical="https://freedominterventions.com/everett-washington"
       />
@@ -64,9 +64,9 @@ const EverettWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const EverettWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

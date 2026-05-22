@@ -17,7 +17,7 @@ const options = [
     title: "We need help now",
     body: "Call Matt directly if safety, treatment entry, or family conflict is moving fast.",
     action: "Call Now",
-    href: "tel:+15418386009",
+    href: "tel:+15416688084",
     event: "start_here_call_now",
   },
   {
@@ -116,7 +116,7 @@ const StartHere = () => {
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 Choose the path that fits what is happening today. You do not need to diagnose the whole situation before you ask for help, and you do not need to know whether this is coaching, readiness work, or intervention yet.
               </p>
-              <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "start_here_hero" }}>
+              <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "start_here_hero" }}>
                 <Button size="xl" variant="hero">
                   <Phone className="h-5 w-5" />
                   Call Matt Now
@@ -193,7 +193,7 @@ const StartHere = () => {
 
                 if (option.href.startsWith("tel:")) {
                   return (
-                    <TrackedPhoneLink key={option.title} phoneNumber="+15418386009" metadata={{ location: option.event }}>
+                    <TrackedPhoneLink key={option.title} phoneNumber="+15416688084" metadata={{ location: option.event }}>
                       <div className="h-full rounded-xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary/40">
                         {content}
                       </div>

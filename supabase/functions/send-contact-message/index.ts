@@ -95,7 +95,7 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
         <p>I received your message through Freedom Interventions. When families reach out, it usually means things have already been heavy for a while, so I do not want you sitting in uncertainty.</p>
         <p>If you need a clear first step, you can book a free consultation here:</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
-        <p>If this is moving fast, call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+        <p>If this is moving fast, call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
         <p>- Matt Brown<br>Freedom Interventions</p>
       `,
       source_attribution: sourceAttribution,
@@ -137,7 +137,7 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
         <p>Families often wait because they do not want to overreact. But if the same crisis keeps repeating, the practical question becomes: what has waiting already cost?</p>
         <p>The first conversation is meant to clarify the right level of help, not pressure you into the wrong one.</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
-        <p>Or call me directly at <a href="tel:5418386009">541-838-6009</a>.</p>
+        <p>Or call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
         <p>- Matt</p>
       `,
       source_attribution: sourceAttribution,

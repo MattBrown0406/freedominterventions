@@ -85,7 +85,7 @@ const AfterConsultation = () => {
                 The first call is not a sales script. It is a triage conversation. Matt listens for safety risk, treatment refusal, family division, logistics, and whether the family has enough leverage to move.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "after_consultation_hero" }}>
+                <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "after_consultation_hero" }}>
                   <Button size="xl" variant="hero">
                     <Phone className="h-5 w-5" />
                     Call Now
@@ -176,7 +176,7 @@ const AfterConsultation = () => {
               That is what the consultation is for. Bring the facts, the fears, and the parts of the story that do not make sense yet.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "after_consultation_final" }}>
+              <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "after_consultation_final" }}>
                 <Button size="xl" variant="hero">
                   <Phone className="h-5 w-5" />
                   Call Matt

@@ -21,7 +21,7 @@ const ProvoUtah = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Provo, Utah | Freedom Interventions"
-        description="Provo families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Utah County. Free consultation. (541) 838-6009."
+        description="Provo families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Utah County. Free consultation. (541) 668-8084."
         keywords="Provo addiction intervention, Utah County drug intervention, Provo family intervention, BYU student addiction, prescription opioid addiction Provo UT"
         canonical="https://freedominterventions.com/provo-utah"
       />
@@ -64,9 +64,9 @@ const ProvoUtah = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -222,9 +222,9 @@ const ProvoUtah = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

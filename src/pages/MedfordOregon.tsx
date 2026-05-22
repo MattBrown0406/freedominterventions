@@ -21,7 +21,7 @@ const MedfordOregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Medford, Oregon | Freedom Interventions"
-        description="Medford families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Jackson County. Free consultation. (541) 838-6009."
+        description="Medford families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Jackson County. Free consultation. (541) 668-8084."
         keywords="Medford Oregon addiction intervention, drug intervention Medford OR, alcohol intervention Medford, family intervention Medford Oregon, Jackson County interventionist, Southern Oregon drug intervention, Rogue Valley addiction help, professional intervention Medford"
         canonical="https://freedominterventions.com/medford-oregon"
       />
@@ -64,9 +64,9 @@ const MedfordOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const MedfordOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

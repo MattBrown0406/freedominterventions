@@ -23,7 +23,7 @@ const InterventionToolkit = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Family Intervention Planning Guide: Step-by-Step | Freedom Interventions"
-        description="A complete family intervention planning guide. Learn the process, avoid common mistakes, and know when to bring in a professional. Free consultation: (541) 838-6009."
+        description="A complete family intervention planning guide. Learn the process, avoid common mistakes, and know when to bring in a professional. Free consultation: (541) 668-8084."
         canonical="https://freedominterventions.com/intervention-toolkit"
         keywords="family intervention planning, intervention guide, how to plan an intervention, intervention steps, family intervention checklist, intervention mistakes, when to hire interventionist"
       />
@@ -586,8 +586,8 @@ const InterventionToolkit = () => {
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <a href="tel:+1-541-903-0724">
-                    Call Now: (541) 903-0724
+                  <a href="tel:+15416688084">
+                    Call Now: (541) 668-8084
                   </a>
                 </Button>
               </div>

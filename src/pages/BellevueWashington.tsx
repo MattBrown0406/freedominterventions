@@ -21,7 +21,7 @@ const BellevueWashington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Bellevue, Washington | Freedom Interventions"
-        description="Bellevue families facing addiction get expert intervention support. Matt Brown serves King County and the Eastside. Free consultation. (541) 838-6009."
+        description="Bellevue families facing addiction get expert intervention support. Matt Brown serves King County and the Eastside. Free consultation. (541) 668-8084."
         keywords="Bellevue addiction intervention, King County drug intervention, Eastside Washington intervention, high-functioning addiction Bellevue, prescription opioid intervention Bellevue, tech culture addiction help"
         canonical="https://freedominterventions.com/bellevue-washington"
       />
@@ -64,9 +64,9 @@ const BellevueWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const BellevueWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

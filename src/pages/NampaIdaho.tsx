@@ -21,7 +21,7 @@ const NampaIdaho = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Nampa, Idaho | Freedom Interventions"
-        description="Nampa families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Canyon County. Free consultation. (541) 838-6009."
+        description="Nampa families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Canyon County. Free consultation. (541) 668-8084."
         keywords="Nampa addiction intervention, Canyon County drug intervention, Nampa family intervention, meth addiction Nampa, addiction help Nampa ID"
         canonical="https://freedominterventions.com/nampa-idaho"
       />
@@ -64,9 +64,9 @@ const NampaIdaho = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -222,9 +222,9 @@ const NampaIdaho = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

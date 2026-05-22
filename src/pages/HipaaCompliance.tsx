@@ -298,7 +298,7 @@ const HipaaCompliance = () => {
                   <p><strong>Freedom Interventions - Privacy Officer</strong><br />
                   Matt Brown, Professional Interventionist & Privacy Officer<br />
                   Email: matt@freedominterventions.com<br />
-                  Phone: (541) 838-6009<br />
+                  Phone: (541) 668-8084<br />
                   Website: https://freedominterventions.com</p>
                   
                   <p className="mt-4 font-semibold">For Privacy-Related Inquiries:</p>

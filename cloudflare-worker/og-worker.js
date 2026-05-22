@@ -21,21 +21,21 @@
 const LOCATION_META = {
   '/oregon': {
     title: 'Addiction Intervention Specialist in Oregon | Freedom Interventions',
-    description: 'Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 838-6009.',
+    description: 'Oregon families facing addiction need expert help now. Matt Brown, certified intervention specialist with 20+ years experience, serves all of Oregon. Free consultation. Call (541) 668-8084.',
     canonical: 'https://freedominterventions.com/oregon',
     city: 'Oregon',
     state: 'Oregon',
   },
   '/portland-oregon': {
     title: 'Addiction Intervention Services in Portland, Oregon | Freedom Interventions',
-    description: 'Portland families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Multnomah County. Free consultation. (541) 838-6009.',
+    description: 'Portland families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Multnomah County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/portland-oregon',
     city: 'Portland',
     state: 'Oregon',
   },
   '/eugene-oregon': {
     title: 'Addiction Intervention Services in Eugene, Oregon | Freedom Interventions',
-    description: 'Eugene families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Lane County. Free consultation. (541) 838-6009.',
+    description: 'Eugene families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Lane County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/eugene-oregon',
     city: 'Eugene',
     state: 'Oregon',
@@ -49,42 +49,42 @@ const LOCATION_META = {
   },
   '/salem-oregon': {
     title: 'Addiction Intervention Services in Salem, Oregon | Freedom Interventions',
-    description: 'Salem families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Marion County. Free consultation. (541) 838-6009.',
+    description: 'Salem families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Marion County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/salem-oregon',
     city: 'Salem',
     state: 'Oregon',
   },
   '/medford-oregon': {
     title: 'Addiction Intervention Services in Medford, Oregon | Freedom Interventions',
-    description: 'Medford families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Jackson County. Free consultation. (541) 838-6009.',
+    description: 'Medford families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Jackson County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/medford-oregon',
     city: 'Medford',
     state: 'Oregon',
   },
   '/hillsboro-oregon': {
     title: 'Addiction Intervention Services in Hillsboro, Oregon | Freedom Interventions',
-    description: 'Hillsboro families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 838-6009.',
+    description: 'Hillsboro families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/hillsboro-oregon',
     city: 'Hillsboro',
     state: 'Oregon',
   },
   '/beaverton-oregon': {
     title: 'Addiction Intervention Services in Beaverton, Oregon | Freedom Interventions',
-    description: 'Beaverton families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 838-6009.',
+    description: 'Beaverton families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/beaverton-oregon',
     city: 'Beaverton',
     state: 'Oregon',
   },
   '/gresham-oregon': {
     title: 'Addiction Intervention Services in Gresham, Oregon | Freedom Interventions',
-    description: 'Gresham families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Multnomah County. Free consultation. (541) 838-6009.',
+    description: 'Gresham families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Multnomah County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/gresham-oregon',
     city: 'Gresham',
     state: 'Oregon',
   },
   '/corvallis-oregon': {
     title: 'Addiction Intervention Services in Corvallis, Oregon | Freedom Interventions',
-    description: 'Corvallis families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Benton County. Free consultation. (541) 838-6009.',
+    description: 'Corvallis families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Benton County. Free consultation. (541) 668-8084.',
     canonical: 'https://freedominterventions.com/corvallis-oregon',
     city: 'Corvallis',
     state: 'Oregon',
@@ -94,13 +94,13 @@ const LOCATION_META = {
 const STATIC_ROUTE_META = {
   '/': {
     title: 'Professional Addiction Interventionist | Freedom Interventions',
-    description: 'Matt Brown has 20+ years experience helping families through professional addiction interventions. Free consultation: (541) 838-6009. Nationwide service.',
+    description: 'Matt Brown has 20+ years experience helping families through professional addiction interventions. Free consultation: (541) 668-8084. Nationwide service.',
     heading: 'Professional Addiction Interventionist',
     body: 'Freedom Interventions helps families move from fear and confusion into a clear plan for intervention, treatment planning, and family recovery support.',
   },
   '/contact': {
     title: 'Contact Freedom Interventions | Free Addiction Intervention Consultation',
-    description: 'Schedule a free, confidential consultation with Matt Brown. Professional addiction intervention services available nationwide. Call (541) 838-6009.',
+    description: 'Schedule a free, confidential consultation with Matt Brown. Professional addiction intervention services available nationwide. Call (541) 668-8084.',
     heading: 'Contact Freedom Interventions',
     body: 'Talk directly with Matt Brown about what is happening in your family and what next step makes sense.',
   },
@@ -304,7 +304,7 @@ function generateLocationHtml(meta) {
     name: 'Freedom Interventions',
     description: `Professional addiction intervention services in ${city}, ${state}.`,
     url: canonical,
-    telephone: '+15418386009',
+    telephone: '+15416688084',
     areaServed: {
       '@type': 'Place',
       name: `${city}, ${state}`,
@@ -382,7 +382,7 @@ function generateLocationHtml(meta) {
         <li>Free initial consultation &mdash; no commitment required</li>
       </ul>
       <h2>Contact Freedom Interventions</h2>
-      <p>Call us now at <a href="tel:+15418386009">(541) 838-6009</a> for a free, confidential consultation. We serve ${safeCity} and all of ${safeState}.</p>
+      <p>Call us now at <a href="tel:+15416688084">(541) 668-8084</a> for a free, confidential consultation. We serve ${safeCity} and all of ${safeState}.</p>
       <p><a href="https://freedominterventions.com/#booking">Schedule your free consultation online</a></p>
     </section>
   </main>
@@ -411,7 +411,7 @@ function getStaticRouteMeta(pathname) {
     const { city, state } = CITY_PAGES[slug];
     return {
       title: `Drug & Alcohol Interventionist in ${city}, ${state} | Freedom Interventions`,
-      description: `Need an addiction interventionist in ${city}? Matt Brown provides professional intervention services with 20+ years experience. Call (541) 838-6009.`,
+      description: `Need an addiction interventionist in ${city}? Matt Brown provides professional intervention services with 20+ years experience. Call (541) 668-8084.`,
       heading: `Addiction Intervention Services in ${city}, ${state}`,
       body: `Freedom Interventions helps families in ${city}, ${state} prepare for addiction intervention, treatment planning, and a clear next step.`,
     };
@@ -421,7 +421,7 @@ function getStaticRouteMeta(pathname) {
     const state = US_STATES[slug];
     return {
       title: `Addiction Intervention Services in ${state} | Freedom Interventions`,
-      description: `Professional drug & alcohol intervention services in ${state}. Over 20 years experience helping families build clear treatment plans. Free consultation: (541) 838-6009.`,
+      description: `Professional drug & alcohol intervention services in ${state}. Over 20 years experience helping families build clear treatment plans. Free consultation: (541) 668-8084.`,
       heading: `Addiction Intervention Services in ${state}`,
       body: `Freedom Interventions helps families across ${state} prepare for addiction intervention, treatment planning, and family recovery support.`,
     };
@@ -431,7 +431,7 @@ function getStaticRouteMeta(pathname) {
     const province = CANADIAN_PROVINCES[slug];
     return {
       title: `Addiction Intervention Services in ${province} | Freedom Interventions`,
-      description: `Professional addiction intervention services in ${province}, Canada. Over 20 years experience helping families. Free consultation: (541) 838-6009.`,
+      description: `Professional addiction intervention services in ${province}, Canada. Over 20 years experience helping families. Free consultation: (541) 668-8084.`,
       heading: `Addiction Intervention Services in ${province}`,
       body: `Freedom Interventions helps families in ${province} prepare for intervention, treatment planning, and family support.`,
     };
@@ -440,7 +440,7 @@ function getStaticRouteMeta(pathname) {
   const formatted = titleCase(slug);
   return {
     title: `${formatted} | Freedom Interventions`,
-    description: 'Professional addiction intervention services, family support, and treatment planning guidance. Free consultation: (541) 838-6009.',
+    description: 'Professional addiction intervention services, family support, and treatment planning guidance. Free consultation: (541) 668-8084.',
     heading: formatted,
     body: 'Freedom Interventions helps families dealing with addiction find clarity, structure, and a real next step.',
   };
@@ -462,7 +462,7 @@ function generateStaticRouteHtml(meta, pageUrl) {
       name: 'Freedom Interventions',
       url: SITE_URL,
       logo: `${SITE_URL}/og-share.jpg`,
-      telephone: '+15418386009',
+      telephone: '+15416688084',
     },
   });
 
@@ -502,7 +502,7 @@ function generateStaticRouteHtml(meta, pageUrl) {
         <li>Family intervention, crisis coaching, treatment planning, and aftercare guidance</li>
         <li>Nationwide and Canada service areas</li>
       </ul>
-      <p><a href="tel:+15418386009">(541) 838-6009</a></p>
+      <p><a href="tel:+15416688084">(541) 668-8084</a></p>
       <p><a href="${SITE_URL}/start-here">Start Here</a></p>
       <p><a href="${pageUrl}">View the full page</a></p>
     </section>

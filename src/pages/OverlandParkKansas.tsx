@@ -21,7 +21,7 @@ const OverlandParkKansas = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Overland Park, Kansas | Freedom Interventions"
-        description="Professional addiction intervention services in Overland Park, KS. Helping Johnson County families address high-functioning addiction, prescription opioids, alcohol, and teen drug issues. Free consultation. Call (541) 838-6009."
+        description="Professional addiction intervention services in Overland Park, KS. Helping Johnson County families address high-functioning addiction, prescription opioids, alcohol, and teen drug issues. Free consultation. Call (541) 668-8084."
         keywords="Overland Park addiction intervention, Overland Park Kansas interventionist, Johnson County drug intervention, high-functioning addiction Overland Park, prescription opioid intervention Kansas, teen addiction help Overland Park"
         canonical="https://freedominterventions.com/overland-park-kansas"
       />
@@ -64,9 +64,9 @@ const OverlandParkKansas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -178,7 +178,7 @@ const OverlandParkKansas = () => {
               Overland Park Area Addiction Resources
             </h2>
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              These Johnson County resources can provide immediate support. For professional intervention services, call Matt Brown at (541) 838-6009.
+              These Johnson County resources can provide immediate support. For professional intervention services, call Matt Brown at (541) 668-8084.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {[
@@ -284,9 +284,9 @@ const OverlandParkKansas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

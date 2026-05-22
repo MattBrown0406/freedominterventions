@@ -21,7 +21,7 @@ const HillsboroOregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Hillsboro, Oregon | Freedom Interventions"
-        description="Hillsboro families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 838-6009."
+        description="Hillsboro families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Washington County. Free consultation. (541) 668-8084."
         keywords="Hillsboro Oregon addiction intervention, drug intervention Hillsboro OR, alcohol intervention Hillsboro, family intervention Hillsboro Oregon, Washington County interventionist, Silicon Forest addiction help, Portland metro west intervention, professional intervention Hillsboro"
         canonical="https://freedominterventions.com/hillsboro-oregon"
       />
@@ -64,9 +64,9 @@ const HillsboroOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const HillsboroOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

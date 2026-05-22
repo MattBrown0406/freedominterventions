@@ -10,7 +10,7 @@ interface TrackedPhoneLinkProps {
 }
 
 const TrackedPhoneLink = ({ 
-  phoneNumber = '+15418386009', 
+  phoneNumber = '+15416688084', 
   children, 
   className,
   metadata = {},

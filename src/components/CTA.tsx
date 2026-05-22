@@ -23,14 +23,14 @@ const CTA = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: 'cta_section' }}>
+            <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: 'cta_section' }}>
               <Button 
                 variant="secondary" 
                 size="xl" 
                 className="bg-background text-primary hover:bg-background/90"
               >
                 <Phone className="w-5 h-5" />
-                Call Now: (541) 838-6009
+                Call Now: (541) 668-8084
               </Button>
             </TrackedPhoneLink>
             <Button 

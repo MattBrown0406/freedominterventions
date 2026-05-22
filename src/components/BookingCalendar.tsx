@@ -73,7 +73,7 @@ const FRI_AGREEMENT_TEXT = `FAMILY READINESS INTENSIVE AGREEMENT
 Freedom Interventions
 Matt Brown
 FreedomInterventions.com
-(541) 838-6009
+(541) 668-8084
 
 This Family Readiness Intensive Agreement ("Agreement") is entered into by and between Freedom Interventions ("Consultant") and the undersigned client ("Client").
 

@@ -21,7 +21,7 @@ const OlympiaWashington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Olympia, Washington | Freedom Interventions"
-        description="Olympia families in Thurston County facing addiction get expert intervention support from Matt Brown. Free consultation. (541) 838-6009."
+        description="Olympia families in Thurston County facing addiction get expert intervention support from Matt Brown. Free consultation. (541) 668-8084."
         keywords="Olympia addiction intervention, Thurston County drug intervention, Olympia WA intervention services, addiction help Olympia Washington, state capital addiction intervention"
         canonical="https://freedominterventions.com/olympia-washington"
       />
@@ -64,9 +64,9 @@ const OlympiaWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const OlympiaWashington = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

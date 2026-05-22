@@ -21,7 +21,7 @@ const FortWorthTexas = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Fentanyl Intervention Help in Fort Worth | Treatment Planning Support"
-        description="Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 838-6009."
+        description="Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 668-8084."
         keywords="fentanyl treatment Fort Worth, fentanyl intervention Fort Worth, Fort Worth addiction intervention, Tarrant County drug intervention, Fort Worth family intervention, opioid crisis Fort Worth TX, DFW intervention specialist"
         canonical="https://freedominterventions.com/fort-worth-texas"
       />
@@ -65,7 +65,7 @@ const FortWorthTexas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>
@@ -220,7 +220,7 @@ const FortWorthTexas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>

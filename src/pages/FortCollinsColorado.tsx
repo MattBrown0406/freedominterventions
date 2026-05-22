@@ -21,7 +21,7 @@ const FortCollinsColorado = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Fort Collins, Colorado | Freedom Interventions"
-        description="Fort Collins families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Larimer County. Free consultation. (541) 838-6009."
+        description="Fort Collins families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Larimer County. Free consultation. (541) 668-8084."
         keywords="Fort Collins addiction intervention, Larimer County drug intervention, Fort Collins family intervention, CSU college addiction, opioid crisis Fort Collins, alcohol addiction Fort Collins, intervention specialist Northern Colorado"
         canonical="https://freedominterventions.com/fort-collins-colorado"
       />
@@ -64,9 +64,9 @@ const FortCollinsColorado = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const FortCollinsColorado = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-838-6009">
+                <a href="tel:541-668-8084">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 838-6009
+                  Call (541) 668-8084
                 </a>
               </Button>
             </div>

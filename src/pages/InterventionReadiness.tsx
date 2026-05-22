@@ -60,7 +60,7 @@ const InterventionReadiness = () => {
                   A professional intervention is not a threat or a last-ditch ambush. It is a prepared family process with a clear treatment plan, a unified message, and real follow-through.
                 </p>
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "intervention_readiness_hero" }}>
+                  <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "intervention_readiness_hero" }}>
                     <Button size="xl" variant="secondary">
                       <Phone className="h-5 w-5" />
                       Call Matt Now
@@ -181,7 +181,7 @@ const InterventionReadiness = () => {
                   Schedule Free Consultation
                 </Link>
               </Button>
-              <TrackedPhoneLink phoneNumber="+15418386009" metadata={{ location: "intervention_readiness_footer" }}>
+              <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "intervention_readiness_footer" }}>
                 <Button variant="outline" size="lg">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Now
