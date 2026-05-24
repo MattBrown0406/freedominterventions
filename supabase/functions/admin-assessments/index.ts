@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 type AdminAssessmentsRequest = {
-  action: "list";
+  action: "list" | "verify-admin";
 };
 
 serve(async (req) => {
@@ -36,7 +36,7 @@ serve(async (req) => {
     }
 
     const body = (await req.json().catch(() => null)) as AdminAssessmentsRequest | null;
-    if (!body || body.action !== "list") {
+    if (!body || (body.action !== "list" && body.action !== "verify-admin")) {
       return new Response(JSON.stringify({ error: "Invalid request" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -66,8 +66,21 @@ serve(async (req) => {
 
     const { data: isStrictAdmin, error: strictErr } = await userClient.rpc("is_strict_admin");
     if (strictErr || !isStrictAdmin) {
+      if (body.action === "verify-admin") {
+        return new Response(JSON.stringify({ isAdmin: false }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (body.action === "verify-admin") {
+      return new Response(JSON.stringify({ isAdmin: true }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

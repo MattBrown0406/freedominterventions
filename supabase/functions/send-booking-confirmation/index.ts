@@ -241,17 +241,27 @@ const handler = async (req: Request): Promise<Response> => {
       : '';
 
     // Send confirmation email
+    const escapeHtml = (v: string) =>
+      String(v ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    const safeCustomerName = escapeHtml(customerName);
+    const safeJoinUrl = encodeURI(joinUrl);
+    const safeBookingId = escapeHtml(bookingId);
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #1e40af;">${emailTitle}</h1>
-        <p>Dear ${customerName},</p>
+        <p>Dear ${safeCustomerName},</p>
         <p>${isReschedule
           ? "Your appointment with Freedom Interventions has been successfully rescheduled."
           : "Thank you for booking with Freedom Interventions. Your appointment has been confirmed."}</p>
 
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Appointment Details</h2>
-          <p><strong>Booking ID:</strong> ${bookingId}</p>
+          <p><strong>Booking ID:</strong> ${safeBookingId}</p>
           <p><strong>Type:</strong> ${appointmentType}</p>
           <p><strong>Date:</strong> ${formattedDate}</p>
           <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
@@ -262,8 +272,8 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Join Your Meeting</h2>
           <p>Click the button below to join your Zoom meeting at the scheduled time:</p>
-          <a href="${joinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 10px;">Join Zoom Meeting</a>
-          <p style="margin-top: 15px; font-size: 14px; color: #666;">Or copy this link: ${joinUrl}</p>
+          <a href="${safeJoinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 10px;">Join Zoom Meeting</a>
+          <p style="margin-top: 15px; font-size: 14px; color: #666;">Or copy this link: ${escapeHtml(joinUrl)}</p>
         </div>
 
         <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
@@ -350,7 +360,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-booking-confirmation:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Unable to send booking confirmation. Please try again later." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

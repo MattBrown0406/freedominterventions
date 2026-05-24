@@ -23,13 +23,17 @@ const InsuranceCardUpload = ({ frontUrl, backUrl, onUpload }: InsuranceCardUploa
     isUploading(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${side}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const fileExt = (file.name.split('.').pop() || '').toLowerCase();
+      const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
+      const safeExt = allowedExts.includes(fileExt) ? fileExt : 'bin';
+      const fileName = `${crypto.randomUUID()}-${side}.${safeExt}`;
+      const filePath = `uploads/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('insurance-cards')
         .upload(filePath, file);
+
+
 
       if (uploadError) throw uploadError;
 
