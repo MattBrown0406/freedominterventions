@@ -24,38 +24,28 @@ const AdminLogin = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   useEffect(() => {
-    // Check if user is already logged in
+    // Server-side admin check via edge function (uses is_strict_admin)
+    const verifyAdmin = async () => {
+      const { data, error } = await supabase.functions.invoke("admin-assessments", {
+        body: { action: "verify-admin" },
+      });
+      return !error && data?.isAdmin === true;
+    };
+
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        // Check if user has admin role
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .eq("role", "admin")
-          .maybeSingle();
-        
-        if (roles) {
-          navigate("/admin");
-        }
+      if (session && (await verifyAdmin())) {
+        navigate("/admin");
       }
     };
-    
+
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
-        // Defer the role check to avoid deadlock
+        // Defer to avoid deadlock
         setTimeout(async () => {
-          const { data: roles } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "admin")
-            .maybeSingle();
-          
-          if (roles) {
+          if (await verifyAdmin()) {
             navigate("/admin");
           } else {
             toast({
