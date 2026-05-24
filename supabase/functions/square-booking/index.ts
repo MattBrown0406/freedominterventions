@@ -895,7 +895,11 @@ serve(async (req) => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error in square-booking function:', errorMessage);
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    // Validation errors are short and safe; surface only those, otherwise return generic message
+    const safeMessage = errorMessage.length < 200 && !/\b(sql|database|relation|column|stack|at .+:\d+:\d+)\b/i.test(errorMessage)
+      ? errorMessage
+      : 'Unable to process booking request. Please try again later.';
+    return new Response(JSON.stringify({ error: safeMessage }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
