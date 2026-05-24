@@ -155,19 +155,33 @@ const AdminDashboard = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (!session) {
         navigate("/admin-login");
         return;
       }
 
-      // Check admin role
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
+      // Server-side admin verification via edge function
+      const { data, error } = await supabase.functions.invoke("admin-assessments", {
+        body: { action: "verify-admin" },
+      });
+
+      if (error || !data?.isAdmin) {
+        toast({
+          title: "Access Denied",
+          description: "You do not have admin privileges.",
+          variant: "destructive",
+        });
+        await supabase.auth.signOut();
+        navigate("/admin-login");
+        return;
+      }
+
+      await loadAssessments();
+    };
+
+    checkAuth();
+  }, [navigate, toast]);
 
       if (!roles) {
         toast({
