@@ -177,23 +177,6 @@ const AdminDashboard = () => {
         return;
       }
 
-      await loadAssessments();
-    };
-
-    checkAuth();
-  }, [navigate, toast]);
-
-      if (!roles) {
-        toast({
-          title: "Access Denied",
-          description: "You do not have admin privileges.",
-          variant: "destructive",
-        });
-        await supabase.auth.signOut();
-        navigate("/admin-login");
-        return;
-      }
-
       fetchAssessments();
     };
 
