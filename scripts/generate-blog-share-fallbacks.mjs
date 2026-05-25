@@ -123,6 +123,11 @@ const upsertHead = (html, post) => {
   });
 };
 
+const outputPaths = (slug) => [
+  path.join(distDir, "blog", slug, "index.html"),
+  path.join(distDir, "blog", `${slug}.html`),
+];
+
 const main = async () => {
   if (!existsSync(indexFile)) throw new Error("dist/index.html not found. Run vite build first.");
 
@@ -152,9 +157,10 @@ const main = async () => {
   for (const post of posts ?? []) {
     if (!post.slug || !post.title) continue;
     const html = upsertHead(template, post);
-    const destination = path.join(distDir, "blog", post.slug, "index.html");
-    await mkdir(path.dirname(destination), { recursive: true });
-    await writeFile(destination, html, "utf8");
+    for (const destination of outputPaths(post.slug)) {
+      await mkdir(path.dirname(destination), { recursive: true });
+      await writeFile(destination, html, "utf8");
+    }
   }
 
   console.log(`✅ Blog social share fallbacks generated for ${(posts ?? []).length} articles`);

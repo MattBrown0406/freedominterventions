@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..");
 const distDir = path.join(root, "dist");
 const appFile = path.join(root, "src", "App.tsx");
+const interventionAnswersFile = path.join(root, "src", "data", "interventionAnswers.ts");
 const indexFile = path.join(distDir, "index.html");
 const BASE_URL = "https://freedominterventions.com";
 
@@ -165,7 +166,12 @@ const escapeHtml = (value) =>
 
 const getRoutes = async () => {
   const appContent = await readFile(appFile, "utf8");
-  return [...new Set([...appContent.matchAll(/path="([^"]+)"/g)].map((match) => match[1]))]
+  const interventionAnswerContent = await readFile(interventionAnswersFile, "utf8");
+  const appRoutes = [...appContent.matchAll(/path="([^"]+)"/g)].map((match) => match[1]);
+  const interventionAnswerRoutes = [...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g)]
+    .map((match) => `/intervention-answers/${match[1]}`);
+
+  return [...new Set([...appRoutes, ...interventionAnswerRoutes])]
     .filter((route) => !route.includes(":"))
     .filter((route) => !route.includes("*"))
     .filter((route) => !route.startsWith("/admin"))
@@ -251,9 +257,14 @@ const upsertHead = (html, route, metadata) => {
 const replaceNoscript = (html, metadata) =>
   html.replace(/<noscript>\s*<div style="max-width:[\s\S]*?<\/div>\s*<\/noscript>/, `<noscript>${fallbackHtml(metadata)}    </noscript>`);
 
-const outputPath = (route) => {
-  if (route === "/") return indexFile;
-  return path.join(distDir, route.replace(/^\//, ""), "index.html");
+const outputPaths = (route) => {
+  if (route === "/") return [indexFile];
+
+  const cleanRoute = route.replace(/^\//, "").replace(/\/+$/, "");
+  return [
+    path.join(distDir, cleanRoute, "index.html"),
+    path.join(distDir, `${cleanRoute}.html`),
+  ];
 };
 
 const main = async () => {
@@ -265,9 +276,11 @@ const main = async () => {
   for (const route of routes) {
     const metadata = getMetadata(route);
     const html = replaceNoscript(upsertHead(template, route, metadata), metadata);
-    const destination = outputPath(route);
-    await mkdir(path.dirname(destination), { recursive: true });
-    await writeFile(destination, html, "utf8");
+    const destinations = outputPaths(route);
+    for (const destination of destinations) {
+      await mkdir(path.dirname(destination), { recursive: true });
+      await writeFile(destination, html, "utf8");
+    }
   }
 
   console.log(`✅ Static SEO fallbacks generated for ${routes.length} routes`);

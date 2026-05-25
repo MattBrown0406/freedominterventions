@@ -76,10 +76,14 @@ const getBlogRoutes = async (env) => {
   return (data ?? []).map(({ slug }) => `/blog/${slug}`);
 };
 
-const toOutputPath = (route) => {
-  if (route === '/') return path.join(distDir, 'index.html');
+const toOutputPaths = (route) => {
+  if (route === '/') return [path.join(distDir, 'index.html')];
+
   const cleanRoute = route.replace(/^\//, '').replace(/\/+$/, '');
-  return path.join(distDir, cleanRoute, 'index.html');
+  return [
+    path.join(distDir, cleanRoute, 'index.html'),
+    path.join(distDir, `${cleanRoute}.html`),
+  ];
 };
 
 const waitForAppReady = async (page, route) => {
@@ -203,9 +207,11 @@ const main = async () => {
       await waitForAppReady(page, route);
 
       const html = await page.content();
-      const outputPath = toOutputPath(route);
-      await mkdir(path.dirname(outputPath), { recursive: true });
-      await writeFile(outputPath, `<!DOCTYPE html>\n${html}`, 'utf8');
+      const outputPaths = toOutputPaths(route);
+      for (const outputPath of outputPaths) {
+        await mkdir(path.dirname(outputPath), { recursive: true });
+        await writeFile(outputPath, `<!DOCTYPE html>\n${html}`, 'utf8');
+      }
       await page.close();
     }
 
