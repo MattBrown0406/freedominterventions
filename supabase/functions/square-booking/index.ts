@@ -557,7 +557,8 @@ serve(async (req) => {
 
         if (bookingError) {
           console.error('Error creating booking for checkout link:', bookingError);
-          throw new Error('Failed to create booking before checkout');
+          // DIAGNOSTIC: surface DB error so we can debug. Remove after root cause found.
+          throw new Error(`Failed to create booking before checkout: ${bookingError.message || bookingError.code || 'unknown'} | details=${bookingError.details || 'none'} | hint=${bookingError.hint || 'none'}`);
         }
 
         await upsertBookingCrm(supabase, booking, {
