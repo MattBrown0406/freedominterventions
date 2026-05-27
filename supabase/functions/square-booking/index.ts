@@ -557,11 +557,7 @@ serve(async (req) => {
 
         if (bookingError) {
           console.error('Error creating booking for checkout link:', bookingError);
-          // DIAG: surface short PostgREST/Postgres error code so we can see why
-          // the insert is still failing post-column-fix. Code-only is safe per
-          // the outer-catch scrubber (no SQL keywords, short string).
-          const code = (bookingError as any).code || 'unknown';
-          throw new Error(`DIAG booking insert code=${code}`);
+          throw new Error('Failed to create booking before checkout');
         }
 
         await upsertBookingCrm(supabase, booking, {
