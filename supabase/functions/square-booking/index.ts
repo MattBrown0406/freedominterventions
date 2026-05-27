@@ -557,17 +557,22 @@ serve(async (req) => {
 
         if (bookingError) {
           console.error('Error creating booking for checkout link:', bookingError);
-          // DIAGNOSTIC: surface DB error so we can debug. Remove after root cause found.
-          throw new Error(`Failed to create booking before checkout: ${bookingError.message || bookingError.code || 'unknown'} | details=${bookingError.details || 'none'} | hint=${bookingError.hint || 'none'}`);
+          // DIAGNOSTIC: surface DB error code (short, safe). Remove after root cause found.
+          const code = (bookingError as any).code || 'unknown';
+          throw new Error(`DIAG booking insert code=${code}`);
         }
 
-        await upsertBookingCrm(supabase, booking, {
-          customerName: sanitizedName,
-          customerEmail: sanitizedEmail,
-          customerPhone: sanitizedPhone,
-          bookingType: normalizedBookingType,
-          sourceAttribution: normalizedSourceAttribution,
-        });
+        try {
+          await upsertBookingCrm(supabase, booking, {
+            customerName: sanitizedName,
+            customerEmail: sanitizedEmail,
+            customerPhone: sanitizedPhone,
+            bookingType: normalizedBookingType,
+            sourceAttribution: normalizedSourceAttribution,
+          });
+        } catch (crmErr: any) {
+          throw new Error(`DIAG crm_upsert code=${crmErr?.code || 'none'} msg=${(crmErr?.message || String(crmErr)).slice(0, 80)}`);
+        }
 
         const origin = req.headers.get('origin') || 'https://freedominterventions.com';
         const successUrl = new URL(normalizedBookingType === 'intervention-contract' ? '/start-contract' : '/#booking', origin);
@@ -613,12 +618,12 @@ serve(async (req) => {
 
         if (checkoutData.errors) {
           console.error('Square checkout link error:', checkoutData.errors);
-          throw new Error(checkoutData.errors[0]?.detail || 'Failed to create Square Checkout link');
+          throw new Error(`DIAG square_checkout ${(checkoutData.errors[0]?.detail || 'unknown').slice(0, 80)}`);
         }
 
         const paymentLinkId = checkoutData.payment_link?.id ?? null;
         const squareOrderId = checkoutData.payment_link?.order_id ?? null;
-        await supabase
+        const { error: updateErr } = await supabase
           .from('bookings')
           .update({
             payment_link_id: paymentLinkId,
@@ -626,6 +631,9 @@ serve(async (req) => {
             updated_at: new Date().toISOString(),
           })
           .eq('id', booking.id);
+        if (updateErr) {
+          throw new Error(`DIAG booking_update code=${(updateErr as any).code || 'none'}`);
+        }
 
         return new Response(JSON.stringify({
           success: true,
@@ -896,10 +904,14 @@ serve(async (req) => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error in square-booking function:', errorMessage);
-    // Validation errors are short and safe; surface only those, otherwise return generic message
-    const safeMessage = errorMessage.length < 200 && !/\b(sql|database|relation|column|stack|at .+:\d+:\d+)\b/i.test(errorMessage)
+    // DIAGNOSTIC: allow DIAG-prefixed messages through the safe-message filter.
+    // Remove the DIAG bypass after root cause is identified.
+    const isDiagnostic = errorMessage.startsWith('DIAG ');
+    const safeMessage = isDiagnostic
       ? errorMessage
-      : 'Unable to process booking request. Please try again later.';
+      : (errorMessage.length < 200 && !/\b(sql|database|relation|column|stack|at .+:\d+:\d+)\b/i.test(errorMessage)
+        ? errorMessage
+        : 'Unable to process booking request. Please try again later.');
     return new Response(JSON.stringify({ error: safeMessage }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
