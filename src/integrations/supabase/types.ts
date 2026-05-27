@@ -873,10 +873,15 @@ export type Database = {
           booking_date: string
           booking_time: string
           booking_type: string
+          contract_metadata: Json | null
+          contract_pdf_path: string | null
+          contract_pdf_url: string | null
           created_at: string
           customer_email: string
           customer_name: string
           customer_phone: string | null
+          discount_cents: number | null
+          discount_code: string | null
           duration_minutes: number
           id: string
           notes: string | null
@@ -896,10 +901,15 @@ export type Database = {
           booking_date: string
           booking_time: string
           booking_type: string
+          contract_metadata?: Json | null
+          contract_pdf_path?: string | null
+          contract_pdf_url?: string | null
           created_at?: string
           customer_email: string
           customer_name: string
           customer_phone?: string | null
+          discount_cents?: number | null
+          discount_code?: string | null
           duration_minutes?: number
           id?: string
           notes?: string | null
@@ -919,10 +929,15 @@ export type Database = {
           booking_date?: string
           booking_time?: string
           booking_type?: string
+          contract_metadata?: Json | null
+          contract_pdf_path?: string | null
+          contract_pdf_url?: string | null
           created_at?: string
           customer_email?: string
           customer_name?: string
           customer_phone?: string | null
+          discount_cents?: number | null
+          discount_code?: string | null
           duration_minutes?: number
           id?: string
           notes?: string | null
