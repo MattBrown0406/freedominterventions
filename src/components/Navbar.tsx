@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, Phone, ChevronDown, Smartphone } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
 import soberHelplineLogo from "@/assets/sober-helpline-logo.png";
@@ -122,6 +122,23 @@ const Navbar = () => {
               onToggle={() => setOpenSection(openSection === "resources" ? null : "resources")}
               onNavigate={() => setIsOpen(false)}
             />
+            <a href="https://soberhelpline.com/monday-zoom-registration" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2 flex items-center gap-2 px-4" onClick={() => setIsOpen(false)}>
+              <img src={soberHelplineLogo} alt="Sober Helpline" className="h-6 w-auto" />
+              <span>Free Weekly Family Support</span>
+            </a>
+            <a
+              href="https://apps.apple.com/app/id6744403069"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20 text-foreground font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              <Smartphone className="w-5 h-5 text-primary flex-shrink-0" />
+              <div>
+                <div className="text-sm font-semibold">FamilyBridge App</div>
+                <div className="text-xs text-muted-foreground">Free AI support for families</div>
+              </div>
+            </a>
             <a href="/party-wreckers-podcast" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2 flex items-center gap-2 px-4" onClick={() => setIsOpen(false)}>
               <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 w-auto" width={1024} height={1024} />
               <span className="font-lobster">The Party Wreckers Podcast</span>
@@ -141,6 +158,15 @@ const Navbar = () => {
           <a href="https://soberhelpline.com/monday-zoom-registration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
             <img src={soberHelplineLogo} alt="Sober Helpline" className="h-8 md:h-10 w-auto" />
             <span className="text-muted-foreground">Free Weekly Family Support Meetings</span>
+          </a>
+          <a
+            href="https://apps.apple.com/app/id6744403069"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 text-sm font-medium text-foreground hover:bg-primary/20 transition-colors"
+          >
+            <Smartphone className="w-4 h-4 text-primary" />
+            <span>FamilyBridge App</span>
           </a>
           <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
             <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" width={1024} height={1024} />
