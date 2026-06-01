@@ -23,7 +23,7 @@ const FamilyBridgeBanner = () => {
             </h3>
             <p className="text-muted-foreground text-base leading-relaxed max-w-xl">
               Not ready to call yet? FamilyBridge gives families real-time
-              AI-powered guidance — how to communicate, how to stop enabling,
+              AI support — how to communicate, how to stop enabling,
               and how to take the right next step. Built by Matt Brown from
               20+ years in the field.
             </p>
@@ -34,7 +34,7 @@ const FamilyBridgeBanner = () => {
             <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="hero" size="xl" className="whitespace-nowrap gap-2">
                 <Smartphone className="w-5 h-5" />
-                Download Free on iOS
+                Download on iOS — AI Support App
               </Button>
             </a>
           </div>

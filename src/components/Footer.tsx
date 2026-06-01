@@ -68,7 +68,7 @@ const Footer = () => {
                 <Smartphone className="w-4 h-4 text-primary flex-shrink-0" />
                 <span>Download FamilyBridge</span>
               </a>
-              <p className="text-xs text-muted-foreground mt-2 max-w-[200px]">AI-powered support for families navigating a loved one's addiction.</p>
+              <p className="text-xs text-muted-foreground mt-2 max-w-[200px]">AI support for families navigating a loved one's addiction.</p>
             </div>
           </div>
 

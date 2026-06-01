@@ -136,7 +136,7 @@ const Navbar = () => {
               <Smartphone className="w-5 h-5 text-primary flex-shrink-0" />
               <div>
                 <div className="text-sm font-semibold">FamilyBridge App</div>
-                <div className="text-xs text-muted-foreground">Free AI support for families</div>
+                <div className="text-xs text-muted-foreground">AI support for families</div>
               </div>
             </a>
             <a href="/party-wreckers-podcast" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2 flex items-center gap-2 px-4" onClick={() => setIsOpen(false)}>

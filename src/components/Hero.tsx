@@ -104,7 +104,7 @@ const Hero = () => {
               >
                 <Button variant="hero-outline" size="default" className="gap-2">
                   <Smartphone className="w-4 h-4" />
-                  Download FamilyBridge — Free AI Support App
+                  Download FamilyBridge — AI Support App
                 </Button>
               </a>
             </div>
