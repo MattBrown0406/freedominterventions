@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, ClipboardCheck, Phone } from "lucide-react";
+import { Calendar, ClipboardCheck, Phone, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
@@ -88,6 +88,26 @@ const Hero = () => {
             <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto pt-2">
               Confidential help for families in crisis. Professional intervention, treatment planning, and family coaching options available.
             </p>
+
+            {/* FamilyBridge app callout */}
+            <div
+              className="pt-4 animate-fade-up"
+              style={{ animationDelay: "0.55s" }}
+            >
+              <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-medium">
+                Not ready to call? Start here:
+              </p>
+              <a
+                href="https://apps.apple.com/app/id6744403069"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="hero-outline" size="default" className="gap-2">
+                  <Smartphone className="w-4 h-4" />
+                  Download FamilyBridge — Free AI Support App
+                </Button>
+              </a>
+            </div>
           </div>
 
           {/* Trust badges */}

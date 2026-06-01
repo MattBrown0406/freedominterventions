@@ -21,6 +21,7 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, AggregateRatingSchema } from "@/components/StructuredData";
 import LeadMagnetPopup from "@/components/LeadMagnetPopup";
 import LeadMagnetBanner from "@/components/LeadMagnetBanner";
+import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Award, Globe, HeartHandshake, ShieldCheck, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -148,6 +149,7 @@ const Index = () => {
         </section>
         <EmpathySection />
         <VideoSection />
+        <FamilyBridgeBanner />
         <Services />
         <SignsSection />
         <SocialProof />
@@ -160,6 +162,7 @@ const Index = () => {
         <WorkWithMatt />
         <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
         <ClosePathProof source="homepage" />
+        <FamilyBridgeBanner />
         <BookingCalendar />
         <section className="py-16 md:py-24 bg-muted/20">
           <div className="container px-6">
