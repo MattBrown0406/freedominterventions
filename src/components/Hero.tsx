@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, ClipboardCheck, Phone, Smartphone } from "lucide-react";
+import { Calendar, ClipboardCheck, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import AppStoreBadge from "@/components/AppStoreBadge";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
@@ -97,16 +98,7 @@ const Hero = () => {
               <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-medium">
                 Not ready to call? Start here:
               </p>
-              <a
-                href="https://apps.apple.com/app/id6744403069"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="hero-outline" size="default" className="gap-2">
-                  <Smartphone className="w-4 h-4" />
-                  Download FamilyBridge — AI Support App
-                </Button>
-              </a>
+              <AppStoreBadge height={44} />
             </div>
           </div>
 

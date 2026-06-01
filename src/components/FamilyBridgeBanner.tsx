@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Smartphone } from "lucide-react";
-
-const APP_STORE_URL = "https://apps.apple.com/app/id6744403069";
+import AppStoreBadge from "@/components/AppStoreBadge";
 
 const FamilyBridgeBanner = () => {
   return (
@@ -29,14 +27,9 @@ const FamilyBridgeBanner = () => {
             </p>
           </div>
 
-          {/* CTA */}
+          {/* App Store Badge */}
           <div className="flex-shrink-0">
-            <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="hero" size="xl" className="whitespace-nowrap gap-2">
-                <Smartphone className="w-5 h-5" />
-                Download on iOS — AI Support App
-              </Button>
-            </a>
+            <AppStoreBadge height={52} />
           </div>
         </div>
       </div>
