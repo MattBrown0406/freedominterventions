@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -412,11 +413,9 @@ serve(async (req) => {
       console.error("Assessment followup queue failed:", followupError);
     }
 
-    // Send email notification via SendGrid API
+    // Send email notifications via Resend
     try {
-      const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-      if (sendgridApiKey) {
-        console.log("Sending assessment notification via SendGrid");
+      console.log("Sending assessment notifications via Resend");
 
         // Parse withdrawal symptoms if present
         let withdrawalInfo = "None reported";
@@ -563,29 +562,36 @@ serve(async (req) => {
 
         const emailSubject = `${isHighUrgency ? "⚠️ URGENT: " : ""}New Assessment: ${assessmentData.loved_one_name} (${assessmentData.severity_level || "Unassessed"})`;
 
-        const emailResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${sendgridApiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
-            from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-            subject: emailSubject,
-            content: [{ type: "text/html", value: emailHtml }],
-          }),
+        await sendSystemEmail({
+          to: "matt@freedominterventions.com",
+          replyTo: assessmentData.contact_email,
+          subject: emailSubject,
+          html: emailHtml,
         });
 
-        if (emailResponse.ok) {
-          console.log("Email sent successfully via SendGrid");
-        } else {
-          const errorText = await emailResponse.text();
-          console.error("SendGrid API error:", errorText);
-        }
-      } else {
-        console.log("SENDGRID_API_KEY not configured, skipping email notification");
-      }
+        const firstName = String(assessmentData.contact_name || "there").trim().split(/\s+/)[0] || "there";
+        const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(assessmentData.contact_name || "")}&email=${encodeURIComponent(assessmentData.contact_email || "")}${assessmentData.contact_phone ? `&phone=${encodeURIComponent(assessmentData.contact_phone)}` : ""}#booking`;
+        const clientHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 20px; color: #1f2937; line-height: 1.6;">
+            <h1 style="color: #1e3a5f;">I received your family assessment</h1>
+            <p>Hi ${escapeHtml(firstName)},</p>
+            <p>I received your assessment. Thank you for taking the time to lay out what is happening. I’ll review it personally and look for the clearest next step for your family.</p>
+            <p>This assessment helps me understand urgency, safety concerns, treatment history, family alignment, and where leverage may or may not exist.</p>
+            <p>If this is escalating or you need answers sooner, book a free consultation here:</p>
+            <p><a href="${consultUrl}" style="display:inline-block;background:#1e3a5f;color:#fff;padding:12px 20px;text-decoration:none;border-radius:6px;">Book a free consultation</a></p>
+            <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, call or text me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+            <p>- Matt Brown<br>Freedom Interventions</p>
+          </div>
+        `;
+
+        await sendResendEmail({
+          to: assessmentData.contact_email,
+          subject: `${firstName}, I received your family assessment`,
+          html: clientHtml,
+          replyTo: "matt@freedominterventions.com",
+        });
+
+        console.log("Assessment notifications sent successfully via Resend");
     } catch (emailError) {
       console.error("Email notification failed:", emailError);
       // Don't fail the request if email fails

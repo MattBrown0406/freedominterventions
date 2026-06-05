@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { escapeHtml, sendResendEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -109,36 +110,18 @@ async function createZoomMeeting(
 async function sendEmail(
   to: string,
   subject: string,
-  html: string
+  html: string,
+  opts: { from?: string; replyTo?: string } = {}
 ): Promise<void> {
-  const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-  if (!sendgridApiKey) {
-    throw new Error("SENDGRID_API_KEY not configured");
-  }
-
-  console.log("Sending email via SendGrid to:", to);
-
-  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${sendgridApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      personalizations: [{ to: [{ email: to }] }],
-      from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-      subject,
-      content: [{ type: "text/html", value: html }],
-    }),
+  console.log("Sending booking email via Resend to:", to);
+  await sendResendEmail({
+    to,
+    subject,
+    html,
+    from: opts.from,
+    replyTo: opts.replyTo || "matt@freedominterventions.com",
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("SendGrid error:", errorText);
-    throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
-  }
-
-  console.log("Email sent successfully via SendGrid");
+  console.log("Booking email sent successfully via Resend");
 }
 
 // Map booking type → display label and default duration
@@ -241,23 +224,18 @@ const handler = async (req: Request): Promise<Response> => {
       : '';
 
     // Send confirmation email
-    const escapeHtml = (v: string) =>
-      String(v ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    // Send confirmation email
     const safeCustomerName = escapeHtml(customerName);
     const safeJoinUrl = encodeURI(joinUrl);
     const safeBookingId = escapeHtml(bookingId);
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #1e40af;">${emailTitle}</h1>
-        <p>Dear ${safeCustomerName},</p>
+        <p>Hi ${safeCustomerName},</p>
         <p>${isReschedule
-          ? "Your appointment with Freedom Interventions has been successfully rescheduled."
-          : "Thank you for booking with Freedom Interventions. Your appointment has been confirmed."}</p>
+          ? "Your appointment with me has been successfully rescheduled."
+          : "I’m looking forward to meeting with you. This call is a chance to slow things down, get clear about what is actually happening, and talk through the next right step for your family."}</p>
+        <p>You do not need to have everything figured out before we meet. Just come ready to be honest about what is going on.</p>
 
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Appointment Details</h2>
@@ -286,8 +264,8 @@ const handler = async (req: Request): Promise<Response> => {
           <li>Email: matt@freedominterventions.com</li>
         </ul>
 
-        <p>We look forward to speaking with you!</p>
-        <p>Best regards,<br>Freedom Interventions Team</p>
+        <p>I’m looking forward to speaking with you.</p>
+        <p>- Matt Brown<br>Freedom Interventions</p>
       </div>
     `;
 
@@ -339,12 +317,17 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    await supabase
+    const { error: zoomUpdateError } = await supabase
       .from("bookings")
-      .update({ 
-        notes: `Zoom Meeting ID: ${meetingId}, Join URL: ${joinUrl}` 
+      .update({
+        notes: `Zoom Meeting ID: ${meetingId}, Join URL: ${joinUrl}`,
+        updated_at: new Date().toISOString(),
       })
       .eq("id", bookingId);
+
+    if (zoomUpdateError) {
+      console.error("Failed to store Zoom details on booking:", zoomUpdateError);
+    }
 
     return new Response(
       JSON.stringify({ 

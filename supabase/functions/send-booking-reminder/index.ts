@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendResendEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,30 +8,12 @@ const corsHeaders = {
 };
 
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
-  const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-  if (!sendgridApiKey) {
-    throw new Error("SENDGRID_API_KEY not configured");
-  }
-
-  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${sendgridApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      personalizations: [{ to: [{ email: to }] }],
-      from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-      subject,
-      content: [{ type: "text/html", value: html }],
-    }),
+  await sendResendEmail({
+    to,
+    subject,
+    html,
+    replyTo: "matt@freedominterventions.com",
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("SendGrid error:", errorText);
-    throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
-  }
 }
 
 serve(async (req: Request) => {

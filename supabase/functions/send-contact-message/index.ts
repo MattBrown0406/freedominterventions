@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,14 +18,6 @@ interface ContactMessageRequest {
 
 const SITE_URL = "https://freedominterventions.com";
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
 
 function firstName(name: string) {
   return name.trim().split(/\s+/)[0] || "there";
@@ -159,11 +152,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Processing contact message from:", email);
 
-    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-    if (!sendgridApiKey) {
-      throw new Error("SENDGRID_API_KEY not configured");
-    }
-
     // Send email to Matt
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -185,30 +173,16 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    console.log("Sending email via SendGrid");
+    console.log("Sending contact notification via Resend");
 
-    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sendgridApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
-        from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-        reply_to: { email: email, name: name },
-        subject: `Contact Form: Message from ${name}`,
-        content: [{ type: "text/html", value: emailHtml }],
-      }),
+    await sendSystemEmail({
+      to: "matt@freedominterventions.com",
+      replyTo: email,
+      subject: `Contact Form: Message from ${name}`,
+      html: emailHtml,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("SendGrid error:", errorText);
-      throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
-    }
-
-    console.log("Email sent successfully via SendGrid");
+    console.log("Contact notification sent successfully via Resend");
 
     await storeLeadAndQueueFollowups({ name, email, phone, message, pagePath, sourceAttribution });
 

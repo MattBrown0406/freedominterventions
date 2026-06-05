@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendResendEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -50,9 +51,6 @@ function buildResumeUrl(cart: AbandonedCart): string {
 }
 
 async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
-  const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-  if (!sendgridApiKey) throw new Error("SENDGRID_API_KEY not configured");
-
   const offer = getOfferMeta(cart.booking_type);
   const resumeUrl = buildResumeUrl(cart);
 
@@ -103,25 +101,12 @@ async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
     </div>
   `;
 
-  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${sendgridApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      personalizations: [{ to: [{ email: cart.customer_email }] }],
-      from: { email: "matt@freedominterventions.com", name: "Matt Brown — Freedom Interventions" },
-      reply_to: { email: "matt@freedominterventions.com", name: "Matt Brown" },
-      subject,
-      content: [{ type: "text/html", value: html }],
-    }),
+  await sendResendEmail({
+    to: cart.customer_email,
+    subject,
+    html,
+    replyTo: "matt@freedominterventions.com",
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`SendGrid failed: ${response.status} - ${errorText}`);
-  }
 }
 
 async function sendTelegramAlert(cart: AbandonedCart): Promise<void> {

@@ -645,11 +645,25 @@ serve(async (req) => {
 
         const { data: booking, error: bookingError } = await supabase
           .from('bookings')
-          .select('id, booking_type, booking_date, booking_time, customer_name, customer_email, customer_phone, duration_minutes, amount_cents, payment_id, square_order_id, status')
+          .select('id, booking_type, booking_date, booking_time, customer_name, customer_email, customer_phone, duration_minutes, amount_cents, payment_id, square_order_id, status, notes')
           .eq('id', bookingId)
           .single();
         if (bookingError || !booking) throw bookingError || new Error('Booking not found');
         if (booking.status === 'confirmed' && booking.payment_id) {
+          if (!booking.notes || !String(booking.notes).includes('Join URL:')) {
+            console.log('Confirmed paid booking is missing Zoom details; sending confirmation now:', booking.id);
+            await supabase.functions.invoke('send-booking-confirmation', {
+              body: {
+                bookingId: booking.id,
+                customerName: booking.customer_name,
+                customerEmail: booking.customer_email,
+                bookingType: booking.booking_type,
+                bookingDate: booking.booking_date,
+                bookingTime: booking.booking_time,
+                durationMinutes: booking.duration_minutes,
+              }
+            }).catch((emailError) => console.error('Failed to send missing booking confirmation:', emailError));
+          }
           return new Response(JSON.stringify({ success: true, paid: true, booking }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
@@ -818,6 +832,26 @@ serve(async (req) => {
             customerPhone: sanitizedData.customer_phone,
             sourceAttribution: normalizedSourceAttribution,
           });
+        }
+
+        // Send Zoom confirmation immediately for free consultations.
+        // This was the missing path that left recent booked consultations without Zoom links.
+        try {
+          await supabase.functions.invoke('send-booking-confirmation', {
+            body: {
+              bookingId: booking.id,
+              customerName: sanitizedData.customer_name,
+              customerEmail: sanitizedData.customer_email,
+              bookingType: sanitizedData.booking_type,
+              bookingDate: sanitizedData.booking_date,
+              bookingTime: sanitizedData.booking_time,
+              durationMinutes: sanitizedData.duration_minutes,
+            }
+          });
+          console.log('Successfully sent booking confirmation with Zoom link');
+        } catch (confirmationError) {
+          console.error('Failed to send booking confirmation with Zoom link:', confirmationError);
+          throw new Error('Booking was created, but the Zoom confirmation email failed. Please contact Freedom Interventions.');
         }
 
         // Sync booking to Notion CRM (async, don't block response)

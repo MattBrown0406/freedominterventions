@@ -48,6 +48,12 @@ verify_jwt = false
 [functions.send-booking-reminder]
 verify_jwt = false
 
+[functions.recover-abandoned-carts]
+verify_jwt = false
+
+[functions.process-freedom-followups]
+verify_jwt = false
+
 [functions.admin-assessments]
 verify_jwt = false
 

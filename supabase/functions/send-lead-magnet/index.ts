@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -187,11 +188,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending lead magnet to:", cleanEmail);
 
-    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-    if (!sendgridApiKey) {
-      throw new Error("SENDGRID_API_KEY not configured");
-    }
-
     // Create the checklist email HTML
     const emailHtml = `
 <!DOCTYPE html>
@@ -280,7 +276,7 @@ const handler = async (req: Request): Promise<Response> => {
     Warmly,<br>
     <strong>Matt</strong><br>
     Freedom Interventions<br>
-    <a href="tel:+15416688084" style="color: #1a365d;">(541) 668-8084</a>
+    <a href="tel:+154****8084" style="color: #1a365d;">(541) 668-8084</a>
   </p>
 
   <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
@@ -294,56 +290,33 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     // Send the email
-    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sendgridApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: cleanEmail }] }],
-        from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-        subject: `${firstName(cleanName)}, your intervention checklist is ready`,
-        content: [{ type: "text/html", value: emailHtml }],
-      }),
+    await sendResendEmail({
+      to: cleanEmail,
+      subject: `${firstName(cleanName)}, your intervention checklist is ready`,
+      html: emailHtml,
+      replyTo: "matt@freedominterventions.com",
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("SendGrid error:", errorText);
-      throw new Error(`Failed to send email: ${response.status}`);
-    }
 
     console.log("Lead magnet email sent successfully to:", cleanEmail);
 
     // Also notify Matt about new lead
-    await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sendgridApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: "matt@freedominterventions.com" }] }],
-        from: { email: "noreply@freedominterventions.com", name: "Freedom Interventions" },
-        subject: `New Lead: ${cleanName} downloaded the checklist`,
-        content: [{ 
-          type: "text/html", 
-          value: `
-            <h2>New Lead Magnet Download</h2>
-            <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
-            <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
-            <p><strong>Phone:</strong> ${escapeHtml(cleanPhone || "Not provided")}</p>
-            <p><strong>Urgency:</strong> ${escapeHtml(urgencyLabel(payload.urgency))}</p>
-            <p><strong>Source:</strong> ${escapeHtml(payload.source || "lead_magnet")}</p>
-            <p><strong>Page:</strong> ${escapeHtml(payload.pagePath || "Unknown")}</p>
-            <p><strong>Downloaded:</strong> Intervention Planning Checklist</p>
-            <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
-            <hr>
-            <p>Consider following up within 24-48 hours while they're actively researching.</p>
-          `
-        }],
-      }),
+    await sendSystemEmail({
+      to: "matt@freedominterventions.com",
+      replyTo: cleanEmail,
+      subject: `New Lead: ${cleanName} downloaded the checklist`,
+      html: `
+        <h2>New Lead Magnet Download</h2>
+        <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(cleanPhone || "Not provided")}</p>
+        <p><strong>Urgency:</strong> ${escapeHtml(urgencyLabel(payload.urgency))}</p>
+        <p><strong>Source:</strong> ${escapeHtml(payload.source || "lead_magnet")}</p>
+        <p><strong>Page:</strong> ${escapeHtml(payload.pagePath || "Unknown")}</p>
+        <p><strong>Downloaded:</strong> Intervention Planning Checklist</p>
+        <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+        <hr>
+        <p>Consider following up within 24-48 hours while they're actively researching.</p>
+      `,
     });
 
     await storeLeadAndQueueFollowups(payload, cleanName, cleanEmail, cleanPhone);
