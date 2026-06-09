@@ -21,7 +21,11 @@ const appRoutes = routeMatches
       !path.includes('*') &&
       !path.startsWith('/admin') &&
       path !== '/reschedule' &&
-      path !== '/404',
+      path !== '/404' &&
+      path !== '/booking' &&
+      path !== '/unsubscribe' &&
+      path !== '/start-contract' &&
+      path !== '/intervention-agreement',
   )
 const interventionAnswerRoutes = [...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g)]
   .map((match) => `/intervention-answers/${match[1]}`)

@@ -18,7 +18,7 @@ import Footer from "@/components/Footer";
 import ClosePathProof from "@/components/ClosePathProof";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import SEOHead from "@/components/SEOHead";
-import { OrganizationSchema, AggregateRatingSchema } from "@/components/StructuredData";
+import { FAQSchema, OrganizationSchema, SpeakableSchema } from "@/components/StructuredData";
 import LeadMagnetPopup from "@/components/LeadMagnetPopup";
 import LeadMagnetBanner from "@/components/LeadMagnetBanner";
 import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
@@ -77,11 +77,12 @@ const Index = () => {
         keywords="addiction intervention, family intervention, drug intervention, alcohol intervention, professional interventionist, intervention services, addiction help, recovery support"
       />
       <OrganizationSchema />
-      <AggregateRatingSchema 
-        ratingValue="4.9" 
-        reviewCount={47} 
-        bestRating="5"
-        worstRating="1"
+      <FAQSchema faqs={faqItems} />
+      <SpeakableSchema
+        name="Professional Addiction Interventionist | Freedom Interventions"
+        description="Matt Brown helps families in addiction crisis get a clear intervention, treatment planning, and family boundary plan."
+        url="https://freedominterventions.com"
+        speakableSelectors={["h1", "main section:first-of-type p", "h2"]}
       />
       <Navbar />
       <main>

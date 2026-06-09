@@ -339,7 +339,7 @@ const StartContract = () => {
         title="Start Your Agreement | Freedom Interventions"
         description="Review and sign the Freedom Interventions agreement online, apply an approved discount code, and complete payment securely through Square checkout."
         canonical="https://freedominterventions.com/start-contract"
-        keywords="Freedom Interventions contract, intervention agreement, electronic signature, Square checkout"
+        noindex
       />
       <OrganizationSchema />
       <ServiceSchema

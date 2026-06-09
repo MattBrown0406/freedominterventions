@@ -63,6 +63,73 @@
       gtag('config', 'G-WCT7G4VSJP');
     </script>
 
+    <!-- Static JSON-LD for crawlers before React hydrates -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["Organization", "ProfessionalService"],
+          "@id": "https://freedominterventions.com/#organization",
+          "name": "Freedom Interventions",
+          "url": "https://freedominterventions.com",
+          "logo": "https://freedominterventions.com/og-share.jpg",
+          "image": "https://freedominterventions.com/og-share.jpg",
+          "description": "Professional addiction intervention services led by Matt Brown, a Certified Intervention Professional with 20+ years helping families respond to addiction crisis.",
+          "telephone": "+1-541-668-8084",
+          "email": "matt@freedominterventions.com",
+          "founder": { "@id": "https://freedominterventions.com/#matt-brown" },
+          "areaServed": [
+            { "@type": "Country", "name": "United States" },
+            { "@type": "Country", "name": "Canada" }
+          ],
+          "serviceType": ["Addiction intervention", "Family intervention", "Treatment planning", "Family recovery coaching"],
+          "sameAs": [
+            "https://soberhelpline.com",
+            "https://nomoreenabling.com",
+            "https://partywreckers.com"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://freedominterventions.com/#matt-brown",
+          "name": "Matt Brown",
+          "jobTitle": "Certified Intervention Professional",
+          "description": "Drug and alcohol interventionist with 20+ years of professional experience and long-term personal recovery.",
+          "knowsAbout": ["addiction intervention", "family recovery", "treatment planning", "substance use disorder", "boundaries"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://freedominterventions.com/#website",
+          "url": "https://freedominterventions.com",
+          "name": "Freedom Interventions",
+          "publisher": { "@id": "https://freedominterventions.com/#organization" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://freedominterventions.com/#homepage-faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is a professional intervention?",
+              "acceptedAnswer": { "@type": "Answer", "text": "A professional intervention is a structured, planned conversation between a person struggling with addiction and their loved ones, guided by a trained interventionist. It is designed to present a unified family message and a specific treatment plan." }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I know if it is time for an intervention?",
+              "acceptedAnswer": { "@type": "Answer", "text": "If the family has already tried talking, setting limits, waiting, or making threats without follow-through and nothing has changed, it may be time to bring in professional guidance before rock bottom." }
+            },
+            {
+              "@type": "Question",
+              "name": "What if my loved one refuses treatment?",
+              "acceptedAnswer": { "@type": "Answer", "text": "A refusal does not mean the process failed. A well-run intervention changes the family system and helps the family follow through on boundaries and next steps." }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
     <!-- Microsoft Clarity Heatmap Analytics -->
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){

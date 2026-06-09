@@ -276,7 +276,7 @@ const handler = async (req: Request): Promise<Response> => {
     Warmly,<br>
     <strong>Matt</strong><br>
     Freedom Interventions<br>
-    <a href="tel:+154****8084" style="color: #1a365d;">(541) 668-8084</a>
+    <a href="tel:+15416688084" style="color: #1a365d;">(541) 668-8084</a>
   </p>
 
   <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">

@@ -58,6 +58,7 @@ export default function Unsubscribe() {
         title="Unsubscribe | Freedom Interventions"
         description="Unsubscribe from Freedom Interventions email updates."
         canonical="https://freedominterventions.com/unsubscribe"
+        noindex
       />
       <Navbar />
       <main className="container mx-auto max-w-xl px-6 py-32">
