@@ -27,10 +27,10 @@ const Interventionist = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Matt Brown — Certified Family Intervention Specialist | Freedom Interventions"
-        description={`Matt Brown is a certified family intervention specialist with 20+ years experience and ${yearsSober} years sobriety. Helping families nationwide plan and execute successful interventions. Free consultation: (541) 668-8084.`}
+        title="Matt Brown — Professional Interventionist in Oregon & Nationwide | Freedom Interventions"
+        description={`Matt Brown is a professional interventionist based in Oregon with 20+ years experience and ${yearsSober} years sober. Helping families in Oregon and nationwide plan drug and alcohol interventions. Call (541) 668-8084.`}
         canonical="https://freedominterventions.com/interventionist"
-        keywords="certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
+        keywords="professional interventionist Oregon, interventionist Oregon, certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
       <PersonSchema />
       <BreadcrumbSchema
@@ -81,7 +81,7 @@ const Interventionist = () => {
               {/* Bio Column */}
               <div className="space-y-6">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
-                  Meet Your Certified Family Intervention Specialist
+                  Meet Matt Brown, Oregon-Based Professional Interventionist
                 </h1>
                 <p className="text-2xl md:text-3xl font-serif text-primary">Matt Brown</p>
                 
@@ -92,6 +92,10 @@ const Interventionist = () => {
                 <div className="space-y-6 text-muted-foreground leading-relaxed">
                   <p>
                     I have been a certified family intervention specialist since 2004, and over the past two decades I've had the privilege of walking alongside hundreds of families during some of the most difficult moments of their lives. As a certified interventionist, I work with each family to build a plan that is ethical, structured, and tailored to the specific dynamics at play. No two families are the same — and no two interventions should be either.
+                  </p>
+
+                  <p>
+                    I am based in Oregon and work with families throughout the Pacific Northwest and across the country. If you are specifically looking for an <Link to="/oregon" className="text-primary underline underline-offset-4">Oregon interventionist</Link>, the work still starts the same way: get the family aligned, get treatment options ready, and stop letting addiction set the pace.
                   </p>
 
                   <p>

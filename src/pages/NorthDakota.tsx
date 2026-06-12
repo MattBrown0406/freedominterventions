@@ -62,10 +62,10 @@ const NorthDakota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Services in North Dakota | Freedom Interventions"
-        description="North Dakota families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across North Dakota prepare, intervene, and move loved ones toward treatment."
+        title="Professional Interventionist in North Dakota | Drug & Alcohol Help"
+        description="Need a professional interventionist in North Dakota? Matt Brown helps families in Fargo, Bismarck, and statewide plan drug, alcohol, meth, and fentanyl interventions. Call (541) 668-8084."
         canonical="https://freedominterventions.com/north-dakota"
-        keywords="North Dakota addiction intervention, North Dakota interventionist, Fargo drug intervention, Bismarck family intervention, North Dakota alcohol intervention"
+        keywords="professional interventionist North Dakota, North Dakota interventionist, North Dakota addiction intervention, Fargo drug intervention, Bismarck family intervention, North Dakota alcohol intervention"
         geoRegion="US-ND"
         geoPlacename="North Dakota"
       />
@@ -106,8 +106,7 @@ const NorthDakota = () => {
               North Dakota Intervention Services
             </p>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              When a Family Feels Isolated by Distance and Addiction, Structure
-              Still Works
+              Professional Interventionist in North Dakota for Drug and Alcohol Addiction
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               Matt Brown works with families across North Dakota to prepare the

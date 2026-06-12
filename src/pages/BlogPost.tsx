@@ -15,6 +15,44 @@ const slugRedirects: Record<string, string> = {
   "waiting-for-right-time-addiction-risk": "waiting-for-the-right-time-addiction-risk",
 };
 
+type GscPostOptimization = {
+  title: string;
+  description: string;
+  directAnswerHeading: string;
+  directAnswer: string;
+  ctaText: string;
+};
+
+const gscPostOptimizations: Record<string, GscPostOptimization> = {
+  "video-games-social-media-dopamine-addiction": {
+    title: "Video Game & Social Media Addiction Help for Families | Freedom Interventions",
+    description:
+      "Worried your loved one is trapped in gaming, scrolling, or dopamine-driven screen use? Learn the warning signs and what families can do next.",
+    directAnswerHeading: "When gaming or scrolling starts looking like addiction",
+    directAnswer:
+      "Video game and social media addiction becomes a family problem when screen use keeps going despite lost sleep, school or work decline, isolation, rage when access is limited, secrecy, or repeated failed promises to cut back. The goal is not just taking the device away. The goal is understanding what the behavior is regulating, setting boundaries the family can hold, and getting professional help when daily functioning is being damaged.",
+    ctaText: "If gaming, scrolling, or dopamine-seeking behavior is taking over your home, Matt Brown can help your family sort out what is happening and what next step makes sense.",
+  },
+  "social-media-addiction-help-for-families": {
+    title: "Social Media Addiction Help for Families | Freedom Interventions",
+    description:
+      "Is scrolling, phone use, or dopamine-driven social media behavior damaging your family? Learn warning signs and practical next steps from Matt Brown.",
+    directAnswerHeading: "What families should watch for with social media addiction",
+    directAnswer:
+      "Social media addiction is not measured by screen time alone. It becomes serious when use is compulsive, responsibilities are being neglected, relationships are deteriorating, or the person becomes anxious, angry, or secretive when access is limited. Families need calm structure, not endless arguments over the phone.",
+    ctaText: "If social media use has become a family crisis, a consultation can help you decide whether coaching, therapy, treatment, or a structured intervention is appropriate.",
+  },
+  "compulsive-shopping-addiction-family-guide": {
+    title: "How to Deal With Spending Addiction in the Family | Freedom Interventions",
+    description:
+      "Learn how families can respond to compulsive shopping or spending addiction with boundaries, financial protection, treatment planning, and intervention support.",
+    directAnswerHeading: "How to deal with spending addiction in the family",
+    directAnswer:
+      "Start by protecting the household from more financial damage: stop secretly covering debts, separate vulnerable accounts where appropriate, document the pattern, and have one calm conversation focused on facts and next steps. Compulsive spending often needs therapy, financial counseling, and support for anxiety, depression, ADHD, trauma, or other addictions underneath the behavior.",
+    ctaText: "If the spending is creating debt, secrecy, or repeated broken promises, Matt Brown can help your family decide whether a structured intervention is the right next step.",
+  },
+};
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const canonicalSlug = slug ? slugRedirects[slug] || slug : "";
@@ -108,12 +146,15 @@ const BlogPost = () => {
   const imageUrl = post.image_url
     ? (post.image_url.startsWith("http") ? post.image_url : `https://freedominterventions.com${post.image_url}`)
     : "https://freedominterventions.com/favicon.jpeg";
+  const gscOptimization = gscPostOptimizations[post.slug];
+  const displayTitle = gscOptimization?.title || post.title;
+  const displayDescription = gscOptimization?.description || post.excerpt;
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={post.title}
-        description={post.excerpt}
+        title={displayTitle}
+        description={displayDescription}
         canonical={`https://freedominterventions.com/blog/${post.slug}`}
         type="article"
         image={imageUrl}
@@ -124,8 +165,8 @@ const BlogPost = () => {
         section={post.category}
       />
       <ArticleSchema
-        title={post.title}
-        description={post.excerpt}
+        title={displayTitle}
+        description={displayDescription}
         datePublished={post.published_at || post.created_at}
         dateModified={post.updated_at}
         image={imageUrl}
@@ -135,7 +176,7 @@ const BlogPost = () => {
         items={[
           { name: "Home", url: "https://freedominterventions.com" },
           { name: "Blog", url: "https://freedominterventions.com/blog" },
-          { name: post.title, url: `https://freedominterventions.com/blog/${post.slug}` },
+          { name: displayTitle, url: `https://freedominterventions.com/blog/${post.slug}` },
         ]}
       />
 
@@ -148,7 +189,7 @@ const BlogPost = () => {
               <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">{post.title}</h1>
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">{displayTitle}</h1>
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-6">
               <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -156,7 +197,7 @@ const BlogPost = () => {
               </span>
               <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">{post.category}</span>
             </div>
-            <ShareButtons url={window.location.href} title={post.title} description={post.excerpt} slug={post.slug} />
+            <ShareButtons url={window.location.href} title={displayTitle} description={displayDescription} slug={post.slug} />
           </div>
         </div>
       </section>
@@ -174,6 +215,22 @@ const BlogPost = () => {
       <section className="py-12 md:py-16">
         <div className="container px-6">
           <article className="max-w-3xl mx-auto prose prose-lg prose-slate dark:prose-invert">
+            {gscOptimization && (
+              <aside className="not-prose mb-8 rounded-2xl border border-primary/20 bg-primary/5 p-6 md:p-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary mb-3">Direct answer for families</p>
+                <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-3">{gscOptimization.directAnswerHeading}</h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">{gscOptimization.directAnswer}</p>
+                <p className="text-foreground font-medium leading-relaxed mb-5">{gscOptimization.ctaText}</p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link to="/book-intervention-consultation#booking" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+                    Book a confidential consultation
+                  </Link>
+                  <a href="tel:+15416688084" className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
+                    Call (541) 668-8084
+                  </a>
+                </div>
+              </aside>
+            )}
             <div
               className="text-foreground leading-relaxed"
               dangerouslySetInnerHTML={{
