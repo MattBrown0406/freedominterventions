@@ -9,6 +9,7 @@ import { Calendar, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
+import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
 
 const slugRedirects: Record<string, string> = {
   "preparing-for-an-intervention": "how-to-prepare-for-an-intervention",
@@ -51,7 +52,23 @@ const gscPostOptimizations: Record<string, GscPostOptimization> = {
       "Start by protecting the household from more financial damage: stop secretly covering debts, separate vulnerable accounts where appropriate, document the pattern, and have one calm conversation focused on facts and next steps. Compulsive spending often needs therapy, financial counseling, and support for anxiety, depression, ADHD, trauma, or other addictions underneath the behavior.",
     ctaText: "If the spending is creating debt, secrecy, or repeated broken promises, Matt Brown can help your family decide whether a structured intervention is the right next step.",
   },
+  "kratom-addiction-warning-signs-families": {
+    title: "Kratom Addiction Warning Signs & Family Help | Freedom Interventions",
+    description:
+      "Worried about kratom addiction, withdrawal, secrecy, or escalating use? Learn the warning signs and what families should do next.",
+    directAnswerHeading: "What families should do about kratom addiction",
+    directAnswer:
+      "Kratom addiction becomes a family concern when use is secretive, escalating, tied to withdrawal, damaging work or relationships, or being used to avoid opioid, alcohol, anxiety, or depression symptoms. Families should stop minimizing it as just a supplement, document the pattern, avoid rescuing away consequences, and get guidance if the person cannot cut back or refuses help.",
+    ctaText: "If kratom use is creating withdrawal, deception, financial stress, or repeated failed promises to stop, Matt Brown can help your family decide whether treatment planning, coaching, or an intervention is appropriate.",
+  },
 };
+
+const familyBridgeFitSlugs = new Set([
+  "video-games-social-media-dopamine-addiction",
+  "social-media-addiction-help-for-families",
+  "compulsive-shopping-addiction-family-guide",
+  "kratom-addiction-warning-signs-families",
+]);
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -246,6 +263,8 @@ const BlogPost = () => {
         </div>
       </section>
 
+      {familyBridgeFitSlugs.has(post.slug) && <FamilyBridgeBanner />}
+
       {relatedPosts.length > 0 && (
         <section className="py-8 md:py-12 border-t border-border/60">
           <div className="container px-6">
@@ -281,8 +300,8 @@ const BlogPost = () => {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-4">Need Help for Your Family?</h2>
             <p className="text-muted-foreground mb-8">If you're struggling with a loved one's addiction, Matt can help you understand the situation and map out the next step.</p>
-            <Link to="/#booking" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-colors">
-              Schedule a Free Consultation
+            <Link to="/book-intervention-consultation#booking" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-colors">
+              Book a Confidential Consultation
             </Link>
           </div>
         </div>

@@ -62,8 +62,8 @@ const Minnesota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Services in Minnesota | Freedom Interventions"
-        description="Minnesota families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Minnesota prepare, intervene, and move loved ones toward treatment."
+        title="Minnesota Alcohol & Drug Interventionist | Minneapolis Help"
+        description="Need an alcohol or drug intervention in Minnesota or Minneapolis? Matt Brown helps families align, plan treatment, and take the next step. Call (541) 668-8084."
         canonical="https://freedominterventions.com/minnesota"
         keywords="Minnesota addiction intervention, Minnesota interventionist, Minneapolis drug intervention, St. Paul family intervention, Minnesota alcohol intervention"
         geoRegion="US-MN"
@@ -106,19 +106,18 @@ const Minnesota = () => {
               Minnesota Intervention Services
             </p>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              When the Family Has Been Living in Reaction Mode, Structure
-              Changes Everything
+              Minnesota Alcohol and Drug Intervention Help for Families
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-              Matt Brown works with families across Minnesota to prepare the
-              intervention, coordinate treatment, and stop the cycle of crisis,
-              rescuing, and relapse.
+              Matt Brown works with families across Minnesota, including
+              Minneapolis and St. Paul, to prepare the intervention, coordinate
+              treatment, and stop the cycle of crisis, rescuing, and relapse.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-lg" asChild>
-                <Link to="/#contact">
+                <Link to="/book-intervention-consultation#booking">
                   <Calendar className="w-5 h-5 mr-2" />
-                  Schedule a Consultation
+                  Book Confidential Consultation
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg" asChild>
@@ -177,14 +176,14 @@ const Minnesota = () => {
           <div className="max-w-4xl mx-auto space-y-14">
             <section className="space-y-6">
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
-                Minnesota Families Usually Call After They Have Tried Harder,
-                Helped More, and Watched the Situation Get Worse
+                When to Call for a Minnesota Alcohol or Drug Intervention
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Most families do not reach out at the first warning sign. They
-                call after the relapses, the lies, the money leaks, the
-                treatment attempts that did not stick, or the creeping fear that
-                one overdose could change everything.
+                search for a Minnesota alcohol intervention, drug intervention,
+                or Minneapolis interventionist after the relapses, the lies, the
+                money leaks, the treatment attempts that did not stick, or the
+                creeping fear that one overdose could change everything.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 The problem is not a lack of love. The problem is that addiction
@@ -297,9 +296,9 @@ const Minnesota = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg" asChild>
-              <Link to="/#contact">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="w-5 h-5 mr-2" />
-                Schedule a Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
