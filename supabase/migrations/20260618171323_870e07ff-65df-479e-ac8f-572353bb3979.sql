@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Only strict admins can view availability" ON public.availability_settings;
