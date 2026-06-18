@@ -8,7 +8,12 @@ const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..");
 const distDir = path.join(root, "dist");
 const appFile = path.join(root, "src", "App.tsx");
-const interventionAnswersFile = path.join(root, "src", "data", "interventionAnswers.ts");
+const interventionAnswersFile = path.join(
+  root,
+  "src",
+  "data",
+  "interventionAnswers.ts",
+);
 const indexFile = path.join(distDir, "index.html");
 const BASE_URL = "https://freedominterventions.com";
 
@@ -31,25 +36,30 @@ const staticMetadata = {
     title: "Family Intervention Services | Help a Loved One Accept Treatment",
     description:
       "Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 668-8084.",
-    heading: "Family Intervention Services to Help a Loved One Accept Treatment",
+    heading:
+      "Family Intervention Services to Help a Loved One Accept Treatment",
     body: "Matt Brown helps families plan the conversation, line up treatment, and set boundaries before addiction gets another chance to negotiate.",
   },
   "/minneapolis-minnesota": {
-    title: "Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help",
+    title:
+      "Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help",
     description:
       "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084.",
-    heading: "Minneapolis Professional Interventionist for Drug, Alcohol, and Fentanyl Addiction",
+    heading:
+      "Minneapolis Professional Interventionist for Drug, Alcohol, and Fentanyl Addiction",
     body: "Freedom Interventions helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis.",
   },
   "/boise-idaho": {
-    title: "Drug Intervention in Boise, Idaho | Professional Family Intervention Help",
+    title:
+      "Drug Intervention in Boise, Idaho | Professional Family Intervention Help",
     description:
       "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families plan treatment entry, boundaries, and next steps. Call (541) 668-8084.",
     heading: "Drug Intervention in Boise for Families Who Need a Real Plan",
     body: "Freedom Interventions helps Boise families prepare the intervention, line up treatment, and stop the cycle of rescuing, arguing, and waiting.",
   },
   "/oregon": {
-    title: "Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions",
+    title:
+      "Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions",
     description:
       "Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 668-8084.",
     heading: "Oregon Interventionist for Drug, Alcohol, and Fentanyl Addiction",
@@ -59,25 +69,30 @@ const staticMetadata = {
     title: "Drug Interventionist in Washington | Family Intervention Help",
     description:
       "Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 668-8084.",
-    heading: "Drug Interventionist in Washington for Families Who Need Structure",
+    heading:
+      "Drug Interventionist in Washington for Families Who Need Structure",
     body: "Matt Brown helps Washington families prepare drug, alcohol, and fentanyl interventions, coordinate treatment, and hold clear boundaries.",
   },
   "/north-carolina": {
-    title: "Professional Interventionist in North Carolina | Drug & Alcohol Help",
+    title:
+      "Professional Interventionist in North Carolina | Drug & Alcohol Help",
     description:
       "Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084.",
-    heading: "Professional Interventionist in North Carolina for Drug and Alcohol Addiction",
+    heading:
+      "Professional Interventionist in North Carolina for Drug and Alcohol Addiction",
     body: "Matt Brown helps North Carolina families prepare the intervention, line up treatment, and stop the cycle of panic, rescuing, and relapse.",
   },
   "/south-dakota": {
     title: "Professional Interventionist in South Dakota | Drug & Alcohol Help",
     description:
       "Need a professional interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions. Call (541) 668-8084.",
-    heading: "Professional Interventionist in South Dakota for Drug and Alcohol Addiction",
+    heading:
+      "Professional Interventionist in South Dakota for Drug and Alcohol Addiction",
     body: "Matt Brown helps South Dakota families prepare the intervention, coordinate treatment, and stop living at addiction's pace.",
   },
   "/iowa": {
-    title: "Drug Intervention in Iowa | Professional Interventionist for Families",
+    title:
+      "Drug Intervention in Iowa | Professional Interventionist for Families",
     description:
       "Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 668-8084.",
     heading: "Drug Intervention in Iowa for Families Who Need a Real Plan",
@@ -91,14 +106,16 @@ const staticMetadata = {
     body: "Freedom Interventions helps Louisiana families prepare the intervention, coordinate treatment entry, and stop reacting from crisis to crisis.",
   },
   "/fort-worth-texas": {
-    title: "Fentanyl Intervention Help in Fort Worth | Treatment Planning Support",
+    title:
+      "Fentanyl Intervention Help in Fort Worth | Treatment Planning Support",
     description:
       "Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 668-8084.",
     heading: "Fentanyl Intervention and Treatment Planning Help in Fort Worth",
     body: "Freedom Interventions helps Fort Worth families plan fentanyl intervention, treatment entry, and urgent next steps.",
   },
   "/contact": {
-    title: "Contact Freedom Interventions | Free Addiction Intervention Consultation",
+    title:
+      "Contact Freedom Interventions | Free Addiction Intervention Consultation",
     description:
       "Schedule a free, confidential consultation with Matt Brown. Professional addiction intervention services available nationwide. Call (541) 668-8084.",
     heading: "Contact Freedom Interventions",
@@ -112,7 +129,8 @@ const staticMetadata = {
     body: "Matt Brown brings professional intervention experience, personal recovery, and direct family guidance to serious addiction situations.",
   },
   "/intervention-answers": {
-    title: "Addiction Intervention Answers for Families | Freedom Interventions",
+    title:
+      "Addiction Intervention Answers for Families | Freedom Interventions",
     description:
       "Clear answers for families deciding whether addiction has become intervention-level, what to do first, and when to call Freedom Interventions.",
     heading: "Addiction Intervention Answers",
@@ -142,13 +160,56 @@ const staticMetadata = {
 };
 
 const usStates = new Set([
-  "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware",
-  "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky",
-  "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi",
-  "missouri", "montana", "nebraska", "nevada", "new-hampshire", "new-jersey", "new-mexico",
-  "new-york", "north-carolina", "north-dakota", "ohio", "oklahoma", "oregon", "pennsylvania",
-  "rhode-island", "south-carolina", "south-dakota", "tennessee", "texas", "utah", "vermont",
-  "virginia", "washington", "west-virginia", "wisconsin", "wyoming",
+  "alabama",
+  "alaska",
+  "arizona",
+  "arkansas",
+  "california",
+  "colorado",
+  "connecticut",
+  "delaware",
+  "florida",
+  "georgia",
+  "hawaii",
+  "idaho",
+  "illinois",
+  "indiana",
+  "iowa",
+  "kansas",
+  "kentucky",
+  "louisiana",
+  "maine",
+  "maryland",
+  "massachusetts",
+  "michigan",
+  "minnesota",
+  "mississippi",
+  "missouri",
+  "montana",
+  "nebraska",
+  "nevada",
+  "new-hampshire",
+  "new-jersey",
+  "new-mexico",
+  "new-york",
+  "north-carolina",
+  "north-dakota",
+  "ohio",
+  "oklahoma",
+  "oregon",
+  "pennsylvania",
+  "rhode-island",
+  "south-carolina",
+  "south-dakota",
+  "tennessee",
+  "texas",
+  "utah",
+  "vermont",
+  "virginia",
+  "washington",
+  "west-virginia",
+  "wisconsin",
+  "wyoming",
 ]);
 
 const titleCase = (slug) =>
@@ -166,16 +227,24 @@ const escapeHtml = (value) =>
 
 const getRoutes = async () => {
   const appContent = await readFile(appFile, "utf8");
-  const interventionAnswerContent = await readFile(interventionAnswersFile, "utf8");
-  const appRoutes = [...appContent.matchAll(/path="([^"]+)"/g)].map((match) => match[1]);
-  const interventionAnswerRoutes = [...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g)]
-    .map((match) => `/intervention-answers/${match[1]}`);
+  const interventionAnswerContent = await readFile(
+    interventionAnswersFile,
+    "utf8",
+  );
+  const appRoutes = [...appContent.matchAll(/path="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const interventionAnswerRoutes = [
+    ...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g),
+  ].map((match) => `/intervention-answers/${match[1]}`);
 
   return [...new Set([...appRoutes, ...interventionAnswerRoutes])]
     .filter((route) => !route.includes(":"))
     .filter((route) => !route.includes("*"))
     .filter((route) => !route.startsWith("/admin"))
-    .filter((route) => !["/404", "/reschedule"].includes(route));
+    .filter(
+      (route) => !["/404", "/reschedule", "/family-portal"].includes(route),
+    );
 };
 
 const getMetadata = (route) => {
@@ -255,7 +324,10 @@ const upsertHead = (html, route, metadata) => {
 };
 
 const replaceNoscript = (html, metadata) =>
-  html.replace(/<noscript>\s*<div style="max-width:[\s\S]*?<\/div>\s*<\/noscript>/, `<noscript>${fallbackHtml(metadata)}    </noscript>`);
+  html.replace(
+    /<noscript>\s*<div style="max-width:[\s\S]*?<\/div>\s*<\/noscript>/,
+    `<noscript>${fallbackHtml(metadata)}    </noscript>`,
+  );
 
 const outputPaths = (route) => {
   if (route === "/") return [indexFile];
@@ -268,14 +340,18 @@ const outputPaths = (route) => {
 };
 
 const main = async () => {
-  if (!existsSync(indexFile)) throw new Error("dist/index.html not found. Run vite build first.");
+  if (!existsSync(indexFile))
+    throw new Error("dist/index.html not found. Run vite build first.");
 
   const template = await readFile(indexFile, "utf8");
   const routes = await getRoutes();
 
   for (const route of routes) {
     const metadata = getMetadata(route);
-    const html = replaceNoscript(upsertHead(template, route, metadata), metadata);
+    const html = replaceNoscript(
+      upsertHead(template, route, metadata),
+      metadata,
+    );
     const destinations = outputPaths(route);
     for (const destination of destinations) {
       await mkdir(path.dirname(destination), { recursive: true });

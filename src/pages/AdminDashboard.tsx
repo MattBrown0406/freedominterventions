@@ -8,7 +8,29 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Eye, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, FileText, Download, MessageSquare, Home, Calendar, ShoppingCart, FileSignature, Mail, MailCheck, BarChart3, Columns3, Target, HelpCircle } from "lucide-react";
+import {
+  LogOut,
+  Eye,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Download,
+  MessageSquare,
+  Home,
+  Calendar,
+  ShoppingCart,
+  FileSignature,
+  Mail,
+  MailCheck,
+  BarChart3,
+  Columns3,
+  Target,
+  HelpCircle,
+  Users,
+} from "lucide-react";
 import { generateAssessmentPdf } from "@/utils/generateAssessmentPdf";
 import { format } from "date-fns";
 import AssessmentExpandedView from "@/components/admin/AssessmentExpandedView";
@@ -24,6 +46,7 @@ import RevenueAttributionManager from "@/components/admin/RevenueAttributionMana
 import RevenuePipelineManager from "@/components/admin/RevenuePipelineManager";
 import WeeklyRevenueActionsManager from "@/components/admin/WeeklyRevenueActionsManager";
 import AnswerPagePerformance from "@/components/admin/AnswerPagePerformance";
+import FamilyPortalManager from "@/components/admin/FamilyPortalManager";
 interface Assessment {
   id: string;
   contact_name: string;
@@ -66,7 +89,11 @@ interface Assessment {
   children_impacted: string | null;
   support_network: string | null;
   prior_treatment: string | null;
-  treatment_history: Array<{ programName: string; dateAttended: string; successfulCompletion: boolean }> | null;
+  treatment_history: Array<{
+    programName: string;
+    dateAttended: string;
+    successfulCompletion: boolean;
+  }> | null;
   current_triggers: string | null;
   willingness_to_change: string | null;
   financial_impact: string | null;
@@ -94,7 +121,11 @@ const parseAssessment = (data: unknown): Assessment => {
   return {
     ...raw,
     dsm_behaviors: raw.dsm_behaviors as Record<string, boolean> | null,
-    treatment_history: raw.treatment_history as Array<{ programName: string; dateAttended: string; successfulCompletion: boolean }> | null,
+    treatment_history: raw.treatment_history as Array<{
+      programName: string;
+      dateAttended: string;
+      successfulCompletion: boolean;
+    }> | null,
   } as Assessment;
 };
 
@@ -107,10 +138,18 @@ const calculateLeadScore = (assessment: Assessment) => {
   let score = 0;
 
   if (assessment.status === "new") score += 20;
-  if (assessment.urgency_level && /urgent|high|immediate/i.test(assessment.urgency_level)) score += 25;
+  if (
+    assessment.urgency_level &&
+    /urgent|high|immediate/i.test(assessment.urgency_level)
+  )
+    score += 25;
   if ((assessment.dsm_yes_count || 0) >= 6) score += 20;
   if (includesYes(assessment.overdose_history)) score += 20;
-  if (includesYes(assessment.suicide_ideation) || includesYes(assessment.suicide_attempts_history)) score += 25;
+  if (
+    includesYes(assessment.suicide_ideation) ||
+    includesYes(assessment.suicide_attempts_history)
+  )
+    score += 25;
   if (includesYes(assessment.violence_history)) score += 15;
   if (includesYes(assessment.immediate_safety_concerns)) score += 20;
   if (includesYes(assessment.homeless_unstable)) score += 10;
@@ -121,24 +160,43 @@ const calculateLeadScore = (assessment: Assessment) => {
 };
 
 const getLeadPriority = (score: number) => {
-  if (score >= 75) return { label: "Hot Lead", className: "bg-red-600 text-white hover:bg-red-600" };
-  if (score >= 50) return { label: "High Priority", className: "bg-amber-500 text-white hover:bg-amber-500" };
-  if (score >= 25) return { label: "Needs Review", className: "bg-blue-600 text-white hover:bg-blue-600" };
-  return { label: "Standard", className: "bg-muted text-foreground hover:bg-muted" };
+  if (score >= 75)
+    return {
+      label: "Hot Lead",
+      className: "bg-red-600 text-white hover:bg-red-600",
+    };
+  if (score >= 50)
+    return {
+      label: "High Priority",
+      className: "bg-amber-500 text-white hover:bg-amber-500",
+    };
+  if (score >= 25)
+    return {
+      label: "Needs Review",
+      className: "bg-blue-600 text-white hover:bg-blue-600",
+    };
+  return {
+    label: "Standard",
+    className: "bg-muted text-foreground hover:bg-muted",
+  };
 };
 
 const getFollowUpLabel = (assessment: Assessment) => {
   if (assessment.status === "reviewed") return "Reviewed";
 
   const created = new Date(assessment.created_at).getTime();
-  const hoursOld = Number.isFinite(created) ? (Date.now() - created) / (1000 * 60 * 60) : 0;
+  const hoursOld = Number.isFinite(created)
+    ? (Date.now() - created) / (1000 * 60 * 60)
+    : 0;
   if (assessment.status === "new" && hoursOld >= 24) return "Overdue";
   if (assessment.status === "new" && hoursOld >= 4) return "Same-day follow-up";
   if (assessment.status === "in_progress") return "Active follow-up";
   return "New lead";
 };
 
-const getSourceLabel = (sourceAttribution: Record<string, unknown> | null | undefined) => {
+const getSourceLabel = (
+  sourceAttribution: Record<string, unknown> | null | undefined,
+) => {
   if (!sourceAttribution) return "Unknown";
   const source = sourceAttribution.source;
   const campaign = sourceAttribution.utm_campaign;
@@ -154,7 +212,9 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       if (!session) {
         navigate("/admin-login");
@@ -162,9 +222,12 @@ const AdminDashboard = () => {
       }
 
       // Server-side admin verification via edge function
-      const { data, error } = await supabase.functions.invoke("admin-assessments", {
-        body: { action: "verify-admin" },
-      });
+      const { data, error } = await supabase.functions.invoke(
+        "admin-assessments",
+        {
+          body: { action: "verify-admin" },
+        },
+      );
 
       if (error || !data?.isAdmin) {
         toast({
@@ -182,7 +245,9 @@ const AdminDashboard = () => {
 
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
         navigate("/admin-login");
       }
@@ -194,9 +259,12 @@ const AdminDashboard = () => {
   const fetchAssessments = async () => {
     setIsLoading(true);
 
-    const { data, error } = await supabase.functions.invoke("admin-assessments", {
-      body: { action: "list" },
-    });
+    const { data, error } = await supabase.functions.invoke(
+      "admin-assessments",
+      {
+        body: { action: "list" },
+      },
+    );
 
     if (error) {
       toast({
@@ -209,7 +277,8 @@ const AdminDashboard = () => {
       return;
     }
 
-    const rows = (data as { assessments?: unknown[] } | null)?.assessments ?? [];
+    const rows =
+      (data as { assessments?: unknown[] } | null)?.assessments ?? [];
     setAssessments(rows.map(parseAssessment));
     setIsLoading(false);
   };
@@ -242,23 +311,42 @@ const AdminDashboard = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "new":
-        return <Badge variant="destructive"><AlertCircle className="w-3 h-3 mr-1" /> New</Badge>;
+        return (
+          <Badge variant="destructive">
+            <AlertCircle className="w-3 h-3 mr-1" /> New
+          </Badge>
+        );
       case "in_progress":
-        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> In Progress</Badge>;
+        return (
+          <Badge variant="secondary">
+            <Clock className="w-3 h-3 mr-1" /> In Progress
+          </Badge>
+        );
       case "reviewed":
-        return <Badge variant="default"><CheckCircle className="w-3 h-3 mr-1" /> Reviewed</Badge>;
+        return (
+          <Badge variant="default">
+            <CheckCircle className="w-3 h-3 mr-1" /> Reviewed
+          </Badge>
+        );
       default:
         return <Badge>{status}</Badge>;
     }
   };
 
   const sortedAssessments = [...assessments].sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 
-  const hotLeadCount = assessments.filter((assessment) => calculateLeadScore(assessment) >= 75).length;
-  const newLeadCount = assessments.filter((assessment) => assessment.status === "new").length;
-  const overdueCount = assessments.filter((assessment) => getFollowUpLabel(assessment) === "Overdue").length;
+  const hotLeadCount = assessments.filter(
+    (assessment) => calculateLeadScore(assessment) >= 75,
+  ).length;
+  const newLeadCount = assessments.filter(
+    (assessment) => assessment.status === "new",
+  ).length;
+  const overdueCount = assessments.filter(
+    (assessment) => getFollowUpLabel(assessment) === "Overdue",
+  ).length;
 
   // These must match the exact keys used in Assessment.tsx form submission
   const dsmBehaviorQuestions = [
@@ -305,8 +393,12 @@ const AdminDashboard = () => {
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Assessment Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Review submitted family assessments</p>
+            <h1 className="text-2xl font-bold text-foreground">
+              Assessment Dashboard
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Review submitted family assessments
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => navigate("/")}>
@@ -342,6 +434,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="case-documents" className="gap-2">
               <FileText className="w-4 h-4" />
               Case Docs
+            </TabsTrigger>
+            <TabsTrigger value="family-portal" className="gap-2">
+              <Users className="w-4 h-4" />
+              Family Portal
             </TabsTrigger>
             <TabsTrigger value="contracts" className="gap-2">
               <FileSignature className="w-4 h-4" />
@@ -385,7 +481,9 @@ const AdminDashboard = () => {
             ) : assessments.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center">
-                  <p className="text-muted-foreground">No assessments submitted yet.</p>
+                  <p className="text-muted-foreground">
+                    No assessments submitted yet.
+                  </p>
                 </CardContent>
               </Card>
             ) : (
@@ -393,25 +491,37 @@ const AdminDashboard = () => {
                 <div className="grid gap-4 md:grid-cols-4">
                   <Card>
                     <CardContent className="p-4">
-                      <p className="text-xs uppercase text-muted-foreground">New Leads</p>
+                      <p className="text-xs uppercase text-muted-foreground">
+                        New Leads
+                      </p>
                       <p className="text-2xl font-bold">{newLeadCount}</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
-                      <p className="text-xs uppercase text-muted-foreground">Hot Leads</p>
-                      <p className="text-2xl font-bold text-red-600">{hotLeadCount}</p>
+                      <p className="text-xs uppercase text-muted-foreground">
+                        Hot Leads
+                      </p>
+                      <p className="text-2xl font-bold text-red-600">
+                        {hotLeadCount}
+                      </p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
-                      <p className="text-xs uppercase text-muted-foreground">Overdue Follow-Up</p>
-                      <p className="text-2xl font-bold text-amber-600">{overdueCount}</p>
+                      <p className="text-xs uppercase text-muted-foreground">
+                        Overdue Follow-Up
+                      </p>
+                      <p className="text-2xl font-bold text-amber-600">
+                        {overdueCount}
+                      </p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4">
-                      <p className="text-xs uppercase text-muted-foreground">Total Assessments</p>
+                      <p className="text-xs uppercase text-muted-foreground">
+                        Total Assessments
+                      </p>
                       <p className="text-2xl font-bold">{assessments.length}</p>
                     </CardContent>
                   </Card>
@@ -423,175 +533,263 @@ const AdminDashboard = () => {
                   const followUpLabel = getFollowUpLabel(assessment);
 
                   return (
-              <Card key={assessment.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">
-                        {assessment.loved_one_name}
-                        {assessment.loved_one_age && ` (Age ${assessment.loved_one_age})`}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        Submitted by {assessment.contact_name} • {assessment.contact_relationship || "Relationship not specified"}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {format(new Date(assessment.created_at), "MMM d, yyyy 'at' h:mm a")}
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap items-center justify-end gap-2">
-                      <Badge className={priority.className}>{priority.label} · {leadScore}</Badge>
-                      <Badge variant="outline">{getSourceLabel(assessment.source_attribution)}</Badge>
-                      <Badge variant={followUpLabel === "Overdue" ? "destructive" : "outline"}>{followUpLabel}</Badge>
-                      {getStatusBadge(assessment.status)}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Contact</p>
-                      <p className="text-sm">{assessment.contact_email}</p>
-                      {assessment.contact_phone && <p className="text-sm">{assessment.contact_phone}</p>}
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Best Time</p>
-                      <p className="text-sm capitalize">
-                        {assessment.best_day_to_contact || "Not specified"} • {assessment.best_time_to_contact || "Any time"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Severity</p>
-                      <p className="text-sm">
-                        {assessment.severity_level || "Not assessed"} ({assessment.dsm_yes_count || 0}/13 criteria)
-                      </p>
-                    </div>
-                  </div>
+                    <Card key={assessment.id}>
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-lg">
+                              {assessment.loved_one_name}
+                              {assessment.loved_one_age &&
+                                ` (Age ${assessment.loved_one_age})`}
+                            </CardTitle>
+                            <p className="text-sm text-muted-foreground">
+                              Submitted by {assessment.contact_name} •{" "}
+                              {assessment.contact_relationship ||
+                                "Relationship not specified"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {format(
+                                new Date(assessment.created_at),
+                                "MMM d, yyyy 'at' h:mm a",
+                              )}
+                            </p>
+                          </div>
+                          <div className="flex flex-wrap items-center justify-end gap-2">
+                            <Badge className={priority.className}>
+                              {priority.label} · {leadScore}
+                            </Badge>
+                            <Badge variant="outline">
+                              {getSourceLabel(assessment.source_attribution)}
+                            </Badge>
+                            <Badge
+                              variant={
+                                followUpLabel === "Overdue"
+                                  ? "destructive"
+                                  : "outline"
+                              }
+                            >
+                              {followUpLabel}
+                            </Badge>
+                            {getStatusBadge(assessment.status)}
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Contact
+                            </p>
+                            <p className="text-sm">
+                              {assessment.contact_email}
+                            </p>
+                            {assessment.contact_phone && (
+                              <p className="text-sm">
+                                {assessment.contact_phone}
+                              </p>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Best Time
+                            </p>
+                            <p className="text-sm capitalize">
+                              {assessment.best_day_to_contact ||
+                                "Not specified"}{" "}
+                              • {assessment.best_time_to_contact || "Any time"}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Severity
+                            </p>
+                            <p className="text-sm">
+                              {assessment.severity_level || "Not assessed"} (
+                              {assessment.dsm_yes_count || 0}/13 criteria)
+                            </p>
+                          </div>
+                        </div>
 
-                  {assessment.primary_substances && (
-                    <div className="mb-4">
-                      <p className="text-xs text-muted-foreground uppercase">Primary Substances</p>
-                      <p className="text-sm">{assessment.primary_substances}</p>
-                    </div>
-                  )}
+                        {assessment.primary_substances && (
+                          <div className="mb-4">
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Primary Substances
+                            </p>
+                            <p className="text-sm">
+                              {assessment.primary_substances}
+                            </p>
+                          </div>
+                        )}
 
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 rounded-lg border border-border bg-muted/30 p-4">
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Urgency</p>
-                      <p className="text-sm">{assessment.urgency_level || "Not specified"}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Safety Concerns</p>
-                      <p className="text-sm">{assessment.immediate_safety_concerns || "Not specified"}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Family Ready</p>
-                      <p className="text-sm">{assessment.family_ready_intervention || "Not specified"}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase">Suggested Next Step</p>
-                      <p className="text-sm font-medium">
-                        {leadScore >= 75 ? "Call first" : leadScore >= 50 ? "Same-day review" : "Review in queue"}
-                      </p>
-                    </div>
-                  </div>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 rounded-lg border border-border bg-muted/30 p-4">
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Urgency
+                            </p>
+                            <p className="text-sm">
+                              {assessment.urgency_level || "Not specified"}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Safety Concerns
+                            </p>
+                            <p className="text-sm">
+                              {assessment.immediate_safety_concerns ||
+                                "Not specified"}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Family Ready
+                            </p>
+                            <p className="text-sm">
+                              {assessment.family_ready_intervention ||
+                                "Not specified"}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase">
+                              Suggested Next Step
+                            </p>
+                            <p className="text-sm font-medium">
+                              {leadScore >= 75
+                                ? "Call first"
+                                : leadScore >= 50
+                                  ? "Same-day review"
+                                  : "Review in queue"}
+                            </p>
+                          </div>
+                        </div>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setExpandedId(expandedId === assessment.id ? null : assessment.id)}
-                    >
-                      {expandedId === assessment.id ? (
-                        <>
-                          <ChevronUp className="w-4 h-4 mr-1" /> Hide Details
-                        </>
-                      ) : (
-                        <>
-                          <Eye className="w-4 h-4 mr-1" /> View Full Assessment
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={async () => {
-                        toast({ title: "Generating PDF...", description: "Please wait while insurance card images are being fetched." });
-                        await generateAssessmentPdf(assessment as Parameters<typeof generateAssessmentPdf>[0]);
-                      }}
-                    >
-                      <Download className="w-4 h-4 mr-1" /> Download PDF
-                    </Button>
-                    {assessment.status === "new" && (
-                      <Button size="sm" variant="secondary" onClick={() => updateStatus(assessment.id, "in_progress")}>
-                        Mark In Progress
-                      </Button>
-                    )}
-                    {assessment.status !== "reviewed" && (
-                      <Button size="sm" onClick={() => updateStatus(assessment.id, "reviewed")}>
-                        Mark Reviewed
-                      </Button>
-                    )}
-                  </div>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              setExpandedId(
+                                expandedId === assessment.id
+                                  ? null
+                                  : assessment.id,
+                              )
+                            }
+                          >
+                            {expandedId === assessment.id ? (
+                              <>
+                                <ChevronUp className="w-4 h-4 mr-1" /> Hide
+                                Details
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="w-4 h-4 mr-1" /> View Full
+                                Assessment
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={async () => {
+                              toast({
+                                title: "Generating PDF...",
+                                description:
+                                  "Please wait while insurance card images are being fetched.",
+                              });
+                              await generateAssessmentPdf(
+                                assessment as Parameters<
+                                  typeof generateAssessmentPdf
+                                >[0],
+                              );
+                            }}
+                          >
+                            <Download className="w-4 h-4 mr-1" /> Download PDF
+                          </Button>
+                          {assessment.status === "new" && (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() =>
+                                updateStatus(assessment.id, "in_progress")
+                              }
+                            >
+                              Mark In Progress
+                            </Button>
+                          )}
+                          {assessment.status !== "reviewed" && (
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                updateStatus(assessment.id, "reviewed")
+                              }
+                            >
+                              Mark Reviewed
+                            </Button>
+                          )}
+                        </div>
 
-                  {expandedId === assessment.id && (
-                    <AssessmentExpandedView assessment={assessment} />
-                  )}
-                </CardContent>
-              </Card>
+                        {expandedId === assessment.id && (
+                          <AssessmentExpandedView assessment={assessment} />
+                        )}
+                      </CardContent>
+                    </Card>
                   );
                 })}
-                </div>
-              )}
-            </TabsContent>
+              </div>
+            )}
+          </TabsContent>
 
-            <TabsContent value="availability">
-              <AvailabilityManager />
-            </TabsContent>
+          <TabsContent value="availability">
+            <AvailabilityManager />
+          </TabsContent>
 
-            <TabsContent value="testimonials">
-              <TestimonialManager />
-            </TabsContent>
+          <TabsContent value="testimonials">
+            <TestimonialManager />
+          </TabsContent>
 
-            <TabsContent value="case-documents">
-              <CaseDocumentsManager />
-            </TabsContent>
+          <TabsContent value="case-documents">
+            <CaseDocumentsManager />
+          </TabsContent>
 
-            <TabsContent value="contracts">
-              <ContractsManager />
-            </TabsContent>
+          <TabsContent value="family-portal">
+            <FamilyPortalManager />
+          </TabsContent>
 
-            <TabsContent value="outreach">
-              <EmailOutreachSection />
-            </TabsContent>
+          <TabsContent value="contracts">
+            <ContractsManager />
+          </TabsContent>
 
-            <TabsContent value="followups">
-              <FreedomFollowupsManager />
-            </TabsContent>
+          <TabsContent value="outreach">
+            <EmailOutreachSection />
+          </TabsContent>
 
-            <TabsContent value="revenue-pipeline">
-              <RevenuePipelineManager />
-            </TabsContent>
+          <TabsContent value="followups">
+            <FreedomFollowupsManager />
+          </TabsContent>
 
-            <TabsContent value="revenue-actions">
-              <WeeklyRevenueActionsManager />
-            </TabsContent>
+          <TabsContent value="revenue-pipeline">
+            <RevenuePipelineManager />
+          </TabsContent>
 
-            <TabsContent value="cross-site-revenue">
-              <CrossSiteRevenueDashboard />
-            </TabsContent>
+          <TabsContent value="revenue-actions">
+            <WeeklyRevenueActionsManager />
+          </TabsContent>
 
-            <TabsContent value="attribution">
-              <RevenueAttributionManager />
-            </TabsContent>
+          <TabsContent value="cross-site-revenue">
+            <CrossSiteRevenueDashboard />
+          </TabsContent>
 
-            <TabsContent value="answer-aeo">
-              <AnswerPagePerformance />
-            </TabsContent>
+          <TabsContent value="attribution">
+            <RevenueAttributionManager />
+          </TabsContent>
 
-            <TabsContent value="abandoned-carts">
-              <AbandonedCartsManager />
-            </TabsContent>
-          </Tabs>
+          <TabsContent value="answer-aeo">
+            <AnswerPagePerformance />
+          </TabsContent>
+
+          <TabsContent value="abandoned-carts">
+            <AbandonedCartsManager />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
