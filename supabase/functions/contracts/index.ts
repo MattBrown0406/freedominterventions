@@ -279,6 +279,26 @@ serve(async (req) => {
           console.error("Failed to send signed contract notification:", notifyError);
         }
 
+        // Spine: forward contract_signed (additive — never blocks).
+        try {
+          await enqueueSpineEvent(
+            "contract_signed",
+            {
+              email: clientEmail.toLowerCase().trim(),
+              phone: clientPhone ? sanitizeString(clientPhone).slice(0, 25) : null,
+              name: sanitizeString(clientName),
+              props: {
+                contract_type: contractType,
+                amount_cents: resolvedAmount.amountCents,
+                discount_code: resolvedAmount.discountCode ?? null,
+              },
+            },
+            supabase,
+          );
+        } catch (spineError) {
+          console.error("Spine enqueue failed (contract_signed):", spineError);
+        }
+
         return new Response(JSON.stringify({ success: true, contract: data }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
