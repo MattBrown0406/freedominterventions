@@ -414,6 +414,23 @@ serve(async (req) => {
       console.error("Assessment followup queue failed:", followupError);
     }
 
+    // Spine: forward NON-SENSITIVE summary to the hub (additive — never blocks).
+    try {
+      await enqueueSpineEvent(
+        "assessment_completed",
+        {
+          email: assessmentData.contact_email ?? null,
+          phone: assessmentData.contact_phone ?? null,
+          name: assessmentData.contact_name ?? null,
+          utm: extractUtm(body),
+          props: { score: scoreAssessment(body) },
+        },
+        supabase,
+      );
+    } catch (spineError) {
+      console.error("Spine enqueue failed (assessment_completed):", spineError);
+    }
+
     // Send email notifications via Resend
     try {
       console.log("Sending assessment notifications via Resend");
