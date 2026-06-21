@@ -221,6 +221,27 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (!previewOnly) {
+      try {
+        await enqueueSpineEvent(
+          "contract_sent",
+          {
+            email: recipientEmail,
+            name: recipientName,
+            props: {
+              final_amount_cents: finalAmountCents,
+              base_amount_cents: baseAmountCents,
+              discount_amount_cents: discountAmountCents,
+              has_discount_code: Boolean(code),
+            },
+          },
+          admin,
+        );
+      } catch (spineError) {
+        console.error("Spine enqueue failed (contract_sent):", spineError);
+      }
+    }
+
     return json({
       success: true,
       sentTo: sendTo,
