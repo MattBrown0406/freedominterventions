@@ -924,7 +924,7 @@ serve(async (req) => {
               email: sanitizedData.customer_email ?? null,
               phone: sanitizedData.customer_phone ?? null,
               name: sanitizedData.customer_name ?? null,
-              utm: extractUtm(requestBody ?? {}),
+              utm: extractUtm(params ?? {}),
               props: {
                 booking_type: sanitizedData.booking_type,
                 booking_date: sanitizedData.booking_date,
