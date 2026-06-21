@@ -11,7 +11,9 @@ export type SpineEventName =
   | "payment"
   | "contract_sent"
   | "contract_signed"
-  | "cart_abandoned";
+  | "cart_abandoned"
+  | "lead_captured"
+  | "checklist_downloaded";
 
 export interface SpineUtm {
   source?: string | null;

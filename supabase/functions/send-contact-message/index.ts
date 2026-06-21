@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
+import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -140,6 +141,14 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
 
   const { error: queueError } = await supabase.from("freedom_followup_queue").insert(rows);
   if (queueError) console.error("Failed to queue contact followups:", queueError);
+
+  await enqueueSpineEvent("lead_captured", {
+    email: payload.email.toLowerCase().trim(),
+    phone: payload.phone || null,
+    name: payload.name,
+    utm: extractUtm(sourceAttribution as Record<string, any>),
+    props: { source: "contact_form" },
+  }, supabase);
 }
 
 const handler = async (req: Request): Promise<Response> => {

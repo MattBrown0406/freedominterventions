@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
+import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -155,6 +156,14 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
 
   const { error } = await supabase.from("freedom_followup_queue").insert(rows);
   if (error) console.error("Failed to queue lead magnet followups:", error);
+
+  await enqueueSpineEvent("checklist_downloaded", {
+    email: cleanEmail,
+    phone: cleanPhone,
+    name: cleanName,
+    utm: extractUtm(sourceAttribution as Record<string, any>),
+    props: { urgency: payload.urgency || null, lead_magnet: payload.leadMagnet || "intervention_readiness_checklist" },
+  }, supabase);
 }
 
 const handler = async (req: Request): Promise<Response> => {
