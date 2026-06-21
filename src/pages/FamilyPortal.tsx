@@ -77,7 +77,7 @@ type PortalTable =
   | "family_portal_updates"
   | "family_portal_messages";
 const portalTable = (table: PortalTable) =>
-  supabase.from(table as "assessments");
+  (supabase.from as any)(table);
 
 export default function FamilyPortal() {
   const navigate = useNavigate();
