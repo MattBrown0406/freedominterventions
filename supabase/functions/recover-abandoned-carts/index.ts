@@ -227,6 +227,25 @@ serve(async (req: Request) => {
           })
           .eq("id", cart.id);
 
+        // Spine: forward cart_abandoned (additive — never blocks).
+        try {
+          await enqueueSpineEvent(
+            "cart_abandoned",
+            {
+              email: cart.customer_email,
+              phone: cart.customer_phone,
+              name: cart.customer_name,
+              props: {
+                booking_type: cart.booking_type,
+                amount_cents: cart.amount_cents,
+              },
+            },
+            supabase,
+          );
+        } catch (spineError) {
+          console.error("Spine enqueue failed (cart_abandoned):", spineError);
+        }
+
         results.sent++;
       } catch (e) {
         console.error(`Failed to recover cart ${cart.id}:`, e);
