@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendResendEmail } from "../_shared/resend.ts";
+import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
