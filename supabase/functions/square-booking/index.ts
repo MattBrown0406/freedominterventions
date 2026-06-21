@@ -916,6 +916,28 @@ serve(async (req) => {
           console.error('Error syncing to Mailchimp:', mcError);
         }
 
+        // Spine: forward session_booked (additive — never blocks).
+        try {
+          await enqueueSpineEvent(
+            "session_booked",
+            {
+              email: sanitizedData.customer_email ?? null,
+              phone: sanitizedData.customer_phone ?? null,
+              name: sanitizedData.customer_name ?? null,
+              utm: extractUtm(requestBody ?? {}),
+              props: {
+                booking_type: sanitizedData.booking_type,
+                booking_date: sanitizedData.booking_date,
+                booking_time: sanitizedData.booking_time,
+                amount_cents: booking?.amount_cents ?? null,
+              },
+            },
+            supabase,
+          );
+        } catch (spineError) {
+          console.error("Spine enqueue failed (session_booked):", spineError);
+        }
+
         return new Response(JSON.stringify({ 
           success: true, 
           booking 
