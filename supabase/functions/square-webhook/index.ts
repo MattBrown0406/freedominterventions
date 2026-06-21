@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -74,7 +75,7 @@ serve(async (req) => {
 
     const { data: contract } = await supabase
       .from("contracts")
-      .select("id, amount_cents, status")
+      .select("id, amount_cents, status, client_email, client_phone, client_name, contract_type")
       .eq("square_order_id", orderId)
       .maybeSingle();
 
@@ -91,11 +92,27 @@ serve(async (req) => {
       await supabase.functions.invoke("send-contract-notification", {
         body: { contractId: contract.id, event: "paid" },
       }).catch((error) => console.error("Contract paid notification failed:", error));
+
+      try {
+        await enqueueSpineEvent(
+          "payment",
+          {
+            email: contract.client_email ?? null,
+            phone: contract.client_phone ?? null,
+            name: contract.client_name ?? null,
+            props: { source: "contract", contract_type: contract.contract_type },
+            payment: { processor: "square", amount_cents: amount, kind: "intervention" },
+          },
+          supabase,
+        );
+      } catch (spineError) {
+        console.error("Spine enqueue failed (payment/contract):", spineError);
+      }
     }
 
     const { data: booking } = await supabase
       .from("bookings")
-      .select("id, amount_cents, status, customer_name, customer_email, booking_type, booking_date, booking_time, duration_minutes")
+      .select("id, amount_cents, status, customer_name, customer_email, customer_phone, booking_type, booking_date, booking_time, duration_minutes")
       .eq("square_order_id", orderId)
       .maybeSingle();
 
@@ -120,6 +137,22 @@ serve(async (req) => {
           durationMinutes: booking.duration_minutes,
         },
       }).catch((error) => console.error("Booking confirmation failed:", error));
+
+      try {
+        await enqueueSpineEvent(
+          "payment",
+          {
+            email: booking.customer_email ?? null,
+            phone: booking.customer_phone ?? null,
+            name: booking.customer_name ?? null,
+            props: { source: "booking", booking_type: booking.booking_type },
+            payment: { processor: "square", amount_cents: amount, kind: "intervention" },
+          },
+          supabase,
+        );
+      } catch (spineError) {
+        console.error("Spine enqueue failed (payment/booking):", spineError);
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), {

@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendResendEmail } from "../_shared/resend.ts";
+import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -225,6 +226,25 @@ serve(async (req: Request) => {
             recovery_email_sent_at: new Date().toISOString(),
           })
           .eq("id", cart.id);
+
+        // Spine: forward cart_abandoned (additive — never blocks).
+        try {
+          await enqueueSpineEvent(
+            "cart_abandoned",
+            {
+              email: cart.customer_email,
+              phone: cart.customer_phone,
+              name: cart.customer_name,
+              props: {
+                booking_type: cart.booking_type,
+                amount_cents: cart.amount_cents,
+              },
+            },
+            supabase,
+          );
+        } catch (spineError) {
+          console.error("Spine enqueue failed (cart_abandoned):", spineError);
+        }
 
         results.sent++;
       } catch (e) {

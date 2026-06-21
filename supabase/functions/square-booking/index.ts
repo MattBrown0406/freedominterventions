@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -913,6 +914,28 @@ serve(async (req) => {
           }
         } catch (mcError) {
           console.error('Error syncing to Mailchimp:', mcError);
+        }
+
+        // Spine: forward session_booked (additive — never blocks).
+        try {
+          await enqueueSpineEvent(
+            "session_booked",
+            {
+              email: sanitizedData.customer_email ?? null,
+              phone: sanitizedData.customer_phone ?? null,
+              name: sanitizedData.customer_name ?? null,
+              utm: extractUtm(params ?? {}),
+              props: {
+                booking_type: sanitizedData.booking_type,
+                booking_date: sanitizedData.booking_date,
+                booking_time: sanitizedData.booking_time,
+                amount_cents: booking?.amount_cents ?? null,
+              },
+            },
+            supabase,
+          );
+        } catch (spineError) {
+          console.error("Spine enqueue failed (session_booked):", spineError);
         }
 
         return new Response(JSON.stringify({ 

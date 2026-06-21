@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -276,6 +277,26 @@ serve(async (req) => {
           });
         } catch (notifyError) {
           console.error("Failed to send signed contract notification:", notifyError);
+        }
+
+        // Spine: forward contract_signed (additive — never blocks).
+        try {
+          await enqueueSpineEvent(
+            "contract_signed",
+            {
+              email: clientEmail.toLowerCase().trim(),
+              phone: clientPhone ? sanitizeString(clientPhone).slice(0, 25) : null,
+              name: sanitizeString(clientName),
+              props: {
+                contract_type: contractType,
+                amount_cents: resolvedAmount.amountCents,
+                discount_code: resolvedAmount.discountCode ?? null,
+              },
+            },
+            supabase,
+          );
+        } catch (spineError) {
+          console.error("Spine enqueue failed (contract_signed):", spineError);
         }
 
         return new Response(JSON.stringify({ success: true, contract: data }), {

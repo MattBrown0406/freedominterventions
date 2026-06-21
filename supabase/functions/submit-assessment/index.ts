@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
+import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -411,6 +412,23 @@ serve(async (req) => {
       await queueAssessmentFollowups(supabase, data.id, assessmentData);
     } catch (followupError) {
       console.error("Assessment followup queue failed:", followupError);
+    }
+
+    // Spine: forward NON-SENSITIVE summary to the hub (additive — never blocks).
+    try {
+      await enqueueSpineEvent(
+        "assessment_completed",
+        {
+          email: assessmentData.contact_email ?? null,
+          phone: assessmentData.contact_phone ?? null,
+          name: assessmentData.contact_name ?? null,
+          utm: extractUtm(body),
+          props: { score: scoreAssessment(body) },
+        },
+        supabase,
+      );
+    } catch (spineError) {
+      console.error("Spine enqueue failed (assessment_completed):", spineError);
     }
 
     // Send email notifications via Resend

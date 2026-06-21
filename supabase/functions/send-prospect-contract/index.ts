@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -218,6 +219,27 @@ Deno.serve(async (req) => {
         source: "manual",
         notes: personalNote || null,
       });
+    }
+
+    if (!previewOnly) {
+      try {
+        await enqueueSpineEvent(
+          "contract_sent",
+          {
+            email: recipientEmail,
+            name: recipientName,
+            props: {
+              final_amount_cents: finalAmountCents,
+              base_amount_cents: baseAmountCents,
+              discount_amount_cents: discountAmountCents,
+              has_discount_code: Boolean(code),
+            },
+          },
+          admin,
+        );
+      } catch (spineError) {
+        console.error("Spine enqueue failed (contract_sent):", spineError);
+      }
     }
 
     return json({
