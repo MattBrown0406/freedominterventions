@@ -62,8 +62,8 @@ const SouthDakota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Professional Interventionist in South Dakota | Drug & Alcohol Help"
-        description="Need a professional interventionist in South Dakota? Matt Brown helps families in Sioux Falls, Rapid City, and statewide plan drug, alcohol, meth, and fentanyl interventions. Call (541) 668-8084."
+        title="Interventionist South Dakota | Drug & Alcohol Intervention Help"
+        description="Looking for an interventionist in South Dakota? Matt Brown helps families in Sioux Falls, Rapid City, and statewide plan drug, alcohol, meth, and fentanyl interventions. Call (541) 668-8084."
         canonical="https://freedominterventions.com/south-dakota"
         keywords="professional interventionist South Dakota, South Dakota interventionist, South Dakota addiction intervention, Sioux Falls drug intervention, Rapid City family intervention, South Dakota alcohol intervention, meth intervention South Dakota"
         geoRegion="US-SD"
@@ -106,13 +106,25 @@ const SouthDakota = () => {
               South Dakota Intervention Services
             </p>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Professional Interventionist in South Dakota for Drug and Alcohol Addiction
+              Interventionist in South Dakota for Drug and Alcohol Addiction
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               Matt Brown works with families across South Dakota to prepare the
               intervention, coordinate treatment, and stop the cycle of fear,
               rescuing, and repeated crisis.
             </p>
+            <div className="mt-6 rounded-2xl border border-primary/20 bg-background/80 p-5 text-left shadow-sm max-w-3xl mx-auto">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary mb-2">
+                What to do next
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                If a South Dakota loved one is refusing treatment, cycling
+                through meth, alcohol, fentanyl, or repeated relapse, start with
+                a confidential intervention consultation. The first step is a
+                clear assessment of risk, family alignment, treatment options,
+                and whether intervention is the right move now.
+              </p>
+            </div>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-lg" asChild>
                 <Link to="/book-intervention-consultation#booking">

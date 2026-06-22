@@ -27,8 +27,8 @@ const Interventionist = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Matt Brown — Professional Interventionist in Oregon & Nationwide | Freedom Interventions"
-        description={`Matt Brown is a professional interventionist based in Oregon with 20+ years experience and ${yearsSober} years sober. Helping families in Oregon and nationwide plan drug and alcohol interventions. Call (541) 668-8084.`}
+        title="Oregon Interventionist Matt Brown | Drug & Alcohol Intervention Help"
+        description={`Looking for an interventionist in Oregon? Matt Brown is an Oregon-based professional interventionist with 20+ years experience and ${yearsSober} years sober, helping families plan drug and alcohol interventions. Call (541) 668-8084.`}
         canonical="https://freedominterventions.com/interventionist"
         keywords="professional interventionist Oregon, interventionist Oregon, certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
@@ -64,11 +64,11 @@ const Interventionist = () => {
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 w-full max-w-xs">
-                  <a href="/#booking">
+                  <Link to="/book-intervention-consultation#booking">
                     <Button variant="hero" size="lg" className="w-full">
-                      Schedule a Consultation
+                      Book a Confidential Consultation
                     </Button>
-                  </a>
+                  </Link>
                   <a href="tel:+15416688084">
                     <Button variant="outline" size="lg" className="w-full">
                       <Phone className="mr-2 h-4 w-4" />
@@ -81,7 +81,7 @@ const Interventionist = () => {
               {/* Bio Column */}
               <div className="space-y-6">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
-                  Meet Matt Brown, Oregon-Based Professional Interventionist
+                  Meet Matt Brown, Oregon Interventionist for Families in Crisis
                 </h1>
                 <p className="text-2xl md:text-3xl font-serif text-primary">Matt Brown</p>
                 
@@ -115,7 +115,7 @@ const Interventionist = () => {
                   </p>
 
                   <p>
-                    If you're feeling overwhelmed, uncertain, or unsure of what to do next, you don't have to figure it out on your own. I invite you to reach out for a consultation. Together, we'll take an honest look at your situation and outline practical, thoughtful next steps toward lasting freedom—for your loved one and for your family.
+                    If you're feeling overwhelmed, uncertain, or unsure of what to do next, you don't have to figure it out on your own. The next step is a confidential consultation: we look honestly at the risk, whether treatment needs to be ready now, who in the family must be aligned, and whether a professional intervention is the right move.
                   </p>
 
                   <div className="bg-accent/50 border border-border rounded-xl p-6 mt-8">

@@ -26,13 +26,13 @@ type GscPostOptimization = {
 
 const gscPostOptimizations: Record<string, GscPostOptimization> = {
   "video-games-social-media-dopamine-addiction": {
-    title: "Video Game & Social Media Addiction Help for Families | Freedom Interventions",
+    title: "Video Game, Screen & Social Media Addiction Help for Families",
     description:
-      "Worried your loved one is trapped in gaming, scrolling, or dopamine-driven screen use? Learn the warning signs and what families can do next.",
+      "Worried your loved one is trapped in gaming, scrolling, or dopamine-driven screen use? Learn the warning signs, family boundaries, and next step.",
     directAnswerHeading: "When gaming or scrolling starts looking like addiction",
     directAnswer:
-      "Video game and social media addiction becomes a family problem when screen use keeps going despite lost sleep, school or work decline, isolation, rage when access is limited, secrecy, or repeated failed promises to cut back. The goal is not just taking the device away. The goal is understanding what the behavior is regulating, setting boundaries the family can hold, and getting professional help when daily functioning is being damaged.",
-    ctaText: "If gaming, scrolling, or dopamine-seeking behavior is taking over your home, Matt Brown can help your family sort out what is happening and what next step makes sense.",
+      "Video game, screen, and social media addiction becomes a family problem when use keeps going despite lost sleep, school or work decline, isolation, rage when access is limited, secrecy, or repeated failed promises to cut back. The next step is not just taking the device away. The family needs one calm plan: name the pattern, set boundaries that can actually be held, and get professional support when daily functioning is being damaged.",
+    ctaText: "If gaming, scrolling, or dopamine-seeking behavior is taking over your home, Matt Brown can help your family sort out whether coaching, treatment planning, FamilyBridge support, or a structured intervention is the right next step.",
   },
   "social-media-addiction-help-for-families": {
     title: "Social Media Addiction Help for Families | Freedom Interventions",
