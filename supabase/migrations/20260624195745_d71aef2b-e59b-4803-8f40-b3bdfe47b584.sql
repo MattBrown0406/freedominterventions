@@ -1,0 +1,2 @@
+DELETE FROM public.blog_posts WHERE slug = 'who-should-be-part-of-an-intervention';
+UPDATE public.blog_posts SET slug = 'who-should-be-part-of-an-intervention' WHERE slug = 'who-should-be-part-of-an-intervention-v2';
