@@ -687,17 +687,17 @@ serve(async (req) => {
 
       case 'create-booking': {
         // Rate limit check for booking creation
-        const clientIP = getClientIP(req);
-        const rateLimit = checkRateLimit(clientIP, bookingAttempts, MAX_BOOKING_ATTEMPTS);
-        
-        if (!rateLimit.allowed) {
+        const clientIP = getClientIp(req);
+        const allowed = await checkRateLimit(supabase, `booking:${clientIP}`, 5, 3600);
+
+        if (!allowed) {
           console.warn(`Booking rate limit exceeded for IP: ${clientIP}`);
-          return new Response(JSON.stringify({ 
-            error: 'Too many booking attempts. Please try again later.' 
+          return new Response(JSON.stringify({
+            error: 'Too many booking attempts. Please try again later.'
           }), {
             status: 429,
-            headers: { 
-              ...corsHeaders, 
+            headers: {
+              ...corsHeaders,
               'Content-Type': 'application/json',
               'Retry-After': '3600'
             },
