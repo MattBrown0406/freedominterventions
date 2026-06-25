@@ -1564,6 +1564,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_buckets: {
+        Row: {
+          bucket_key: string
+          hit_count: number
+          window_started_at: string
+        }
+        Insert: {
+          bucket_key: string
+          hit_count?: number
+          window_started_at?: string
+        }
+        Update: {
+          bucket_key?: string
+          hit_count?: number
+          window_started_at?: string
+        }
+        Relationships: []
+      }
       spine_outbox: {
         Row: {
           attempts: number
@@ -1625,6 +1643,10 @@ export type Database = {
     Functions: {
       check_assessment_access_rate: { Args: never; Returns: boolean }
       check_bookings_access_rate: { Args: never; Returns: boolean }
+      check_rate_limit: {
+        Args: { p_key: string; p_max_hits: number; p_window_seconds: number }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
