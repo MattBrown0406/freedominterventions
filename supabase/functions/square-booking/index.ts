@@ -280,10 +280,10 @@ serve(async (req) => {
       case 'create-payment':
       case 'create-checkout-link':
       case 'create-contract-payment-link': {
-        const clientIP = getClientIP(req);
-        const rateLimit = checkRateLimit(clientIP, paymentAttempts, MAX_PAYMENT_ATTEMPTS);
+        const clientIP = getClientIp(req);
+        const allowed = await checkRateLimit(supabase, `payment:${clientIP}`, 5, 3600);
 
-        if (!rateLimit.allowed) {
+        if (!allowed) {
           console.warn(`Rate limit exceeded for IP: ${clientIP}`);
           return new Response(JSON.stringify({
             error: 'Too many payment attempts. Please try again later.'
