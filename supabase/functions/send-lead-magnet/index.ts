@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
+import { checkRateLimit } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,27 +22,7 @@ interface LeadMagnetRequest {
 
 const SITE_URL = "https://freedominterventions.com";
 
-// Rate limiting map
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5; // Max 5 requests per hour per email
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
-
-function isRateLimited(email: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(email);
-  
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(email, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return false;
-  }
-  
-  if (record.count >= RATE_LIMIT) {
-    return true;
-  }
-  
-  record.count++;
-  return false;
-}
+// Rate limit handled via shared durable limiter
 
 function escapeHtml(value: unknown) {
   return String(value || "")
@@ -187,12 +168,18 @@ const handler = async (req: Request): Promise<Response> => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPhone = typeof phone === "string" && phone.trim().length > 0 ? phone.trim().slice(0, 40) : null;
 
-    // Check rate limit
-    if (isRateLimited(cleanEmail)) {
-      return new Response(
-        JSON.stringify({ error: "Too many requests. Please try again later." }),
-        { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+    // Durable rate limit: 5 per hour per email
+    const rlUrl = Deno.env.get("SUPABASE_URL");
+    const rlKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (rlUrl && rlKey) {
+      const rlClient = createClient(rlUrl, rlKey);
+      const allowed = await checkRateLimit(rlClient, `lead-magnet:${cleanEmail}`, 5, 3600);
+      if (!allowed) {
+        return new Response(
+          JSON.stringify({ error: "Too many requests. Please try again later." }),
+          { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
     }
 
     console.log("Sending lead magnet to:", cleanEmail);
