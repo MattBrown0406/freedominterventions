@@ -153,28 +153,6 @@ async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient
   if (error) console.error("Failed to queue assessment followups:", error);
 }
 
-// Simple in-memory rate limiting (resets on function restart)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 3; // Max 3 submissions per hour per IP
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(ip);
-  
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return false;
-  }
-  
-  if (record.count >= RATE_LIMIT) {
-    return true;
-  }
-  
-  record.count++;
-  return false;
-}
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -183,14 +161,18 @@ serve(async (req) => {
 
   try {
     // Get client IP for rate limiting
-    const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
-                     req.headers.get("x-real-ip") || 
-                     "unknown";
-    
+    const clientIP = getClientIp(req);
+
     console.log(`Assessment submission attempt from IP: ${clientIP}`);
 
-    // Check rate limit
-    if (isRateLimited(clientIP)) {
+    // Build service-role client up front (used by rate limiter and insert)
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Durable rate limit: 3 per hour per IP
+    const allowed = await checkRateLimit(supabase, `assessment:${clientIP}`, 3, 3600);
+    if (!allowed) {
       console.log(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
         JSON.stringify({ error: "Too many submissions. Please try again later." }),
