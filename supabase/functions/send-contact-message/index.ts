@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
+import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,6 +14,7 @@ interface ContactMessageRequest {
   email: string;
   phone?: string;
   message: string;
+  company?: string; // honeypot
   pagePath?: string;
   sourceAttribution?: Record<string, unknown>;
 }
