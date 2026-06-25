@@ -159,7 +159,59 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, phone, message, pagePath, sourceAttribution }: ContactMessageRequest = await req.json();
+    const body: ContactMessageRequest = await req.json();
+    const { name, email, phone, message, company, pagePath, sourceAttribution } = body;
+
+    // Honeypot: silently succeed if filled
+    if (typeof company === "string" && company.trim().length > 0) {
+      console.log("Honeypot triggered on contact form; silently accepting");
+      return new Response(
+        JSON.stringify({ success: true }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Input validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
+      return new Response(
+        JSON.stringify({ error: "Valid name is required (max 100 characters)." }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    if (!email || typeof email !== "string" || !emailRegex.test(email) || email.length > 255) {
+      return new Response(
+        JSON.stringify({ error: "Valid email is required." }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    if (!message || typeof message !== "string" || message.trim().length === 0 || message.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: "Message is required (max 5000 characters)." }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    if (phone != null && (typeof phone !== "string" || phone.length > 40)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid phone number." }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Durable rate limit: 5 per hour per IP
+    const clientIP = getClientIp(req);
+    const rlUrl = Deno.env.get("SUPABASE_URL");
+    const rlKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (rlUrl && rlKey) {
+      const rlClient = createClient(rlUrl, rlKey);
+      const allowed = await checkRateLimit(rlClient, `contact:${clientIP}`, 5, 3600);
+      if (!allowed) {
+        return new Response(
+          JSON.stringify({ error: "Too many submissions. Please try again later." }),
+          { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+    }
 
     console.log("Processing contact message from:", email);
 
