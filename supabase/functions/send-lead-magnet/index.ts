@@ -22,27 +22,7 @@ interface LeadMagnetRequest {
 
 const SITE_URL = "https://freedominterventions.com";
 
-// Rate limiting map
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5; // Max 5 requests per hour per email
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
-
-function isRateLimited(email: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(email);
-  
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(email, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return false;
-  }
-  
-  if (record.count >= RATE_LIMIT) {
-    return true;
-  }
-  
-  record.count++;
-  return false;
-}
+// Rate limit handled via shared durable limiter
 
 function escapeHtml(value: unknown) {
   return String(value || "")
