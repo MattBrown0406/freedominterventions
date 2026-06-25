@@ -23,37 +23,7 @@ const BOOKING_FEES_CENTS: Record<string, number> = {
 };
 const SITE_URL = 'https://freedominterventions.com';
 
-// Simple in-memory rate limiter for payment attempts
-const paymentAttempts = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const MAX_PAYMENT_ATTEMPTS = 5; // 5 attempts per hour per IP
-
-// Separate rate limiter for booking creation (consultations)
-const bookingAttempts = new Map<string, { count: number; resetTime: number }>();
-const MAX_BOOKING_ATTEMPTS = 5; // 5 booking attempts per hour per IP
-
-function getClientIP(req: Request): string {
-  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-         req.headers.get('x-real-ip') || 
-         'unknown';
-}
-
-function checkRateLimit(ip: string, limitMap: Map<string, { count: number; resetTime: number }>, maxAttempts: number): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const record = limitMap.get(ip);
-  
-  if (!record || now > record.resetTime) {
-    limitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true, remaining: maxAttempts - 1 };
-  }
-  
-  if (record.count >= maxAttempts) {
-    return { allowed: false, remaining: 0 };
-  }
-  
-  record.count++;
-  return { allowed: true, remaining: maxAttempts - record.count };
-}
+// Rate limiting is handled via shared durable limiter (public.check_rate_limit RPC).
 
 // Input validation helpers
 function validateEmail(email: string): boolean {
