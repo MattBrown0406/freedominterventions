@@ -168,12 +168,18 @@ const handler = async (req: Request): Promise<Response> => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPhone = typeof phone === "string" && phone.trim().length > 0 ? phone.trim().slice(0, 40) : null;
 
-    // Check rate limit
-    if (isRateLimited(cleanEmail)) {
-      return new Response(
-        JSON.stringify({ error: "Too many requests. Please try again later." }),
-        { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+    // Durable rate limit: 5 per hour per email
+    const rlUrl = Deno.env.get("SUPABASE_URL");
+    const rlKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (rlUrl && rlKey) {
+      const rlClient = createClient(rlUrl, rlKey);
+      const allowed = await checkRateLimit(rlClient, `lead-magnet:${cleanEmail}`, 5, 3600);
+      if (!allowed) {
+        return new Response(
+          JSON.stringify({ error: "Too many requests. Please try again later." }),
+          { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
     }
 
     console.log("Sending lead magnet to:", cleanEmail);
