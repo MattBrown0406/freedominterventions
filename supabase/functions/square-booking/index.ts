@@ -2,6 +2,7 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
+import { checkRateLimit as durableRateLimit } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -22,36 +23,21 @@ const BOOKING_FEES_CENTS: Record<string, number> = {
 };
 const SITE_URL = 'https://freedominterventions.com';
 
-// Simple in-memory rate limiter for payment attempts
-const paymentAttempts = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+// Durable, cross-instance rate limiting (see _shared/rateLimit.ts).
+const RATE_LIMIT_WINDOW_SECONDS = 60 * 60; // 1 hour
 const MAX_PAYMENT_ATTEMPTS = 5; // 5 attempts per hour per IP
-
-// Separate rate limiter for booking creation (consultations)
-const bookingAttempts = new Map<string, { count: number; resetTime: number }>();
 const MAX_BOOKING_ATTEMPTS = 5; // 5 booking attempts per hour per IP
 
 function getClientIP(req: Request): string {
-  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-         req.headers.get('x-real-ip') || 
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+         req.headers.get('x-real-ip') ||
          'unknown';
 }
 
-function checkRateLimit(ip: string, limitMap: Map<string, { count: number; resetTime: number }>, maxAttempts: number): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const record = limitMap.get(ip);
-  
-  if (!record || now > record.resetTime) {
-    limitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true, remaining: maxAttempts - 1 };
-  }
-  
-  if (record.count >= maxAttempts) {
-    return { allowed: false, remaining: 0 };
-  }
-  
-  record.count++;
-  return { allowed: true, remaining: maxAttempts - record.count };
+async function checkRateLimit(ip: string, bucket: string, maxAttempts: number): Promise<{ allowed: boolean }> {
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  const allowed = await durableRateLimit(supabase, `${bucket}:${ip}`, maxAttempts, RATE_LIMIT_WINDOW_SECONDS);
+  return { allowed };
 }
 
 // Input validation helpers
@@ -310,7 +296,7 @@ serve(async (req) => {
       case 'create-checkout-link':
       case 'create-contract-payment-link': {
         const clientIP = getClientIP(req);
-        const rateLimit = checkRateLimit(clientIP, paymentAttempts, MAX_PAYMENT_ATTEMPTS);
+        const rateLimit = await checkRateLimit(clientIP, 'payment', MAX_PAYMENT_ATTEMPTS);
 
         if (!rateLimit.allowed) {
           console.warn(`Rate limit exceeded for IP: ${clientIP}`);
@@ -717,8 +703,8 @@ serve(async (req) => {
       case 'create-booking': {
         // Rate limit check for booking creation
         const clientIP = getClientIP(req);
-        const rateLimit = checkRateLimit(clientIP, bookingAttempts, MAX_BOOKING_ATTEMPTS);
-        
+        const rateLimit = await checkRateLimit(clientIP, 'booking', MAX_BOOKING_ATTEMPTS);
+
         if (!rateLimit.allowed) {
           console.warn(`Booking rate limit exceeded for IP: ${clientIP}`);
           return new Response(JSON.stringify({ 

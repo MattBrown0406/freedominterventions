@@ -6,7 +6,7 @@ import testimonialsBanner from "@/assets/testimonials-banner.jpg";
 import { ReviewSubmissionForm } from "@/components/ReviewSubmissionForm";
 import SEOHead from "@/components/SEOHead";
 import { BreadcrumbSchema, OrganizationSchema } from "@/components/StructuredData";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import OptimizedImage from "@/components/OptimizedImage";
 
 const StarDisplay = ({ rating }: { rating: number }) => (

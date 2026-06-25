@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +33,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const honeypotRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const form = useForm<ContactFormData>({
@@ -62,6 +63,7 @@ const Contact = () => {
             email: data.email,
             phone: data.phone || undefined,
             message: data.message,
+            company: honeypotRef.current?.value || undefined,
             pagePath: window.location.pathname,
             sourceAttribution: getFunnelAttribution(),
           }),
@@ -246,6 +248,16 @@ const Contact = () => {
               
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  {/* Honeypot: hidden from real users, catches bots. Do not remove. */}
+                  <input
+                    ref={honeypotRef}
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                  />
                   <FormField
                     control={form.control}
                     name="name"

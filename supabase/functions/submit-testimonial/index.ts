@@ -1,32 +1,15 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Simple in-memory rate limiting
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5; // Max 5 submissions per hour per IP
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(ip);
-  
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return false;
-  }
-  
-  if (record.count >= RATE_LIMIT) {
-    return true;
-  }
-  
-  record.count++;
-  return false;
-}
+// Durable rate limiting: max 5 submissions per hour per IP (see _shared/rateLimit.ts).
+const RATE_LIMIT = 5;
+const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -34,13 +17,16 @@ serve(async (req) => {
   }
 
   try {
-    const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
-                     req.headers.get("x-real-ip") || 
-                     "unknown";
-    
+    const clientIP = getClientIp(req);
+
     console.log(`Testimonial submission from IP: ${clientIP}`);
 
-    if (isRateLimited(clientIP)) {
+    const rlClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const allowed = await checkRateLimit(rlClient, `testimonial:${clientIP}`, RATE_LIMIT, RATE_LIMIT_WINDOW_SECONDS);
+    if (!allowed) {
       console.log(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
         JSON.stringify({ error: "Too many submissions. Please try again later." }),
