@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
+import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -15,9 +16,29 @@ interface ContactMessageRequest {
   message: string;
   pagePath?: string;
   sourceAttribution?: Record<string, unknown>;
+  // Honeypot: a hidden form field that real users never fill in. Bots do.
+  company?: string;
 }
 
 const SITE_URL = "https://freedominterventions.com";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validationError(payload: ContactMessageRequest): string | null {
+  if (typeof payload.name !== "string" || payload.name.trim().length === 0 || payload.name.length > 120) {
+    return "A valid name is required.";
+  }
+  if (typeof payload.email !== "string" || payload.email.length > 255 || !EMAIL_RE.test(payload.email)) {
+    return "A valid email address is required.";
+  }
+  if (typeof payload.message !== "string" || payload.message.trim().length === 0 || payload.message.length > 5000) {
+    return "A message is required.";
+  }
+  if (payload.phone != null && (typeof payload.phone !== "string" || payload.phone.length > 40)) {
+    return "Invalid phone number.";
+  }
+  return null;
+}
 
 
 function firstName(name: string) {
@@ -157,7 +178,41 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, phone, message, pagePath, sourceAttribution }: ContactMessageRequest = await req.json();
+    const payload: ContactMessageRequest = await req.json();
+    const { name, email, phone, message, pagePath, sourceAttribution } = payload;
+
+    // Honeypot: silently accept (200) so bots don't learn they were filtered,
+    // but do no work — no email, no DB writes, no queued follow-ups.
+    if (typeof payload.company === "string" && payload.company.trim().length > 0) {
+      console.log("Contact message rejected: honeypot triggered");
+      return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    // Input validation.
+    const invalid = validationError(payload);
+    if (invalid) {
+      return new Response(JSON.stringify({ error: invalid }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    // Durable rate limit: max 5 contact submissions per hour per IP.
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (supabaseUrl && serviceKey) {
+      const rlClient = createClient(supabaseUrl, serviceKey);
+      const allowed = await checkRateLimit(rlClient, `contact:${getClientIp(req)}`, 5, 60 * 60);
+      if (!allowed) {
+        return new Response(
+          JSON.stringify({ error: "Too many messages. Please try again later." }),
+          { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } },
+        );
+      }
+    }
 
     console.log("Processing contact message from:", email);
 
