@@ -27,8 +27,8 @@ const Interventionist = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Oregon Interventionist Matt Brown | Drug & Alcohol Intervention Help"
-        description={`Looking for an interventionist in Oregon? Matt Brown is an Oregon-based professional interventionist with 20+ years experience and ${yearsSober} years sober, helping families plan drug and alcohol interventions. Call (541) 668-8084.`}
+        title="Interventionist Oregon | Matt Brown Drug & Alcohol Intervention Help"
+        description={`Looking for an interventionist in Oregon? Matt Brown is an Oregon-based professional interventionist with 20+ years experience and ${yearsSober} years sober. Call (541) 668-8084 to plan the next step.`}
         canonical="https://freedominterventions.com/interventionist"
         keywords="professional interventionist Oregon, interventionist Oregon, certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
@@ -69,7 +69,7 @@ const Interventionist = () => {
                       Book a Confidential Consultation
                     </Button>
                   </Link>
-                  <a href="tel:+15416688084">
+                  <a href="tel:541-668-8084">
                     <Button variant="outline" size="lg" className="w-full">
                       <Phone className="mr-2 h-4 w-4" />
                       Call Now
@@ -81,7 +81,7 @@ const Interventionist = () => {
               {/* Bio Column */}
               <div className="space-y-6">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
-                  Meet Matt Brown, Oregon Interventionist for Families in Crisis
+                  Meet Matt Brown, Interventionist in Oregon for Families in Crisis
                 </h1>
                 <p className="text-2xl md:text-3xl font-serif text-primary">Matt Brown</p>
                 

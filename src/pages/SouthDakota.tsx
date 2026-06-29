@@ -133,7 +133,7 @@ const SouthDakota = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg" asChild>
-                <a href="tel:+15416688084">
+                <a href="tel:541-668-8084">
                   <Phone className="w-5 h-5 mr-2" />
                   Call Matt Now
                 </a>
@@ -315,7 +315,7 @@ const SouthDakota = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:+15416688084">
+              <a href="tel:541-668-8084">
                 <Phone className="w-5 h-5 mr-2" />
                 Call Matt Now
               </a>

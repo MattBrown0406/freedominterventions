@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
+import AppStoreBadge from "@/components/AppStoreBadge";
 
 const slugRedirects: Record<string, string> = {
   "preparing-for-an-intervention": "how-to-prepare-for-an-intervention",
@@ -50,7 +51,7 @@ const gscPostOptimizations: Record<string, GscPostOptimization> = {
     directAnswerHeading: "How to deal with spending addiction in the family",
     directAnswer:
       "Start by protecting the household from more financial damage: stop secretly covering debts, separate vulnerable accounts where appropriate, document the pattern, and have one calm conversation focused on facts and next steps. Compulsive spending often needs therapy, financial counseling, and support for anxiety, depression, ADHD, trauma, or other addictions underneath the behavior.",
-    ctaText: "If the spending is creating debt, secrecy, or repeated broken promises, Matt Brown can help your family decide whether a structured intervention is the right next step.",
+    ctaText: "If the spending is creating debt, secrecy, or repeated broken promises, Matt Brown can help your family decide whether a structured intervention, family coaching, or FamilyBridge support is the right next step.",
   },
   "kratom-addiction-warning-signs-families": {
     title: "Kratom Addiction Warning Signs & Family Help | Freedom Interventions",
@@ -88,7 +89,7 @@ const BlogPost = () => {
       if (postError) throw postError;
       if (!post) return { post: null, relatedPosts: [] };
 
-      let relatedQuery = supabase
+      const relatedQuery = supabase
         .from("blog_posts")
         .select("id, slug, title, excerpt, image_url, category, published_at")
         .eq("published", true)
@@ -97,7 +98,8 @@ const BlogPost = () => {
         .order("published_at", { ascending: false })
         .limit(3);
 
-      let { data: relatedPosts, error: relatedError } = await relatedQuery;
+      const { data: initialRelatedPosts, error: relatedError } = await relatedQuery;
+      let relatedPosts = initialRelatedPosts;
       if (relatedError) throw relatedError;
 
       if (!relatedPosts || relatedPosts.length < 3) {
@@ -166,6 +168,7 @@ const BlogPost = () => {
   const gscOptimization = gscPostOptimizations[post.slug];
   const displayTitle = gscOptimization?.title || post.title;
   const displayDescription = gscOptimization?.description || post.excerpt;
+  const showFamilyBridgeCta = familyBridgeFitSlugs.has(post.slug);
 
   return (
     <div className="min-h-screen bg-background">
@@ -242,10 +245,18 @@ const BlogPost = () => {
                   <Link to="/book-intervention-consultation#booking" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                     Book a confidential consultation
                   </Link>
-                  <a href="tel:+15416688084" className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
+                  <a href="tel:541-668-8084" className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
                     Call (541) 668-8084
                   </a>
                 </div>
+                {showFamilyBridgeCta && (
+                  <div className="mt-6 rounded-xl border border-border/60 bg-background/80 p-4">
+                    <p className="text-sm font-medium text-foreground mb-3">
+                      Need help with boundaries, enabling, or what to say next today? Use FamilyBridge as the practical support step while your family decides whether to call.
+                    </p>
+                    <AppStoreBadge height={42} />
+                  </div>
+                )}
               </aside>
             )}
             <div
@@ -263,7 +274,7 @@ const BlogPost = () => {
         </div>
       </section>
 
-      {familyBridgeFitSlugs.has(post.slug) && <FamilyBridgeBanner />}
+      {showFamilyBridgeCta && <FamilyBridgeBanner />}
 
       {relatedPosts.length > 0 && (
         <section className="py-8 md:py-12 border-t border-border/60">
