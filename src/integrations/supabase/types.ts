@@ -1582,6 +1582,51 @@ export type Database = {
         }
         Relationships: []
       }
+      self_assessment_leads: {
+        Row: {
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          contact_relationship: string | null
+          created_at: string
+          id: string
+          percentage: number
+          responses: Json
+          result_category: string
+          safety_flag: boolean
+          score: number
+          source_attribution: Json
+        }
+        Insert: {
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          contact_relationship?: string | null
+          created_at?: string
+          id?: string
+          percentage?: number
+          responses?: Json
+          result_category: string
+          safety_flag?: boolean
+          score?: number
+          source_attribution?: Json
+        }
+        Update: {
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          contact_relationship?: string | null
+          created_at?: string
+          id?: string
+          percentage?: number
+          responses?: Json
+          result_category?: string
+          safety_flag?: boolean
+          score?: number
+          source_attribution?: Json
+        }
+        Relationships: []
+      }
       spine_outbox: {
         Row: {
           attempts: number
