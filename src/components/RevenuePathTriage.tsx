@@ -46,7 +46,7 @@ const paths = [
   },
   {
     icon: ShieldCheck,
-    label: "High-ticket qualifier",
+    label: "Pre-intervention plan",
     price: "$2,500",
     title: "Family Readiness Intensive",
     description: "Use this when refusal, relapse, risk, and family alignment require a professional plan before deciding on full intervention.",
@@ -57,7 +57,7 @@ const paths = [
   },
   {
     icon: ClipboardCheck,
-    label: "Ready to retain",
+    label: "Ready to begin",
     price: "Full engagement",
     title: "Full intervention agreement",
     description: "Use this when the family is aligned enough to begin the formal intervention process and treatment coordination.",
@@ -89,7 +89,7 @@ export default function RevenuePathTriage({ source, className = "", compact = fa
               What kind of help does your family need today?
             </h2>
             <p className="mt-3 text-muted-foreground md:text-lg">
-              This is the close-path sorter. Families should not have to decode the offer ladder while they are scared. Start with the lowest level that can safely answer the question, and Matt can redirect you if a different level of help fits.
+              You should not have to figure out the right level of help while you are scared. Start with the lowest level that can safely answer the question, and Matt will redirect you if a different level of help fits.
             </p>
           </div>
 

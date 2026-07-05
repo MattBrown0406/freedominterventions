@@ -168,6 +168,20 @@ const StartHere = () => {
               <p className="mt-3 text-muted-foreground md:text-lg">
                 This is the practical ladder from first conversation to full intervention engagement.
               </p>
+              <div className="mt-6 rounded-xl border border-primary/20 bg-primary/5 p-5 text-left md:flex md:items-center md:justify-between md:gap-6">
+                <div>
+                  <p className="font-serif text-lg font-bold text-foreground">Not sure which step fits?</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Take the 3-minute "Is It Time for an Intervention?" assessment and we will point you to the right one.
+                  </p>
+                </div>
+                <Button asChild className="mt-4 md:mt-0 shrink-0" onClick={() => trackChoice("start_here_self_assessment")}>
+                  <Link to="/self-assessment">
+                    Take the Assessment
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5 max-w-6xl mx-auto">
               {options.map((option) => {
