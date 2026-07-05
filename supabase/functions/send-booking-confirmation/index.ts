@@ -134,6 +134,8 @@ function getBookingMeta(bookingType: string): { label: string; defaultDuration: 
       return { label: 'Crisis Coaching Session', defaultDuration: 60, emailNoun: 'Crisis Coaching Session' };
     case 'readiness-intensive':
       return { label: 'Family Readiness Intensive', defaultDuration: 90, emailNoun: 'Family Readiness Intensive' };
+    case 'aftercare-planning':
+      return { label: 'Aftercare Planning Call', defaultDuration: 30, emailNoun: 'Aftercare Planning Call' };
     default:
       return { label: 'Appointment', defaultDuration: 60, emailNoun: 'Appointment' };
   }

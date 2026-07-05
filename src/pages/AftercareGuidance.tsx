@@ -221,6 +221,25 @@ const AftercareGuidance = () => {
                 ))}
               </section>
 
+              <section id="aftercare-support" className="bg-card rounded-2xl border-2 border-primary/30 p-8 md:p-10">
+                <p className="mb-2 w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">Ongoing support</p>
+                <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-3">Family Aftercare Support with Matt</h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  The intervention or treatment admission is the beginning, not the end. Families who stay structured through the first months of recovery — boundaries held, communication planned, relapse warning signs watched — get dramatically better outcomes.
+                </p>
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  Matt works with a limited number of families on ongoing aftercare support: scheduled family check-ins, boundary and communication coaching, discharge planning, and relapse-response preparation. Support is tailored — and priced — to what your family actually needs.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button asChild size="lg" className="gap-2">
+                    <a href="tel:+15416688084">Call Matt to Enroll — (541) 668-8084</a>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="gap-2">
+                    <Link to="/?type=aftercare-planning#booking">Book a Free Aftercare Planning Call</Link>
+                  </Button>
+                </div>
+              </section>
+
               <section id="cta" className="bg-primary/5 rounded-2xl border border-primary/20 p-8 md:p-12 text-center">
                 <h3 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">Plan for What Happens After Treatment, Not Just How to Get There</h3>
                 <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">

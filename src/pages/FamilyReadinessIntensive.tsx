@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import TestimonialStrip from "@/components/TestimonialStrip";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -58,7 +59,7 @@ const FamilyReadinessIntensive = () => {
             For families who need more than a single session — you need a plan, alignment, and someone in your corner while you put it into action.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="/#booking">
+            <a href="/?type=readiness-intensive#booking">
               <Button variant="hero" size="xl">
                 <Calendar className="w-5 h-5" />
                 Book the Intensive — $2,500
@@ -130,6 +131,8 @@ const FamilyReadinessIntensive = () => {
         </div>
       </section>
 
+      <TestimonialStrip className="bg-muted/20 border-y border-border/50" heading="Families who did this work" />
+
       {/* Pricing / CTA */}
       <section className="py-16 bg-primary/5">
         <div className="container mx-auto px-6 max-w-3xl text-center">
@@ -141,7 +144,7 @@ const FamilyReadinessIntensive = () => {
             <Clock className="inline w-5 h-5 mr-1" /> 90-minute Zoom session + 7 days of direct follow-up support by Zoom, phone, text, or email.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/#booking">
+            <a href="/?type=readiness-intensive#booking">
               <Button variant="hero" size="xl">
                 <Calendar className="w-5 h-5" />
                 Book Now

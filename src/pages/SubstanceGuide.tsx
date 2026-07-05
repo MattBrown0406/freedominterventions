@@ -33,7 +33,7 @@ const SubstanceGuide = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">
-                <Link to="/#booking">
+                <Link to="/?type=consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Schedule Free Consultation
                 </Link>
@@ -489,7 +489,7 @@ const SubstanceGuide = () => {
           <p className="text-xl font-medium mb-8">You are responding to something real.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link to="/#booking">
+              <Link to="/?type=consultation#booking">
                 <Calendar className="mr-2 h-5 w-5" />
                 Schedule Free Consultation
               </Link>

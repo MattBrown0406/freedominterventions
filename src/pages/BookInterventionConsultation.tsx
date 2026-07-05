@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import TestimonialStrip from "@/components/TestimonialStrip";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
@@ -192,6 +193,8 @@ const BookInterventionConsultation = () => {
         <ClosePathProof source="book_intervention_consultation" className="bg-muted/20 border-y border-border" />
         <BookingCalendar />
       </main>
+      <TestimonialStrip className="bg-muted/20 border-t border-border/50" />
+
       <Footer />
     </div>
   );

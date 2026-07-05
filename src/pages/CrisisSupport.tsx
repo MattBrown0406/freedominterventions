@@ -158,7 +158,7 @@ const CrisisSupport = () => {
                   Call Now: (541) 668-8084
                 </Button>
               </a>
-              <Link to="/#booking">
+              <Link to="/?type=consultation#booking">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Schedule a Consultation
                 </Button>
@@ -264,7 +264,7 @@ const CrisisSupport = () => {
                     Call (541) 668-8084
                   </Button>
                 </a>
-                <Link to="/#booking">
+                <Link to="/?type=consultation#booking">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto">
                     Schedule a Consultation
                     <ArrowRight className="w-4 h-4 ml-2" />

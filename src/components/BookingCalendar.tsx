@@ -18,7 +18,7 @@ import { getFunnelAttribution } from "@/lib/funnelAttribution";
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
 const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
 
-type BookingType = 'consultation' | 'crisis-coaching' | 'readiness-intensive';
+type BookingType = 'consultation' | 'crisis-coaching' | 'readiness-intensive' | 'aftercare-planning';
 type PaidReturnType = BookingType | 'fri-contract';
 
 interface OfferConfig {
@@ -46,6 +46,14 @@ const OFFERS: Record<BookingType, OfferConfig> = {
     priceLabel: '$150',
     description: "A 60-minute Zoom session with you and any concerned loved ones. Walk away with an actionable plan to change your family's circumstances.",
     shortName: 'Crisis Coaching Session (60 min)',
+  },
+  'aftercare-planning': {
+    label: 'Aftercare Planning Call',
+    durationMinutes: 30,
+    priceCents: 0,
+    priceLabel: 'Free',
+    description: "A free 30-minute call for families whose loved one is entering or leaving treatment. We map the aftercare structure your family needs and discuss ongoing support options.",
+    shortName: 'Aftercare Planning Call (30 min)',
   },
   'readiness-intensive': {
     label: 'Family Readiness Intensive',
@@ -217,7 +225,7 @@ export const BookingCalendar = () => {
     }
 
     const type = params.get("type") as BookingType | null;
-    if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive")) {
+    if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive" || type === "aftercare-planning")) {
       setBookingType(type);
       const name = params.get("name") || "";
       const email = params.get("email") || "";
@@ -730,7 +738,7 @@ export const BookingCalendar = () => {
                   <div className="space-y-2"><Label htmlFor="name" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name *</Label><Input id="name" value={customerInfo.name} onChange={(e) => { setCustomerInfo({ ...customerInfo, name: e.target.value }); if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined }); }} placeholder="John Smith" maxLength={100} required className={validationErrors.name ? 'border-destructive' : ''} />{validationErrors.name && <p className="text-sm text-destructive">{validationErrors.name}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="email" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email *</Label><Input id="email" type="email" value={customerInfo.email} onChange={(e) => { setCustomerInfo({ ...customerInfo, email: e.target.value }); if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined }); }} placeholder="john@example.com" maxLength={255} required className={validationErrors.email ? 'border-destructive' : ''} />{validationErrors.email && <p className="text-sm text-destructive">{validationErrors.email}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="phone" className="flex items-center gap-2"><Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}</Label><Input id="phone" type="tel" value={customerInfo.phone} onChange={(e) => { setCustomerInfo({ ...customerInfo, phone: e.target.value }); if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined }); }} placeholder="(555) 123-4567" maxLength={20} required={bookingType === 'consultation'} className={validationErrors.phone ? 'border-destructive' : ''} />{validationErrors.phone && <p className="text-sm text-destructive">{validationErrors.phone}</p>}</div>
-                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>← Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? 'Book Consultation' : 'Continue to Payment'}</Button></div>
+                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>← Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? (bookingType === 'aftercare-planning' ? 'Book Planning Call' : 'Book Consultation') : 'Continue to Payment'}</Button></div>
                 </form>
               )}
 

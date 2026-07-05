@@ -151,7 +151,7 @@ const WhatIfTheyRefuse = () => {
                 <a href="tel:541-668-8084"><Phone className="mr-2 h-5 w-5" />Call Now</a>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>
+                <Link to="/?type=consultation#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>
               </Button>
             </div>
           </div>

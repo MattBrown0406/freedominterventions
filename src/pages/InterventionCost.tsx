@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import TestimonialStrip from "@/components/TestimonialStrip";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
@@ -139,6 +140,56 @@ const InterventionCost = () => {
           </div>
         </section>
 
+
+        <section className="py-16 md:py-20">
+          <div className="container px-6">
+            <div className="mx-auto mb-10 max-w-3xl text-center">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">What each level of help costs</h2>
+              <p className="text-lg text-muted-foreground">Transparent pricing, so you can start at the lowest level that safely answers your question. Matt will redirect you if a different level fits.</p>
+            </div>
+            <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 xl:grid-cols-4">
+              <div className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-sm">
+                <p className="text-sm font-semibold text-primary">Step 1</p>
+                <h3 className="mt-1 font-serif text-xl font-bold text-foreground">Free Consultation</h3>
+                <p className="mt-2 text-3xl font-bold text-foreground">Free</p>
+                <p className="mt-3 flex-1 text-sm text-muted-foreground">A 15-minute call to sort what level of help your family actually needs. No obligation, no pitch.</p>
+                <Button asChild className="mt-5">
+                  <Link to="/?type=consultation#booking">Book Free Consult</Link>
+                </Button>
+              </div>
+              <div className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-sm">
+                <p className="text-sm font-semibold text-primary">Step 2</p>
+                <h3 className="mt-1 font-serif text-xl font-bold text-foreground">Crisis Coaching Session</h3>
+                <p className="mt-2 text-3xl font-bold text-foreground">$150</p>
+                <p className="mt-3 flex-1 text-sm text-muted-foreground">A 60-minute session that turns mixed messages and uncertainty into a working plan for the next hard conversation.</p>
+                <Button asChild className="mt-5">
+                  <Link to="/?type=crisis-coaching#booking">Book Crisis Coaching</Link>
+                </Button>
+              </div>
+              <div className="flex flex-col rounded-xl border-2 border-primary/40 bg-primary/5 p-6 shadow-sm">
+                <p className="text-sm font-semibold text-primary">Step 3</p>
+                <h3 className="mt-1 font-serif text-xl font-bold text-foreground">Family Readiness Intensive</h3>
+                <p className="mt-2 text-3xl font-bold text-foreground">$2,500</p>
+                <p className="mt-3 flex-1 text-sm text-muted-foreground">A 90-minute intensive plus 7 days of follow-up support. Pre-intervention strategy, treatment planning, and family alignment.</p>
+                <Button asChild className="mt-5">
+                  <Link to="/?type=readiness-intensive#booking">Book the Intensive</Link>
+                </Button>
+              </div>
+              <div className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-sm">
+                <p className="text-sm font-semibold text-primary">Step 4</p>
+                <h3 className="mt-1 font-serif text-xl font-bold text-foreground">Full Intervention</h3>
+                <p className="mt-2 text-3xl font-bold text-foreground">Custom</p>
+                <p className="mt-3 flex-1 text-sm text-muted-foreground">Full intervention planning, on-site facilitation, treatment coordination, and family support. Priced to the situation — travel, timeline, and complexity all factor in.</p>
+                <Button asChild variant="outline" className="mt-5">
+                  <a href="tel:541-668-8084">Call for Pricing</a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <TestimonialStrip className="bg-muted/20 border-y border-border/50" heading="Families who made this investment" />
+
         <InterventionAnswerLinks
           source="intervention_cost"
           slugs={[
@@ -164,7 +215,7 @@ const InterventionCost = () => {
                 <a href="tel:541-668-8084"><Phone className="mr-2 h-5 w-5" />Call Now</a>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>
+                <Link to="/?type=consultation#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>
               </Button>
             </div>
           </div>

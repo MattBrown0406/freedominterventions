@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import InterventionReadinessChecklist from "@/components/InterventionReadinessChecklist";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
@@ -555,6 +556,13 @@ const InterventionToolkit = () => {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Lead capture: get the toolkit + follow-up sequence by email */}
+        <section className="py-12 bg-muted/20 border-y border-border/50">
+          <div className="container mx-auto px-6 max-w-3xl">
+            <InterventionReadinessChecklist source="intervention_toolkit" />
           </div>
         </section>
 

@@ -133,6 +133,64 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
       source_attribution: sourceAttribution,
       due_at: new Date(Date.now() + 36 * 60 * 60 * 1000).toISOString(),
     },
+    {
+      lead_type: "contact_message",
+      contact_email: cleanEmail,
+      contact_name: cleanName,
+      contact_phone: cleanPhone,
+      followup_reason: "lead_magnet_checklist_boundaries",
+      priority: leadScore >= 60 ? "high" : "normal",
+      sequence_step: 3,
+      subject: "Did the checklist change anything yet?",
+      body_html: `
+        <p>Hi ${escapeHtml(first)},</p>
+        <p>A few days in, most families discover the hard part is not knowing what to do — it is holding the line when the pushback starts. Boundaries that collapse teach the addiction that waiting works.</p>
+        <p>If the family keeps arguing about how serious this is, or a boundary has already slipped, that is exactly what a crisis coaching session is built for: one hour, one working plan, $150.</p>
+        <p><a href="${SITE_URL}/?type=crisis-coaching#booking">Book a crisis coaching session</a></p>
+        <p>Not sure it is at that level yet? <a href="${consultUrl}">Start with a free consultation</a>.</p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "contact_message",
+      contact_email: cleanEmail,
+      contact_name: cleanName,
+      contact_phone: cleanPhone,
+      followup_reason: "lead_magnet_checklist_readiness",
+      priority: leadScore >= 60 ? "high" : "normal",
+      sequence_step: 4,
+      subject: "What families get wrong about timing",
+      body_html: `
+        <p>Hi ${escapeHtml(first)},</p>
+        <p>The most common regret I hear is not "we acted too soon." It is "we waited for rock bottom." Rock bottom is not a strategy — it is the absence of one.</p>
+        <p>If refusal, relapse, or rising risk is in the picture, the readiness path exists to build the plan before the next crisis builds it for you:</p>
+        <p><a href="${readinessUrl}">Review the intervention readiness path</a></p>
+        <p>- Matt</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      lead_type: "contact_message",
+      contact_email: cleanEmail,
+      contact_name: cleanName,
+      contact_phone: cleanPhone,
+      followup_reason: "lead_magnet_checklist_final",
+      priority: leadScore >= 60 ? "high" : "normal",
+      sequence_step: 5,
+      subject: "One last check-in from me",
+      body_html: `
+        <p>Hi ${escapeHtml(first)},</p>
+        <p>This is my last scheduled note. If things have stabilized, I am glad the checklist helped.</p>
+        <p>If they have not — if you are still having the same conversation with the same result — you do not have to figure out the next move alone. A free consultation costs nothing but fifteen minutes, and I will tell you honestly what level of help fits, including "none yet."</p>
+        <p><a href="${consultUrl}">Book a free consultation</a> or call me at <a href="tel:5416688084">541-668-8084</a>.</p>
+        <p>- Matt Brown<br>Freedom Interventions</p>
+      `,
+      source_attribution: sourceAttribution,
+      due_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    },
   ];
 
   const { error } = await supabase.from("freedom_followup_queue").insert(rows);
