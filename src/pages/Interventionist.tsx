@@ -27,8 +27,8 @@ const Interventionist = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Interventionist Oregon | Matt Brown Drug & Alcohol Intervention Help"
-        description={`Looking for an interventionist in Oregon? Matt Brown is an Oregon-based professional interventionist with 20+ years experience and ${yearsSober} years sober. Call (541) 668-8084 to plan the next step.`}
+        title="Interventionist Oregon | Call Matt Brown for Family Help"
+        description={`Looking for an interventionist in Oregon? Matt Brown is an Oregon-based professional interventionist with 20+ years experience and ${yearsSober} years sober. Call (541) 668-8084 for a confidential next step.`}
         canonical="https://freedominterventions.com/interventionist"
         keywords="professional interventionist Oregon, interventionist Oregon, certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
@@ -64,17 +64,17 @@ const Interventionist = () => {
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 w-full max-w-xs">
-                  <Link to="/book-intervention-consultation#booking">
+                  <a href="tel:541-668-8084">
                     <Button variant="hero" size="lg" className="w-full">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call Matt Now
+                    </Button>
+                  </a>
+                  <Link to="/book-intervention-consultation#booking">
+                    <Button variant="outline" size="lg" className="w-full">
                       Book a Confidential Consultation
                     </Button>
                   </Link>
-                  <a href="tel:541-668-8084">
-                    <Button variant="outline" size="lg" className="w-full">
-                      <Phone className="mr-2 h-4 w-4" />
-                      Call Now
-                    </Button>
-                  </a>
                 </div>
               </div>
 

@@ -20,8 +20,8 @@ const MinneapolisMinnesota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Minneapolis Professional Interventions | Matt Brown Interventionist"
-        description="Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions before the next crisis. Call (541) 668-8084."
+        title="Minneapolis Professional Interventions | Call Matt Brown Today"
+        description="Searching for Minneapolis professional interventions? Matt Brown helps Twin Cities families plan a drug, alcohol, or fentanyl intervention and treatment next step. Call (541) 668-8084."
         keywords="Minneapolis professional interventions, Minneapolis professional interventionist, Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl intervention Minneapolis, alcohol intervention Minneapolis"
         canonical="https://freedominterventions.com/minneapolis-minnesota"
       />
@@ -52,10 +52,10 @@ const MinneapolisMinnesota = () => {
               Minneapolis, Minnesota
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Minneapolis Professional Interventions for Drug, Alcohol, and Fentanyl Addiction
+              Minneapolis Professional Interventions for Families Facing Addiction
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              If you are looking for professional interventions in Minneapolis, the next step is a confidential call with Matt Brown. He helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis. Freedom Interventions serves Minneapolis, St. Paul, Bloomington, and surrounding communities with direct, confidential help.
+              If your family is searching for professional interventions in Minneapolis, the next step is a confidential call with Matt Brown. He helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis. Freedom Interventions serves Minneapolis, St. Paul, Bloomington, and surrounding communities with direct, confidential help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">

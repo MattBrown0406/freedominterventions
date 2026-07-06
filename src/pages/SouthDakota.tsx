@@ -62,8 +62,8 @@ const SouthDakota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Interventionist South Dakota | Drug & Alcohol Intervention Help"
-        description="Looking for an interventionist in South Dakota? Matt Brown helps families in Sioux Falls, Rapid City, and statewide plan drug, alcohol, meth, and fentanyl interventions. Call (541) 668-8084."
+        title="Interventionist South Dakota | Call Matt Brown for Family Help"
+        description="Looking for an interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions in Sioux Falls, Rapid City, and statewide. Call (541) 668-8084."
         canonical="https://freedominterventions.com/south-dakota"
         keywords="professional interventionist South Dakota, South Dakota interventionist, South Dakota addiction intervention, Sioux Falls drug intervention, Rapid City family intervention, South Dakota alcohol intervention, meth intervention South Dakota"
         geoRegion="US-SD"
@@ -106,7 +106,7 @@ const SouthDakota = () => {
               South Dakota Intervention Services
             </p>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Interventionist in South Dakota for Drug and Alcohol Addiction
+              Interventionist in South Dakota for Drug, Alcohol, Meth, and Fentanyl Addiction
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
               Matt Brown works with families across South Dakota to prepare the
