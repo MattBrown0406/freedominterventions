@@ -65,6 +65,15 @@ const staticMetadata = {
     heading: "Oregon Interventionist for Drug, Alcohol, and Fentanyl Addiction",
     body: "Matt Brown helps families across Oregon prepare the intervention, coordinate treatment, and stop the cycle of panic and repeated crisis.",
   },
+  "/alaska": {
+    title:
+      "Interventionist Alaska | Family Addiction Help | Freedom Interventions",
+    description:
+      "Need an interventionist in Alaska? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions and treatment travel. Call (541) 668-8084.",
+    heading:
+      "Professional Interventionist in Alaska for Families Facing Addiction",
+    body: "Matt Brown helps Alaska families prepare the intervention, coordinate appropriate treatment, and plan travel before the family conversation happens.",
+  },
   "/washington": {
     title: "Drug Interventionist in Washington | Family Intervention Help",
     description:
