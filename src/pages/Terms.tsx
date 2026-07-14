@@ -34,7 +34,7 @@ const Terms = () => {
             <div className="prose prose-lg max-w-none text-muted-foreground space-y-8">
               <p className="text-lg text-foreground">
                 <strong>Effective Date:</strong> May 11, 2026<br />
-                <strong>Last Updated:</strong> May 11, 2026
+                <strong>Last Updated:</strong> July 14, 2026
               </p>
 
               <section className="space-y-4">
@@ -73,19 +73,20 @@ const Terms = () => {
               <section className="space-y-4">
                 <h2 className="text-2xl font-serif font-semibold text-foreground">SMS Messaging Terms</h2>
                 <p>
-                  Freedom Interventions may send SMS text messages only to people who contact us, submit a request, book a service, or ask to receive follow-up information by text. Messages may include requested booking links, coaching session payment links, appointment details, callback coordination, and support information related to your inquiry.
+                  Freedom Interventions sends customer-care SMS text messages only after a person gives explicit consent. Messages may include requested consultation or registration links, secure coaching payment links, appointment and Zoom details, reminders, callback coordination, and follow-up related to an existing inquiry.
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>Opt-in:</strong> You consent by calling Freedom Interventions, submitting a website/contact or booking request, or otherwise asking to receive follow-up information by SMS.</li>
-                  <li><strong>Message frequency:</strong> Message frequency varies based on your inquiry and appointment activity.</li>
+                  <li><strong>Verbal opt-in:</strong> During an inbound call, Freedom Interventions identifies the messaging program, explains the message categories and expected frequency, states that message and data rates may apply, explains HELP and STOP, provides these Terms and our Privacy Policy, states that consent is not a condition of purchase, and asks for a yes-or-no response. We send SMS only after a clear affirmative response.</li>
+                  <li><strong>No inferred consent:</strong> Calling us, providing a phone number, submitting a request, booking, or purchasing does not by itself opt you in. Consent to SMS is not a condition of purchasing any product or service.</li>
+                  <li><strong>Message frequency:</strong> Message frequency varies, typically 1–4 messages per request or appointment.</li>
                   <li><strong>Costs:</strong> Message and data rates may apply.</li>
                   <li><strong>Opt-out:</strong> Reply STOP to cancel SMS messages.</li>
                   <li><strong>Help:</strong> Reply HELP for help, or contact us at matt@freedominterventions.com or (541) 668-8084.</li>
                   <li><strong>Carriers:</strong> Mobile carriers are not liable for delayed or undelivered messages.</li>
-                  <li><strong>Privacy:</strong> We do not sell or share SMS opt-in data or consent with third parties for their marketing purposes.</li>
+                  <li><strong>Privacy:</strong> We do not sell or share mobile information, SMS opt-in data, or consent with third parties or affiliates for their marketing or promotional purposes. We share it only with service providers necessary to deliver the requested messages.</li>
                 </ul>
                 <p>
-                  Example message: Freedom Interventions: here is the secure booking and payment link for your $150 crisis coaching Zoom session: https://freedominterventions.com/booking. Zoom details are sent after payment. Reply STOP to opt out.
+                  Example message: Freedom Interventions: Here is the consultation information you requested: [link]. Msg frequency varies. Msg &amp; data rates may apply. Reply HELP for help or STOP to opt out.
                 </p>
               </section>
 

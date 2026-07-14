@@ -30,7 +30,7 @@ const PrivacyPolicy = () => {
             <div className="prose prose-lg max-w-none text-muted-foreground space-y-6">
               <p className="text-lg text-foreground mb-8">
                 <strong>Effective Date:</strong> February 27, 2026<br />
-                <strong>Last Updated:</strong> February 27, 2026
+                <strong>Last Updated:</strong> July 14, 2026
               </p>
 
               <section className="space-y-4">
@@ -78,6 +78,19 @@ const PrivacyPolicy = () => {
                   <li>Comply with legal obligations</li>
                   <li>Send service updates and educational resources (with consent)</li>
                 </ul>
+              </section>
+
+              <section className="space-y-4">
+                <h2 className="text-2xl font-serif font-semibold text-foreground">SMS and Mobile Information</h2>
+                <p>
+                  Freedom Interventions sends customer-care text messages only after explicit consent. Calling us, providing a mobile number, submitting a request, booking, or purchasing does not by itself constitute SMS consent. Consent to receive SMS is not a condition of purchase.
+                </p>
+                <p>
+                  We do not sell, rent, or share mobile information, text-messaging originator opt-in data, or consent with third parties or affiliates for their marketing or promotional purposes. We may share this information only with service providers, such as our messaging provider, as necessary to deliver messages you requested and operate the messaging program.
+                </p>
+                <p>
+                  Message frequency varies, typically 1–4 messages per request or appointment. Message and data rates may apply. Reply STOP to opt out or HELP for help. Review our <a className="text-primary underline" href="/terms">Terms and SMS Policy</a> for complete program terms.
+                </p>
               </section>
 
               <section className="space-y-4">
