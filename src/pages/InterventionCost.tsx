@@ -181,7 +181,7 @@ const InterventionCost = () => {
                 <p className="mt-2 text-3xl font-bold text-foreground">Custom</p>
                 <p className="mt-3 flex-1 text-sm text-muted-foreground">Full intervention planning, on-site facilitation, treatment coordination, and family support. Priced to the situation — travel, timeline, and complexity all factor in.</p>
                 <Button asChild variant="outline" className="mt-5">
-                  <a href="tel:541-668-8084">Call for Pricing</a>
+                  <a href="tel:458-298-8000">Call for Pricing</a>
                 </Button>
               </div>
             </div>
@@ -212,7 +212,7 @@ const InterventionCost = () => {
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">There's no obligation and no pitch, just a straight conversation about the situation and what the work would involve.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">
-                <a href="tel:541-668-8084"><Phone className="mr-2 h-5 w-5" />Call Now</a>
+                <a href="tel:458-298-8000"><Phone className="mr-2 h-5 w-5" />Call Now</a>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link to="/?type=consultation#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>

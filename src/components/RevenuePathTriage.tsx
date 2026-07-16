@@ -121,7 +121,7 @@ export default function RevenuePathTriage({ source, className = "", compact = fa
 
               if (path.type === "phone") {
                 return (
-                  <TrackedPhoneLink key={path.title} phoneNumber="+15416688084" metadata={{ location: `${source}_${path.event}` }} className="block h-full" onClick={() => trackChoice(path.event)}>
+                  <TrackedPhoneLink key={path.title} phoneNumber="+14582988000" metadata={{ location: `${source}_${path.event}` }} className="block h-full" onClick={() => trackChoice(path.event)}>
                     {content}
                   </TrackedPhoneLink>
                 );

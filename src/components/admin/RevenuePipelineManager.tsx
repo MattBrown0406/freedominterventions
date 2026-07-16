@@ -171,7 +171,7 @@ const buildStageFollowups = (lead: RevenueLead, status: string): FollowupInsert[
             <p>I wanted to follow up after your family reached out. The first goal is not to force a decision. It is to understand whether this calls for consultation, family readiness work, or full intervention planning.</p>
             <p>If you have not booked a time yet, start here:</p>
             <p><a href="${consultUrl}">Book a free consultation</a></p>
-            <p>If things are moving quickly, call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+            <p>If things are moving quickly, call me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
             <p>- Matt</p>
           `,
           due_at: dueIn(120),
@@ -203,7 +203,7 @@ const buildStageFollowups = (lead: RevenueLead, status: string): FollowupInsert[
             <p>Hi ${firstName},</p>
             <p>Before our consultation, please complete the family assessment if you have not already. It helps me understand urgency, safety, treatment history, leverage, and where the family may need to get aligned.</p>
             <p><a href="${assessmentUrl}">Complete the family assessment</a></p>
-            <p>If things escalate before our call, call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+            <p>If things escalate before our call, call me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
             <p>- Matt</p>
           `,
           due_at: dueIn(15),

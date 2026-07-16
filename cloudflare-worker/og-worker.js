@@ -304,7 +304,7 @@ function generateLocationHtml(meta) {
     name: 'Freedom Interventions',
     description: `Professional addiction intervention services in ${city}, ${state}.`,
     url: canonical,
-    telephone: '+15416688084',
+    telephone: '+14582988000',
     areaServed: {
       '@type': 'Place',
       name: `${city}, ${state}`,
@@ -382,7 +382,7 @@ function generateLocationHtml(meta) {
         <li>Free initial consultation &mdash; no commitment required</li>
       </ul>
       <h2>Contact Freedom Interventions</h2>
-      <p>Call us now at <a href="tel:+15416688084">(541) 668-8084</a> for a free, confidential consultation. We serve ${safeCity} and all of ${safeState}.</p>
+      <p>Call us now at <a href="tel:+14582988000">(541) 668-8084</a> for a free, confidential consultation. We serve ${safeCity} and all of ${safeState}.</p>
       <p><a href="https://freedominterventions.com/#booking">Schedule your free consultation online</a></p>
     </section>
   </main>
@@ -462,7 +462,7 @@ function generateStaticRouteHtml(meta, pageUrl) {
       name: 'Freedom Interventions',
       url: SITE_URL,
       logo: `${SITE_URL}/og-share.jpg`,
-      telephone: '+15416688084',
+      telephone: '+14582988000',
     },
   });
 
@@ -502,7 +502,7 @@ function generateStaticRouteHtml(meta, pageUrl) {
         <li>Family intervention, crisis coaching, treatment planning, and aftercare guidance</li>
         <li>Nationwide and Canada service areas</li>
       </ul>
-      <p><a href="tel:+15416688084">(541) 668-8084</a></p>
+      <p><a href="tel:+14582988000">(541) 668-8084</a></p>
       <p><a href="${SITE_URL}/start-here">Start Here</a></p>
       <p><a href="${pageUrl}">View the full page</a></p>
     </section>

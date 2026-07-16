@@ -41,7 +41,7 @@ const Footer = () => {
               Direct addiction intervention services led by Matt Brown, helping families find clarity and a real plan.
             </p>
             <div className="space-y-2 pt-2">
-              <TrackedPhoneLink phoneNumber="+15416688084" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base" metadata={{ location: 'footer' }}>
+              <TrackedPhoneLink phoneNumber="+14582988000" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base" metadata={{ location: 'footer' }}>
                 <Phone className="w-4 h-4 flex-shrink-0" />
                 <span>(541) 668-8084</span>
               </TrackedPhoneLink>

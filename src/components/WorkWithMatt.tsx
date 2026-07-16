@@ -79,7 +79,7 @@ const WorkWithMatt = () => {
                 asChild
                 onClick={() => trackEvent("cta_call", { location: "work_with_matt" })}
               >
-                <a href="tel:541-668-8084">
+                <a href="tel:458-298-8000">
                   <Phone className="w-5 h-5" />
                   Call (541) 668-8084
                 </a>

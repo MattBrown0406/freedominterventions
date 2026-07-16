@@ -198,7 +198,7 @@ const Contact = () => {
               
               <div className="space-y-6">
                 <a 
-                  href="tel:+15416688084" 
+                  href="tel:+14582988000" 
                   className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
                 >
                   <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">

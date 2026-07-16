@@ -148,7 +148,7 @@ const WhatIfTheyRefuse = () => {
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">Let's talk about what comes next, and how the family holds the line without turning cold.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">
-                <a href="tel:541-668-8084"><Phone className="mr-2 h-5 w-5" />Call Now</a>
+                <a href="tel:458-298-8000"><Phone className="mr-2 h-5 w-5" />Call Now</a>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link to="/?type=consultation#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>

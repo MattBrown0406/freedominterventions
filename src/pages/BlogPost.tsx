@@ -245,7 +245,7 @@ const BlogPost = () => {
                   <Link to="/book-intervention-consultation#booking" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                     Book a confidential consultation
                   </Link>
-                  <a href="tel:541-668-8084" className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
+                  <a href="tel:458-298-8000" className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
                     Call (541) 668-8084
                   </a>
                 </div>

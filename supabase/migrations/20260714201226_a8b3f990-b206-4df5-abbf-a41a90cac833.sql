@@ -87,6 +87,6 @@ Yes. Interventions don't depend on the person agreeing they're sick. They work b
 
 ## You Don't Have to Do This Alone
 
-If your loved one can't see what addiction is doing to them — and to you — it doesn't mean you're out of options. It means it's time for a different approach. Matt Brown and the team at Freedom Interventions have spent more than two decades helping families guide loved ones into treatment, even when they didn't believe they needed it. Call **541-668-8084** or visit FreedomInterventions.com for a confidential conversation about your next step. Help doesn't have to wait for insight. It can start with you.
+If your loved one can't see what addiction is doing to them — and to you — it doesn't mean you're out of options. It means it's time for a different approach. Matt Brown and the team at Freedom Interventions have spent more than two decades helping families guide loved ones into treatment, even when they didn't believe they needed it. Call **458-298-8000** or visit FreedomInterventions.com for a confidential conversation about your next step. Help doesn't have to wait for insight. It can start with you.
 $body$
 );

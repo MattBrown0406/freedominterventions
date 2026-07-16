@@ -87,7 +87,7 @@ async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
 
       <p style="font-size: 15px; line-height: 1.6;">
         If you're unsure or have questions before booking, just reply to this email or call me directly at 
-        <a href="tel:5416688084" style="color: #1e40af;">541-668-8084</a>. No pressure — I'd rather have a 5-minute conversation than have you book something that isn't the right fit.
+        <a href="tel:4582988000" style="color: #1e40af;">458-298-8000</a>. No pressure — I'd rather have a 5-minute conversation than have you book something that isn't the right fit.
       </p>
 
       <p style="font-size: 15px; margin-top: 28px;">
@@ -97,7 +97,7 @@ async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
 
       <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0 16px;">
       <p style="font-size: 12px; color: #9ca3af; text-align: center;">
-        Freedom Interventions • 541-668-8084 • matt@freedominterventions.com
+        Freedom Interventions • 458-298-8000 • matt@freedominterventions.com
       </p>
     </div>
   `;

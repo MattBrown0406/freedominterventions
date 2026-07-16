@@ -281,7 +281,7 @@ const SelfAssessment = () => {
                       Talk to Matt directly. This call is confidential and free.
                     </p>
                     <TrackedPhoneLink
-                      phoneNumber="+15416688084"
+                      phoneNumber="+14582988000"
                       metadata={{ location: "self_assessment_safety" }}
                     >
                       <Button size="lg" className="w-full sm:w-auto">
@@ -506,7 +506,7 @@ const SelfAssessment = () => {
                             conversation today—not a form or an email.
                           </p>
                           <TrackedPhoneLink
-                            phoneNumber="+15416688084"
+                            phoneNumber="+14582988000"
                             metadata={{ location: "self_assessment_results_safety" }}
                           >
                             <Button size="lg">
@@ -627,7 +627,7 @@ const SelfAssessment = () => {
                       {resultCategory === "urgent" && (
                         <>
                           <TrackedPhoneLink
-                            phoneNumber="+15416688084"
+                            phoneNumber="+14582988000"
                             metadata={{ location: "self_assessment_results_urgent" }}
                           >
                             <Button size="lg">

@@ -76,7 +76,7 @@ async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient
         <p>I received your family assessment. Thank you for taking the time to lay out what is happening. That information helps me understand urgency, safety, treatment history, and where the family may need to get aligned.</p>
         <p>If things are escalating or you need answers sooner, you can book a free consultation here:</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
-        <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, you can call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+        <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, you can call me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
         <p>- Matt Brown<br>Freedom Interventions</p>
       `,
       source_attribution: sourceAttribution,
@@ -119,7 +119,7 @@ async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient
         <p>If your loved one is refusing help, the family is divided, or the risk is rising, waiting usually costs leverage. It becomes easier for everyone to drift back into rescuing, threatening, minimizing, or arguing.</p>
         <p>You can review the intervention readiness path here:</p>
         <p><a href="${readinessUrl}">Check intervention readiness</a></p>
-        <p>Or call me at <a href="tel:5416688084">541-668-8084</a> or use this consultation link:</p>
+        <p>Or call me at <a href="tel:4582988000">458-298-8000</a> or use this consultation link:</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
         <p>- Matt</p>
       `,
@@ -577,7 +577,7 @@ serve(async (req) => {
             <p>This assessment helps me understand urgency, safety concerns, treatment history, family alignment, and where leverage may or may not exist.</p>
             <p>If this is escalating or you need answers sooner, book a free consultation here:</p>
             <p><a href="${consultUrl}" style="display:inline-block;background:#1e3a5f;color:#fff;padding:12px 20px;text-decoration:none;border-radius:6px;">Book a free consultation</a></p>
-            <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, call or text me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+            <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, call or text me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
             <p>- Matt Brown<br>Freedom Interventions</p>
           </div>
         `;

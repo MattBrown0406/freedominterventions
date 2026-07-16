@@ -128,7 +128,7 @@ const Terms = () => {
                   Freedom Interventions<br />
                   Matt Brown<br />
                   Email: <a href="mailto:matt@freedominterventions.com" className="text-primary underline">matt@freedominterventions.com</a><br />
-                  Phone: <a href="tel:+15416688084" className="text-primary underline">(541) 668-8084</a>
+                  Phone: <a href="tel:+14582988000" className="text-primary underline">(541) 668-8084</a>
                 </p>
               </section>
             </div>

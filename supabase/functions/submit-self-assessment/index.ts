@@ -57,7 +57,7 @@ function buildFollowups(
     turning_point:
       "<p>Your answers land in the range I see most often right before things escalate: the family knows something is wrong, but nobody agrees on how serious it is or what to do next.</p><p>For families in this range, a crisis coaching session is usually the right move — one structured call that turns the confusion into a working plan for the next hard conversation.</p>",
     urgent:
-      "<p>Your answers suggest this situation has likely outgrown informal solutions. That does not mean you failed — it means the addiction is organized, and the response now needs to be organized too.</p><p>Please do not wait on email. Call me directly at <a href=\"tel:5416688084\">541-668-8084</a>. If a call is not possible yet, the intervention readiness path is where to start.</p>",
+      "<p>Your answers suggest this situation has likely outgrown informal solutions. That does not mean you failed — it means the addiction is organized, and the response now needs to be organized too.</p><p>Please do not wait on email. Call me directly at <a href=\"tel:4582988000\">458-298-8000</a>. If a call is not possible yet, the intervention readiness path is where to start.</p>",
   };
 
   const categoryCta: Record<ResultCategory, string> = {
@@ -78,7 +78,7 @@ function buildFollowups(
         ${categoryIntro[body.result_category]}
         ${categoryCta[body.result_category]}
         <p>If there is immediate danger, call 911. If suicide is a concern, call or text 988.</p>
-        <p>- Matt Brown<br>Freedom Interventions<br><a href="tel:5416688084">541-668-8084</a></p>
+        <p>- Matt Brown<br>Freedom Interventions<br><a href="tel:4582988000">458-298-8000</a></p>
       `,
       due_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
     },
@@ -105,7 +105,7 @@ function buildFollowups(
       body_html: `
         <p>Hi ${escapeHtml(first)},</p>
         <p>Checking in once more. These situations can change quickly — a new crisis, a treatment window opening, the family finally agreeing something has to happen.</p>
-        <p>If anything has shifted, call me at <a href="tel:5416688084">541-668-8084</a> or grab a time here:</p>
+        <p>If anything has shifted, call me at <a href="tel:4582988000">458-298-8000</a> or grab a time here:</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
         <p>- Matt</p>
       `,
