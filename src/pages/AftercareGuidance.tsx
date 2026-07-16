@@ -232,7 +232,7 @@ const AftercareGuidance = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button asChild size="lg" className="gap-2">
-                    <a href="tel:+15416688084">Call Matt to Enroll — (541) 668-8084</a>
+                    <a href="tel:+14582988000">Call Matt to Enroll — (541) 668-8084</a>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="gap-2">
                     <Link to="/?type=aftercare-planning#booking">Book a Free Aftercare Planning Call</Link>
@@ -253,7 +253,7 @@ const AftercareGuidance = () => {
                     </Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="gap-2">
-                    <a href="tel:+15416688084">
+                    <a href="tel:+14582988000">
                       <Phone className="w-5 h-5" />
                       Call (541) 668-8084
                     </a>

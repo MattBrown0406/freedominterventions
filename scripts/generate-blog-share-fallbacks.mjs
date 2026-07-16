@@ -73,7 +73,7 @@ const fallbackHtml = ({ title, excerpt, imageUrl, canonical }) => `
         <p>${escapeHtml(excerpt)}</p>
         <p><a href="${escapeHtml(canonical)}" style="color: #2c5282;">Read this article on Freedom Interventions</a></p>
         <div style="background: #f7fafc; padding: 20px; margin: 20px 0; border-left: 4px solid #2c5282;">
-          <p><strong>Phone:</strong> <a href="tel:+15416688084" style="color: #2c5282;">(541) 668-8084</a></p>
+          <p><strong>Phone:</strong> <a href="tel:+14582988000" style="color: #2c5282;">(541) 668-8084</a></p>
           <p><strong>Email:</strong> <a href="mailto:matt@freedominterventions.com" style="color: #2c5282;">matt@freedominterventions.com</a></p>
         </div>
       </div>

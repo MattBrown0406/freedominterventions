@@ -80,7 +80,7 @@ Living inside the financial wreckage of a loved one's addiction is exhausting an
 
 Recovery is possible. Not just for your loved one — for your family, your finances, and your own peace of mind. The first step is getting honest about what's happening and reaching out for guidance.
 
-If you're ready to talk to someone who understands both sides of this — the addiction and the family impact — we're here. Contact Freedom Interventions or call 541-668-8084. A conversation costs nothing, and it might be the turning point your family needs.
+If you're ready to talk to someone who understands both sides of this — the addiction and the family impact — we're here. Contact Freedom Interventions or call 458-298-8000. A conversation costs nothing, and it might be the turning point your family needs.
 
 ## Frequently Asked Questions About the Financial Impact of Addiction on Families
 
@@ -110,5 +110,5 @@ Paying directly for treatment is generally considered a constructive use of fina
 
 ## Ready to Take the Next Step?
 
-If your family is dealing with the financial and emotional toll of a loved one's addiction, you don't have to navigate it alone. Freedom Interventions specializes in helping families understand their options and take meaningful action — including professional intervention services designed to help your loved one accept treatment. Call 541-668-8084 today for a confidential consultation.$body$
+If your family is dealing with the financial and emotional toll of a loved one's addiction, you don't have to navigate it alone. Freedom Interventions specializes in helping families understand their options and take meaningful action — including professional intervention services designed to help your loved one accept treatment. Call 458-298-8000 today for a confidential consultation.$body$
 );

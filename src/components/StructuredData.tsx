@@ -15,7 +15,7 @@ export const OrganizationSchema = () => {
         image: "https://freedominterventions.com/og-share.jpg",
         description:
           "Professional addiction intervention services led by Matt Brown, Certified Intervention Professional with 20+ years of experience.",
-        telephone: "+1-541-668-8084",
+        telephone: "+1-458-298-8000",
         email: "matt@freedominterventions.com",
         foundingDate: "2004",
         founder: {
@@ -130,7 +130,7 @@ export const LocalBusinessSchema = ({
     "@type": "ProfessionalService",
     name: "Freedom Interventions",
     description: `Professional addiction intervention services for families in ${servedName}${areaType === "City" ? `, ${state}` : ""}. Helping loved ones move toward treatment and recovery.`,
-    telephone: "+1-541-668-8084",
+    telephone: "+1-458-298-8000",
     email: "matt@freedominterventions.com",
     url,
     image: "https://freedominterventions.com/favicon.jpeg",
@@ -501,7 +501,7 @@ export const ServiceSchema = ({
       "@type": "ProfessionalService",
       name: "Freedom Interventions",
       url: "https://freedominterventions.com",
-      telephone: "+1-541-668-8084",
+      telephone: "+1-458-298-8000",
       email: "matt@freedominterventions.com",
     },
     areaServed: [
@@ -538,7 +538,7 @@ export const AggregateRatingSchema = ({
     "@type": "ProfessionalService",
     name: "Freedom Interventions",
     url: "https://freedominterventions.com",
-    telephone: "+1-541-668-8084",
+    telephone: "+1-458-298-8000",
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: ratingValue,

@@ -30,7 +30,7 @@ const decisions = [
     description:
       "Choose this if there is overdose risk, disappearance, violence, severe withdrawal, psychosis, a treatment bed available right now, or the family cannot safely wait.",
     nextStep: "Immediate phone triage",
-    href: "tel:+15416688084",
+    href: "tel:+14582988000",
     event: "which_help_call_now",
   },
   {
@@ -125,7 +125,7 @@ export default function WhichHelpDoWeNeed() {
                   You do not have to know whether this is coaching, readiness work, or a formal intervention before you reach out. Use the safest lowest step that can answer the real question today.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: "which_help_hero" }}>
+                  <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "which_help_hero" }}>
                     <Button size="xl" variant="hero">
                       <Phone className="h-5 w-5" />
                       Call Matt Now
@@ -190,7 +190,7 @@ export default function WhichHelpDoWeNeed() {
                   return (
                     <TrackedPhoneLink
                       key={decision.title}
-                      phoneNumber="+15416688084"
+                      phoneNumber="+14582988000"
                       metadata={{ location: decision.event }}
                       className="block h-full"
                       onClick={() => trackChoice(decision.event, decision.href)}

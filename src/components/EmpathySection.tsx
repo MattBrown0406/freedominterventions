@@ -41,7 +41,7 @@ const EmpathySection = () => {
 
           {/* CTA */}
           <Button asChild size="lg" className="font-semibold">
-            <TrackedPhoneLink phoneNumber="+15416688084" metadata={{ location: 'empathy_section' }}>
+            <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: 'empathy_section' }}>
               <Phone className="h-4 w-4" />
               Let's Talk — Free & Confidential
             </TrackedPhoneLink>

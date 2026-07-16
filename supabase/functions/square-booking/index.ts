@@ -109,7 +109,7 @@ async function queueConsultationPrep(
       <p>Hi ${firstName},</p>
       <p>Before our consultation, please complete the family assessment if you have not already. It gives me the clearest picture of urgency, safety, treatment history, leverage, and family alignment before we talk.</p>
       <p><a href="${assessmentUrl}">Complete the family assessment</a></p>
-      <p>If things escalate before our call, you can call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+      <p>If things escalate before our call, you can call me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
       <p>- Matt Brown<br>Freedom Interventions</p>
     `,
     source_attribution: payload.sourceAttribution,

@@ -27,7 +27,7 @@ const normalizePhoneNumber = (phoneNumber: string) => phoneNumber.replace(/[^\d+
 export const useCallTracking = () => {
   const location = useLocation();
 
-  const trackCallClick = useCallback(async (phoneNumber: string = '541-668-8084', metadata: Record<string, unknown> = {}) => {
+  const trackCallClick = useCallback(async (phoneNumber: string = '458-298-8000', metadata: Record<string, unknown> = {}) => {
     const sourceAttribution = getFunnelAttribution();
     const attributionForTracking = sourceAttribution ?? { source: 'direct' };
     const source = attributionForTracking.source || sourceAttribution?.utm_source || 'direct';

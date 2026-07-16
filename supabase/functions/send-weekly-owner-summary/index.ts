@@ -521,7 +521,7 @@ function buildEmailHtml(params: {
       </div>
 
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0 14px;">
-      <p style="font-size:12px;color:#6b7280;">Freedom Interventions · Matt Brown · <a href="tel:5416688084" style="color:#1e40af;">541-668-8084</a></p>
+      <p style="font-size:12px;color:#6b7280;">Freedom Interventions · Matt Brown · <a href="tel:4582988000" style="color:#1e40af;">458-298-8000</a></p>
     </div>
   `;
 }

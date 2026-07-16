@@ -119,5 +119,5 @@ Age-appropriate honesty is generally better than silence. Children need to know 
 
 If you''re living with a loved one whose addiction has made your home feel like a minefield, you don''t have to keep navigating it alone. Freedom Interventions works with families in exactly this situation — helping them understand what they''re dealing with, what options exist, and what a path forward actually looks like.
 
-Call 541-668-8084 today or visit FreedomInterventions.com to learn more. We''re here when you''re ready.$body$
+Call 458-298-8000 today or visit FreedomInterventions.com to learn more. We''re here when you''re ready.$body$
 );

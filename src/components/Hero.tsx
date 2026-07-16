@@ -58,7 +58,7 @@ const Hero = () => {
           >
             <div className="flex justify-center">
               <TrackedPhoneLink
-                phoneNumber="+15416688084"
+                phoneNumber="+14582988000"
                 metadata={{ location: 'hero_primary_cta' }}
               >
                 <Button variant="hero" size="xl">

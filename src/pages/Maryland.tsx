@@ -29,7 +29,7 @@ const Maryland = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:541-668-8084">
+                <a href="tel:458-298-8000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call (541) 668-8084
                 </a>
@@ -134,7 +134,7 @@ const Maryland = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:541-668-8084">
+              <a href="tel:458-298-8000">
                 <Phone className="mr-2 h-5 w-5" />
                 Call (541) 668-8084
               </a>

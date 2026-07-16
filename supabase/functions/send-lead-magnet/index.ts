@@ -106,7 +106,7 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
       subject: `${first}, your intervention readiness checklist`,
       body_html: `
         <p>Hi ${escapeHtml(first)},</p>
-        <p>I sent the intervention readiness checklist. If the situation is moving quickly, do not wait on email. Call me directly at <a href="tel:5416688084">541-668-8084</a>.</p>
+        <p>I sent the intervention readiness checklist. If the situation is moving quickly, do not wait on email. Call me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
         <p>If you are not sure which level of help fits, this page will route you to the safest next step:</p>
         <p><a href="${decisionUrl}">Choose the right help path</a></p>
         <p>- Matt Brown<br>Freedom Interventions</p>
@@ -185,7 +185,7 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
         <p>Hi ${escapeHtml(first)},</p>
         <p>This is my last scheduled note. If things have stabilized, I am glad the checklist helped.</p>
         <p>If they have not — if you are still having the same conversation with the same result — you do not have to figure out the next move alone. A free consultation costs nothing but fifteen minutes, and I will tell you honestly what level of help fits, including "none yet."</p>
-        <p><a href="${consultUrl}">Book a free consultation</a> or call me at <a href="tel:5416688084">541-668-8084</a>.</p>
+        <p><a href="${consultUrl}">Book a free consultation</a> or call me at <a href="tel:4582988000">458-298-8000</a>.</p>
         <p>- Matt Brown<br>Freedom Interventions</p>
       `,
       source_attribution: sourceAttribution,
@@ -330,7 +330,7 @@ const handler = async (req: Request): Promise<Response> => {
     Warmly,<br>
     <strong>Matt</strong><br>
     Freedom Interventions<br>
-    <a href="tel:+15416688084" style="color: #1a365d;">(541) 668-8084</a>
+    <a href="tel:+14582988000" style="color: #1a365d;">(541) 668-8084</a>
   </p>
 
   <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
