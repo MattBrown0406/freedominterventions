@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 let scriptLoaded = false;
 
-export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-WCT7G4VSJP";
+export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-HQ53XPK2Z9";
 
 declare global {
   interface Window {
