@@ -13,8 +13,8 @@ const BoiseIdaho = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Drug Intervention in Boise, Idaho | Professional Family Intervention Help"
-        description="Need a drug intervention in Boise? Matt Brown helps Treasure Valley families plan treatment entry, boundaries, and next steps. Call (541) 668-8084."
+        title="Boise Drug Interventionist | Freedom Interventions"
+        description="Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (541) 668-8084."
         canonical="https://freedominterventions.com/boise-idaho"
         keywords="drug intervention in Boise, Boise professional interventionist, Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth intervention Boise, fentanyl intervention Boise"
       />

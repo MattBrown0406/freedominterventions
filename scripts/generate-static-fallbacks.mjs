@@ -41,19 +41,17 @@ const staticMetadata = {
     body: "Matt Brown helps families plan the conversation, line up treatment, and set boundaries before addiction gets another chance to negotiate.",
   },
   "/minneapolis-minnesota": {
-    title:
-      "Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help",
+    title: "Minneapolis Interventionist | Freedom Interventions",
     description:
-      "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084.",
+      "Need professional intervention help in Minneapolis? Matt Brown helps Twin Cities families plan the conversation and treatment entry. Call (541) 668-8084.",
     heading:
-      "Minneapolis Professional Interventionist for Drug, Alcohol, and Fentanyl Addiction",
+      "Professional Interventionist in Minneapolis for Families Facing Addiction",
     body: "Freedom Interventions helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis.",
   },
   "/boise-idaho": {
-    title:
-      "Drug Intervention in Boise, Idaho | Professional Family Intervention Help",
+    title: "Boise Drug Interventionist | Freedom Interventions",
     description:
-      "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families plan treatment entry, boundaries, and next steps. Call (541) 668-8084.",
+      "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (541) 668-8084.",
     heading: "Drug Intervention in Boise for Families Who Need a Real Plan",
     body: "Freedom Interventions helps Boise families prepare the intervention, line up treatment, and stop the cycle of rescuing, arguing, and waiting.",
   },
@@ -131,10 +129,10 @@ const staticMetadata = {
     body: "Talk directly with Matt Brown about what is happening in your family and what next step makes sense.",
   },
   "/interventionist": {
-    title: "About Matt Brown | Professional Interventionist",
+    title: "Oregon Interventionist Matt Brown | Freedom Interventions",
     description:
-      "Meet Matt Brown, a professional interventionist with 20+ years experience, personal recovery, and direct family intervention experience.",
-    heading: "About Matt Brown",
+      "Oregon-based interventionist Matt Brown helps families prepare for drug and alcohol treatment. 20+ years experience. Call (541) 668-8084.",
+    heading: "Matt Brown: Oregon Interventionist for Families in Crisis",
     body: "Matt Brown brings professional intervention experience, personal recovery, and direct family guidance to serious addiction situations.",
   },
   "/intervention-answers": {

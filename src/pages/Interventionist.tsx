@@ -27,8 +27,8 @@ const Interventionist = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Interventionist Oregon | Call Matt Brown for Family Help"
-        description={`Looking for an interventionist in Oregon? Matt Brown is an Oregon-based professional interventionist with 20+ years experience and ${yearsSober} years sober. Call (541) 668-8084 for a confidential next step.`}
+        title="Oregon Interventionist Matt Brown | Freedom Interventions"
+        description="Oregon-based interventionist Matt Brown helps families prepare for drug and alcohol treatment. 20+ years experience. Call (541) 668-8084."
         canonical="https://freedominterventions.com/interventionist"
         keywords="professional interventionist Oregon, interventionist Oregon, certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
@@ -81,7 +81,7 @@ const Interventionist = () => {
               {/* Bio Column */}
               <div className="space-y-6">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
-                  Meet Matt Brown, Interventionist in Oregon for Families in Crisis
+                  Matt Brown: Oregon Interventionist for Families in Crisis
                 </h1>
                 <p className="text-2xl md:text-3xl font-serif text-primary">Matt Brown</p>
                 
