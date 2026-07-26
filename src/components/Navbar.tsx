@@ -31,9 +31,9 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ];
 
-const Dropdown = ({ label, items }: { label: string; items: { name: string; href: string }[] }) => (
+const Dropdown = ({ label, items, dark = false }: { label: string; items: { name: string; href: string }[]; dark?: boolean }) => (
   <div className="relative group">
-    <button className="inline-flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">
+    <button className={`inline-flex items-center gap-1 transition-colors duration-200 font-medium ${dark ? "text-slate-200 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d5ad55]" : "text-muted-foreground hover:text-primary"}`}>
       {label}
       <ChevronDown className="w-4 h-4" />
     </button>
@@ -67,43 +67,46 @@ const MobileSection = ({ label, items, isOpen, onToggle, onNavigate }: { label: 
   </div>
 );
 
-const Navbar = () => {
+const Navbar = ({ dark = false }: { dark?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const desktopLinkClass = dark
+    ? "text-slate-200 hover:text-white transition-colors duration-200 font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d5ad55]"
+    : "text-muted-foreground hover:text-primary transition-colors duration-200 font-medium";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md">
+    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${dark ? "bg-[#071c3e]/95 border-b border-white/10" : "bg-background/90"}`}>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           <a href="/" className="flex items-center gap-2 min-w-0">
-            <img src={logo} alt="Freedom Interventions" className="h-10 md:h-12 w-auto mix-blend-multiply border-2 border-foreground rounded-lg flex-shrink-0" width={266} height={295} />
-            <span className="font-serif text-base sm:text-xl md:text-2xl font-semibold text-primary truncate">Freedom Interventions</span>
+            <img src={logo} alt="Freedom Interventions" className={`h-10 md:h-12 w-auto border rounded-lg flex-shrink-0 ${dark ? "border-[#d5ad55]/80" : "mix-blend-multiply border-foreground"}`} width={266} height={295} />
+            <span className={`font-serif text-base sm:text-xl md:text-2xl font-semibold truncate ${dark ? "text-white" : "text-primary"}`}>Freedom Interventions</span>
           </a>
 
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Home</Link>
-            <Link to="/start-here" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Start Here</Link>
-            <Dropdown label="Services" items={servicesLinks} />
-            <Link to="/family-intervention#process" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">How It Works</Link>
-            <Link to="/interventionist" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">About Matt</Link>
-            <Dropdown label="Resources" items={resourceLinks} />
-            <Link to="/assessment" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Assessment</Link>
-            <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium">Contact</Link>
-            <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "navbar_desktop" }}>
-              <Button variant="hero" size="default">
+          <div className={dark ? "hidden min-[1200px]:flex items-center gap-6" : "hidden md:flex items-center gap-6"}>
+            <Link to="/" className={desktopLinkClass}>Home</Link>
+            <Link to="/start-here" className={desktopLinkClass}>Start Here</Link>
+            <Dropdown label="Services" items={servicesLinks} dark={dark} />
+            <Link to="/family-intervention#process" className={desktopLinkClass}>How It Works</Link>
+            <Link to="/interventionist" className={desktopLinkClass}>About Matt</Link>
+            <Dropdown label="Resources" items={resourceLinks} dark={dark} />
+            {!dark && <Link to="/assessment" className={desktopLinkClass}>Assessment</Link>}
+            {!dark && <Link to="/contact" className={desktopLinkClass}>Contact</Link>}
+            <TrackedPhoneLink phoneNumber="+145****8000" metadata={{ location: "navbar_desktop" }}>
+              <Button variant="hero" size="default" className={dark ? "bg-white text-[#071c3e] hover:bg-slate-100" : undefined}>
                 <Phone className="w-4 h-4 mr-2" />
                 Call Now
               </Button>
             </TrackedPhoneLink>
           </div>
 
-          <button className="md:hidden p-2 text-foreground" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+          <button className={`${dark ? "min-[1200px]:hidden" : "md:hidden"} p-2 ${dark ? "text-white" : "text-foreground"}`} onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-border/50 animate-fade-up space-y-3">
+          <div className={`${dark ? "min-[1200px]:hidden" : "md:hidden"} py-4 border-t border-border/50 animate-fade-up space-y-3`}>
             {navLinks.map((link) => (
               <Link key={link.href} to={link.href} className="block px-4 py-3 rounded-xl bg-card text-foreground font-medium" onClick={() => setIsOpen(false)}>
                 {link.name}
@@ -156,19 +159,21 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="border-t border-border/50 hidden md:block">
-        <div className="container mx-auto px-6 py-1 flex justify-between items-center">
-          <a href="https://soberhelpline.com/monday-zoom-registration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-            <img src={soberHelplineLogo} alt="Sober Helpline" className="h-8 md:h-10 w-auto" />
-            <span className="text-muted-foreground">Free Weekly Family Support Meetings</span>
-          </a>
-          <AppStoreBadge height={30} />
-          <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
-            <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" width={1024} height={1024} />
-            <span className="font-lobster text-sm md:text-base text-foreground">The Party Wreckers Podcast</span>
-          </a>
+      {!dark && (
+        <div className="border-t border-border/50 hidden md:block">
+          <div className="container mx-auto px-6 py-1 flex justify-between items-center">
+            <a href="https://soberhelpline.com/monday-zoom-registration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
+              <img src={soberHelplineLogo} alt="Sober Helpline" className="h-8 md:h-10 w-auto" />
+              <span className="text-muted-foreground">Free Weekly Family Support Meetings</span>
+            </a>
+            <AppStoreBadge height={30} />
+            <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
+              <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" width={1024} height={1024} />
+              <span className="font-lobster text-sm md:text-base text-foreground">The Party Wreckers Podcast</span>
+            </a>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

@@ -1,128 +1,142 @@
-import { Button } from "@/components/ui/button";
-import { Calendar, ClipboardCheck, Phone } from "lucide-react";
+import { ArrowRight, Phone, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import AppStoreBadge from "@/components/AppStoreBadge";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import "./Hero.css";
+
+const journeySteps = [
+  {
+    title: "Tell me what’s happening.",
+    description: "We listen",
+  },
+  {
+    title: "Build the plan",
+    description: "Together",
+  },
+  {
+    title: "Take action",
+    description: "With support",
+  },
+  {
+    title: "Get your loved one help",
+    description:
+      "Placement at the appropriate level of care based on clinical needs and financial appropriateness.",
+  },
+  {
+    title: "Support the family",
+    description:
+      "Build a post-treatment plan, with continued work through successful treatment completion and commitment to an aftercare plan.*",
+  },
+];
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 md:pt-36">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 organic-blob animate-float opacity-60" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-accent/10 organic-blob-2 animate-float-delayed opacity-50" />
-        <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-secondary/40 organic-blob animate-float opacity-40" />
-      </div>
+    <section className="fi-hero" aria-labelledby="home-hero-title">
+      <div className="fi-hero-noise" aria-hidden="true" />
+      <div className="fi-hero-aurora" aria-hidden="true" />
+      <svg
+        className="fi-hero-topography"
+        viewBox="0 0 1500 900"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d="M-80 620 C180 430 390 790 650 540 S1060 240 1580 470" />
+        <path d="M-100 690 C170 500 390 850 690 600 S1110 300 1600 525" />
+        <path d="M-40 550 C220 370 390 690 620 480 S1040 160 1540 390" />
+      </svg>
 
-      <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
+      <div className="fi-hero-inner">
+        <div className="fi-hero-copy">
+          <div className="fi-hero-eyebrow">Professional addiction intervention</div>
 
-          {/* Matt's portrait */}
-          <div
-            className="flex justify-center animate-fade-up"
-            style={{ animationDelay: "0.08s" }}
-          >
-            <img
-              src={mattPortrait}
-              alt="Matt Brown, Certified Intervention Professional"
-              className="h-44 w-44 md:h-52 md:w-52 rounded-full object-cover object-top border-4 border-primary/20 shadow-lg"
-              loading="eager"
-              width={208}
-              height={208}
-            />
-          </div>
-
-          {/* Headline */}
-          <h1
-            className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight animate-fade-up"
-            style={{ animationDelay: "0.1s" }}
-          >
-            When Addiction Has Your Family in Crisis,
-            <span className="block text-primary mt-2">Get a Clear Plan Now</span>
+          <h1 id="home-hero-title" className="fi-hero-title">
+            Your family is in crisis.
+            <span>You don’t have to guess what comes next.</span>
           </h1>
 
-          {/* Subheadline */}
-          <p
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-up"
-            style={{ animationDelay: "0.3s" }}
-          >
-            If your loved one is spiraling and your family is scared, exhausted, or divided, the next step matters. Call now, book a confidential consultation, or check whether your family is ready for a professional intervention.
+          <p className="fi-hero-lead">
+            Get a clear, confidential plan from Matt Brown—an intervention professional with 20+ years of experience guiding families from fear and division toward treatment and recovery.
           </p>
 
-          {/* CTAs */}
-          <div
-            className="space-y-3 animate-fade-up"
-            style={{ animationDelay: "0.4s" }}
-          >
-            <div className="flex justify-center">
-              <TrackedPhoneLink
-                phoneNumber="+14582988000"
-                metadata={{ location: 'hero_primary_cta' }}
-              >
-                <Button variant="hero" size="xl">
-                  <Phone className="w-5 h-5" />
-                  Call Now
-                </Button>
-              </TrackedPhoneLink>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-              <Link to="/book-intervention-consultation#booking">
-                <Button variant="hero-outline" size="xl">
-                  <Calendar className="w-5 h-5" />
-                  Book Free Consult
-                </Button>
-              </Link>
-              <Link to="/which-help-do-we-need">
-                <Button variant="hero-outline" size="xl">
-                  Which Help Fits?
-                </Button>
-              </Link>
-              <Link to="/intervention-readiness">
-                <Button variant="hero-outline" size="xl">
-                  <ClipboardCheck className="w-5 h-5" />
-                  Check Intervention Readiness
-                </Button>
-              </Link>
-            </div>
-            <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto pt-2">
-              Confidential help for families in crisis. Professional intervention, treatment planning, and family coaching options available.
-            </p>
-
-            {/* FamilyBridge app callout */}
-            <div
-              className="pt-4 animate-fade-up"
-              style={{ animationDelay: "0.55s" }}
+          <div className="fi-hero-actions">
+            <TrackedPhoneLink
+              phoneNumber="+145****8000"
+              metadata={{ location: "hero_primary_cta" }}
+              className="fi-hero-button fi-hero-button-primary"
             >
-              <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-medium">
-                Not ready to call? Start here:
-              </p>
-              <AppStoreBadge height={44} />
-            </div>
+              <Phone aria-hidden="true" />
+              Talk to Matt now
+            </TrackedPhoneLink>
+
+            <Link
+              to="/book-intervention-consultation#booking"
+              className="fi-hero-button fi-hero-button-secondary"
+            >
+              Book a confidential consultation
+              <ArrowRight aria-hidden="true" />
+            </Link>
           </div>
 
-          {/* Trust badges */}
-          <div 
-            className="flex flex-wrap items-center gap-3 justify-center pt-6 animate-fade-up"
-            style={{ animationDelay: "0.5s" }}
-          >
-            {[
-              { icon: "✓", label: "CIP Certified" },
-              { icon: "✓", label: "20+ Years Experience" },
-              { icon: "✓", label: "Direct Family Guidance Into Treatment" },
-            ].map((badge) => (
-              <span
-                key={badge.label}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-foreground"
-              >
-                <span className="text-primary font-bold">{badge.icon}</span>
-                {badge.label}
-              </span>
+          <div className="fi-hero-microcopy">
+            <ShieldCheck aria-hidden="true" />
+            <span>Private, judgment-free guidance · Nationwide and international support</span>
+          </div>
+        </div>
+
+        <div className="fi-hero-visual" aria-label="Matt Brown, intervention professional">
+          <div className="fi-hero-portrait-wrap">
+            <div className="fi-hero-orbit fi-hero-orbit-one" aria-hidden="true" />
+            <div className="fi-hero-orbit fi-hero-orbit-two" aria-hidden="true" />
+
+            <div className="fi-hero-portrait-shape">
+              <img
+                className="fi-hero-portrait"
+                src={mattPortrait}
+                alt="Matt Brown, Certified Intervention Professional"
+                loading="eager"
+                width={415}
+                height={619}
+              />
+            </div>
+
+            <div className="fi-hero-credential">
+              <div className="fi-hero-credential-label">
+                <span aria-hidden="true">✓</span>
+                Trusted guidance
+              </div>
+              <strong>20+ years</strong>
+              <p>Helping families move from chaos to a clear plan.</p>
+            </div>
+
+            <div className="fi-hero-availability">
+              <div>
+                <span className="fi-hero-live-dot" aria-hidden="true" />
+                <strong>Speak directly with Matt</strong>
+              </div>
+              <p>No call center. No pressure. Just an honest conversation about what your family needs.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="fi-hero-journey" aria-label="The path forward">
+          <div className="fi-hero-journey-label">The path forward starts with one conversation</div>
+          <div className="fi-hero-journey-track">
+            {journeySteps.map((step, index) => (
+              <div className="fi-hero-step" key={step.title}>
+                <i className="fi-hero-step-dot" aria-hidden="true" />
+                <strong>{step.title}</strong>
+                <span>{step.description}</span>
+                <span className="sr-only">Step {index + 1} of {journeySteps.length}</span>
+              </div>
             ))}
           </div>
         </div>
       </div>
+
+      <footer className="fi-hero-disclaimer">
+        <strong>*No outcome is guaranteed.</strong> Continued engagement and support are contingent upon the family’s ongoing participation and compliance with the interventionist’s recommendations and instructions.
+      </footer>
     </section>
   );
 };

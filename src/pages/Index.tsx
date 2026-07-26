@@ -84,7 +84,7 @@ const Index = () => {
         url="https://freedominterventions.com"
         speakableSelectors={["h1", "main section:first-of-type p", "h2"]}
       />
-      <Navbar />
+      <Navbar dark />
       <main>
         <Hero />
         <section className="py-12 md:py-16 bg-card border-y border-border/50">
