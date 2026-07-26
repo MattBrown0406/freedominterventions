@@ -12,11 +12,11 @@ const journeySteps = [
   },
   {
     title: "Build the plan",
-    description: "Together",
+    description: "Together we determine the team and the message for the intervention.",
   },
   {
     title: "Take action",
-    description: "With support",
+    description: "We sit down with your loved one and present the plan with love and with boundaries that will hold.",
   },
   {
     title: "Get your loved one help",
