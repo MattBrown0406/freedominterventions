@@ -20,6 +20,7 @@ const resourceLinks = [
   { name: "FAQ", href: "/intervention-faq" },
   { name: "Substance Guide", href: "/substance-guide" },
   { name: "Assessment", href: "/assessment" },
+  { name: "Contact", href: "/contact" },
 ];
 
 const navLinks = [
@@ -33,14 +34,18 @@ const navLinks = [
 
 const Dropdown = ({ label, items, dark = false }: { label: string; items: { name: string; href: string }[]; dark?: boolean }) => (
   <div className="relative group">
-    <button className={`inline-flex items-center gap-1 transition-colors duration-200 font-medium ${dark ? "text-slate-200 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d5ad55]" : "text-muted-foreground hover:text-primary"}`}>
+    <button
+      type="button"
+      aria-haspopup="menu"
+      className={`inline-flex items-center gap-1 transition-colors duration-200 font-medium ${dark ? "text-slate-200 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d5ad55]" : "text-muted-foreground hover:text-primary"}`}
+    >
       {label}
       <ChevronDown className="w-4 h-4" />
     </button>
-    <div className="absolute left-0 top-full pt-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity">
-      <div className="min-w-[220px] rounded-2xl border border-border bg-background shadow-xl p-2">
+    <div className="absolute left-0 top-full pt-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity">
+      <div role="menu" className="min-w-[220px] rounded-2xl border border-border bg-background shadow-xl p-2">
         {items.map((item) => (
-          <Link key={item.href} to={item.href} className="block px-4 py-3 rounded-xl text-sm text-muted-foreground hover:bg-accent/40 hover:text-primary transition-colors">
+          <Link role="menuitem" key={item.href} to={item.href} className="block px-4 py-3 rounded-xl text-sm text-muted-foreground hover:bg-accent/40 hover:text-primary transition-colors">
             {item.name}
           </Link>
         ))}
@@ -51,7 +56,7 @@ const Dropdown = ({ label, items, dark = false }: { label: string; items: { name
 
 const MobileSection = ({ label, items, isOpen, onToggle, onNavigate }: { label: string; items: { name: string; href: string }[]; isOpen: boolean; onToggle: () => void; onNavigate: () => void }) => (
   <div className="border border-border/60 rounded-xl overflow-hidden">
-    <button onClick={onToggle} className="w-full px-4 py-3 bg-card flex items-center justify-between text-left font-medium text-foreground">
+    <button type="button" aria-expanded={isOpen} onClick={onToggle} className="w-full px-4 py-3 bg-card flex items-center justify-between text-left font-medium text-foreground">
       {label}
       <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
     </button>
