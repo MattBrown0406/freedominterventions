@@ -12,6 +12,14 @@ const indexFile = path.join(distDir, "index.html");
 const envFile = path.join(root, ".env");
 const BASE_URL = "https://freedominterventions.com";
 
+const gscMetadataOverrides = {
+  "why-professional-interventions-work": {
+    title: "Professional Interventions: Why They Work | Freedom Interventions",
+    description:
+      "Learn how professional interventions align families, prepare treatment, reduce conflict, and create a clear next step when a loved one refuses help.",
+  },
+};
+
 const escapeHtml = (value = "") =>
   String(value)
     .replace(/&/g, "&amp;")
@@ -85,8 +93,11 @@ const replaceNoscript = (html, metadata) =>
 const upsertHead = (html, post) => {
   const canonical = `${BASE_URL}/blog/${post.slug}`;
   const imageUrl = absoluteUrl(post.image_url);
-  const title = post.title.includes("Freedom Interventions") ? post.title : `${post.title} | Freedom Interventions`;
-  const description = (post.excerpt || "").length > 160 ? `${post.excerpt.slice(0, 157)}...` : post.excerpt || "";
+  const metadataOverride = gscMetadataOverrides[post.slug];
+  const rawTitle = metadataOverride?.title || post.title;
+  const rawDescription = metadataOverride?.description || post.excerpt || "";
+  const title = rawTitle.includes("Freedom Interventions") ? rawTitle : `${rawTitle} | Freedom Interventions`;
+  const description = rawDescription.length > 160 ? `${rawDescription.slice(0, 157)}...` : rawDescription;
   const published = post.published_at || post.created_at;
   const modified = post.updated_at || published;
 
@@ -102,7 +113,7 @@ const upsertHead = (html, post) => {
     `<meta property="og:image" content="${escapeHtml(imageUrl)}">`,
     `<meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">`,
     `<meta property="og:image:type" content="${imageType(imageUrl)}">`,
-    `<meta property="og:image:alt" content="${escapeHtml(post.title)}">`,
+    `<meta property="og:image:alt" content="${escapeHtml(rawTitle)}">`,
     published ? `<meta property="article:published_time" content="${escapeHtml(published)}">` : "",
     modified ? `<meta property="article:modified_time" content="${escapeHtml(modified)}">` : "",
     post.category ? `<meta property="article:section" content="${escapeHtml(post.category)}">` : "",
@@ -110,13 +121,13 @@ const upsertHead = (html, post) => {
     `<meta name="twitter:title" content="${escapeHtml(title)}">`,
     `<meta name="twitter:description" content="${escapeHtml(description)}">`,
     `<meta name="twitter:image" content="${escapeHtml(imageUrl)}">`,
-    `<meta name="twitter:image:alt" content="${escapeHtml(post.title)}">`,
+    `<meta name="twitter:image:alt" content="${escapeHtml(rawTitle)}">`,
     `<meta name="twitter:site" content="@freedominterventions">`,
   ].filter(Boolean).join("\n    ");
 
   const withCleanHead = stripManagedHeadTags(html).replace(/<title>.*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
   return replaceNoscript(withCleanHead.replace("</title>", `</title>\n    ${tags}`), {
-    title: post.title,
+    title: rawTitle,
     excerpt: description,
     imageUrl,
     canonical,

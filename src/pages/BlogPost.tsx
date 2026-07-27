@@ -62,6 +62,15 @@ const gscPostOptimizations: Record<string, GscPostOptimization> = {
       "Kratom addiction becomes a family concern when use is secretive, escalating, tied to withdrawal, damaging work or relationships, or being used to avoid opioid, alcohol, anxiety, or depression symptoms. Families should stop minimizing it as just a supplement, document the pattern, avoid rescuing away consequences, and get guidance if the person cannot cut back or refuses help.",
     ctaText: "If kratom use is creating withdrawal, deception, financial stress, or repeated failed promises to stop, Matt Brown can help your family decide whether treatment planning, coaching, or an intervention is appropriate.",
   },
+  "why-professional-interventions-work": {
+    title: "Professional Interventions: Why They Work | Freedom Interventions",
+    description:
+      "Learn how professional interventions align families, prepare treatment, reduce conflict, and create a clear next step when a loved one refuses help.",
+    directAnswerHeading: "Why professional interventions work",
+    directAnswer:
+      "A professional intervention replaces repeated arguments and last-minute decisions with assessment, family alignment, a prepared treatment plan, and clear boundaries. The goal is not to shame or ambush someone. It is to help the family speak with one compassionate, consistent voice and make treatment immediately available if the person accepts help.",
+    ctaText: "If private conversations keep ending in promises, bargaining, or refusal, the next step is a confidential consultation with Matt Brown to assess risk, family readiness, and whether an intervention is appropriate.",
+  },
 };
 
 const familyBridgeFitSlugs = new Set([
