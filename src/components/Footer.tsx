@@ -43,7 +43,7 @@ const Footer = () => {
             <div className="space-y-2 pt-2">
               <TrackedPhoneLink phoneNumber="+14582988000" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base" metadata={{ location: 'footer' }}>
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                <span>(541) 668-8084</span>
+                <span>(458) 298-8000</span>
               </TrackedPhoneLink>
               <a href="mailto:matt@freedominterventions.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm md:text-base min-w-0">
                 <Mail className="w-4 h-4 flex-shrink-0" />

@@ -21,7 +21,7 @@ const MeridianIdaho = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Meridian, Idaho | Freedom Interventions"
-        description="Meridian families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Ada County. Free consultation. (541) 668-8084."
+        description="Meridian families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Ada County. Free consultation. (458) 298-8000."
         keywords="Meridian addiction intervention, Ada County drug intervention, Meridian family intervention, prescription opioid addiction Meridian, addiction help Meridian ID"
         canonical="https://freedominterventions.com/meridian-idaho"
       />
@@ -64,9 +64,9 @@ const MeridianIdaho = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -222,9 +222,9 @@ const MeridianIdaho = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

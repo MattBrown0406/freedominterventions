@@ -26,7 +26,7 @@ const KauaiHawaii = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services on Kauai, Hawaii | Freedom Interventions"
-        description="Professional addiction intervention on Kauai, Hawaii. Extreme geographic isolation, limited local treatment, meth and alcohol crisis. Matt Brown serves all of Kauai County. Free consultation. Call (541) 668-8084."
+        description="Professional addiction intervention on Kauai, Hawaii. Extreme geographic isolation, limited local treatment, meth and alcohol crisis. Matt Brown serves all of Kauai County. Free consultation. Call (458) 298-8000."
         keywords="Kauai addiction intervention, Kauai drug intervention, Hawaii intervention specialist Kauai, Kauai County substance abuse, meth Kauai, Kauai interventionist, Garden Isle addiction help"
         canonical="https://freedominterventions.com/kauai-hawaii"
       />
@@ -69,9 +69,9 @@ const KauaiHawaii = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -291,9 +291,9 @@ const KauaiHawaii = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:458-298-8000">
+              <a href="tel:+14582988000">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

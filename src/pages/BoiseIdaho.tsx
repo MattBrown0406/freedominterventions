@@ -14,7 +14,7 @@ const BoiseIdaho = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Boise Drug Interventionist | Freedom Interventions"
-        description="Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (541) 668-8084."
+        description="Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (458) 298-8000."
         canonical="https://freedominterventions.com/boise-idaho"
         keywords="drug intervention in Boise, Boise professional interventionist, Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth intervention Boise, fentanyl intervention Boise"
       />
@@ -70,7 +70,7 @@ const BoiseIdaho = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>
@@ -228,7 +228,7 @@ const BoiseIdaho = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
                 </a>

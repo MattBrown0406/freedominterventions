@@ -155,7 +155,7 @@ const CrisisSupport = () => {
               <a href="tel:+14582988000">
                 <Button variant="default" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call Now: (541) 668-8084
+                  Call Now: (458) 298-8000
                 </Button>
               </a>
               <Link to="/?type=consultation#booking">
@@ -261,7 +261,7 @@ const CrisisSupport = () => {
                 <a href="tel:+14582988000">
                   <Button variant="default" size="lg" className="w-full sm:w-auto">
                     <Phone className="w-5 h-5 mr-2" />
-                    Call (541) 668-8084
+                    Call (458) 298-8000
                   </Button>
                 </a>
                 <Link to="/?type=consultation#booking">

@@ -21,7 +21,7 @@ const SalemOregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Salem, Oregon | Freedom Interventions"
-        description="Salem families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Marion County. Free consultation. (541) 668-8084."
+        description="Salem families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Marion County. Free consultation. (458) 298-8000."
         keywords="Salem Oregon addiction intervention, drug intervention Salem OR, alcohol intervention Salem, family intervention Salem Oregon, Marion County interventionist, meth intervention Salem, fentanyl crisis Salem Oregon, professional intervention Salem"
         canonical="https://freedominterventions.com/salem-oregon"
       />
@@ -64,9 +64,9 @@ const SalemOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const SalemOregon = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

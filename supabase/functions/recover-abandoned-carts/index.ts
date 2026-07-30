@@ -87,7 +87,7 @@ async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
 
       <p style="font-size: 15px; line-height: 1.6;">
         If you're unsure or have questions before booking, just reply to this email or call me directly at 
-        <a href="tel:4582988000" style="color: #1e40af;">458-298-8000</a>. No pressure — I'd rather have a 5-minute conversation than have you book something that isn't the right fit.
+        <a href="tel:+14582988000" style="color: #1e40af;">458-298-8000</a>. No pressure — I'd rather have a 5-minute conversation than have you book something that isn't the right fit.
       </p>
 
       <p style="font-size: 15px; margin-top: 28px;">

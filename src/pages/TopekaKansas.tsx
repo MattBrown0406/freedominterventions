@@ -21,7 +21,7 @@ const TopekaKansas = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Topeka, Kansas | Freedom Interventions"
-        description="Professional addiction intervention services in Topeka, KS. Matt Brown helps Shawnee County families navigate meth, fentanyl, and co-occurring addiction crises. Free consultation. Call (541) 668-8084."
+        description="Professional addiction intervention services in Topeka, KS. Matt Brown helps Shawnee County families navigate meth, fentanyl, and co-occurring addiction crises. Free consultation. Call (458) 298-8000."
         keywords="Topeka addiction intervention, Topeka Kansas interventionist, Shawnee County drug intervention, meth intervention Topeka, fentanyl Topeka Kansas, co-occurring disorder intervention Topeka"
         canonical="https://freedominterventions.com/topeka-kansas"
       />
@@ -64,9 +64,9 @@ const TopekaKansas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -178,7 +178,7 @@ const TopekaKansas = () => {
               Topeka Addiction Resources
             </h2>
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              These Topeka-area resources can provide immediate support. For professional intervention services, call Matt Brown at (541) 668-8084.
+              These Topeka-area resources can provide immediate support. For professional intervention services, call Matt Brown at (458) 298-8000.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {[
@@ -284,9 +284,9 @@ const TopekaKansas = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

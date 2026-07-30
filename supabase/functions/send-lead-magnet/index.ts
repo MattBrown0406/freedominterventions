@@ -106,7 +106,7 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
       subject: `${first}, your intervention readiness checklist`,
       body_html: `
         <p>Hi ${escapeHtml(first)},</p>
-        <p>I sent the intervention readiness checklist. If the situation is moving quickly, do not wait on email. Call me directly at <a href="tel:4582988000">458-298-8000</a>.</p>
+        <p>I sent the intervention readiness checklist. If the situation is moving quickly, do not wait on email. Call me directly at <a href="tel:+14582988000">458-298-8000</a>.</p>
         <p>If you are not sure which level of help fits, this page will route you to the safest next step:</p>
         <p><a href="${decisionUrl}">Choose the right help path</a></p>
         <p>- Matt Brown<br>Freedom Interventions</p>
@@ -185,7 +185,7 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
         <p>Hi ${escapeHtml(first)},</p>
         <p>This is my last scheduled note. If things have stabilized, I am glad the checklist helped.</p>
         <p>If they have not — if you are still having the same conversation with the same result — you do not have to figure out the next move alone. A free consultation costs nothing but fifteen minutes, and I will tell you honestly what level of help fits, including "none yet."</p>
-        <p><a href="${consultUrl}">Book a free consultation</a> or call me at <a href="tel:4582988000">458-298-8000</a>.</p>
+        <p><a href="${consultUrl}">Book a free consultation</a> or call me at <a href="tel:+14582988000">458-298-8000</a>.</p>
         <p>- Matt Brown<br>Freedom Interventions</p>
       `,
       source_attribution: sourceAttribution,
@@ -319,7 +319,7 @@ const handler = async (req: Request): Promise<Response> => {
     <h3 style="margin-top: 0;">Need Professional Help?</h3>
     <p style="margin-bottom: 20px;">Interventions are more successful with professional guidance. We've helped over 1,000 families.</p>
     <a href="${SITE_URL}/which-help-do-we-need" style="display: inline-block; background-color: white; color: #1a365d; padding: 12px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">Choose the Right Next Step</a>
-    <p style="margin-top: 15px; margin-bottom: 0; font-size: 18px;">📞 (541) 668-8084</p>
+    <p style="margin-top: 15px; margin-bottom: 0; font-size: 18px;">📞 (458) 298-8000</p>
   </div>
 
   <p>Remember: The longer addiction continues, the harder it becomes to treat. If you're reading this, it may be time to act.</p>
@@ -330,7 +330,7 @@ const handler = async (req: Request): Promise<Response> => {
     Warmly,<br>
     <strong>Matt</strong><br>
     Freedom Interventions<br>
-    <a href="tel:+14582988000" style="color: #1a365d;">(541) 668-8084</a>
+    <a href="tel:+14582988000" style="color: #1a365d;">(458) 298-8000</a>
   </p>
 
   <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">

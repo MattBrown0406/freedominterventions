@@ -119,7 +119,7 @@ const Ohio = () => {
               <Button asChild variant="outline" size="lg" className="text-lg">
                 <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -299,7 +299,7 @@ const Ohio = () => {
             <Button asChild variant="outline" size="lg" className="text-lg">
               <a href="tel:+14582988000">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

@@ -121,7 +121,7 @@ const Illinois = () => {
               <Button asChild variant="outline" size="lg">
                 <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -302,7 +302,7 @@ const Illinois = () => {
             <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+14582988000">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

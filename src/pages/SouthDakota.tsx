@@ -63,7 +63,7 @@ const SouthDakota = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Interventionist South Dakota | Call Matt Brown for Family Help"
-        description="Looking for an interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions in Sioux Falls, Rapid City, and statewide. Call (541) 668-8084."
+        description="Looking for an interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions in Sioux Falls, Rapid City, and statewide. Call (458) 298-8000."
         canonical="https://freedominterventions.com/south-dakota"
         keywords="professional interventionist South Dakota, South Dakota interventionist, South Dakota addiction intervention, Sioux Falls drug intervention, Rapid City family intervention, South Dakota alcohol intervention, meth intervention South Dakota"
         geoRegion="US-SD"
@@ -133,7 +133,7 @@ const SouthDakota = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg" asChild>
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="w-5 h-5 mr-2" />
                   Call Matt Now
                 </a>
@@ -315,7 +315,7 @@ const SouthDakota = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:458-298-8000">
+              <a href="tel:+14582988000">
                 <Phone className="w-5 h-5 mr-2" />
                 Call Matt Now
               </a>

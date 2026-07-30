@@ -21,7 +21,7 @@ const staticMetadata = {
   "/": {
     title: "Professional Addiction Interventionist | Freedom Interventions",
     description:
-      "Matt Brown has 20+ years experience helping families through professional addiction interventions. Free consultation: (541) 668-8084. Nationwide service.",
+      "Matt Brown has 20+ years experience helping families through professional addiction interventions. Free consultation: (458) 298-8000. Nationwide service.",
     heading: "Professional Addiction Interventionist",
     body: "Freedom Interventions helps families move from fear and confusion into a clear plan for intervention, treatment planning, and family recovery support.",
   },
@@ -35,7 +35,7 @@ const staticMetadata = {
   "/family-intervention": {
     title: "Family Intervention Services | Help a Loved One Accept Treatment",
     description:
-      "Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 668-8084.",
+      "Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (458) 298-8000.",
     heading:
       "Family Intervention Services to Help a Loved One Accept Treatment",
     body: "Matt Brown helps families plan the conversation, line up treatment, and set boundaries before addiction gets another chance to negotiate.",
@@ -43,7 +43,7 @@ const staticMetadata = {
   "/minneapolis-minnesota": {
     title: "Minneapolis Interventionist | Freedom Interventions",
     description:
-      "Need professional intervention help in Minneapolis? Matt Brown helps Twin Cities families plan the conversation and treatment entry. Call (541) 668-8084.",
+      "Need professional intervention help in Minneapolis? Matt Brown helps Twin Cities families plan the conversation and treatment entry. Call (458) 298-8000.",
     heading:
       "Professional Interventionist in Minneapolis for Families Facing Addiction",
     body: "Freedom Interventions helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis.",
@@ -51,7 +51,7 @@ const staticMetadata = {
   "/boise-idaho": {
     title: "Boise Drug Interventionist | Freedom Interventions",
     description:
-      "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (541) 668-8084.",
+      "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (458) 298-8000.",
     heading: "Drug Intervention in Boise for Families Who Need a Real Plan",
     body: "Freedom Interventions helps Boise families prepare the intervention, line up treatment, and stop the cycle of rescuing, arguing, and waiting.",
   },
@@ -59,7 +59,7 @@ const staticMetadata = {
     title:
       "Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions",
     description:
-      "Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 668-8084.",
+      "Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (458) 298-8000.",
     heading: "Oregon Interventionist for Drug, Alcohol, and Fentanyl Addiction",
     body: "Matt Brown helps families across Oregon prepare the intervention, coordinate treatment, and stop the cycle of panic and repeated crisis.",
   },
@@ -67,7 +67,7 @@ const staticMetadata = {
     title:
       "Interventionist Alaska | Family Addiction Help | Freedom Interventions",
     description:
-      "Need an interventionist in Alaska? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions and treatment travel. Call (541) 668-8084.",
+      "Need an interventionist in Alaska? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions and treatment travel. Call (458) 298-8000.",
     heading:
       "Professional Interventionist in Alaska for Families Facing Addiction",
     body: "Matt Brown helps Alaska families prepare the intervention, coordinate appropriate treatment, and plan travel before the family conversation happens.",
@@ -75,7 +75,7 @@ const staticMetadata = {
   "/washington": {
     title: "Drug Interventionist in Washington | Family Intervention Help",
     description:
-      "Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 668-8084.",
+      "Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (458) 298-8000.",
     heading:
       "Drug Interventionist in Washington for Families Who Need Structure",
     body: "Matt Brown helps Washington families prepare drug, alcohol, and fentanyl interventions, coordinate treatment, and hold clear boundaries.",
@@ -84,7 +84,7 @@ const staticMetadata = {
     title:
       "Professional Interventionist in North Carolina | Drug & Alcohol Help",
     description:
-      "Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084.",
+      "Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (458) 298-8000.",
     heading:
       "Professional Interventionist in North Carolina for Drug and Alcohol Addiction",
     body: "Matt Brown helps North Carolina families prepare the intervention, line up treatment, and stop the cycle of panic, rescuing, and relapse.",
@@ -92,7 +92,7 @@ const staticMetadata = {
   "/south-dakota": {
     title: "Professional Interventionist in South Dakota | Drug & Alcohol Help",
     description:
-      "Need a professional interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions. Call (541) 668-8084.",
+      "Need a professional interventionist in South Dakota? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions. Call (458) 298-8000.",
     heading:
       "Professional Interventionist in South Dakota for Drug and Alcohol Addiction",
     body: "Matt Brown helps South Dakota families prepare the intervention, coordinate treatment, and stop living at addiction's pace.",
@@ -101,14 +101,14 @@ const staticMetadata = {
     title:
       "Drug Intervention in Iowa | Professional Interventionist for Families",
     description:
-      "Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (541) 668-8084.",
+      "Need a drug intervention in Iowa? Matt Brown helps families plan treatment entry, boundaries, and intervention next steps. Call (458) 298-8000.",
     heading: "Drug Intervention in Iowa for Families Who Need a Real Plan",
     body: "Freedom Interventions helps Iowa families prepare drug and alcohol interventions, line up treatment, and set boundaries.",
   },
   "/louisiana": {
     title: "Drug Intervention in Louisiana | Family Intervention Help",
     description:
-      "Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (541) 668-8084.",
+      "Need a drug intervention in Louisiana? Matt Brown helps families plan treatment entry, boundaries, and next steps. Call (458) 298-8000.",
     heading: "Drug Intervention in Louisiana for Families Who Need Help Now",
     body: "Freedom Interventions helps Louisiana families prepare the intervention, coordinate treatment entry, and stop reacting from crisis to crisis.",
   },
@@ -116,7 +116,7 @@ const staticMetadata = {
     title:
       "Fentanyl Intervention Help in Fort Worth | Treatment Planning Support",
     description:
-      "Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (541) 668-8084.",
+      "Fort Worth fentanyl intervention and treatment planning help for families. Matt Brown helps move loved ones toward care. Call (458) 298-8000.",
     heading: "Fentanyl Intervention and Treatment Planning Help in Fort Worth",
     body: "Freedom Interventions helps Fort Worth families plan fentanyl intervention, treatment entry, and urgent next steps.",
   },
@@ -124,14 +124,14 @@ const staticMetadata = {
     title:
       "Contact Freedom Interventions | Free Addiction Intervention Consultation",
     description:
-      "Schedule a free, confidential consultation with Matt Brown. Professional addiction intervention services available nationwide. Call (541) 668-8084.",
+      "Schedule a free, confidential consultation with Matt Brown. Professional addiction intervention services available nationwide. Call (458) 298-8000.",
     heading: "Contact Freedom Interventions",
     body: "Talk directly with Matt Brown about what is happening in your family and what next step makes sense.",
   },
   "/interventionist": {
     title: "Oregon Interventionist Matt Brown | Freedom Interventions",
     description:
-      "Oregon-based interventionist Matt Brown helps families prepare for drug and alcohol treatment. 20+ years experience. Call (541) 668-8084.",
+      "Oregon-based interventionist Matt Brown helps families prepare for drug and alcohol treatment. 20+ years experience. Call (458) 298-8000.",
     heading: "Matt Brown: Oregon Interventionist for Families in Crisis",
     body: "Matt Brown brings professional intervention experience, personal recovery, and direct family guidance to serious addiction situations.",
   },
@@ -299,7 +299,7 @@ const fallbackHtml = ({ heading, body }) => `
           <li>Nationwide and Canada service areas</li>
         </ul>
         <div style="background: #f7fafc; padding: 20px; margin: 20px 0; border-left: 4px solid #2c5282;">
-          <p><strong>Phone:</strong> <a href="tel:+14582988000" style="color: #2c5282;">(541) 668-8084</a></p>
+          <p><strong>Phone:</strong> <a href="tel:+14582988000" style="color: #2c5282;">(458) 298-8000</a></p>
           <p><strong>Email:</strong> <a href="mailto:matt@freedominterventions.com" style="color: #2c5282;">matt@freedominterventions.com</a></p>
           <p><strong>Start Here:</strong> <a href="https://freedominterventions.com/start-here" style="color: #2c5282;">Find the right next step</a></p>
         </div>

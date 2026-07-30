@@ -606,7 +606,7 @@ export const LocationFAQSchema = ({
     },
     {
       question: `How much does addiction intervention cost in ${location}?`,
-      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (541) 668-8084 for a confidential consultation.`,
+      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (458) 298-8000 for a confidential consultation.`,
     },
     {
       question: `How do professional interventions improve the chances of treatment entry in ${location}?`,
@@ -659,7 +659,7 @@ export const HowToSchema = () => {
       {
         "@type": "HowToStep",
         name: "Contact a Professional Interventionist",
-        text: "Call Freedom Interventions at (541) 668-8084 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
+        text: "Call Freedom Interventions at (458) 298-8000 for a free consultation. Discuss your situation and determine if professional intervention is appropriate.",
         url: "https://freedominterventions.com/#booking",
       },
       {

@@ -21,7 +21,7 @@ const AnaheimCalifornia = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Anaheim, California | Freedom Interventions"
-        description="Anaheim families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Orange County. Free consultation. (541) 668-8084."
+        description="Anaheim families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Orange County. Free consultation. (458) 298-8000."
         keywords="Anaheim addiction intervention, Anaheim drug intervention, Anaheim family intervention, intervention specialist Anaheim CA, Orange County interventionist, fentanyl intervention Anaheim, working class addiction Anaheim"
         canonical="https://freedominterventions.com/anaheim-california"
       />
@@ -64,9 +64,9 @@ const AnaheimCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const AnaheimCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

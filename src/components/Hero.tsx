@@ -61,7 +61,7 @@ const Hero = () => {
 
           <div className="fi-hero-actions">
             <TrackedPhoneLink
-              phoneNumber="+145****8000"
+              phoneNumber="+14582988000"
               metadata={{ location: "hero_primary_cta" }}
               className="fi-hero-button fi-hero-button-primary"
             >

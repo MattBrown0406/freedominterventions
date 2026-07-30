@@ -21,7 +21,7 @@ const LongBeachCalifornia = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Long Beach, California | Freedom Interventions"
-        description="Long Beach families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Los Angeles County. Free consultation. (541) 668-8084."
+        description="Long Beach families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Los Angeles County. Free consultation. (458) 298-8000."
         keywords="Long Beach addiction intervention, Long Beach drug intervention, Long Beach family intervention, intervention specialist Long Beach CA, Los Angeles County interventionist, fentanyl intervention Long Beach, port city drug crisis"
         canonical="https://freedominterventions.com/long-beach-california"
       />
@@ -64,9 +64,9 @@ const LongBeachCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const LongBeachCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

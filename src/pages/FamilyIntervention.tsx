@@ -260,7 +260,7 @@ const FamilyIntervention = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Family Intervention Services | Help a Loved One Accept Treatment"
-        description="Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 668-8084."
+        description="Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (458) 298-8000."
         keywords="family intervention, family intervention services, hire an interventionist, drug intervention, alcohol intervention, how to stage an intervention, intervention specialist, certified interventionist, family intervention cost, what happens during an intervention"
         canonical="https://freedominterventions.com/family-intervention"
       />
@@ -273,7 +273,7 @@ const FamilyIntervention = () => {
       />
       <WebPageSchema
         name="Family Intervention Services | Help a Loved One Accept Treatment"
-        description="Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (541) 668-8084."
+        description="Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (458) 298-8000."
         url="https://freedominterventions.com/family-intervention"
       />
       <BreadcrumbSchema
@@ -321,7 +321,7 @@ const FamilyIntervention = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
                   Call Matt Now
                 </a>
@@ -665,7 +665,7 @@ const FamilyIntervention = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
                   Call Matt Now
                 </a>

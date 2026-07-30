@@ -72,7 +72,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Professional Addiction Interventionist | Freedom Interventions"
-        description="Matt Brown has 20+ years experience helping families through professional addiction interventions. Free consultation: (541) 668-8084. Nationwide service."
+        description="Matt Brown has 20+ years experience helping families through professional addiction interventions. Free consultation: (458) 298-8000. Nationwide service."
         canonical="https://freedominterventions.com"
         keywords="addiction intervention, family intervention, drug intervention, alcohol intervention, professional interventionist, intervention services, addiction help, recovery support"
       />

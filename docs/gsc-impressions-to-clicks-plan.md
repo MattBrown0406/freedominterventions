@@ -110,7 +110,7 @@ Example rewrites:
 
 Description pattern:
 
-`Matt Brown helps {location} families plan drug, alcohol, and fentanyl interventions, treatment entry, and next steps. 20+ years experience. Confidential consultation: (541) 668-8084.`
+`Matt Brown helps {location} families plan drug, alcohol, and fentanyl interventions, treatment entry, and next steps. 20+ years experience. Confidential consultation: (458) 298-8000.`
 
 Keep descriptions under roughly 155-160 characters when possible, but do not over-optimize for character count at the cost of clarity.
 

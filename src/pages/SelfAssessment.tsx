@@ -286,7 +286,7 @@ const SelfAssessment = () => {
                     >
                       <Button size="lg" className="w-full sm:w-auto">
                         <Phone className="mr-2 h-5 w-5" />
-                        Call (541) 668-8084 Now
+                        Call (458) 298-8000 Now
                       </Button>
                     </TrackedPhoneLink>
                   </div>
@@ -511,7 +511,7 @@ const SelfAssessment = () => {
                           >
                             <Button size="lg">
                               <Phone className="mr-2 h-5 w-5" />
-                              Call Matt Now — (541) 668-8084
+                              Call Matt Now — (458) 298-8000
                             </Button>
                           </TrackedPhoneLink>
                           <p className="text-sm text-red-700 dark:text-red-300 mt-3">
@@ -632,7 +632,7 @@ const SelfAssessment = () => {
                           >
                             <Button size="lg">
                               <Phone className="mr-2 h-5 w-5" />
-                              Call (541) 668-8084
+                              Call (458) 298-8000
                             </Button>
                           </TrackedPhoneLink>
                           <Button asChild size="lg" variant="outline">

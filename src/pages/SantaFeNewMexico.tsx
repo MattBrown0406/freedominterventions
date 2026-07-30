@@ -21,7 +21,7 @@ const SantaFeNewMexico = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Santa Fe, New Mexico | Freedom Interventions"
-        description="Santa Fe families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Santa Fe County. Free consultation. (541) 668-8084."
+        description="Santa Fe families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Santa Fe County. Free consultation. (458) 298-8000."
         keywords="Santa Fe addiction intervention, Santa Fe County drug intervention, Santa Fe family intervention, alcohol addiction Santa Fe NM, opioid crisis Santa Fe, Native American addiction New Mexico, intervention specialist Santa Fe"
         canonical="https://freedominterventions.com/santa-fe-new-mexico"
       />
@@ -64,9 +64,9 @@ const SantaFeNewMexico = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const SantaFeNewMexico = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

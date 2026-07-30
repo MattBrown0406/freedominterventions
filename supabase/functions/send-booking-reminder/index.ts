@@ -114,7 +114,7 @@ serve(async (req: Request) => {
           ${zoomSection}
           
           <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <p style="margin: 0; font-size: 14px;"><strong>Need to reschedule?</strong> Visit our website or contact us at (541) 668-8084.</p>
+            <p style="margin: 0; font-size: 14px;"><strong>Need to reschedule?</strong> Visit our website or contact us at (458) 298-8000.</p>
           </div>
           
           <p>We look forward to speaking with you!</p>

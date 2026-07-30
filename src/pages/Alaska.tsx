@@ -18,7 +18,7 @@ const Alaska = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Interventionist Alaska | Family Addiction Help | Freedom Interventions"
-        description="Need an interventionist in Alaska? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions and treatment travel. Call (541) 668-8084."
+        description="Need an interventionist in Alaska? Matt Brown helps families plan drug, alcohol, meth, and fentanyl interventions and treatment travel. Call (458) 298-8000."
         canonical="https://freedominterventions.com/alaska"
         keywords="interventionist Alaska, professional interventionist Alaska, Alaska drug intervention, Alaska alcohol intervention, Alaska family intervention, meth intervention Alaska, fentanyl intervention Alaska"
         geoRegion="US-AK"
@@ -67,9 +67,9 @@ const Alaska = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -152,9 +152,9 @@ const Alaska = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:458-298-8000">
+              <a href="tel:+14582988000">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

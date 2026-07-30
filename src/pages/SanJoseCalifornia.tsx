@@ -21,7 +21,7 @@ const SanJoseCalifornia = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in San Jose, California | Freedom Interventions"
-        description="San Jose families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Santa Clara County. Free consultation. (541) 668-8084."
+        description="San Jose families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Santa Clara County. Free consultation. (458) 298-8000."
         keywords="San Jose addiction intervention, San Jose drug intervention, Silicon Valley family intervention, intervention specialist San Jose CA, Santa Clara County interventionist, high-functioning addiction San Jose, tech addiction Silicon Valley"
         canonical="https://freedominterventions.com/san-jose-california"
       />
@@ -64,9 +64,9 @@ const SanJoseCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const SanJoseCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>

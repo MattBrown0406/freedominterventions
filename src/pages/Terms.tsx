@@ -81,7 +81,7 @@ const Terms = () => {
                   <li><strong>Message frequency:</strong> Message frequency varies, typically 1–4 messages per request or appointment.</li>
                   <li><strong>Costs:</strong> Message and data rates may apply.</li>
                   <li><strong>Opt-out:</strong> Reply STOP to cancel SMS messages.</li>
-                  <li><strong>Help:</strong> Reply HELP for help, or contact us at matt@freedominterventions.com or (541) 668-8084.</li>
+                  <li><strong>Help:</strong> Reply HELP for help, or contact us at matt@freedominterventions.com or (458) 298-8000.</li>
                   <li><strong>Carriers:</strong> Mobile carriers are not liable for delayed or undelivered messages.</li>
                   <li><strong>Privacy:</strong> We do not sell or share mobile information, SMS opt-in data, or consent with third parties or affiliates for their marketing or promotional purposes. We share it only with service providers necessary to deliver the requested messages.</li>
                 </ul>
@@ -128,7 +128,7 @@ const Terms = () => {
                   Freedom Interventions<br />
                   Matt Brown<br />
                   Email: <a href="mailto:matt@freedominterventions.com" className="text-primary underline">matt@freedominterventions.com</a><br />
-                  Phone: <a href="tel:+14582988000" className="text-primary underline">(541) 668-8084</a>
+                  Phone: <a href="tel:+14582988000" className="text-primary underline">(458) 298-8000</a>
                 </p>
               </section>
             </div>

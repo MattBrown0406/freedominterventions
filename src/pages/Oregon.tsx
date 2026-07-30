@@ -65,7 +65,7 @@ const Oregon = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Oregon Interventionist for Drug & Alcohol Addiction | Freedom Interventions"
-        description="Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (541) 668-8084."
+        description="Need an Oregon interventionist? Matt Brown helps families plan drug, alcohol, and fentanyl interventions with treatment entry. Call (458) 298-8000."
         canonical="https://freedominterventions.com/oregon"
         keywords="Oregon interventionist, professional interventionist Oregon, alcohol intervention Oregon, Oregon addiction intervention, Portland drug intervention, Oregon family intervention, fentanyl intervention Oregon"
         geoRegion="US-OR"

@@ -64,7 +64,7 @@ const Washington = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Drug Interventionist in Washington | Family Intervention Help"
-        description="Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (541) 668-8084."
+        description="Need a drug interventionist in Washington? Matt Brown helps families plan intervention, treatment entry, and boundaries. Call (458) 298-8000."
         canonical="https://freedominterventions.com/washington"
         keywords="drug interventionist Washington, Washington interventionist, Washington addiction intervention, Seattle drug intervention, Spokane intervention services, family intervention Washington, fentanyl intervention Washington"
         geoRegion="US-WA"

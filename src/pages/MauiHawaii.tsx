@@ -26,7 +26,7 @@ const MauiHawaii = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services on Maui, Hawaii | Freedom Interventions"
-        description="Professional addiction intervention services on Maui, Hawaii. Alcohol, meth, and post-wildfire trauma-driven addiction. Matt Brown serves all of Maui County. Free consultation. Call (541) 668-8084."
+        description="Professional addiction intervention services on Maui, Hawaii. Alcohol, meth, and post-wildfire trauma-driven addiction. Matt Brown serves all of Maui County. Free consultation. Call (458) 298-8000."
         keywords="Maui addiction intervention, Maui drug intervention, Hawaii intervention specialist Maui, Lahaina addiction, Maui interventionist, alcohol addiction Maui, Maui County substance abuse"
         canonical="https://freedominterventions.com/maui-hawaii"
       />
@@ -69,9 +69,9 @@ const MauiHawaii = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -285,9 +285,9 @@ const MauiHawaii = () => {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <a href="tel:458-298-8000">
+              <a href="tel:+14582988000">
                 <Phone className="mr-2 h-5 w-5" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

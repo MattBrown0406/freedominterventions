@@ -63,7 +63,7 @@ const NorthCarolina = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Professional Interventionist in North Carolina | Drug & Alcohol Help"
-        description="Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (541) 668-8084."
+        description="Need a professional interventionist in North Carolina? Matt Brown helps families plan drug, alcohol, and fentanyl interventions. Call (458) 298-8000."
         canonical="https://freedominterventions.com/north-carolina"
         keywords="professional interventionist North Carolina, North Carolina interventionist, North Carolina addiction intervention, Charlotte intervention services, Raleigh drug intervention, North Carolina family intervention, NC fentanyl crisis"
         geoRegion="US-NC"

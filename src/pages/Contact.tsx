@@ -206,7 +206,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Phone</h3>
-                    <p className="text-primary hover:underline">(541) 668-8084</p>
+                    <p className="text-primary hover:underline">(458) 298-8000</p>
                     <p className="text-sm text-muted-foreground mt-1">Available for consultations</p>
                   </div>
                 </a>

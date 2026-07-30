@@ -18,7 +18,7 @@ const paths = [
     title: "Call Matt now",
     description: "Use this when there is overdose risk, disappearance, violence, psychosis, a treatment window closing, or the family cannot safely wait.",
     bestFor: "Safety, timing, and fast treatment-window decisions.",
-    cta: "Call (541) 668-8084",
+    cta: "Call (458) 298-8000",
     type: "phone",
     event: "triage_call",
   },

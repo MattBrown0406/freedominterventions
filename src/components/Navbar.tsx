@@ -97,7 +97,7 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
             <Dropdown label="Resources" items={resourceLinks} dark={dark} />
             {!dark && <Link to="/assessment" className={desktopLinkClass}>Assessment</Link>}
             {!dark && <Link to="/contact" className={desktopLinkClass}>Contact</Link>}
-            <TrackedPhoneLink phoneNumber="+145****8000" metadata={{ location: "navbar_desktop" }}>
+            <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "navbar_desktop" }}>
               <Button variant="hero" size="default" className={dark ? "bg-white text-[#071c3e] hover:bg-slate-100" : undefined}>
                 <Phone className="w-4 h-4 mr-2" />
                 Call Now

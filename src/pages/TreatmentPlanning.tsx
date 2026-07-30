@@ -261,7 +261,7 @@ const TreatmentPlanning = () => {
                   <a href="tel:+14582988000">
                     <Button size="lg" variant="outline" className="gap-2">
                       <Phone className="w-4 h-4" />
-                      Call (541) 668-8084
+                      Call (458) 298-8000
                     </Button>
                   </a>
                 </div>

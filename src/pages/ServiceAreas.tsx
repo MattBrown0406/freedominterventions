@@ -103,7 +103,7 @@ const ServiceAreas = () => {
               <a href="tel:+14582988000">
                 <Button variant="hero" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call Now: (541) 668-8084
+                  Call Now: (458) 298-8000
                 </Button>
               </a>
               <Link to="/assessment">
@@ -273,7 +273,7 @@ const ServiceAreas = () => {
               <a href="tel:+14582988000">
                 <Button variant="hero" size="lg" className="w-full sm:w-auto">
                   <Phone className="w-5 h-5 mr-2" />
-                  (541) 668-8084
+                  (458) 298-8000
                 </Button>
               </a>
               <Link to="/contact">

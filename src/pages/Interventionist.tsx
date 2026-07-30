@@ -28,7 +28,7 @@ const Interventionist = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Oregon Interventionist Matt Brown | Freedom Interventions"
-        description="Oregon-based interventionist Matt Brown helps families prepare for drug and alcohol treatment. 20+ years experience. Call (541) 668-8084."
+        description="Oregon-based interventionist Matt Brown helps families prepare for drug and alcohol treatment. 20+ years experience. Call (458) 298-8000."
         canonical="https://freedominterventions.com/interventionist"
         keywords="professional interventionist Oregon, interventionist Oregon, certified interventionist, family intervention specialist, professional interventionist, Matt Brown interventionist, hire an interventionist, addiction intervention specialist"
       />
@@ -64,7 +64,7 @@ const Interventionist = () => {
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 w-full max-w-xs">
-                  <a href="tel:458-298-8000">
+                  <a href="tel:+14582988000">
                     <Button variant="hero" size="lg" className="w-full">
                       <Phone className="mr-2 h-4 w-4" />
                       Call Matt Now

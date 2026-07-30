@@ -63,7 +63,7 @@ const Minnesota = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Minnesota Alcohol Intervention & Drug Intervention Help"
-        description="Need a Minnesota alcohol intervention or drug intervention? Matt Brown helps families align, plan treatment, and act before the next crisis. Call (541) 668-8084."
+        description="Need a Minnesota alcohol intervention or drug intervention? Matt Brown helps families align, plan treatment, and act before the next crisis. Call (458) 298-8000."
         canonical="https://freedominterventions.com/minnesota"
         keywords="Minnesota addiction intervention, Minnesota interventionist, Minneapolis drug intervention, St. Paul family intervention, Minnesota alcohol intervention"
         geoRegion="US-MN"
@@ -122,9 +122,9 @@ const Minnesota = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-lg" asChild>
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="w-5 h-5 mr-2" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -303,9 +303,9 @@ const Minnesota = () => {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg" asChild>
-              <a href="tel:458-298-8000">
+              <a href="tel:+14582988000">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

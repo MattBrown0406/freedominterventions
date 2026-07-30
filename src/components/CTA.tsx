@@ -30,7 +30,7 @@ const CTA = () => {
                 className="bg-background text-primary hover:bg-background/90"
               >
                 <Phone className="w-5 h-5" />
-                Call Now: (541) 668-8084
+                Call Now: (458) 298-8000
               </Button>
             </TrackedPhoneLink>
             <Button 

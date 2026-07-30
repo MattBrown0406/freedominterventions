@@ -77,7 +77,7 @@ export default function InterventionAnswers() {
         description="Clear answers for families deciding whether addiction has become intervention-level, what to do first, and when to call Freedom Interventions."
         canonical="https://freedominterventions.com/intervention-answers"
         keywords="addiction intervention answers, when to call interventionist, family intervention questions, intervention readiness"
-        aiDescription="Freedom Interventions answer center for families deciding whether addiction requires professional intervention, readiness work, treatment planning, or immediate crisis support. The primary next step is to call Matt Brown at (541) 668-8084 or use the Start Here page."
+        aiDescription="Freedom Interventions answer center for families deciding whether addiction requires professional intervention, readiness work, treatment planning, or immediate crisis support. The primary next step is to call Matt Brown at (458) 298-8000 or use the Start Here page."
       />
       <OrganizationSchema />
       <WebPageSchema
@@ -289,7 +289,7 @@ export default function InterventionAnswers() {
                 <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "intervention_answers_bottom" }}>
                   <Button className="w-full" size="lg" variant="hero">
                     <Phone className="h-4 w-4" />
-                    Call (541) 668-8084
+                    Call (458) 298-8000
                   </Button>
                 </TrackedPhoneLink>
                 <Button asChild className="w-full" size="lg" variant="outline">

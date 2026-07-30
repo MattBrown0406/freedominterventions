@@ -131,7 +131,7 @@ const Texas = () => {
             >
               <a href="tel:+14582988000">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>
@@ -316,7 +316,7 @@ const Texas = () => {
             <Button size="lg" variant="outline" className="text-lg" asChild>
               <a href="tel:+14582988000">
                 <Phone className="w-5 h-5 mr-2" />
-                Call (541) 668-8084
+                Call (458) 298-8000
               </a>
             </Button>
           </div>

@@ -21,7 +21,7 @@ const OrangeCountyCalifornia = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Addiction Intervention Services in Orange County, California | Freedom Interventions"
-        description="Orange County families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Orange County, CA. Free consultation. (541) 668-8084."
+        description="Orange County families facing addiction get expert intervention support from Matt Brown, certified professional with 20+ years experience. Serving Orange County, CA. Free consultation. (458) 298-8000."
         keywords="Orange County addiction intervention, Orange County drug intervention, OC family intervention, intervention specialist Orange County CA, Orange County interventionist, prescription opioid intervention OC, high-functioning addiction Orange County"
         canonical="https://freedominterventions.com/orange-county-california"
       />
@@ -64,9 +64,9 @@ const OrangeCountyCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
@@ -219,9 +219,9 @@ const OrangeCountyCalifornia = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <a href="tel:458-298-8000">
+                <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
-                  Call (541) 668-8084
+                  Call (458) 298-8000
                 </a>
               </Button>
             </div>
