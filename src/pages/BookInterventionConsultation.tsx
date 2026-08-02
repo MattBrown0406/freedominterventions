@@ -6,6 +6,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav";
 import ClosePathProof from "@/components/ClosePathProof";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowDown, Calendar, CheckCircle2, Clock, Phone, ShieldCheck, Users } from "lucide-react";
