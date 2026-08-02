@@ -61,12 +61,15 @@ export default function ClosePathProof({ source, className = "" }: ClosePathProo
                 ))}
               </div>
             </div>
-            <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: `${source}_proof_block` }}>
-              <Button className="mt-5">
-                <PhoneCall className="h-4 w-4" />
-                Call Matt directly
-              </Button>
-            </TrackedPhoneLink>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: `${source}_proof_block` }}>
+                <Button>
+                  <PhoneCall className="h-4 w-4" />
+                  Call Matt directly
+                </Button>
+              </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" />
+            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
