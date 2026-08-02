@@ -22,6 +22,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import { trackEvent } from "@/lib/analytics";
 import { getFunnelAttribution } from "@/lib/funnelAttribution";
 import { supabase } from "@/integrations/supabase/client";
