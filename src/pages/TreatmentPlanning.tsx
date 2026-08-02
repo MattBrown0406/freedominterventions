@@ -8,6 +8,7 @@ import treatmentBanner from "@/assets/treatment-planning-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const faqs = [
   {
@@ -257,6 +258,7 @@ const TreatmentPlanning = () => {
                       Schedule a Consultation
                       <ArrowRight className="w-4 h-4" />
                     </Button>
+                    <WhatsAppChatButton variant="solid" size="lg" />
                   </Link>
                   <a href="tel:+14582988000">
                     <Button size="lg" variant="outline" className="gap-2">

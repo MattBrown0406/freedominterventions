@@ -19,6 +19,7 @@ import {
   LocationFAQSchema,
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Hawaii families are often dealing with meth, alcohol, and rising fentanyl risk in a setting where geographic isolation makes every treatment decision feel heavier.",
@@ -149,6 +150,7 @@ const Hawaii = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>
@@ -367,6 +369,7 @@ const Hawaii = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

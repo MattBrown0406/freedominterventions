@@ -20,6 +20,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Arizona families are often dealing with fentanyl, meth, alcohol, and prescription misuse at the same time, which means the crisis rarely stays simple for long.",
@@ -134,6 +135,7 @@ const Arizona = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
@@ -317,6 +319,7 @@ const Arizona = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

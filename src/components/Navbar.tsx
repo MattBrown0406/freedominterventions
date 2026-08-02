@@ -5,6 +5,7 @@ import logo from "@/assets/logo.jpeg";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
 import soberHelplineLogo from "@/assets/sober-helpline-logo.png";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 import { Link } from "react-router-dom";
 import AppStoreBadge from "@/components/AppStoreBadge";
 
@@ -103,6 +104,7 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
                 Call Now
               </Button>
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="sm" label="WhatsApp" />
           </div>
 
           <button className={`${dark ? "min-[1200px]:hidden" : "md:hidden"} p-2 ${dark ? "text-white" : "text-foreground"}`} onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
@@ -160,6 +162,7 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
                 Call Now
               </Button>
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="w-full" />
           </div>
         )}
       </div>

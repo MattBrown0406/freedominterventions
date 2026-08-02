@@ -6,6 +6,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav";
 import ClosePathProof from "@/components/ClosePathProof";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowDown, Calendar, CheckCircle2, Clock, Phone, ShieldCheck, Users } from "lucide-react";
@@ -92,6 +93,7 @@ const BookInterventionConsultation = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" className="w-full sm:w-auto" />
                 </div>
                 <p className="mt-4 text-sm text-muted-foreground">
                   Not sure which level of help fits? <Link to="/which-help-do-we-need" className="font-medium text-primary underline underline-offset-4">Use the decision path first.</Link>

@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Fentanyl has made the margin for error much smaller for Minnesota families who once assumed they had more time.",
@@ -127,6 +128,7 @@ const Minnesota = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -308,6 +310,7 @@ const Minnesota = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Play, Clock, Calendar, Users } from "lucide-react";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import ClosePathProof from "@/components/ClosePathProof";
 
@@ -181,6 +182,7 @@ const PartyWreckersPodcast = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" />
                   <Button asChild variant="outline" size="lg">
                     <Link to="/?type=consultation#booking">
                       <Calendar className="w-4 h-4 mr-2" />
@@ -218,6 +220,7 @@ const PartyWreckersPodcast = () => {
                   Call Now
                 </Button>
               </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" />
               <Link to="/family-intervention" className="shrink-0">
                 <Button variant="outline" className="gap-2 whitespace-nowrap">
                   <Users className="h-4 w-4" />

@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Meth can create prolonged chaos, unpredictability, and fear inside a family long before anyone finally asks for help.",
@@ -138,6 +139,7 @@ const SouthDakota = () => {
                   Call Matt Now
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -320,6 +322,7 @@ const SouthDakota = () => {
                 Call Matt Now
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

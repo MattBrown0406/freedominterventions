@@ -19,6 +19,7 @@ import {
   ServiceAreaSchema,
   LocationFAQSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Pennsylvania families are often dealing with fentanyl, heroin, alcohol, cocaine, and prescription drugs in communities that have already been carrying addiction pain for years.",
@@ -126,6 +127,7 @@ const Pennsylvania = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -308,6 +310,7 @@ const Pennsylvania = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

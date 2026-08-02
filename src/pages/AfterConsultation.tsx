@@ -7,6 +7,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav";
 import { BreadcrumbSchema, OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const breadcrumbItems = [
   { name: "Home", href: "/" },
@@ -91,6 +92,7 @@ const AfterConsultation = () => {
                     Call Now
                   </Button>
                 </TrackedPhoneLink>
+                <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                 <Button asChild size="xl" variant="hero-outline">
                   <Link to="/?type=consultation#booking">
                     <Calendar className="h-5 w-5" />
@@ -182,6 +184,7 @@ const AfterConsultation = () => {
                   Call Matt
                 </Button>
               </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
               <Button asChild size="xl" variant="hero-outline">
                 <Link to="/intervention-readiness">
                   <ClipboardCheck className="h-5 w-5" />

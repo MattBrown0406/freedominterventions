@@ -12,6 +12,7 @@ import {
   OrganizationSchema,
   ServiceAreaSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const Alaska = () => {
   return (
@@ -72,6 +73,7 @@ const Alaska = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -157,6 +159,7 @@ const Alaska = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>

@@ -20,6 +20,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Idaho families are dealing with fentanyl, meth, alcohol, and DUI-related fallout in a state where both denial and distance can delay action too long.",
@@ -134,6 +135,7 @@ const Idaho = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
@@ -312,6 +314,7 @@ const Idaho = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

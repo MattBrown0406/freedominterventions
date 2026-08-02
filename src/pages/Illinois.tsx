@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Illinois families are often dealing with fentanyl, opioids, alcohol, meth, or cocaine in situations that keep getting more dangerous while everyone argues about what to do next.",
@@ -124,6 +125,7 @@ const Illinois = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -305,6 +307,7 @@ const Illinois = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

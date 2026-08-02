@@ -6,6 +6,7 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import ClosePathProof from "@/components/ClosePathProof";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import InterventionReadinessChecklist from "@/components/InterventionReadinessChecklist";
@@ -66,6 +67,7 @@ const InterventionReadiness = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                   <Button asChild size="xl" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" onClick={() => trackChoice("assessment")}>
                     <Link to="/assessment">
                       <ClipboardCheck className="h-5 w-5" />
@@ -187,6 +189,7 @@ const InterventionReadiness = () => {
                   Call Now
                 </Button>
               </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" />
             </div>
           </div>
         </section>

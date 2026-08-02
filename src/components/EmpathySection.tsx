@@ -1,6 +1,7 @@
 import { Heart, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 
 const EmpathySection = () => {
   return (
@@ -40,12 +41,15 @@ const EmpathySection = () => {
           </p>
 
           {/* CTA */}
-          <Button asChild size="lg" className="font-semibold">
-            <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: 'empathy_section' }}>
-              <Phone className="h-4 w-4" />
-              Let's Talk — Free & Confidential
-            </TrackedPhoneLink>
-          </Button>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg" className="font-semibold">
+              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: 'empathy_section' }}>
+                <Phone className="h-4 w-4" />
+                Let's Talk — Free & Confidential
+              </TrackedPhoneLink>
+            </Button>
+            <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" />
+          </div>
 
           <p className="text-sm text-muted-foreground mt-4">
             No pressure. No judgment. Just a conversation about your options.

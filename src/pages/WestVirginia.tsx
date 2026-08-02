@@ -19,6 +19,7 @@ import {
   ServiceAreaSchema,
   LocationFAQSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "West Virginia families often reach out after years of watching addiction tear through not just one person, but the entire family system around them.",
@@ -126,6 +127,7 @@ const WestVirginia = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -307,6 +309,7 @@ const WestVirginia = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

@@ -29,6 +29,7 @@ import {
   FAQSchema,
   WebPageSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const faqs = [
   {
@@ -326,6 +327,7 @@ const FamilyIntervention = () => {
                   Call Matt Now
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -670,6 +672,7 @@ const FamilyIntervention = () => {
                   Call Matt Now
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>

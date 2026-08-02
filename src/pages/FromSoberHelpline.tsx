@@ -6,6 +6,7 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import ClosePathProof from "@/components/ClosePathProof";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import { trackEvent } from "@/lib/analytics";
@@ -96,6 +97,7 @@ const FromSoberHelpline = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                   <Button asChild size="xl" variant="hero-outline" onClick={() => trackBridgeChoice("assessment")}>
                     <Link to="/assessment">
                       <ClipboardCheck className="h-5 w-5" />

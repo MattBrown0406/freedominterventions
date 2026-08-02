@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 import "./Hero.css";
 
 const journeySteps = [
@@ -68,6 +69,7 @@ const Hero = () => {
               <Phone aria-hidden="true" />
               Talk to Matt now
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="fi-hero-button" />
 
             <Link
               to="/book-intervention-consultation#booking"

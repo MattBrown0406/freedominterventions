@@ -6,6 +6,7 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import ClosePathProof from "@/components/ClosePathProof";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import { trackEvent } from "@/lib/analytics";
@@ -116,12 +117,15 @@ const StartHere = () => {
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 Choose the path that fits what is happening today. You do not need to diagnose the whole situation before you ask for help, and you do not need to know whether this is coaching, readiness work, or intervention yet.
               </p>
-              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "start_here_hero" }}>
-                <Button size="xl" variant="hero">
-                  <Phone className="h-5 w-5" />
-                  Call Matt Now
-                </Button>
-              </TrackedPhoneLink>
+              <div className="flex flex-wrap gap-3">
+                <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "start_here_hero" }}>
+                  <Button size="xl" variant="hero">
+                    <Phone className="h-5 w-5" />
+                    Call Matt Now
+                  </Button>
+                </TrackedPhoneLink>
+                <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
+              </div>
             </div>
           </div>
         </section>

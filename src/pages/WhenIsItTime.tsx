@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Calendar, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const faqItems = [
   {
@@ -149,6 +150,7 @@ const WhenIsItTime = () => {
               <Button asChild size="lg">
                 <a href="tel:+14582988000"><Phone className="mr-2 h-5 w-5" />Call Now</a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
               <Button asChild variant="outline" size="lg">
                 <Link to="/?type=consultation#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>
               </Button>

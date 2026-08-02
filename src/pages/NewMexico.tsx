@@ -20,6 +20,7 @@ import {
   ServiceAreaSchema,
   LocationFAQSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "New Mexico families are often dealing with fentanyl, heroin, meth, and alcohol in communities where treatment access can be limited and the stakes are already high.",
@@ -137,6 +138,7 @@ const NewMexico = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
@@ -317,6 +319,7 @@ const NewMexico = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

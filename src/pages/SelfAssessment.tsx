@@ -22,6 +22,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import { trackEvent } from "@/lib/analytics";
 import { getFunnelAttribution } from "@/lib/funnelAttribution";
 import { supabase } from "@/integrations/supabase/client";
@@ -280,15 +281,18 @@ const SelfAssessment = () => {
                     <p className="font-medium text-foreground">
                       Talk to Matt directly. This call is confidential and free.
                     </p>
-                    <TrackedPhoneLink
-                      phoneNumber="+14582988000"
-                      metadata={{ location: "self_assessment_safety" }}
-                    >
-                      <Button size="lg" className="w-full sm:w-auto">
-                        <Phone className="mr-2 h-5 w-5" />
-                        Call (458) 298-8000 Now
-                      </Button>
-                    </TrackedPhoneLink>
+                    <div className="flex flex-wrap gap-3">
+                      <TrackedPhoneLink
+                        phoneNumber="+14582988000"
+                        metadata={{ location: "self_assessment_safety" }}
+                      >
+                        <Button size="lg" className="w-full sm:w-auto">
+                          <Phone className="mr-2 h-5 w-5" />
+                          Call (458) 298-8000 Now
+                        </Button>
+                      </TrackedPhoneLink>
+                      <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" className="w-full sm:w-auto" />
+                    </div>
                   </div>
                   <p className="text-sm text-muted-foreground">
                     If someone is in immediate danger, call 911. If suicide is a concern, call or
@@ -505,15 +509,18 @@ const SelfAssessment = () => {
                             health symptoms. Whatever else is true, this deserves a direct
                             conversation today—not a form or an email.
                           </p>
-                          <TrackedPhoneLink
-                            phoneNumber="+14582988000"
-                            metadata={{ location: "self_assessment_results_safety" }}
-                          >
-                            <Button size="lg">
-                              <Phone className="mr-2 h-5 w-5" />
-                              Call Matt Now — (458) 298-8000
-                            </Button>
-                          </TrackedPhoneLink>
+                          <div className="flex flex-wrap gap-3">
+                            <TrackedPhoneLink
+                              phoneNumber="+14582988000"
+                              metadata={{ location: "self_assessment_results_safety" }}
+                            >
+                              <Button size="lg">
+                                <Phone className="mr-2 h-5 w-5" />
+                                Call Matt Now — (458) 298-8000
+                              </Button>
+                            </TrackedPhoneLink>
+                            <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" />
+                          </div>
                           <p className="text-sm text-red-700 dark:text-red-300 mt-3">
                             Immediate danger: call 911. Suicide concern: call or text 988.
                           </p>
@@ -626,15 +633,18 @@ const SelfAssessment = () => {
                       )}
                       {resultCategory === "urgent" && (
                         <>
-                          <TrackedPhoneLink
-                            phoneNumber="+14582988000"
-                            metadata={{ location: "self_assessment_results_urgent" }}
-                          >
-                            <Button size="lg">
-                              <Phone className="mr-2 h-5 w-5" />
-                              Call (458) 298-8000
-                            </Button>
-                          </TrackedPhoneLink>
+                          <div className="flex flex-wrap gap-3">
+                            <TrackedPhoneLink
+                              phoneNumber="+14582988000"
+                              metadata={{ location: "self_assessment_results_urgent" }}
+                            >
+                              <Button size="lg">
+                                <Phone className="mr-2 h-5 w-5" />
+                                Call (458) 298-8000
+                              </Button>
+                            </TrackedPhoneLink>
+                            <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" />
+                          </div>
                           <Button asChild size="lg" variant="outline">
                             <Link
                               to="/intervention-readiness?source=self_assessment"

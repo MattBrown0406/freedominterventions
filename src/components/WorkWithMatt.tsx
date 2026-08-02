@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Phone, Calendar, CheckCircle2, Shield, Users } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
 import { trackEvent } from "@/lib/analytics";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const proofPoints = [
   "Certified Intervention Professional (CIP)",
@@ -84,6 +85,7 @@ const WorkWithMatt = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary" />
                 <span>No retainers. Fee paid in full, engagement lasts until the client completes treatment successfully.</span>

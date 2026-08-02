@@ -5,6 +5,7 @@ import { Phone, Calendar, AlertTriangle, Wine, Pill, Zap, Brain, Leaf, FlaskConi
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const SubstanceGuide = () => {
   return (
@@ -44,6 +45,7 @@ const SubstanceGuide = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -500,6 +502,7 @@ const SubstanceGuide = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
