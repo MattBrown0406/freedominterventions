@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Play, Clock, Calendar, Users } from "lucide-react";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import ClosePathProof from "@/components/ClosePathProof";
 
