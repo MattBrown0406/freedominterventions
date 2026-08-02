@@ -1,6 +1,7 @@
 import { Heart, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 
 const EmpathySection = () => {
   return (
