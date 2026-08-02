@@ -69,6 +69,7 @@ const Hero = () => {
               <Phone aria-hidden="true" />
               Talk to Matt now
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="fi-hero-button" />
 
             <Link
               to="/book-intervention-consultation#booking"
