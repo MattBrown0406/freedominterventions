@@ -220,7 +220,6 @@ const PublicConversionChrome = () => {
     <>
       <FloatingContactForm />
       <MobileStickyCTA />
-      <WhatsAppButton />
     </>
   );
 };
