@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Calendar, ClipboardCheck, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import { trackEvent } from "@/lib/analytics";
 
 type MoneyPathCTAProps = {
