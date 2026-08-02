@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Ohio families often call after living through multiple treatment attempts, relapses, overdose scares, and years of trying to hold the whole situation together on their own.",
   "Fentanyl has made the risk in Ohio brutally high. Families who once thought they had more time often realize the margin for error is much smaller than they believed.",

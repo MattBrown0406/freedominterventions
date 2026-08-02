@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "British Columbia families are often dealing with a situation that has already become more dangerous than it looks from the outside because the drug supply is so unpredictable.",
   "The province offers more treatment pathways than some regions, but that does not make decisions easier. Families still need clarity about level of care, timing, and whether travel is the better option.",

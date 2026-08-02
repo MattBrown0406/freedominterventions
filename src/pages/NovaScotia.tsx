@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Nova Scotia families often reach out after months or years of trying to handle the problem privately and hoping their loved one will finally choose help on their own.",
   "Alcohol, opioids, fentanyl, cocaine, and prescription misuse can all create the same family reality: confusion, exhaustion, broken trust, and constant vigilance.",

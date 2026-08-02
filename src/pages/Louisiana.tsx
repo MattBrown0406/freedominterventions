@@ -5,8 +5,8 @@ import { Phone, Calendar, AlertTriangle, Users, Heart, TrendingUp } from "lucide
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceAreaSchema, LocationFAQSchema } from "@/components/StructuredData";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const Louisiana = () => {
   return (
     <div className="min-h-screen bg-background">

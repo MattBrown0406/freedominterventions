@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Meth can create prolonged chaos, unpredictability, and fear inside a family long before anyone finally asks for help.",
   "Fentanyl has made every relapse, every unknown pill, and every mixed-drug situation more dangerous.",

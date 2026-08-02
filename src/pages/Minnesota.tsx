@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Fentanyl has made the margin for error much smaller for Minnesota families who once assumed they had more time.",
   "Meth and alcohol can keep a household unstable for years, especially when the person using still looks partly functional from the outside.",

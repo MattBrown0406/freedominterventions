@@ -21,8 +21,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Oregon families are often dealing with fentanyl, meth, alcohol, and polysubstance use in a system that still feels patchy, confusing, and inconsistent from one community to the next.",
   "Policy shifts and public debate do not change what families live with at home: chaos, fear, money problems, and the exhausting feeling that everyone is reacting while the addiction keeps advancing.",

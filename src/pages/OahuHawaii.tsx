@@ -7,8 +7,8 @@ import oregonBanner from "@/assets/oregon-crisis-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const OahuHawaii = () => {
   const breadcrumbItems = [
     { name: "Home", href: "/" },

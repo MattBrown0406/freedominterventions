@@ -19,8 +19,8 @@ import {
   LocationFAQSchema,
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Hawaii families are often dealing with meth, alcohol, and rising fentanyl risk in a setting where geographic isolation makes every treatment decision feel heavier.",
   "The island reality changes the logistics. Families may be deciding between limited local options, inter-island coordination, or treatment on the mainland.",

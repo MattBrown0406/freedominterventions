@@ -20,8 +20,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Nevada families are often dealing with fentanyl, meth, alcohol, cocaine, and gambling-adjacent lifestyle instability in ways that can make addiction harder to confront early.",
   "Las Vegas and Reno can make serious substance problems look normal from the outside for far too long, especially when nightlife, service work, and fast money blur the warning signs.",

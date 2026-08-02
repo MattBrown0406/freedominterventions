@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { AlertTriangle, Calendar, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const faqItems = [
   {
     question: "What if I'm not ready to commit to an intervention yet?",

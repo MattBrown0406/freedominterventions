@@ -8,8 +8,8 @@ import aftercareBanner from "@/assets/aftercare-guidance-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const faqs = [
   {
     question: "Why does aftercare matter so much if they already went to treatment?",

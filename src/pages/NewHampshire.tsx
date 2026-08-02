@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "New Hampshire families are often dealing with fentanyl, alcohol, cocaine, and prescription drug misuse in a state small enough that people try to hide the crisis until it has already become dangerous.",
   "Manchester, Nashua, the Seacoast, and rural communities all face the same family problem: everyone is exhausted, nobody agrees on the next move, and addiction keeps using that confusion to stay in control.",

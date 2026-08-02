@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Ontario families often call after they have already tried private conversations, financial rescue, treatment attempts, ultimatums, softened ultimatums, and months of trying to hold everything together.",
   "The size of Ontario creates a second challenge. Some families are overwhelmed by the number of options. Others are outside the main corridors and feel like the right help is too far away.",

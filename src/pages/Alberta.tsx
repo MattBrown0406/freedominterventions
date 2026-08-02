@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Many Alberta families call only after the situation has already gone through relapse, overdose scares, emergency visits, or a long stretch of broken promises.",
   "In Alberta, the pressure often comes from both directions. Cities can feel overwhelming with options, while rural areas can feel stuck with too few realistic choices.",

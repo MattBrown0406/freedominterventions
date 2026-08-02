@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Meth can keep families trapped in a grinding long-term crisis, while fentanyl has made relapse and experimentation far more dangerous.",
   "Alcohol problems often stay normalized until the damage to the marriage, family, or finances is impossible to ignore.",

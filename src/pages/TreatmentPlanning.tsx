@@ -8,8 +8,8 @@ import treatmentBanner from "@/assets/treatment-planning-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const faqs = [
   {
     question: "How do we know which treatment is right?",

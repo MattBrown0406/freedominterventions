@@ -5,8 +5,8 @@ import { Phone, Calendar, AlertTriangle, Wine, Pill, Zap, Brain, Leaf, FlaskConi
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema } from "@/components/StructuredData";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const SubstanceGuide = () => {
   return (
     <div className="min-h-screen bg-background">

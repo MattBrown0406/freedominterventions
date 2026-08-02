@@ -3,8 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Phone, Calendar, CheckCircle2, Shield, Users } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot.jpg";
 import { trackEvent } from "@/lib/analytics";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const proofPoints = [
   "Certified Intervention Professional (CIP)",
   "20+ years sober, 1,000+ families served",

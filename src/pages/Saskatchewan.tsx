@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const pressurePoints = [
   "Saskatchewan families often wait too long because they are trying to manage the problem themselves and hoping the next promise, the next treatment call, or the next scare will somehow change things.",
   "The geography of the province can make a crisis harder to interrupt. Travel, availability, and limited local resources can all raise the threshold for action when the family is already worn down.",

@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Calendar, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 const faqItems = [
   {
     question: "What if my loved one isn't at rock bottom yet?",
