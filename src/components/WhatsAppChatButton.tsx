@@ -55,12 +55,14 @@ const WhatsAppChatButton = ({
     sm: "h-9 px-4 text-sm",
     default: "h-10 px-6 text-sm",
     lg: "h-12 px-8 text-base",
+    xl: "h-14 px-10 text-base",
   };
 
   const iconSizes = {
     sm: "h-4 w-4",
     default: "h-4 w-4",
     lg: "h-5 w-5",
+    xl: "h-5 w-5",
   };
 
   return (
