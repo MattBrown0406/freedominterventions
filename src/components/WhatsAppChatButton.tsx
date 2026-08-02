@@ -60,9 +60,9 @@ const WhatsAppChatButton = ({
 
   const iconSizes = {
     sm: "h-4 w-4",
-    default: "h-4 w-4",
+    default: "h-5 w-5",
     lg: "h-5 w-5",
-    xl: "h-5 w-5",
+    xl: "h-6 w-6",
   };
 
   return (
