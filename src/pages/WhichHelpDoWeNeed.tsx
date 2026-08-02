@@ -14,6 +14,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import ClosePathProof from "@/components/ClosePathProof";
 import InterventionReadinessChecklist from "@/components/InterventionReadinessChecklist";
@@ -131,6 +132,7 @@ export default function WhichHelpDoWeNeed() {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                   <Button asChild size="xl" variant="outline" onClick={() => trackChoice("consultation_hero", "/?type=consultation#booking")}>
                     <Link to="/?type=consultation#booking">
                       <Calendar className="h-5 w-5" />
