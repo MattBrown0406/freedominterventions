@@ -97,6 +97,7 @@ const FromSoberHelpline = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                   <Button asChild size="xl" variant="hero-outline" onClick={() => trackBridgeChoice("assessment")}>
                     <Link to="/assessment">
                       <ClipboardCheck className="h-5 w-5" />
