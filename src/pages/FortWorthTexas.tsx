@@ -71,7 +71,7 @@ const FortWorthTexas = () => {
                   Call Matt Now
                 </a>
               </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -227,7 +227,7 @@ const FortWorthTexas = () => {
                   Call Matt Now
                 </a>
               </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>

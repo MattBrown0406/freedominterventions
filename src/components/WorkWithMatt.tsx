@@ -85,7 +85,7 @@ const WorkWithMatt = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+              <WhatsAppChatButton variant="solid" size="lg" />
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Shield className="w-4 h-4 text-primary" />
                 <span>No retainers. Fee paid in full, engagement lasts until the client completes treatment successfully.</span>

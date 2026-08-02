@@ -70,7 +70,7 @@ const MedfordOregon = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -226,7 +226,7 @@ const MedfordOregon = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>

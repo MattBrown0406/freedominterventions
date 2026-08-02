@@ -258,7 +258,7 @@ const TreatmentPlanning = () => {
                       Schedule a Consultation
                       <ArrowRight className="w-4 h-4" />
                     </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+                    <WhatsAppChatButton variant="solid" size="lg" />
                   </Link>
                   <a href="tel:+14582988000">
                     <Button size="lg" variant="outline" className="gap-2">

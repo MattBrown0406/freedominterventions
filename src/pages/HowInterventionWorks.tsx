@@ -186,8 +186,7 @@ const HowInterventionWorks = () => {
                 <Button asChild size="lg">
                   <a href="tel:+14582988000"><Phone className="mr-2 h-5 w-5" />Call Now</a>
                 </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
-            <WhatsAppChatButton variant="solid" size="lg" />
+                <WhatsAppChatButton variant="solid" size="lg" />
                 <Button asChild variant="outline" size="lg">
                   <Link to="/?type=consultation#booking"><Calendar className="mr-2 h-5 w-5" />Schedule Free Consultation</Link>
                 </Button>

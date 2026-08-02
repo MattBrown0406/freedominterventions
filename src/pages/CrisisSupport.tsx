@@ -163,7 +163,7 @@ const CrisisSupport = () => {
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Schedule a Consultation
                 </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
+                <WhatsAppChatButton variant="solid" size="lg" />
               </Link>
             </div>
           </div>
