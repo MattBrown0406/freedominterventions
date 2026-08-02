@@ -1,6 +1,7 @@
 import { Award, CheckCircle2, PhoneCall, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 type ClosePathProofProps = {
   source: string;
