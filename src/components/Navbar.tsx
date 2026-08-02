@@ -5,6 +5,7 @@ import logo from "@/assets/logo.jpeg";
 import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
 import soberHelplineLogo from "@/assets/sober-helpline-logo.png";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 import { Link } from "react-router-dom";
 import AppStoreBadge from "@/components/AppStoreBadge";
 
