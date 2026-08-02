@@ -20,8 +20,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Idaho families are dealing with fentanyl, meth, alcohol, and DUI-related fallout in a state where both denial and distance can delay action too long.",
   "Rural families often face long drives and fewer treatment options, while metro families still face the same deeper problem: addiction has trained everyone to react instead of lead.",

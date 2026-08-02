@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Home, Phone } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const NotFound = () => {
   const location = useLocation();
 

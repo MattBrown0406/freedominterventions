@@ -14,12 +14,12 @@ import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import {
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   OrganizationSchema,
   BreadcrumbSchema,
   ServiceAreaSchema,
   LocationFAQSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Tennessee families often call after repeated cycles of treatment attempts, relapses, legal trouble, and promises that sounded sincere at the time but did not hold.",

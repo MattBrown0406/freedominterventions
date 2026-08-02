@@ -14,12 +14,12 @@ import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import {
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   OrganizationSchema,
   BreadcrumbSchema,
   ServiceAreaSchema,
   LocationFAQSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Wisconsin families are often dealing with both alcohol and drug addiction at the same time, which can make the crisis harder to name and easier to normalize for too long.",

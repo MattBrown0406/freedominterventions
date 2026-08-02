@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Quebec families usually call after they have spent too long trying to manage the problem privately and hoping concern, pleading, or one more rescue will somehow break through denial.",
   "Treatment planning can get complicated fast. Families may be weighing public and private options, local and out-of-province care, and whether language fit will affect engagement and follow-through.",

@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Meth can keep households in a constant state of volatility, paranoia, and emotional exhaustion.",
   "Fentanyl has made experimentation, relapse, and counterfeit pills far more dangerous than many families realize.",

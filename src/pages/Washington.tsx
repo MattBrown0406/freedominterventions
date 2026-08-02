@@ -20,8 +20,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Washington families are often dealing with fentanyl, meth, alcohol, and polysubstance use in both urban overdose zones and rural areas with fewer supports.",
   "Seattle, Tacoma, Spokane, and smaller communities may look different on the surface, but the family pattern is the same: fear, enabling, divided messages, and growing exhaustion.",

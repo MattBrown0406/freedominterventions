@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Rural isolation can make families feel like help is farther away than it really is, especially when treatment may need to happen out of town or out of state.",
   "Meth can keep a household unstable for years, and fentanyl has made the danger of mixed or unknown substances much higher.",

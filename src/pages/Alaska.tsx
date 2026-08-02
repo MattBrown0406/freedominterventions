@@ -7,12 +7,12 @@ import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 import {
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   BreadcrumbSchema,
   LocationFAQSchema,
   OrganizationSchema,
   ServiceAreaSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const Alaska = () => {
   return (

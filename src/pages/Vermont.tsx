@@ -14,12 +14,12 @@ import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import {
-import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   OrganizationSchema,
   BreadcrumbSchema,
   ServiceAreaSchema,
   LocationFAQSchema,
 } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Vermont families are often dealing with fentanyl, alcohol, cocaine, and prescription misuse in smaller communities where privacy matters and people wait too long to ask for outside help.",

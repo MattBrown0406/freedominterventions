@@ -20,8 +20,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Arizona families are often dealing with fentanyl, meth, alcohol, and prescription misuse at the same time, which means the crisis rarely stays simple for long.",
   "Phoenix-area families may have treatment options nearby, but they still need help choosing the right level of care. Families in smaller or more remote communities often feel isolated and overwhelmed much faster.",

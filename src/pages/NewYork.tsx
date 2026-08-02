@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "New York families call from Manhattan, Long Island, Buffalo, Westchester, and small upstate towns, but the family pattern is the same: the addiction keeps escalating while everyone around it keeps reacting.",
   "In a state this large, treatment options can be both abundant and overwhelming. Families do not just need a list of programs. They need a plan that matches the real level of risk and resistance.",

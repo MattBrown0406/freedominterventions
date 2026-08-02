@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Distance can complicate treatment, but it should not become the reason the family keeps waiting while the danger grows.",
   "Meth can keep households unstable for years, and fentanyl has made the overdose risk much more immediate.",

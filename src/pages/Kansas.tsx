@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Meth has been entrenched in many Kansas communities for years, and fentanyl has made the overdose risk far more severe.",
   "Families in rural areas often feel like they have to choose between bad options, long travel, or continuing to wait.",

@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Newfoundland and Labrador families often wait because the logistics feel overwhelming, not because the problem feels small.",
   "Geography matters here. What would be a quick treatment transition somewhere else can require much more planning when distance, travel, or availability become part of the equation.",

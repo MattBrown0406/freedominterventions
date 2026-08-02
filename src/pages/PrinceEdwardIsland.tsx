@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Prince Edward Island families often delay because everyone knows everyone and the situation can feel deeply personal, exposed, and hard to navigate quietly.",
   "The smaller local treatment landscape can make families feel boxed in, especially when they are trying to decide whether local care is enough or whether travel is the better option.",

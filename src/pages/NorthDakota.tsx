@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Small communities can make families more worried about judgment, which often leads to more secrecy and slower action.",
   "North Dakota’s geography means treatment planning may need to include travel, transport, or out-of-state options from the start.",

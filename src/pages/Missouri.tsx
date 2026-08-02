@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Fentanyl has made the risk more immediate, especially for families dealing with counterfeit pills or mixed drug use.",
   "Meth and alcohol can create long periods of chaos that feel normal only because the family has been living inside them so long.",

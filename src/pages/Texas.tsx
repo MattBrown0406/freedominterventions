@@ -20,8 +20,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Texas families often wait too long because the culture rewards privacy, toughness, and figuring it out yourself. By the time they call, the situation has usually already become dangerous.",
   "The state is huge, which means treatment access can get messy fast. Urban families can feel overwhelmed by too many options, while rural families may feel like there are no workable options at all.",

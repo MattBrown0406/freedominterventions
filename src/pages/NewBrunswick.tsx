@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "New Brunswick families often wait too long because they are trying to manage the problem privately and protect everyone from shame, conflict, or public fallout.",
   "The province can make treatment planning feel complicated. Some families want local care, others need to consider travel, and many do not know which option actually fits the situation.",

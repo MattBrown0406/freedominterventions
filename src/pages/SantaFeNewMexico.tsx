@@ -8,8 +8,8 @@ import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema } from "@/components/StructuredData";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const SantaFeNewMexico = () => {
   const breadcrumbItems = [
     { name: "Home", href: "/" },

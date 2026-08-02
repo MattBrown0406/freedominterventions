@@ -8,8 +8,8 @@ import SEOHead from "@/components/SEOHead";
 import { ServiceAreaSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Fentanyl, meth, alcohol, and prescription drug misuse can all drive the same family chaos: fear, lies, financial damage, and repeated emergencies.",
   "Utah families often spend months trying to manage the situation privately before realizing the problem is bigger than one more promise or one more rescue.",

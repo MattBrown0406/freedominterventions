@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Manitoba families usually call after they have already spent months trying to contain the problem privately and hoping the next promise might be the one that sticks.",
   "Distance, winter travel, and uneven treatment access can make a bad situation harder to navigate, especially when the family is already exhausted.",

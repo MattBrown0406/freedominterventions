@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Fentanyl has made denial much more dangerous, especially when people are using pills or street drugs without knowing exactly what is in them.",
   "Meth and alcohol can keep families trapped in long, grinding patterns that look survivable until they suddenly are not.",

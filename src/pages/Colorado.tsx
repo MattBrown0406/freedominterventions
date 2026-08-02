@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Colorado families are often dealing with fentanyl, meth, alcohol, cocaine, and prescription misuse in combinations that make relapse and crisis more dangerous than they used to be.",
   "The state has strong treatment visibility in places like Denver and Boulder, but visibility is not the same as clarity. Families still need help finding the right level of care and moving fast.",

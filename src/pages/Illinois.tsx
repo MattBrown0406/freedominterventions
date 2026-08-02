@@ -19,8 +19,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "Illinois families are often dealing with fentanyl, opioids, alcohol, meth, or cocaine in situations that keep getting more dangerous while everyone argues about what to do next.",
   "In Chicagoland there may be plenty of treatment options on paper, but volume does not create clarity. Families still need help choosing a real plan and moving fast.",

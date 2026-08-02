@@ -20,8 +20,8 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
-
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+
 const pressurePoints = [
   "In California, families call from every kind of environment, affluent neighborhoods, college towns, rural communities, and major cities, but the pattern is the same: the addiction keeps escalating while the family keeps trying to contain it.",
   "Fentanyl has made the margin for error much smaller. Families who once thought they had time now realize one relapse, one counterfeit pill, or one weekend gone sideways can change everything.",
