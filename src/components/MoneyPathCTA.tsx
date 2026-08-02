@@ -40,7 +40,7 @@ export default function MoneyPathCTA({
               <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">{title}</h2>
               <p className="mt-3 text-muted-foreground md:text-lg">{description}</p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[520px]">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:min-w-[520px]">
               <Button asChild size="lg" variant="hero" onClick={() => trackClick("decision_path", "/which-help-do-we-need")}>
                 <Link to="/which-help-do-we-need">
                   Which help fits?
@@ -59,6 +59,7 @@ export default function MoneyPathCTA({
                   Call now
                 </Button>
               </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" className="w-full" />
             </div>
           </div>
         </div>
