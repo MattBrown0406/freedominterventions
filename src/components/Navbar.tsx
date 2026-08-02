@@ -103,6 +103,7 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
                 Call Now
               </Button>
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="sm" label="WhatsApp" />
           </div>
 
           <button className={`${dark ? "min-[1200px]:hidden" : "md:hidden"} p-2 ${dark ? "text-white" : "text-foreground"}`} onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
@@ -160,6 +161,7 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
                 Call Now
               </Button>
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="w-full" />
           </div>
         )}
       </div>
