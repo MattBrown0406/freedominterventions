@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import mattPortrait from "@/assets/matt-hero-portrait.jpg";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 import "./Hero.css";
 
 const journeySteps = [
