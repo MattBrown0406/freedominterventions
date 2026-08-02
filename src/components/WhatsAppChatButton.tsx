@@ -18,7 +18,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 interface WhatsAppChatButtonProps {
   phoneNumber?: string;
   variant?: "solid" | "outline" | "dark";
-  size?: "default" | "sm" | "lg";
+  size?: "default" | "sm" | "lg" | "xl";
   className?: string;
   children?: React.ReactNode;
   label?: string;
