@@ -67,6 +67,7 @@ const InterventionReadiness = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                   <Button asChild size="xl" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" onClick={() => trackChoice("assessment")}>
                     <Link to="/assessment">
                       <ClipboardCheck className="h-5 w-5" />
@@ -188,6 +189,7 @@ const InterventionReadiness = () => {
                   Call Now
                 </Button>
               </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="lg" label="WhatsApp" />
             </div>
           </div>
         </section>
