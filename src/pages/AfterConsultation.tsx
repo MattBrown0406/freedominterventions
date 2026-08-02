@@ -92,6 +92,7 @@ const AfterConsultation = () => {
                     Call Now
                   </Button>
                 </TrackedPhoneLink>
+                <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                 <Button asChild size="xl" variant="hero-outline">
                   <Link to="/?type=consultation#booking">
                     <Calendar className="h-5 w-5" />
@@ -183,6 +184,7 @@ const AfterConsultation = () => {
                   Call Matt
                 </Button>
               </TrackedPhoneLink>
+              <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
               <Button asChild size="xl" variant="hero-outline">
                 <Link to="/intervention-readiness">
                   <ClipboardCheck className="h-5 w-5" />
