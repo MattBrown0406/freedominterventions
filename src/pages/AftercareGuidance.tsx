@@ -8,6 +8,7 @@ import aftercareBanner from "@/assets/aftercare-guidance-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const faqs = [
   {
@@ -234,6 +235,7 @@ const AftercareGuidance = () => {
                   <Button asChild size="lg" className="gap-2">
                     <a href="tel:+14582988000">Call Matt to Enroll — (458) 298-8000</a>
                   </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
                   <Button asChild variant="outline" size="lg" className="gap-2">
                     <Link to="/?type=aftercare-planning#booking">Book a Free Aftercare Planning Call</Link>
                   </Button>
