@@ -21,6 +21,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Oregon families are often dealing with fentanyl, meth, alcohol, and polysubstance use in a system that still feels patchy, confusing, and inconsistent from one community to the next.",
@@ -139,6 +140,7 @@ const Oregon = () => {
                 Call Matt Now
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
@@ -317,6 +319,7 @@ const Oregon = () => {
                 Call Matt Now
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

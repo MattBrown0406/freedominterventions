@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "New Hampshire families are often dealing with fentanyl, alcohol, cocaine, and prescription drug misuse in a state small enough that people try to hide the crisis until it has already become dangerous.",
@@ -127,6 +128,7 @@ const NewHampshire = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -311,6 +313,7 @@ const NewHampshire = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

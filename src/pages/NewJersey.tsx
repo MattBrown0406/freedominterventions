@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "New Jersey families are dealing with fentanyl, cocaine, alcohol, pills, and polysubstance use in a densely populated state where the crisis can stay hidden until it suddenly turns lethal.",
@@ -127,6 +128,7 @@ const NewJersey = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -309,6 +311,7 @@ const NewJersey = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

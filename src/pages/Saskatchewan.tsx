@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Saskatchewan families often wait too long because they are trying to manage the problem themselves and hoping the next promise, the next treatment call, or the next scare will somehow change things.",
@@ -128,6 +129,7 @@ const Saskatchewan = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -309,6 +311,7 @@ const Saskatchewan = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

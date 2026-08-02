@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Meth can keep families trapped in a grinding long-term crisis, while fentanyl has made relapse and experimentation far more dangerous.",
@@ -127,6 +128,7 @@ const Nebraska = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -307,6 +309,7 @@ const Nebraska = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

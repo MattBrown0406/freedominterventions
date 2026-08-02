@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Home, Phone } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const NotFound = () => {
   const location = useLocation();
@@ -31,6 +32,7 @@ const NotFound = () => {
               <Home className="mr-2 h-4 w-4" />
               Return to Home
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </Link>
           <a href="tel:+14582988000">
             <Button variant="outline" size="lg">

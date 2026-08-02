@@ -8,6 +8,7 @@ import SEOHead from "@/components/SEOHead";
 import { ServiceAreaSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Fentanyl, meth, alcohol, and prescription drug misuse can all drive the same family chaos: fear, lies, financial damage, and repeated emergencies.",
@@ -107,6 +108,7 @@ const Utah = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
@@ -240,6 +242,7 @@ const Utah = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

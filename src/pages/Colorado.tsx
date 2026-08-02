@@ -19,6 +19,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "Colorado families are often dealing with fentanyl, meth, alcohol, cocaine, and prescription misuse in combinations that make relapse and crisis more dangerous than they used to be.",
@@ -126,6 +127,7 @@ const Colorado = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -306,6 +308,7 @@ const Colorado = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

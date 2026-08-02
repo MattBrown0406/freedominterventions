@@ -8,6 +8,7 @@ import crisisBanner from "@/assets/crisis-support-banner.jpg";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const faqs = [
   {
@@ -162,6 +163,7 @@ const CrisisSupport = () => {
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Schedule a Consultation
                 </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
               </Link>
             </div>
           </div>

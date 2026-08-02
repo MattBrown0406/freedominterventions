@@ -8,6 +8,7 @@ import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 import { LocalBusinessSchema, OrganizationSchema, BreadcrumbSchema, LocationFAQSchema } from "@/components/StructuredData";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const MinneapolisMinnesota = () => {
   const breadcrumbItems = [
@@ -70,6 +71,7 @@ const MinneapolisMinnesota = () => {
                   Call Matt Now
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -228,6 +230,7 @@ const MinneapolisMinnesota = () => {
                   Call Matt Now
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>

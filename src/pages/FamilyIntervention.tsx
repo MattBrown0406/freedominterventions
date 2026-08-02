@@ -23,6 +23,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav";
 import InterventionAnswerLinks from "@/components/InterventionAnswerLinks";
 import MoneyPathCTA from "@/components/MoneyPathCTA";
 import {
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   OrganizationSchema,
   BreadcrumbSchema,
   ServiceSchema,
@@ -326,6 +327,7 @@ const FamilyIntervention = () => {
                   Call Matt Now
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -670,6 +672,7 @@ const FamilyIntervention = () => {
                   Call Matt Now
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>

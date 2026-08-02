@@ -7,6 +7,7 @@ import SEOHead from "@/components/SEOHead";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import LocationLinks from "@/components/LocationLinks";
 import {
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   BreadcrumbSchema,
   LocationFAQSchema,
   OrganizationSchema,
@@ -72,6 +73,7 @@ const Alaska = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -157,6 +159,7 @@ const Alaska = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>

@@ -236,6 +236,7 @@ const AftercareGuidance = () => {
                     <a href="tel:+14582988000">Call Matt to Enroll — (458) 298-8000</a>
                   </Button>
             <WhatsAppChatButton variant="solid" size="lg" />
+            <WhatsAppChatButton variant="solid" size="lg" />
                   <Button asChild variant="outline" size="lg" className="gap-2">
                     <Link to="/?type=aftercare-planning#booking">Book a Free Aftercare Planning Call</Link>
                   </Button>
@@ -260,6 +261,7 @@ const AftercareGuidance = () => {
                       Call (458) 298-8000
                     </a>
                   </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
                 </div>
               </section>
             </article>

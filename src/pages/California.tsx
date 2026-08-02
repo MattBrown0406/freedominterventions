@@ -20,6 +20,7 @@ import {
 } from "@/components/StructuredData";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const pressurePoints = [
   "In California, families call from every kind of environment, affluent neighborhoods, college towns, rural communities, and major cities, but the pattern is the same: the addiction keeps escalating while the family keeps trying to contain it.",
@@ -137,6 +138,7 @@ const California = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="dark" size="lg" />
           </div>
         </div>
       </section>
@@ -322,6 +324,7 @@ const California = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>

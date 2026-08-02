@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const InterventionToolkit = () => {
   return (
@@ -598,6 +599,7 @@ const InterventionToolkit = () => {
                     Call Now: (458) 298-8000
                   </a>
                 </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
               </div>
             </div>
           </div>

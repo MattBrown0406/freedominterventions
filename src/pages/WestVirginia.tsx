@@ -14,6 +14,7 @@ import SEOHead from "@/components/SEOHead";
 import LocationLinks from "@/components/LocationLinks";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
 import {
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
   OrganizationSchema,
   BreadcrumbSchema,
   ServiceAreaSchema,
@@ -126,6 +127,7 @@ const WestVirginia = () => {
                   Call (458) 298-8000
                 </a>
               </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>
@@ -307,6 +309,7 @@ const WestVirginia = () => {
                 Call (458) 298-8000
               </a>
             </Button>
+            <WhatsAppChatButton variant="solid" size="lg" />
           </div>
         </div>
       </section>
