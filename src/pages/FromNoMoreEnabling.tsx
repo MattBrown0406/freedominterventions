@@ -97,6 +97,7 @@ const FromNoMoreEnabling = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
                   <Button asChild size="xl" variant="hero-outline" onClick={() => trackChoice("intervention_readiness")}>
                     <Link to="/intervention-readiness">
                       <ShieldCheck className="h-5 w-5" />
