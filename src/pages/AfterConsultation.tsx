@@ -7,6 +7,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav";
 import { BreadcrumbSchema, OrganizationSchema, WebPageSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import WhatsAppChatButton from "@/components/WhatsAppChatButton";
 
 const breadcrumbItems = [
   { name: "Home", href: "/" },
