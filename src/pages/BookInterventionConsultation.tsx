@@ -92,6 +92,7 @@ const BookInterventionConsultation = () => {
                       Call Matt Now
                     </Button>
                   </TrackedPhoneLink>
+                  <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" className="w-full sm:w-auto" />
                 </div>
                 <p className="mt-4 text-sm text-muted-foreground">
                   Not sure which level of help fits? <Link to="/which-help-do-we-need" className="font-medium text-primary underline underline-offset-4">Use the decision path first.</Link>
