@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import TrackedPhoneLink from "./TrackedPhoneLink";
+import WhatsAppChatButton from "./WhatsAppChatButton";
 import { trackEvent } from "@/lib/analytics";
 
 const CTA = () => {
@@ -33,6 +34,7 @@ const CTA = () => {
                 Call Now: (458) 298-8000
               </Button>
             </TrackedPhoneLink>
+            <WhatsAppChatButton variant="solid" size="xl" />
             <Button 
               asChild
               variant="outline" 
