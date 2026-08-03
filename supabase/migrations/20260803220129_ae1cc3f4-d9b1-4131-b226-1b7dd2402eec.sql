@@ -1,0 +1,1 @@
+UPDATE public.spine_outbox SET status = 'pending', attempts = 0, last_error = null WHERE status = 'failed';
