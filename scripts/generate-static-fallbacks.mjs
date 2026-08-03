@@ -63,6 +63,14 @@ const staticMetadata = {
     heading: "Oregon Interventionist for Drug, Alcohol, and Fentanyl Addiction",
     body: "Matt Brown helps families across Oregon prepare the intervention, coordinate treatment, and stop the cycle of panic and repeated crisis.",
   },
+  "/nevada": {
+    title: "Nevada Interventionist | Drug & Alcohol Family Help",
+    description:
+      "Need an interventionist in Nevada? Matt Brown helps families prepare drug and alcohol interventions and treatment entry. Call (458) 298-8000.",
+    heading:
+      "Professional Interventionist in Nevada for Families Facing Addiction",
+    body: "If a loved one keeps refusing help, Matt Brown helps Nevada families assess the risk, prepare the intervention, coordinate treatment, and stop reacting crisis by crisis.",
+  },
   "/alaska": {
     title:
       "Interventionist Alaska | Family Addiction Help | Freedom Interventions",

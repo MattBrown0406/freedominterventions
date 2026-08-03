@@ -64,8 +64,8 @@ const Nevada = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Addiction Intervention Services in Nevada | Freedom Interventions"
-        description="Nevada families dealing with addiction need a clear plan, not more chaos. Matt Brown helps families across Nevada prepare, intervene, and move loved ones toward treatment."
+        title="Nevada Interventionist | Drug & Alcohol Family Help"
+        description="Need an interventionist in Nevada? Matt Brown helps families prepare drug and alcohol interventions and treatment entry. Call (458) 298-8000."
         canonical="https://freedominterventions.com/nevada"
         keywords="Nevada addiction intervention, Nevada interventionist, Las Vegas drug intervention, Reno intervention services, family intervention Nevada"
         geoRegion="US-NV"
@@ -110,19 +110,19 @@ const Nevada = () => {
             Nevada Intervention Services
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            When Addiction Thrives in Secrecy and Chaos, Families Need Structure
-            Fast
+            Professional Interventionist in Nevada for Families Facing Addiction
           </h1>
           <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
-            Matt Brown works with families across Nevada to prepare the
-            intervention, coordinate treatment, and stop the cycle of crisis,
-            rescue, and repeated relapse.
+            If your loved one keeps refusing help, the next step is a confidential
+            call with Matt Brown. He helps Nevada families assess the risk,
+            prepare the intervention, coordinate treatment, and stop reacting
+            crisis by crisis.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg" asChild>
-              <Link to="/#contact">
+              <Link to="/book-intervention-consultation#booking">
                 <Calendar className="w-5 h-5 mr-2" />
-                Schedule a Consultation
+                Book Confidential Consultation
               </Link>
             </Button>
             <Button
