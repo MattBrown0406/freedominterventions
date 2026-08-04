@@ -2,14 +2,27 @@ import { useState, useEffect } from "react";
 import { X, ArrowRight, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const STORAGE_KEY = "leadMagnetDismissed";
+const STORAGE_KEY = "leadMagnetDismissedAt";
+const DISMISS_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+const isDismissed = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const at = Number(raw);
+    if (!Number.isFinite(at)) return true;
+    return Date.now() - at < DISMISS_DURATION_MS;
+  } catch {
+    return false;
+  }
+};
 
 const LeadMagnetPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem(STORAGE_KEY);
-    if (dismissed) return;
+    if (isDismissed()) return;
+
 
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
