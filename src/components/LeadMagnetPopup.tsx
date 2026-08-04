@@ -28,6 +28,7 @@ const LeadMagnetPopup = () => {
 
     const handleMouseLeave = (e: MouseEvent) => {
       if (isMobile) return;
+      if (isDismissed()) return;
       if (e.clientY <= 0) {
         setIsVisible(true);
         document.removeEventListener("mouseout", handleMouseLeave);
@@ -35,10 +36,10 @@ const LeadMagnetPopup = () => {
     };
 
     const timer = setTimeout(() => {
-      if (!sessionStorage.getItem(STORAGE_KEY)) {
+      if (!isDismissed()) {
         setIsVisible(true);
       }
-    }, isMobile ? 30000 : 30000);
+    }, 30000);
 
     if (!isMobile) {
       document.addEventListener("mouseout", handleMouseLeave);
@@ -52,8 +53,13 @@ const LeadMagnetPopup = () => {
 
   const handleClose = () => {
     setIsVisible(false);
-    sessionStorage.setItem(STORAGE_KEY, "true");
+    try {
+      localStorage.setItem(STORAGE_KEY, String(Date.now()));
+    } catch {
+      // ignore storage failures
+    }
   };
+
 
   if (!isVisible) return null;
 
