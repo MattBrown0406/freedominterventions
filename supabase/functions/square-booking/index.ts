@@ -452,7 +452,6 @@ serve(async (req) => {
             customerEmail: sanitizedEmail,
             bookingDate,
             bookingType: normalizedBookingType,
-            rateLimitRemaining: rateLimit.remaining
           });
 
           const paymentResponse = await fetch(`${SQUARE_BASE_URL}/payments`, {
@@ -720,7 +719,7 @@ serve(async (req) => {
           throw new Error('Valid booking date and time are required');
         }
 
-        if (!bookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'coaching', 'intervention-contract'].includes(bookingType)) {
+        if (!bookingType || !['consultation', 'crisis-coaching', 'readiness-intensive', 'aftercare-planning', 'coaching', 'intervention-contract'].includes(bookingType)) {
           throw new Error('Valid booking type is required');
         }
 
@@ -773,7 +772,6 @@ serve(async (req) => {
           type: sanitizedData.booking_type,
           date: sanitizedData.booking_date,
           time: sanitizedData.booking_time,
-          rateLimitRemaining: rateLimit.remaining 
         });
 
         const { data: booking, error: bookingError } = await supabase
