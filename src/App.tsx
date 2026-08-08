@@ -43,6 +43,7 @@ import WhatIfTheyRefuse from "./pages/WhatIfTheyRefuse";
 import WhatMakesMattDifferent from "./pages/WhatMakesMattDifferent";
 import InterventionCost from "./pages/InterventionCost";
 import BookInterventionConsultation from "./pages/BookInterventionConsultation";
+import BookACall from "./pages/BookACall";
 import BeforeYouCall from "./pages/BeforeYouCall";
 import AfterConsultation from "./pages/AfterConsultation";
 import MobileStickyCTA from "./components/MobileStickyCTA";
@@ -240,6 +241,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/booking" element={<Index />} />
+            <Route path="/book" element={<BookACall />} />
+            <Route path="/schedule" element={<BookACall />} />
             <Route path="/interventionist" element={<Interventionist />} />
             <Route
               path="/family-intervention"
