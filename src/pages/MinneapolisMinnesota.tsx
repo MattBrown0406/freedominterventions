@@ -21,8 +21,8 @@ const MinneapolisMinnesota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Minneapolis Interventionist | Freedom Interventions"
-        description="Need professional intervention help in Minneapolis? Matt Brown helps Twin Cities families plan the conversation and treatment entry. Call (458) 298-8000."
+        title="Minneapolis Professional Interventions | Freedom Interventions"
+        description="Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan intervention and treatment entry. Call (458) 298-8000."
         keywords="Minneapolis professional interventions, Minneapolis professional interventionist, Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl intervention Minneapolis, alcohol intervention Minneapolis"
         canonical="https://freedominterventions.com/minneapolis-minnesota"
       />
@@ -53,7 +53,7 @@ const MinneapolisMinnesota = () => {
               Minneapolis, Minnesota
             </div>
             <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Professional Interventionist in Minneapolis for Families Facing Addiction
+              Professional Interventions in Minneapolis for Families Facing Addiction
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               If your family is searching for professional interventions in Minneapolis, the next step is a confidential call with Matt Brown. He helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis. Freedom Interventions serves Minneapolis, St. Paul, Bloomington, and surrounding communities with direct, confidential help.

@@ -50,8 +50,8 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
     description: "Family intervention services led by Matt Brown. Plan a drug or alcohol intervention, treatment entry, and family boundaries. Call (458) 298-8000.",
   },
   "/minneapolis-minnesota": {
-    title: "Minneapolis Professional Interventionist | Drug & Alcohol Intervention Help",
-    description: "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan drug, alcohol, and fentanyl interventions. Call (458) 298-8000.",
+    title: "Minneapolis Professional Interventions | Freedom Interventions",
+    description: "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan intervention and treatment entry. Call (458) 298-8000.",
   },
   "/boise-idaho": {
     title: "Drug Intervention in Boise, Idaho | Professional Family Intervention Help",
