@@ -5,7 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ShareButtons from "@/components/ShareButtons";
-import { Calendar, ArrowLeft } from "lucide-react";
+import { Calendar, ArrowLeft, Phone } from "lucide-react";
+import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 import { supabase } from "@/integrations/supabase/client";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
@@ -271,12 +272,12 @@ const BlogPost = () => {
                 <p className="text-muted-foreground leading-relaxed mb-4">{gscOptimization.directAnswer}</p>
                 <p className="text-foreground font-medium leading-relaxed mb-5">{gscOptimization.ctaText}</p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link to="/book-intervention-consultation#booking" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+                  <Link to="/book-intervention-consultation?type=consultation#booking" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                     Book a confidential consultation
                   </Link>
-                  <a href="tel:+14582988000" className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
+                  <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_post_gsc_aside" }} className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
                     Call (458) 298-8000
-                  </a>
+                  </TrackedPhoneLink>
                 </div>
                 {showFamilyBridgeCta && (
                   <div className="mt-6 rounded-xl border border-border/60 bg-background/80 p-4">
@@ -304,6 +305,25 @@ const BlogPost = () => {
       </section>
 
       {showFamilyBridgeCta && <FamilyBridgeBanner />}
+
+      <section className="py-16 bg-card">
+        <div className="container px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-4">Need Help for Your Family?</h2>
+            <p className="text-muted-foreground mb-8">If you're struggling with a loved one's addiction, Matt can help you understand the situation and map out the next step.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_post_close" }} className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-colors">
+                <Phone className="w-4 h-4 mr-2" />
+                Call (458) 298-8000
+              </TrackedPhoneLink>
+              <Link to="/book-intervention-consultation?type=consultation#booking" className="inline-flex items-center justify-center px-8 py-4 border border-primary/30 text-primary font-semibold rounded-full hover:bg-primary/10 transition-colors">
+                Book a Confidential Consultation
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       {relatedPosts.length > 0 && (
         <section className="py-8 md:py-12 border-t border-border/60">
@@ -334,18 +354,6 @@ const BlogPost = () => {
           </div>
         </section>
       )}
-
-      <section className="py-16 bg-card">
-        <div className="container px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-4">Need Help for Your Family?</h2>
-            <p className="text-muted-foreground mb-8">If you're struggling with a loved one's addiction, Matt can help you understand the situation and map out the next step.</p>
-            <Link to="/book-intervention-consultation#booking" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-colors">
-              Book a Confidential Consultation
-            </Link>
-          </div>
-        </div>
-      </section>
 
       <Footer />
     </div>
