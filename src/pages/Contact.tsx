@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,9 +7,9 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, LocalBusinessSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Phone, Mail, MapPin, Send, MessageSquareText, ClipboardCheck, ArrowRightCircle, Shield, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -25,27 +25,23 @@ import { getFunnelAttribution } from "@/lib/funnelAttribution";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 import { Link } from "react-router-dom";
 
-const buildContactSchema = (requirePhone: boolean) =>
-  z.object({
-    name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
-    email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-    phone: requirePhone
-      ? z.string().trim().min(7, "Phone is required so Matt can call you back").max(20, "Phone must be less than 20 characters")
-      : z.string().trim().max(20, "Phone must be less than 20 characters"),
-    message: z.string().trim().min(1, "Message is required").max(2000, "Message must be less than 2000 characters"),
-  });
 
-type ContactFormData = z.infer<ReturnType<typeof buildContactSchema>>;
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().max(20, "Phone must be less than 20 characters").optional().or(z.literal("")),
+  message: z.string().trim().min(1, "Message is required").max(2000, "Message must be less than 2000 characters"),
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [callMeBack, setCallMeBack] = useState(true);
-  const callMeBackRef = useRef(true);
   const { toast } = useToast();
 
   const form = useForm<ContactFormData>({
-    resolver: (values, context, options) =>
-      zodResolver(buildContactSchema(callMeBackRef.current))(values, context, options),
+    resolver: zodResolver(contactSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -54,20 +50,18 @@ const Contact = () => {
     },
   });
 
-  const handleCallMeBackChange = (checked: boolean) => {
-    callMeBackRef.current = checked;
-    setCallMeBack(checked);
-    form.clearErrors("phone");
-  };
-
   const onSubmit = async (data: ContactFormData) => {
+    if (callMeBack && !(data.phone || "").trim()) {
+      form.setError("phone", { type: "manual", message: "Phone is required so Matt can call you back" });
+      return;
+    }
+    if (callMeBack && (data.phone || "").trim().length < 7) {
+      form.setError("phone", { type: "manual", message: "Phone is required so Matt can call you back" });
+      return;
+    }
     setIsSubmitting(true);
     
     try {
-      const message = callMeBack
-        ? data.message
-        : `Message only — no callback requested.\n\n${data.message}`;
-
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-message`,
         {
@@ -80,7 +74,7 @@ const Contact = () => {
             name: data.name,
             email: data.email,
             phone: data.phone,
-            message,
+            message: data.message,
             pagePath: window.location.pathname,
             sourceAttribution: getFunnelAttribution(),
           }),
@@ -95,12 +89,11 @@ const Contact = () => {
         title: "Message Sent",
         description: callMeBack
           ? "Thank you for reaching out. Matt will use the number you provided to call you back."
-          : "Thank you for reaching out. Matt will read your message.",
+          : "Thank you for reaching out. We'll reply by email.",
       });
       trackEvent("contact_message_sent", {
         source: "contact_page",
         page_path: window.location.pathname,
-        call_me_back: callMeBack,
       });
       
       form.reset();
@@ -310,26 +303,34 @@ const Contact = () => {
                       </FormItem>
                     )}
                   />
-
-                  <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-background px-4 py-3">
-                    <label htmlFor="call-me-back" className="text-sm font-medium text-foreground">
-                      Call me back
-                    </label>
+                  
+                  <div className="flex items-center justify-between gap-4 rounded-xl border border-border p-4">
+                    <div>
+                      <p className="font-medium text-foreground">Call me back</p>
+                      <p className="text-sm text-muted-foreground">
+                        {callMeBack
+                          ? "Matt will use this number to call you."
+                          : "We'll reply by email instead."}
+                      </p>
+                    </div>
                     <Switch
-                      id="call-me-back"
                       checked={callMeBack}
-                      onCheckedChange={handleCallMeBackChange}
+                      onCheckedChange={(checked) => {
+                        setCallMeBack(checked);
+                        form.clearErrors("phone");
+                      }}
+                      aria-label="Call me back"
                     />
                   </div>
-                  
+
                   <FormField
                     control={form.control}
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{callMeBack ? "Phone *" : "Phone"}</FormLabel>
+                        <FormLabel>{callMeBack ? "Phone *" : "Phone (optional)"}</FormLabel>
                         <FormControl>
-                          <Input type="tel" placeholder="(555) 555-5555" required={callMeBack} {...field} />
+                          <Input type="tel" placeholder="(555) 555-5555" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
