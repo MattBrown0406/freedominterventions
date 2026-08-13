@@ -13,8 +13,8 @@ import { format } from "date-fns";
 import { z } from "zod";
 import { trackEvent } from "@/lib/analytics";
 import { getFunnelAttribution } from "@/lib/funnelAttribution";
+import { FRI_AGREEMENT_VERSION, FRI_AGREEMENT_TEXT } from "@/components/friAgreementText";
 
-// Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
 const SQUARE_LOCATION_ID = '3CJ7Z2V1KEZR5';
 
@@ -24,10 +24,10 @@ type PaidReturnType = BookingType | 'fri-contract';
 interface OfferConfig {
   label: string;
   durationMinutes: number;
-  priceCents: number; // 0 for free
+  priceCents: number;
   priceLabel: string;
   description: string;
-  shortName: string; // used in summaries
+  shortName: string;
 }
 
 const OFFERS: Record<BookingType, OfferConfig> = {
@@ -75,73 +75,6 @@ const getErrorMessage = (error: unknown, fallback: string) => {
   return error instanceof Error ? error.message : fallback;
 };
 
-const FRI_AGREEMENT_VERSION = "fri-v1";
-const FRI_AGREEMENT_TEXT = `FAMILY READINESS INTENSIVE AGREEMENT
-
-Freedom Interventions
-Matt Brown
-FreedomInterventions.com
-(458) 298-8000
-
-This Family Readiness Intensive Agreement ("Agreement") is entered into by and between Freedom Interventions ("Consultant") and the undersigned client ("Client").
-
-1. Services
-Client is engaging Consultant for a Family Readiness Intensive focused on evaluating the family system, current crisis dynamics, intervention readiness, communication strategy, boundary guidance, and immediate next-step recommendations relating to a loved one struggling with substance use or related behavioral health concerns.
-
-The Family Readiness Intensive includes:
-• one 90-minute consultation session, typically by Zoom unless otherwise arranged
-• review of the family situation and relevant background shared by Client
-• strategic guidance and recommendations
-• up to 7 days of reasonable follow-up support by phone, Zoom, text, or email, at Consultant’s discretion and subject to scheduling availability
-
-2. Fee
-The fee for the Family Readiness Intensive is $2,500.00.
-
-Client understands and agrees that this fee is earned in exchange for Consultant reserving time, providing specialized professional guidance, and making availability and follow-up support available to Client.
-
-3. Payment Terms
-Payment is due in full at the time of signing unless otherwise stated in writing by Consultant.
-
-No services are guaranteed to begin until this Agreement is signed and payment has been successfully processed.
-
-4. No Guarantee of Outcome
-Client understands that Consultant does not and cannot guarantee any specific outcome, including but not limited to:
-• that a loved one will accept help
-• that a loved one will enter treatment
-• that a family intervention will occur
-• that any particular relationship, treatment, or recovery result will follow
-
-Consultant agrees only to provide professional guidance, experience-based recommendations, and agreed support services.
-
-5. Nonrefundable Fee
-Client acknowledges that the Family Readiness Intensive requires Consultant to reserve time, prepare for the matter, provide specialized advisory services, and make follow-up availability available.
-
-Accordingly, all fees paid under this Agreement are nonrefundable once the Agreement is signed and payment is processed, including in circumstances where:
-• Client later decides not to proceed
-• Client does not attend or fully participate
-• Client believes the family is not ready
-• the loved one refuses help or treatment
-• the family elects not to move forward with any further services
-
-Client agrees not to initiate a chargeback, payment dispute, or reversal based on dissatisfaction with outcome alone where Consultant has made the agreed professional time, guidance, and support available.
-
-6. Scheduling and Rescheduling
-Consultant will make reasonable efforts to schedule the session promptly. If Client needs to reschedule, Client agrees to provide as much notice as possible. Consultant will make reasonable efforts to accommodate a rescheduled session, but availability is not guaranteed on Client’s preferred timeline.
-
-7. Client Responsibility
-Client agrees to provide accurate information to the best of their knowledge and to participate honestly and in good faith. Client understands that the quality of strategic guidance may depend in part on the completeness and accuracy of the information provided.
-
-8. Not Medical or Legal Advice
-Consultant does not provide medical care, psychiatric treatment, legal advice, or emergency services. If there is an immediate safety risk, medical emergency, overdose concern, or psychiatric crisis, Client should contact 911 or appropriate emergency services immediately.
-
-9. Confidentiality
-Consultant will use reasonable discretion regarding information shared by Client, subject to legal, ethical, safety, and practical limitations. Electronic communications and virtual meetings carry inherent privacy and security risks that cannot be entirely eliminated.
-
-10. Entire Agreement
-This Agreement reflects the entire understanding between the parties regarding the Family Readiness Intensive and supersedes prior discussions relating to this specific service, unless modified in writing.
-
-11. Acceptance
-By signing below, Client acknowledges that Client has read this Agreement, understands it, and agrees to its terms, including the nonrefundable nature of the fee.`;
 
 type Step = 'type' | 'date' | 'time' | 'details' | 'agreement' | 'payment' | 'confirmation';
 
@@ -188,30 +121,13 @@ export const BookingCalendar = () => {
       }
       setLoading(true);
       const verifyPayment = returnedType === 'fri-contract'
-        ? supabase.functions.invoke('contracts', {
-            body: {
-              action: 'mark-paid',
-              contractId: returnedBookingId,
-            }
-          })
-        : supabase.functions.invoke('square-booking', {
-            body: {
-              action: 'verify-booking-payment',
-              bookingId: returnedBookingId,
-            }
-          });
-
+        ? supabase.functions.invoke('contracts', { body: { action: 'mark-paid', contractId: returnedBookingId } })
+        : supabase.functions.invoke('square-booking', { body: { action: 'verify-booking-payment', bookingId: returnedBookingId } });
       verifyPayment.then(({ error }) => {
         if (error) throw error;
-        trackEvent('booking_payment_completed', {
-          booking_id: returnedBookingId,
-          booking_type: returnedType,
-        });
-        if (returnedType === 'fri-contract') {
-          setContractId(returnedBookingId);
-        } else {
-          setBookingId(returnedBookingId);
-        }
+        trackEvent('booking_payment_completed', { booking_id: returnedBookingId, booking_type: returnedType });
+        if (returnedType === 'fri-contract') setContractId(returnedBookingId);
+        else setBookingId(returnedBookingId);
         setStep('confirmation');
         toast.success('Payment completed successfully.');
         const cleanUrl = window.location.pathname + window.location.hash;
@@ -219,24 +135,18 @@ export const BookingCalendar = () => {
       }).catch((error) => {
         console.error('Failed to verify Square payment:', error);
         toast.error('Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.');
-      }).finally(() => {
-        setLoading(false);
-      });
+      }).finally(() => setLoading(false));
       return;
     }
 
     const type = params.get("type") as BookingType | null;
     if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive" || type === "aftercare-planning")) {
       setBookingType(type);
-      if (type === "consultation") {
-        setSkippedTypeChooser(true);
-      }
+      if (type === "consultation") setSkippedTypeChooser(true);
       const name = params.get("name") || "";
       const email = params.get("email") || "";
       const phone = params.get("phone") || "";
-      if (name || email || phone) {
-        setCustomerInfo({ name, email, phone });
-      }
+      if (name || email || phone) setCustomerInfo({ name, email, phone });
       const dateStr = params.get("date");
       const timeStr = params.get("time");
       if (dateStr) {
@@ -245,18 +155,10 @@ export const BookingCalendar = () => {
         if (!isNaN(date.getTime())) {
           setSelectedDate(date);
           fetchAvailableSlots(date);
-          if (timeStr) {
-            setSelectedTime(timeStr);
-            setStep("details");
-          } else {
-            setStep("time");
-          }
-        } else {
-          setStep("date");
-        }
-      } else {
-        setStep("date");
-      }
+          if (timeStr) { setSelectedTime(timeStr); setStep("details"); }
+          else setStep("time");
+        } else setStep("date");
+      } else setStep("date");
       const cleanUrl = window.location.pathname + window.location.hash;
       window.history.replaceState({}, "", cleanUrl);
     }
@@ -285,8 +187,7 @@ export const BookingCalendar = () => {
         body: { action: 'get-available-slots', date: format(date, 'yyyy-MM-dd') }
       });
       if (error) throw error;
-      const filteredSlots = filterSameDaySlots(data.slots || [], date);
-      setAvailableSlots(filteredSlots);
+      setAvailableSlots(filterSameDaySlots(data.slots || [], date));
     } catch (error: unknown) {
       console.error('Error fetching slots:', error);
       toast.error('Failed to load available times');
@@ -297,10 +198,7 @@ export const BookingCalendar = () => {
 
   const handleTypeSelect = (type: BookingType) => {
     setBookingType(type);
-    trackEvent('booking_type_selected', {
-      booking_type: type,
-      price_cents: OFFERS[type].priceCents,
-    });
+    trackEvent('booking_type_selected', { booking_type: type, price_cents: OFFERS[type].priceCents });
     setStep('date');
   };
 
@@ -330,9 +228,7 @@ export const BookingCalendar = () => {
         errors[field] = err.message;
       });
       setValidationErrors(errors);
-      trackEvent('booking_details_validation_failed', {
-        booking_type: bookingType,
-      });
+      trackEvent('booking_details_validation_failed', { booking_type: bookingType });
       toast.error('Please correct the errors in the form');
       return;
     }
@@ -345,26 +241,18 @@ export const BookingCalendar = () => {
       await bookFreeConsultation();
     } else {
       try {
-        const { data: cartData } = await supabase
-          .from('abandoned_carts')
-          .insert({
-            customer_name: customerInfo.name,
-            customer_email: customerInfo.email,
-            customer_phone: customerInfo.phone || null,
-            booking_type: bookingType!,
-            booking_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
-            booking_time: selectedTime || null,
-            amount_cents: offer!.priceCents,
-            source_attribution: sourceAttribution,
-          } as never)
-          .select('id')
-          .single();
-        if (cartData?.id) setAbandonedCartId(cartData.id);
-        trackEvent('booking_lead_captured', {
-          booking_type: bookingType,
+        const { data: cartData } = await supabase.from('abandoned_carts').insert({
+          customer_name: customerInfo.name,
+          customer_email: customerInfo.email,
+          customer_phone: customerInfo.phone || null,
+          booking_type: bookingType!,
+          booking_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
+          booking_time: selectedTime || null,
           amount_cents: offer!.priceCents,
-          cart_id: cartData?.id,
-        });
+          source_attribution: sourceAttribution,
+        } as never).select('id').single();
+        if (cartData?.id) setAbandonedCartId(cartData.id);
+        trackEvent('booking_lead_captured', { booking_type: bookingType, amount_cents: offer!.priceCents, cart_id: cartData?.id });
       } catch (err) {
         console.warn('Cart capture failed:', err);
       }
@@ -372,24 +260,10 @@ export const BookingCalendar = () => {
     }
   };
 
-  const sendBookingConfirmation = async (
-    id: string,
-    type: BookingType,
-    date: string,
-    time: string,
-    duration: number
-  ) => {
+  const sendBookingConfirmation = async (id: string, type: BookingType, date: string, time: string, duration: number) => {
     try {
       const { error } = await supabase.functions.invoke('send-booking-confirmation', {
-        body: {
-          bookingId: id,
-          customerName: customerInfo.name,
-          customerEmail: customerInfo.email,
-          bookingType: type,
-          bookingDate: date,
-          bookingTime: time,
-          durationMinutes: duration,
-        }
+        body: { bookingId: id, customerName: customerInfo.name, customerEmail: customerInfo.email, bookingType: type, bookingDate: date, bookingTime: time, durationMinutes: duration }
       });
       if (error) {
         console.error('Failed to send confirmation:', error);
@@ -422,11 +296,7 @@ export const BookingCalendar = () => {
       if (data?.error) throw new Error(data.error);
       setBookingId(data.booking.id);
       setStep('confirmation');
-      trackEvent('consultation_booked', {
-        booking_id: data.booking.id,
-        booking_type: bookingType,
-        booking_date: bookingDate,
-      });
+      trackEvent('consultation_booked', { booking_id: data.booking.id, booking_type: bookingType, booking_date: bookingDate });
       toast.success('Consultation booked successfully!');
       await sendBookingConfirmation(data.booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
     } catch (error: unknown) {
@@ -447,7 +317,6 @@ export const BookingCalendar = () => {
         return;
       }
     }
-
     setLoading(true);
     try {
       const bookingDate = format(selectedDate, 'yyyy-MM-dd');
@@ -455,7 +324,6 @@ export const BookingCalendar = () => {
       let checkoutContractId: string | null = null;
       let data;
       let error;
-
       if (bookingType === 'readiness-intensive') {
         const { generateContractPdf } = await import("@/utils/generateContractPdf");
         const pdfBlob = generateContractPdf({
@@ -474,7 +342,6 @@ export const BookingCalendar = () => {
           },
           agreementText: FRI_AGREEMENT_TEXT,
         });
-
         const pdfBase64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onloadend = () => {
@@ -484,9 +351,7 @@ export const BookingCalendar = () => {
           reader.onerror = () => reject(new Error('Failed to encode FRI contract PDF.'));
           reader.readAsDataURL(pdfBlob);
         });
-
         const pdfPath = `fri/${crypto.randomUUID()}.pdf`;
-
         const contractResponse = await supabase.functions.invoke('contracts', {
           body: {
             action: 'create-contract',
@@ -501,29 +366,23 @@ export const BookingCalendar = () => {
             amountCents: offer.priceCents,
             contractPdfPath: pdfPath,
             contractPdfBase64: pdfBase64,
-          metadata: {
-            bookingDate,
-            bookingTime: selectedTime,
-            durationMinutes: offer.durationMinutes,
-            followUpIncluded: true,
+            metadata: {
+              bookingDate,
+              bookingTime: selectedTime,
+              durationMinutes: offer.durationMinutes,
+              followUpIncluded: true,
+              sourceAttribution: getFunnelAttribution(),
+            },
             sourceAttribution: getFunnelAttribution(),
-          },
-          sourceAttribution: getFunnelAttribution(),
-        }
-      });
+          }
+        });
         error = contractResponse.error;
         data = contractResponse.data;
         if (error) throw error;
         if (!data?.contract?.id) throw new Error('FRI contract record was not created.');
-
         setContractId(data.contract.id);
         checkoutContractId = data.contract.id;
-        trackEvent('contract_signed', {
-          contract_id: data.contract.id,
-          contract_type: 'readiness-intensive',
-          amount_cents: offer.priceCents,
-        });
-
+        trackEvent('contract_signed', { contract_id: data.contract.id, contract_type: 'readiness-intensive', amount_cents: offer.priceCents });
         const paymentResponse = await supabase.functions.invoke('contracts', {
           body: {
             action: 'create-payment-link',
@@ -558,21 +417,13 @@ export const BookingCalendar = () => {
       if (data?.error) throw new Error(data.error);
       if (abandonedCartId) {
         try {
-          await supabase
-            .from('abandoned_carts')
-            .update({ status: 'recovered', recovered_at: new Date().toISOString() })
-            .eq('id', abandonedCartId);
+          await supabase.from('abandoned_carts').update({ status: 'recovered', recovered_at: new Date().toISOString() }).eq('id', abandonedCartId);
         } catch (err) {
           console.warn('Failed to mark cart recovered:', err);
         }
       }
       if (data?.checkoutUrl) {
-        trackEvent('checkout_started', {
-          booking_type: bookingType,
-          amount_cents: offer.priceCents,
-          contract_id: checkoutContractId,
-          abandoned_cart_id: abandonedCartId,
-        });
+        trackEvent('checkout_started', { booking_type: bookingType, amount_cents: offer.priceCents, contract_id: checkoutContractId, abandoned_cart_id: abandonedCartId });
         window.location.href = data.checkoutUrl;
         return;
       }
@@ -657,35 +508,21 @@ export const BookingCalendar = () => {
     <section id="booking" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Schedule an Appointment
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Choose the level of support that fits your family's situation.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Schedule an Appointment</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Choose the level of support that fits your family's situation.</p>
           <p className="text-sm text-muted-foreground mt-3 max-w-2xl mx-auto">
-            Optional prep: a short <a href="/assessment" className="text-primary hover:underline font-medium">family assessment</a> can help organize what&apos;s happening before you meet. It is not required to book.
+            Optional: an <a href="/assessment" className="text-primary hover:underline font-medium">assessment</a> before we meet can help Matt prepare. It is not required to book.
           </p>
           {skippedTypeChooser && bookingType === 'consultation' && step !== 'type' && (
             <p className="text-sm text-muted-foreground mt-3">
-              <button
-                type="button"
-                className="text-primary hover:underline font-medium"
-                onClick={() => setStep('type')}
-              >
-                Looking for coaching or a readiness intensive?
-              </button>
+              <button type="button" className="text-primary hover:underline font-medium" onClick={() => setStep('type')}>Looking for coaching or a readiness intensive?</button>
             </p>
           )}
         </div>
-
         <div className="max-w-5xl mx-auto">
           <Card className="border-primary/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="w-5 h-5 text-primary" />
-                {getStepTitle()}
-              </CardTitle>
+              <CardTitle className="flex items-center gap-2"><CalendarIcon className="w-5 h-5 text-primary" />{getStepTitle()}</CardTitle>
               <CardDescription>{getStepDescription()}</CardDescription>
             </CardHeader>
             <CardContent>
@@ -712,7 +549,6 @@ export const BookingCalendar = () => {
                   </button>
                 </div>
               )}
-
               {step === 'date' && (
                 <div>
                   <div className="flex justify-center">
@@ -720,25 +556,16 @@ export const BookingCalendar = () => {
                   </div>
                   <div className="flex justify-between mt-6">
                     {skippedTypeChooser && bookingType === 'consultation' ? (
-                      <button
-                        type="button"
-                        className="text-sm text-muted-foreground hover:text-primary underline underline-offset-4"
-                        onClick={() => setStep('type')}
-                      >
-                        Looking for coaching or a readiness intensive?
-                      </button>
+                      <button type="button" className="text-sm text-muted-foreground hover:text-primary underline underline-offset-4" onClick={() => setStep('type')}>Looking for coaching or a readiness intensive?</button>
                     ) : (
-                      <Button variant="ghost" onClick={() => setStep('type')}>← Back</Button>
+                      <Button variant="ghost" onClick={() => setStep('type')}>{'\u2190'} Back</Button>
                     )}
                   </div>
                 </div>
               )}
-
               {step === 'time' && selectedDate && (
                 <div className="space-y-6">
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Times shown in your timezone ({userTzShort})</p>
-                  </div>
+                  <div className="text-center"><p className="text-sm text-muted-foreground">Times shown in your timezone ({userTzShort})</p></div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {availableSlots.map((slot) => (
                       <Button key={slot} variant="outline" onClick={() => handleTimeSelect(slot)} className="h-auto py-4 flex flex-col gap-1">
@@ -748,10 +575,9 @@ export const BookingCalendar = () => {
                     ))}
                   </div>
                   {availableSlots.length === 0 && !loading && <p className="text-center text-muted-foreground">No available times for this date.</p>}
-                  <div className="flex justify-between"><Button variant="ghost" onClick={() => setStep('date')}>← Back</Button></div>
+                  <div className="flex justify-between"><Button variant="ghost" onClick={() => setStep('date')}>{'\u2190'} Back</Button></div>
                 </div>
               )}
-
               {step === 'details' && selectedDate && offer && (
                 <form onSubmit={handleDetailsSubmit} className="max-w-md mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
@@ -764,10 +590,9 @@ export const BookingCalendar = () => {
                   <div className="space-y-2"><Label htmlFor="name" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name *</Label><Input id="name" value={customerInfo.name} onChange={(e) => { setCustomerInfo({ ...customerInfo, name: e.target.value }); if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined }); }} placeholder="John Smith" maxLength={100} required className={validationErrors.name ? 'border-destructive' : ''} />{validationErrors.name && <p className="text-sm text-destructive">{validationErrors.name}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="email" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email *</Label><Input id="email" type="email" value={customerInfo.email} onChange={(e) => { setCustomerInfo({ ...customerInfo, email: e.target.value }); if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined }); }} placeholder="john@example.com" maxLength={255} required className={validationErrors.email ? 'border-destructive' : ''} />{validationErrors.email && <p className="text-sm text-destructive">{validationErrors.email}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="phone" className="flex items-center gap-2"><Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}</Label><Input id="phone" type="tel" value={customerInfo.phone} onChange={(e) => { setCustomerInfo({ ...customerInfo, phone: e.target.value }); if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined }); }} placeholder="(555) 123-4567" maxLength={20} required={bookingType === 'consultation'} className={validationErrors.phone ? 'border-destructive' : ''} />{validationErrors.phone && <p className="text-sm text-destructive">{validationErrors.phone}</p>}</div>
-                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>← Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? (bookingType === 'aftercare-planning' ? 'Book Planning Call' : 'Book Consultation') : 'Continue to Payment'}</Button></div>
+                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>{'\u2190'} Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? (bookingType === 'aftercare-planning' ? 'Book Planning Call' : 'Book Consultation') : 'Continue to Payment'}</Button></div>
                 </form>
               )}
-
               {step === 'agreement' && selectedDate && offer && bookingType === 'readiness-intensive' && (
                 <div className="max-w-3xl mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
@@ -785,11 +610,10 @@ export const BookingCalendar = () => {
                     <div className="space-y-2"><Label htmlFor="fri-signer-name">Type your full legal name</Label><Input id="fri-signer-name" value={friSignerName} onChange={(e) => { setFriSignerName(e.target.value); if (friAgreementError) setFriAgreementError(null); }} placeholder="Full legal name" maxLength={100} /></div>
                     <div className="flex items-start gap-3 rounded-lg border p-4"><Checkbox id="fri-agreement-accepted" checked={friAgreementAccepted} onCheckedChange={(checked) => { setFriAgreementAccepted(checked === true); if (friAgreementError) setFriAgreementError(null); }} /><Label htmlFor="fri-agreement-accepted" className="leading-6 font-normal">I have read this agreement, understand it, and agree to its terms, including the nonrefundable nature of the fee.</Label></div>
                     {friAgreementError && <p className="text-sm text-destructive">{friAgreementError}</p>}
-                    <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep('details')}>← Back</Button><Button onClick={() => { const signerName = friSignerName.trim(); if (!friAgreementAccepted || !signerName) { setFriAgreementError('Please type your full name and accept the agreement before continuing.'); return; } setFriAgreementError(null); setStep('payment'); }} className="flex-1">Continue to Payment</Button></div>
+                    <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep('details')}>{'\u2190'} Back</Button><Button onClick={() => { const signerName = friSignerName.trim(); if (!friAgreementAccepted || !signerName) { setFriAgreementError('Please type your full name and accept the agreement before continuing.'); return; } setFriAgreementError(null); setStep('payment'); }} className="flex-1">Continue to Payment</Button></div>
                   </div>
                 </div>
               )}
-
               {step === 'payment' && selectedDate && offer && (
                 <div className="max-w-xl mx-auto space-y-6">
                   <div className="bg-muted p-4 rounded-lg space-y-2">
@@ -799,20 +623,19 @@ export const BookingCalendar = () => {
                     <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
-                    {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-1">✓ Includes 7 days of follow-up support by Zoom, phone, text, or email</p>}
+                    {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-1">Includes 7 days of follow-up support by Zoom, phone, text, or email</p>}
                     <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
                   </div>
                   <div className="rounded-lg border bg-card p-6 space-y-4">
-                    <div className="flex items-center gap-3"><div className="rounded-full bg-primary/10 p-2"><ExternalLink className="w-5 h-5 text-primary" /></div><div><h4 className="font-semibold">Complete payment on Square</h4><p className="text-sm text-muted-foreground">You’ll be redirected to Square’s secure hosted checkout page to enter card details and complete payment.</p></div></div>
+                    <div className="flex items-center gap-3"><div className="rounded-full bg-primary/10 p-2"><ExternalLink className="w-5 h-5 text-primary" /></div><div><h4 className="font-semibold">Complete payment on Square</h4><p className="text-sm text-muted-foreground">You will be redirected to Square's secure hosted checkout page to enter card details and complete payment.</p></div></div>
                     <div className="rounded-lg bg-muted p-4 text-sm text-muted-foreground space-y-2">
                       <div className="flex items-center gap-2"><Lock className="w-4 h-4" /><span>Secure hosted checkout powered by Square</span></div>
-                      <p>You’ll return here after payment. This gives you a more professional payment experience than the embedded card field.</p>
+                      <p>You will return here after payment.</p>
                     </div>
                   </div>
-                  <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'details')}>← Back</Button><Button onClick={handleHostedCheckout} disabled={loading} className="flex-1 flex items-center gap-2">{loading ? 'Redirecting...' : `Continue to Square Checkout`}</Button></div>
+                  <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'details')}>{'\u2190'} Back</Button><Button onClick={handleHostedCheckout} disabled={loading} className="flex-1 flex items-center gap-2">{loading ? 'Redirecting...' : 'Continue to Square Checkout'}</Button></div>
                 </div>
               )}
-
               {step === 'confirmation' && selectedDate && offer && (
                 <div className="max-w-md mx-auto text-center space-y-6">
                   <div className="flex justify-center"><div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle className="w-10 h-10 text-green-600" /></div></div>
@@ -824,18 +647,13 @@ export const BookingCalendar = () => {
                     {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-2">Your booking includes 7 days of follow-up support by Zoom, phone, text, or email.</p>}
                   </div>
                   <div className="rounded-lg border border-primary/20 bg-primary/5 p-5 text-left space-y-3">
-                    <h4 className="font-semibold text-foreground flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-primary" />
-                      Before your appointment
-                    </h4>
+                    <h4 className="font-semibold text-foreground flex items-center gap-2"><CheckCircle className="w-5 h-5 text-primary" />Before your appointment</h4>
                     <div className="space-y-2 text-sm text-muted-foreground">
                       <p>Watch for the confirmation email with your meeting details.</p>
-                      <p>If you have time, a short family assessment can help organize the facts before you talk. It is optional.</p>
+                      <p>Optional: an assessment before we meet can help Matt prepare. It is not required.</p>
                       <p>If the situation changes before your appointment, call directly instead of waiting.</p>
                     </div>
-                    <Button asChild className="w-full" variant={bookingType === 'readiness-intensive' ? 'outline' : 'default'}>
-                      <a href="/assessment">Optional: Complete Assessment</a>
-                    </Button>
+                    <Button asChild className="w-full" variant={bookingType === 'readiness-intensive' ? 'outline' : 'default'}><a href="/assessment">Optional: Complete Assessment</a></Button>
                   </div>
                   {bookingType === 'readiness-intensive' ? (
                     <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3"><h4 className="font-semibold text-primary flex items-center gap-2"><Sparkles className="w-5 h-5" />Readiness Intensive reminder</h4><p className="text-sm text-foreground">Your intensive includes the session plus 7 days of follow-up support. Use the assessment to organize the facts that matter most.</p></div>
