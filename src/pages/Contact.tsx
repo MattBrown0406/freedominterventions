@@ -9,7 +9,7 @@ import { OrganizationSchema, LocalBusinessSchema } from "@/components/Structured
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Phone, Mail, MapPin, Send, MessageSquareText, ClipboardCheck, ArrowRightCircle, Shield } from "lucide-react";
+import { Phone, Mail, MapPin, Send, MessageSquareText, ClipboardCheck, ArrowRightCircle, Shield, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Form,
@@ -21,11 +21,13 @@ import {
 } from "@/components/ui/form";
 import { trackEvent } from "@/lib/analytics";
 import { getFunnelAttribution } from "@/lib/funnelAttribution";
+import TrackedPhoneLink from "@/components/TrackedPhoneLink";
+import { Link } from "react-router-dom";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  phone: z.string().trim().max(20, "Phone must be less than 20 characters").optional(),
+  phone: z.string().trim().min(7, "Phone is required so Matt can call you back").max(20, "Phone must be less than 20 characters"),
   message: z.string().trim().min(1, "Message is required").max(2000, "Message must be less than 2000 characters"),
 });
 
@@ -60,7 +62,7 @@ const Contact = () => {
           body: JSON.stringify({
             name: data.name,
             email: data.email,
-            phone: data.phone || undefined,
+            phone: data.phone,
             message: data.message,
             pagePath: window.location.pathname,
             sourceAttribution: getFunnelAttribution(),
@@ -74,7 +76,7 @@ const Contact = () => {
 
       toast({
         title: "Message Sent",
-        description: "Thank you for reaching out. We'll get back to you soon.",
+        description: "Thank you for reaching out. Matt will use the number you provided to call you back.",
       });
       trackEvent("contact_message_sent", {
         source: "contact_page",
@@ -197,8 +199,9 @@ const Contact = () => {
               </div>
               
               <div className="space-y-6">
-                <a 
-                  href="tel:+14582988000" 
+                <TrackedPhoneLink
+                  phoneNumber="+14582988000"
+                  metadata={{ location: "contact_page" }}
                   className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
                 >
                   <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -207,9 +210,9 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Phone</h3>
                     <p className="text-primary hover:underline">(458) 298-8000</p>
-                    <p className="text-sm text-muted-foreground mt-1">Available for consultations</p>
+                    <p className="text-sm text-muted-foreground mt-1">Call if you would rather talk now</p>
                   </div>
-                </a>
+                </TrackedPhoneLink>
                 
                 <a 
                   href="mailto:matt@freedominterventions.com" 
@@ -240,9 +243,23 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div className="bg-card p-8 rounded-2xl border border-border">
-              <h2 className="font-serif text-2xl font-bold text-foreground mb-6">
+              <h2 className="font-serif text-2xl font-bold text-foreground mb-4">
                 Send Us a Message
               </h2>
+              <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "contact_page" }}>
+                  <Button type="button" className="w-full sm:w-auto">
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call (458) 298-8000
+                  </Button>
+                </TrackedPhoneLink>
+                <Button asChild type="button" variant="outline" className="w-full sm:w-auto">
+                  <Link to="/book-intervention-consultation?type=consultation#booking">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Book a confidential consultation
+                  </Link>
+                </Button>
+              </div>
               
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -279,7 +296,7 @@ const Contact = () => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone (optional)</FormLabel>
+                        <FormLabel>Phone *</FormLabel>
                         <FormControl>
                           <Input type="tel" placeholder="(555) 555-5555" {...field} />
                         </FormControl>
@@ -296,7 +313,7 @@ const Contact = () => {
                         <FormLabel>Message *</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="How can we help you? Feel free to share your situation or ask any questions."
+                            placeholder="What's happening, and when can Matt call you back?"
                             className="min-h-[150px] resize-none"
                             {...field} 
                           />
