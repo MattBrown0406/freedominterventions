@@ -78,7 +78,7 @@ const SignsSection = () => {
             Taking the next step doesn't mean giving up on them; it means fighting for them.
           </p>
           <Button asChild variant="default" size="lg">
-            <Link to="/?type=consultation#booking">
+            <Link to="/book-intervention-consultation?type=consultation#booking">
               Schedule Free Consultation
             </Link>
           </Button>
