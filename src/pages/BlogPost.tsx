@@ -80,6 +80,12 @@ const familyBridgeFitSlugs = new Set([
   "kratom-addiction-warning-signs-families",
 ]);
 
+const rewriteLegacyFreedomPhone = (html: string) =>
+  html
+    .replace(/tel:(?:\+?1)?[-.]?541[-.]?668[-.]?8084/gi, "tel:+14582988000")
+    .replace(/\(541\)\s*668-8084/g, "(458) 298-8000")
+    .replace(/541-668-8084/g, "458-298-8000");
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const canonicalSlug = slug ? slugRedirects[slug] || slug : "";
@@ -272,7 +278,7 @@ const BlogPost = () => {
               className="text-foreground leading-relaxed"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
-                  post.content
+                  rewriteLegacyFreedomPhone(post.content)
                     .replace(/^## (.+)$/gm, '<h2 class="font-serif text-2xl md:text-3xl font-bold text-foreground mt-10 mb-1">$1</h2>')
                     .replace(/^### (.+)$/gm, '<h3 class="font-serif text-xl md:text-2xl font-semibold text-foreground mt-8 mb-1">$1</h3>')
                     .replace(/\n/g, "<br />")
