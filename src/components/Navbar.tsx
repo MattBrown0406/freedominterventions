@@ -137,40 +137,9 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
               </Button>
             </TrackedPhoneLink>
             <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="w-full" />
-            <p className="px-4 pt-1 text-sm text-muted-foreground">
-              Need free family support first?{" "}
-              <a
-                href="https://soberhelpline.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-                onClick={() => setIsOpen(false)}
-              >
-                Sober Helpline is separate and free.
-              </a>
-            </p>
           </div>
         )}
       </div>
-
-      {!dark && (
-        <div className="border-t border-border/50 hidden md:block">
-          <div className="container mx-auto px-6 py-1.5">
-            <p className="text-sm text-muted-foreground">
-              Need free family support first?{" "}
-              <a
-                href="https://soberhelpline.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Sober Helpline is separate and free.
-              </a>
-            </p>
-          </div>
-        </div>
-      )}
-
     </nav>
   );
 };
