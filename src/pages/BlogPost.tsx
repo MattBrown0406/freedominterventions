@@ -6,12 +6,12 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft, Phone } from "lucide-react";
-import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 import { supabase } from "@/integrations/supabase/client";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
 import AppStoreBadge from "@/components/AppStoreBadge";
+import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 
 const slugRedirects: Record<string, string> = {
   "preparing-for-an-intervention": "how-to-prepare-for-an-intervention",
@@ -235,7 +235,7 @@ const BlogPost = () => {
       <section className="relative pt-32 pb-16 bg-card">
         <div className="container px-6">
           <div className="max-w-3xl mx-auto">
-            <Link to="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6">
+            <Link to="/blog" className="inline-flex items-center justify-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6">
               <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
@@ -275,7 +275,7 @@ const BlogPost = () => {
                   <Link to="/book-intervention-consultation?type=consultation#booking" className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                     Book a confidential consultation
                   </Link>
-                  <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_post_gsc_aside" }} className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
+                  <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_post_gsc" }} className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10">
                     Call (458) 298-8000
                   </TrackedPhoneLink>
                 </div>
@@ -311,19 +311,18 @@ const BlogPost = () => {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-4">Need Help for Your Family?</h2>
             <p className="text-muted-foreground mb-8">If you're struggling with a loved one's addiction, Matt can help you understand the situation and map out the next step.</p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_post_close" }} className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-colors">
-                <Phone className="w-4 h-4 mr-2" />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_post" }} className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-colors">
+                <Phone className="w-5 h-5" />
                 Call (458) 298-8000
               </TrackedPhoneLink>
-              <Link to="/book-intervention-consultation?type=consultation#booking" className="inline-flex items-center justify-center px-8 py-4 border border-primary/30 text-primary font-semibold rounded-full hover:bg-primary/10 transition-colors">
+              <Link to="/book-intervention-consultation?type=consultation#booking" className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-primary/30 text-primary font-semibold rounded-full hover:bg-primary/10 transition-colors">
                 Book a Confidential Consultation
               </Link>
             </div>
           </div>
         </div>
       </section>
-
 
       {relatedPosts.length > 0 && (
         <section className="py-8 md:py-12 border-t border-border/60">
