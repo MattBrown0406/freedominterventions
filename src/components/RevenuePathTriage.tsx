@@ -41,7 +41,7 @@ const paths = [
     description: "Use this when the immediate problem is mixed messages, enabling, money, housing, boundaries, or what to say next.",
     bestFor: "A working plan for the next hard conversation.",
     cta: "Book crisis coaching",
-    href: "/book-intervention-consultation?type=crisis-coaching#booking",
+    href: "/?type=crisis-coaching#booking",
     event: "triage_coaching",
   },
   {
@@ -52,7 +52,7 @@ const paths = [
     description: "Use this when refusal, relapse, risk, and family alignment require a professional plan before deciding on full intervention.",
     bestFor: "Pre-intervention strategy and family alignment.",
     cta: "Book readiness intensive",
-    href: "/book-intervention-consultation?type=readiness-intensive#booking",
+    href: "/?type=readiness-intensive#booking",
     event: "triage_readiness",
   },
   {
