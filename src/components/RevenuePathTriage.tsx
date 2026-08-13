@@ -30,7 +30,7 @@ const paths = [
     description: "Use this when you need Matt to sort whether this is coaching, treatment planning, readiness work, or a full intervention.",
     bestFor: "A first recommendation before spending money.",
     cta: "Book free consult",
-    href: "/?type=consultation#booking",
+    href: "/book-intervention-consultation?type=consultation#booking",
     event: "triage_consult",
   },
   {
@@ -41,7 +41,7 @@ const paths = [
     description: "Use this when the immediate problem is mixed messages, enabling, money, housing, boundaries, or what to say next.",
     bestFor: "A working plan for the next hard conversation.",
     cta: "Book crisis coaching",
-    href: "/?type=crisis-coaching#booking",
+    href: "/book-intervention-consultation?type=crisis-coaching#booking",
     event: "triage_coaching",
   },
   {
@@ -52,7 +52,7 @@ const paths = [
     description: "Use this when refusal, relapse, risk, and family alignment require a professional plan before deciding on full intervention.",
     bestFor: "Pre-intervention strategy and family alignment.",
     cta: "Book readiness intensive",
-    href: "/?type=readiness-intensive#booking",
+    href: "/book-intervention-consultation?type=readiness-intensive#booking",
     event: "triage_readiness",
   },
   {
