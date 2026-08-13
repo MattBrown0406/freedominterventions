@@ -107,7 +107,7 @@ const ProcessOverview = () => {
             Ready to take the first step?
           </p>
           <Button asChild size="lg">
-            <Link to="/contact">
+            <Link to="/book-intervention-consultation?type=consultation#booking">
               Book Your Free Consultation
             </Link>
           </Button>

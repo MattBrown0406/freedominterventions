@@ -27,7 +27,7 @@ const MobileStickyCTA = () => {
           WhatsApp
         </a>
         <Link
-          to="/?type=consultation#booking"
+          to="/book-intervention-consultation?type=consultation#booking"
           onClick={() => trackEvent("mobile_free_consult_click", { location: "mobile_sticky_cta" })}
           className="flex h-12 items-center justify-center gap-1 rounded-md border border-primary/30 bg-background text-xs font-semibold text-primary"
         >

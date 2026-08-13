@@ -160,6 +160,7 @@ export const BookingCalendar = () => {
   const [contractId, setContractId] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
+  const [skippedTypeChooser, setSkippedTypeChooser] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -227,6 +228,9 @@ export const BookingCalendar = () => {
     const type = params.get("type") as BookingType | null;
     if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive" || type === "aftercare-planning")) {
       setBookingType(type);
+      if (type === "consultation") {
+        setSkippedTypeChooser(true);
+      }
       const name = params.get("name") || "";
       const email = params.get("email") || "";
       const phone = params.get("phone") || "";
@@ -592,6 +596,7 @@ export const BookingCalendar = () => {
     setBookingId(null);
     setContractId(null);
     setAbandonedCartId(null);
+    setSkippedTypeChooser(false);
   };
 
   const formatTime = (time: string) => {
@@ -659,8 +664,19 @@ export const BookingCalendar = () => {
             Choose the level of support that fits your family's situation.
           </p>
           <p className="text-sm text-muted-foreground mt-3 max-w-2xl mx-auto">
-            Please complete an <a href="/assessment" className="text-primary hover:underline font-medium">assessment</a> before your meeting time.
+            Optional prep: a short <a href="/assessment" className="text-primary hover:underline font-medium">family assessment</a> can help organize what&apos;s happening before you meet. It is not required to book.
           </p>
+          {skippedTypeChooser && bookingType === 'consultation' && step !== 'type' && (
+            <p className="text-sm text-muted-foreground mt-3">
+              <button
+                type="button"
+                className="text-primary hover:underline font-medium"
+                onClick={() => setStep('type')}
+              >
+                Looking for coaching or a readiness intensive?
+              </button>
+            </p>
+          )}
         </div>
 
         <div className="max-w-5xl mx-auto">
@@ -703,7 +719,17 @@ export const BookingCalendar = () => {
                     <Calendar mode="single" selected={selectedDate} onSelect={handleDateSelect} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} className="rounded-md border" />
                   </div>
                   <div className="flex justify-between mt-6">
-                    <Button variant="ghost" onClick={() => setStep('type')}>← Back</Button>
+                    {skippedTypeChooser && bookingType === 'consultation' ? (
+                      <button
+                        type="button"
+                        className="text-sm text-muted-foreground hover:text-primary underline underline-offset-4"
+                        onClick={() => setStep('type')}
+                      >
+                        Looking for coaching or a readiness intensive?
+                      </button>
+                    ) : (
+                      <Button variant="ghost" onClick={() => setStep('type')}>← Back</Button>
+                    )}
                   </div>
                 </div>
               )}
@@ -804,11 +830,11 @@ export const BookingCalendar = () => {
                     </h4>
                     <div className="space-y-2 text-sm text-muted-foreground">
                       <p>Watch for the confirmation email with your meeting details.</p>
-                      <p>Complete the family assessment so Matt has the clearest picture before you talk.</p>
+                      <p>If you have time, a short family assessment can help organize the facts before you talk. It is optional.</p>
                       <p>If the situation changes before your appointment, call directly instead of waiting.</p>
                     </div>
                     <Button asChild className="w-full" variant={bookingType === 'readiness-intensive' ? 'outline' : 'default'}>
-                      <a href="/assessment">Complete Assessment</a>
+                      <a href="/assessment">Optional: Complete Assessment</a>
                     </Button>
                   </div>
                   {bookingType === 'readiness-intensive' ? (

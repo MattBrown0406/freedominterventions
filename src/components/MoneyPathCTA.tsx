@@ -47,8 +47,8 @@ export default function MoneyPathCTA({
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" onClick={() => trackClick("consultation", "/book-intervention-consultation#booking")}>
-                <Link to="/book-intervention-consultation#booking">
+              <Button asChild size="lg" variant="outline" onClick={() => trackClick("consultation", "/book-intervention-consultation?type=consultation#booking")}>
+                <Link to="/book-intervention-consultation?type=consultation#booking">
                   <Calendar className="h-4 w-4" />
                   Free consult
                 </Link>

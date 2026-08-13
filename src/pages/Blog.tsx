@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { Calendar, ArrowRight, Users } from "lucide-react";
+import { Calendar, ArrowRight, Users, Phone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SEOHead from "@/components/SEOHead";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 import { Button } from "@/components/ui/button";
+import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 
 const featuredSlugs = [
   "what-is-an-intervention",
@@ -248,22 +249,36 @@ const Blog = () => {
 
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="max-w-4xl mx-auto flex flex-col gap-5">
             <div>
               <p className="font-semibold text-foreground">
                 Need help planning a family intervention?
               </p>
               <p className="text-sm text-muted-foreground">
-                Learn how Matt's family intervention process works and what to
-                expect.
+                Call Matt or book a confidential consultation. You can also read
+                how the family intervention process works.
               </p>
             </div>
-            <Link to="/family-intervention" className="shrink-0">
-              <Button variant="outline" className="gap-2 whitespace-nowrap">
-                <Users className="h-4 w-4" />
-                Family Intervention Services
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_index_close" }}>
+                <Button className="gap-2 whitespace-nowrap w-full sm:w-auto">
+                  <Phone className="h-4 w-4" />
+                  Call (458) 298-8000
+                </Button>
+              </TrackedPhoneLink>
+              <Link to="/book-intervention-consultation?type=consultation#booking" className="shrink-0">
+                <Button variant="outline" className="gap-2 whitespace-nowrap w-full sm:w-auto">
+                  <Calendar className="h-4 w-4" />
+                  Book a confidential consultation
+                </Button>
+              </Link>
+              <Link to="/family-intervention" className="shrink-0">
+                <Button variant="ghost" className="gap-2 whitespace-nowrap w-full sm:w-auto text-muted-foreground">
+                  <Users className="h-4 w-4" />
+                  Family Intervention Services
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

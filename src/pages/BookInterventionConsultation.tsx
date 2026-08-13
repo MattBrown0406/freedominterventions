@@ -82,7 +82,7 @@ const BookInterventionConsultation = () => {
                 </div>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button asChild size="xl" variant="hero">
-                    <a href="#booking">
+                    <a href="/book-intervention-consultation?type=consultation#booking">
                       <Calendar className="h-5 w-5" />
                       Book Free Consult
                     </a>
@@ -104,99 +104,80 @@ const BookInterventionConsultation = () => {
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <ShieldCheck className="h-6 w-6" />
                 </div>
-                <h2 className="font-serif text-2xl font-bold text-foreground">What this call is for</h2>
-                <div className="mt-5 space-y-3">
+                <p className="text-sm font-semibold uppercase tracking-wide text-primary">What this call is for</p>
+                <h2 className="mt-2 font-serif text-3xl font-bold text-foreground">Leave with a decision, not a sales script.</h2>
+                <ul className="mt-5 space-y-3">
                   {outcomes.map((item) => (
-                    <div key={item} className="flex gap-3 rounded-lg border border-border bg-background p-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                      <p className="text-sm leading-relaxed text-muted-foreground">{item}</p>
-                    </div>
+                    <li key={item} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <span>{item}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="border-b border-border/60 bg-card py-10">
+        <section className="py-16 md:py-20">
           <div className="container px-6">
-            <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-destructive/20 bg-destructive/10 px-4 py-2 text-sm font-semibold text-destructive">
-                  <Clock className="h-4 w-4" />
-                  Do not wait for perfect certainty
-                </div>
-                <h2 className="mt-4 font-serif text-3xl font-bold text-foreground md:text-4xl">
-                  If any of these are true, the consult is the right next move.
-                </h2>
-              </div>
-              <div className="grid gap-3">
-                {urgencySignals.map((signal) => (
-                  <div key={signal} className="flex gap-3 rounded-lg border border-border bg-background p-4">
-                    <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                    <p className="text-sm leading-relaxed text-muted-foreground">{signal}</p>
+            <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
+              {callFlow.map((item) => (
+                <div key={item.title} className="rounded-xl border border-border bg-card p-6">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Clock className="h-5 w-5" />
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-12 md:py-16">
-          <div className="container px-6">
-            <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-3">
-              {[
-                { title: "If it feels urgent", body: "Call directly. Timing, safety, and family alignment matter more than browsing another page." },
-                { title: "If you need a starting point", body: "Book the free consultation and use it to decide the right level of help." },
-                { title: "If the family is divided", body: "Expect the first call to clarify who must be aligned before pressure increases." },
-              ].map((item) => (
-                <div key={item.title} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-                  <h3 className="font-semibold text-foreground">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                  <h3 className="font-serif text-xl font-bold text-foreground">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
                 </div>
               ))}
             </div>
-            <div className="mt-8 flex justify-center">
-              <a href="#booking" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                Go to scheduling
-                <ArrowDown className="h-4 w-4" />
-              </a>
-            </div>
           </div>
         </section>
 
-        <section className="bg-muted/20 py-12 md:py-16">
+        <section className="border-y border-border bg-muted/20 py-16 md:py-20">
           <div className="container px-6">
-            <div className="mx-auto max-w-6xl">
-              <div className="mb-8 max-w-3xl">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
-                  <Users className="h-4 w-4" />
-                  What happens on the call
+            <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <div>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Users className="h-6 w-6" />
                 </div>
-                <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">
-                  The call is built to reduce confusion, not add pressure.
-                </h2>
-                <p className="mt-3 text-muted-foreground">
-                  Families often arrive with too many facts, too many opinions, and no shared plan. The first call turns that into a practical next decision.
+                <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">Skip the form if the situation is already urgent.</h2>
+                <p className="mt-4 text-muted-foreground">
+                  Booking is the right move when you can wait for a scheduled conversation. Call now if the family cannot wait for the next available consult slot.
                 </p>
               </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {callFlow.map((item) => (
-                  <div key={item.title} className="rounded-lg border border-border bg-card p-5 shadow-sm">
-                    <p className="text-sm font-semibold uppercase tracking-wide text-primary">{item.title}</p>
-                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+              <div className="space-y-4">
+                {urgencySignals.map((item) => (
+                  <div key={item} className="rounded-xl border border-border bg-card p-5 text-sm leading-relaxed text-muted-foreground">
+                    {item}
                   </div>
                 ))}
+                <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "book_intervention_consultation_urgency" }}>
+                  <Button size="lg" variant="hero" className="w-full sm:w-auto">
+                    <Phone className="h-5 w-5" />
+                    Call (458) 298-8000
+                  </Button>
+                </TrackedPhoneLink>
               </div>
             </div>
           </div>
         </section>
 
-        <ClosePathProof source="book_intervention_consultation" className="bg-muted/20 border-y border-border" />
+        <TestimonialStrip />
+        <div className="container px-6 py-8">
+          <div className="mx-auto flex max-w-3xl justify-center">
+            <Button asChild size="lg" variant="outline">
+              <a href="#booking">
+                <ArrowDown className="h-4 w-4" />
+                Jump to booking
+              </a>
+            </Button>
+          </div>
+        </div>
         <BookingCalendar />
+        <ClosePathProof source="book_intervention_consultation" />
       </main>
-      <TestimonialStrip className="bg-muted/20 border-t border-border/50" />
-
       <Footer />
     </div>
   );

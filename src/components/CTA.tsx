@@ -42,7 +42,7 @@ const CTA = () => {
               className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
               onClick={() => trackEvent("cta_free_consult_click", { location: "cta_section" })}
             >
-              <Link to="/?type=consultation#booking">
+              <Link to="/book-intervention-consultation?type=consultation#booking">
                 <Calendar className="w-5 h-5" />
                 Schedule Free Consultation
               </Link>

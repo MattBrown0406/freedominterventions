@@ -41,7 +41,7 @@ const decisions = [
     description:
       "Choose this if you need Matt to sort whether this is coaching, treatment planning, readiness work, or a full intervention process.",
     nextStep: "Free consultation",
-    href: "/?type=consultation#booking",
+    href: "/book-intervention-consultation?type=consultation#booking",
     event: "which_help_consultation",
   },
   {
@@ -51,7 +51,7 @@ const decisions = [
     description:
       "Choose this when the immediate problem is what the family says, stops funding, stops rescuing, or does next.",
     nextStep: "$150 coaching session",
-    href: "/?type=crisis-coaching#booking",
+    href: "/book-intervention-consultation?type=crisis-coaching#booking",
     event: "which_help_coaching",
   },
   {
@@ -133,8 +133,8 @@ export default function WhichHelpDoWeNeed() {
                     </Button>
                   </TrackedPhoneLink>
                   <WhatsAppChatButton variant="solid" size="xl" label="WhatsApp" />
-                  <Button asChild size="xl" variant="outline" onClick={() => trackChoice("consultation_hero", "/?type=consultation#booking")}>
-                    <Link to="/?type=consultation#booking">
+                  <Button asChild size="xl" variant="outline" onClick={() => trackChoice("consultation_hero", "/book-intervention-consultation?type=consultation#booking")}>
+                    <Link to="/book-intervention-consultation?type=consultation#booking">
                       <Calendar className="h-5 w-5" />
                       Book Free Consultation
                     </Link>

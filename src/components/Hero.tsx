@@ -72,7 +72,7 @@ const Hero = () => {
             <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="fi-hero-button" />
 
             <Link
-              to="/book-intervention-consultation#booking"
+              to="/book-intervention-consultation?type=consultation#booking"
               className="fi-hero-button fi-hero-button-secondary"
             >
               Book a confidential consultation

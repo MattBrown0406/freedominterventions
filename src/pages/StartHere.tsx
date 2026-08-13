@@ -27,7 +27,7 @@ const options = [
     title: "We need a first conversation",
     body: "Schedule a free consultation to explain what is happening and get a clear next step.",
     action: "Book Free Consult",
-    href: "/?type=consultation#booking",
+    href: "/book-intervention-consultation?type=consultation#booking",
     event: "start_here_free_consult",
   },
   {
@@ -36,7 +36,7 @@ const options = [
     title: "We need a family plan",
     body: "Use the paid crisis coaching path when the family needs structured guidance before deciding on an intervention.",
     action: "Crisis Coaching",
-    href: "/?type=crisis-coaching#booking",
+    href: "/book-intervention-consultation?type=crisis-coaching#booking",
     event: "start_here_crisis_coaching",
   },
   {
@@ -45,7 +45,7 @@ const options = [
     title: "We may need an intervention",
     body: "Start the readiness path when treatment planning, family alignment, and intervention preparation are likely needed.",
     action: "Book Readiness Intensive",
-    href: "/?type=readiness-intensive#booking",
+    href: "/book-intervention-consultation?type=readiness-intensive#booking",
     event: "start_here_readiness",
   },
   {

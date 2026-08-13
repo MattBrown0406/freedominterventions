@@ -30,7 +30,7 @@ const paths = [
     description: "Use this when you need Matt to sort whether this is coaching, treatment planning, readiness work, or a full intervention.",
     bestFor: "A first recommendation before spending money.",
     cta: "Book free consult",
-    href: "/?type=consultation#booking",
+    href: "/book-intervention-consultation?type=consultation#booking",
     event: "triage_consult",
   },
   {
