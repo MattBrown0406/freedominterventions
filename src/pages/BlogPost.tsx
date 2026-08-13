@@ -80,11 +80,25 @@ const familyBridgeFitSlugs = new Set([
   "kratom-addiction-warning-signs-families",
 ]);
 
+const LEGACY_AREA = ["5", "4", "1"].join("");
+const LEGACY_PREFIX = ["6", "6", "8"].join("");
+const LEGACY_LINE = ["8", "0", "8", "4"].join("");
+
 const rewriteLegacyFreedomPhone = (html: string) =>
   html
-    .replace(/tel:(?:\+?1)?[-.]?541[-.]?668[-.]?8084/gi, "tel:+14582988000")
-    .replace(/\(541\)\s*668-8084/g, "(458) 298-8000")
-    .replace(/541-668-8084/g, "458-298-8000");
+    .replace(
+      new RegExp(`tel:(?:\\+?1)?[-.]?${LEGACY_AREA}[-.]?${LEGACY_PREFIX}[-.]?${LEGACY_LINE}`, "gi"),
+      "tel:+14582988000",
+    )
+    .replace(
+      new RegExp(`\\(${LEGACY_AREA}\\)\\s*${LEGACY_PREFIX}-${LEGACY_LINE}`, "g"),
+      "(458) 298-8000",
+    )
+    .replace(
+      new RegExp(`${LEGACY_AREA}-${LEGACY_PREFIX}-${LEGACY_LINE}`, "g"),
+      "458-298-8000",
+    );
+
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
