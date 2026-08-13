@@ -27,7 +27,7 @@ import { Link } from "react-router-dom";
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  phone: z.string().trim().min(1, "Phone is required").max(20, "Phone must be less than 20 characters"),
+  phone: z.string().trim().min(7, "Phone is required so Matt can call you back").max(20, "Phone must be less than 20 characters"),
   message: z.string().trim().min(1, "Message is required").max(2000, "Message must be less than 2000 characters"),
 });
 
@@ -76,7 +76,7 @@ const Contact = () => {
 
       toast({
         title: "Message Sent",
-        description: "Thank you for reaching out. We'll get back to you soon.",
+        description: "Thank you for reaching out. Matt will use the number you provided to call you back.",
       });
       trackEvent("contact_message_sent", {
         source: "contact_page",
@@ -210,7 +210,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Phone</h3>
                     <p className="text-primary hover:underline">(458) 298-8000</p>
-                    <p className="text-sm text-muted-foreground mt-1">Available for consultations</p>
+                    <p className="text-sm text-muted-foreground mt-1">Call if you would rather talk now</p>
                   </div>
                 </TrackedPhoneLink>
                 
@@ -253,10 +253,10 @@ const Contact = () => {
                     Call (458) 298-8000
                   </Button>
                 </TrackedPhoneLink>
-                <Button asChild variant="outline" className="w-full sm:w-auto">
+                <Button asChild type="button" variant="outline" className="w-full sm:w-auto">
                   <Link to="/book-intervention-consultation?type=consultation#booking">
                     <Calendar className="w-4 h-4 mr-2" />
-                    Book a Free Consultation
+                    Book a confidential consultation
                   </Link>
                 </Button>
               </div>
