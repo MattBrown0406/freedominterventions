@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { Calendar, ArrowRight, Users, Phone } from "lucide-react";
+import { Calendar, ArrowRight, Phone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SEOHead from "@/components/SEOHead";
 import {
@@ -249,35 +249,28 @@ const Blog = () => {
 
       <section className="py-8 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto flex flex-col gap-5">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <p className="font-semibold text-foreground">
                 Need help planning a family intervention?
               </p>
               <p className="text-sm text-muted-foreground">
-                Call Matt or book a confidential consultation. You can also read
-                how the family intervention process works.
+                Call Matt now or book a free consultation.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
-              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_index_close" }}>
-                <Button className="gap-2 whitespace-nowrap w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+              <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "blog_index" }}>
+                <Button className="gap-2 whitespace-nowrap">
                   <Phone className="h-4 w-4" />
                   Call (458) 298-8000
                 </Button>
               </TrackedPhoneLink>
-              <Link to="/book-intervention-consultation?type=consultation#booking" className="shrink-0">
-                <Button variant="outline" className="gap-2 whitespace-nowrap w-full sm:w-auto">
+              <Button asChild variant="outline" className="gap-2 whitespace-nowrap">
+                <Link to="/book-intervention-consultation?type=consultation#booking">
                   <Calendar className="h-4 w-4" />
-                  Book a confidential consultation
-                </Button>
-              </Link>
-              <Link to="/family-intervention" className="shrink-0">
-                <Button variant="ghost" className="gap-2 whitespace-nowrap w-full sm:w-auto text-muted-foreground">
-                  <Users className="h-4 w-4" />
-                  Family Intervention Services
-                </Button>
-              </Link>
+                  Book a Free Consultation
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
