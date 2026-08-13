@@ -82,7 +82,7 @@ const BookInterventionConsultation = () => {
                 </div>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button asChild size="xl" variant="hero">
-                    <a href="#booking">
+                    <a href="/book-intervention-consultation?type=consultation#booking">
                       <Calendar className="h-5 w-5" />
                       Book Free Consult
                     </a>
@@ -157,7 +157,7 @@ const BookInterventionConsultation = () => {
               ))}
             </div>
             <div className="mt-8 flex justify-center">
-              <a href="#booking" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+              <a href="/book-intervention-consultation?type=consultation#booking" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
                 Go to scheduling
                 <ArrowDown className="h-4 w-4" />
               </a>
