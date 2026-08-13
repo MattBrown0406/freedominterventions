@@ -76,7 +76,72 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 };
 
 const FRI_AGREEMENT_VERSION = "fri-v1";
-const FRI_AGREEMENT_TEXT = `FAMILY READINESS INTENSIVE AGREEMENT\n\nFreedom Interventions\nMatt Brown\nFreedomInterventions.com\n(458) 298-8000\n\nThis Family Readiness Intensive Agreement ("Agreement") is entered into by and between Freedom Interventions ("Consultant") and the undersigned client ("Client").\n\n1. Services\nClient is engaging Consultant for a Family Readiness Intensive focused on evaluating the family system, current crisis dynamics, intervention readiness, communication strategy, boundary guidance, and immediate next-step recommendations relating to a loved one struggling with substance use or related behavioral health concerns.\n\nThe Family Readiness Intensive includes:\n• one 90-minute consultation session, typically by Zoom unless otherwise arranged\n• review of the family situation and relevant background shared by Client\n• strategic guidance and recommendations\n• up to 7 days of reasonable follow-up support by phone, Zoom, text, or email, at Consultant’s discretion and subject to scheduling availability\n\n2. Fee\nThe fee for the Family Readiness Intensive is $2,500.00.\n\nClient understands and agrees that this fee is earned in exchange for Consultant reserving time, providing specialized professional guidance, and making availability and follow-up support available to Client.\n\n3. Payment Terms\nPayment is due in full at the time of signing unless otherwise stated in writing by Consultant.\n\nNo services are guaranteed to begin until this Agreement is signed and payment has been successfully processed.\n\n4. No Guarantee of Outcome\nClient understands that Consultant does not and cannot guarantee any specific outcome, including but not limited to:\n• that a loved one will accept help\n• that a loved one will enter treatment\n• that a family intervention will occur\n• that any particular relationship, treatment, or recovery result will follow\n\nConsultant agrees only to provide professional guidance, experience-based recommendations, and agreed support services.\n\n5. Nonrefundable Fee\nClient acknowledges that the Family Readiness Intensive requires Consultant to reserve time, prepare for the matter, provide specialized advisory services, and make follow-up availability available.\n\nAccordingly, all fees paid under this Agreement are nonrefundable once the Agreement is signed and payment is processed, including in circumstances where:\n• Client later decides not to proceed\n• Client does not attend or fully participate\n• Client believes the family is not ready\n• the loved one refuses help or treatment\n• the family elects not to move forward with any further services\n\nClient agrees not to initiate a chargeback, payment dispute, or reversal based on dissatisfaction with outcome alone where Consultant has made the agreed professional time, guidance, and support available.\n\n6. Scheduling and Rescheduling\nConsultant will make reasonable efforts to schedule the session promptly. If Client needs to reschedule, Client agrees to provide as much notice as possible. Consultant will make reasonable efforts to accommodate a rescheduled session, but availability is not guaranteed on Client’s preferred timeline.\n\n7. Client Responsibility\nClient agrees to provide accurate information to the best of their knowledge and to participate honestly and in good faith. Client understands that the quality of strategic guidance may depend in part on the completeness and accuracy of the information provided.\n\n8. Not Medical or Legal Advice\nConsultant does not provide medical care, psychiatric treatment, legal advice, or emergency services. If there is an immediate safety risk, medical emergency, overdose concern, or psychiatric crisis, Client should contact 911 or appropriate emergency services immediately.\n\n9. Confidentiality\nConsultant will use reasonable discretion regarding information shared by Client, subject to legal, ethical, safety, and practical limitations. Electronic communications and virtual meetings carry inherent privacy and security risks that cannot be entirely eliminated.\n\n10. Entire Agreement\nThis Agreement reflects the entire understanding between the parties regarding the Family Readiness Intensive and supersedes prior discussions relating to this specific service, unless modified in writing.\n\n11. Acceptance\nBy signing below, Client acknowledges that Client has read this Agreement, understands it, and agrees to its terms, including the nonrefundable nature of the fee.`;
+const FRI_AGREEMENT_TEXT = `FAMILY READINESS INTENSIVE AGREEMENT
+
+Freedom Interventions
+Matt Brown
+FreedomInterventions.com
+(458) 298-8000
+
+This Family Readiness Intensive Agreement ("Agreement") is entered into by and between Freedom Interventions ("Consultant") and the undersigned client ("Client").
+
+1. Services
+Client is engaging Consultant for a Family Readiness Intensive focused on evaluating the family system, current crisis dynamics, intervention readiness, communication strategy, boundary guidance, and immediate next-step recommendations relating to a loved one struggling with substance use or related behavioral health concerns.
+
+The Family Readiness Intensive includes:
+• one 90-minute consultation session, typically by Zoom unless otherwise arranged
+• review of the family situation and relevant background shared by Client
+• strategic guidance and recommendations
+• up to 7 days of reasonable follow-up support by phone, Zoom, text, or email, at Consultant’s discretion and subject to scheduling availability
+
+2. Fee
+The fee for the Family Readiness Intensive is $2,500.00.
+
+Client understands and agrees that this fee is earned in exchange for Consultant reserving time, providing specialized professional guidance, and making availability and follow-up support available to Client.
+
+3. Payment Terms
+Payment is due in full at the time of signing unless otherwise stated in writing by Consultant.
+
+No services are guaranteed to begin until this Agreement is signed and payment has been successfully processed.
+
+4. No Guarantee of Outcome
+Client understands that Consultant does not and cannot guarantee any specific outcome, including but not limited to:
+• that a loved one will accept help
+• that a loved one will enter treatment
+• that a family intervention will occur
+• that any particular relationship, treatment, or recovery result will follow
+
+Consultant agrees only to provide professional guidance, experience-based recommendations, and agreed support services.
+
+5. Nonrefundable Fee
+Client acknowledges that the Family Readiness Intensive requires Consultant to reserve time, prepare for the matter, provide specialized advisory services, and make follow-up availability available.
+
+Accordingly, all fees paid under this Agreement are nonrefundable once the Agreement is signed and payment is processed, including in circumstances where:
+• Client later decides not to proceed
+• Client does not attend or fully participate
+• Client believes the family is not ready
+• the loved one refuses help or treatment
+• the family elects not to move forward with any further services
+
+Client agrees not to initiate a chargeback, payment dispute, or reversal based on dissatisfaction with outcome alone where Consultant has made the agreed professional time, guidance, and support available.
+
+6. Scheduling and Rescheduling
+Consultant will make reasonable efforts to schedule the session promptly. If Client needs to reschedule, Client agrees to provide as much notice as possible. Consultant will make reasonable efforts to accommodate a rescheduled session, but availability is not guaranteed on Client’s preferred timeline.
+
+7. Client Responsibility
+Client agrees to provide accurate information to the best of their knowledge and to participate honestly and in good faith. Client understands that the quality of strategic guidance may depend in part on the completeness and accuracy of the information provided.
+
+8. Not Medical or Legal Advice
+Consultant does not provide medical care, psychiatric treatment, legal advice, or emergency services. If there is an immediate safety risk, medical emergency, overdose concern, or psychiatric crisis, Client should contact 911 or appropriate emergency services immediately.
+
+9. Confidentiality
+Consultant will use reasonable discretion regarding information shared by Client, subject to legal, ethical, safety, and practical limitations. Electronic communications and virtual meetings carry inherent privacy and security risks that cannot be entirely eliminated.
+
+10. Entire Agreement
+This Agreement reflects the entire understanding between the parties regarding the Family Readiness Intensive and supersedes prior discussions relating to this specific service, unless modified in writing.
+
+11. Acceptance
+By signing below, Client acknowledges that Client has read this Agreement, understands it, and agrees to its terms, including the nonrefundable nature of the fee.`;
 
 type Step = 'type' | 'date' | 'time' | 'details' | 'agreement' | 'payment' | 'confirmation';
 
@@ -629,7 +694,7 @@ export const BookingCalendar = () => {
                   <button onClick={() => handleTypeSelect('consultation')} className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col">
                     <div className="flex items-center gap-2 mb-3"><Phone className="w-6 h-6 text-primary" /><span className="text-lg font-semibold">Free Consultation</span></div>
                     <p className="text-muted-foreground text-sm mb-3 flex-1">{OFFERS.consultation.description}</p>
-                    <p className="text-2xl font-bold text-primary">Free</p>
+                    <div className="text-2xl font-bold text-primary">Free</div>
                     <p className="text-xs text-muted-foreground mt-1">15-minute Zoom call</p>
                   </button>
                   <button onClick={() => handleTypeSelect('crisis-coaching')} className="p-6 rounded-lg border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left flex flex-col">
@@ -663,7 +728,7 @@ export const BookingCalendar = () => {
                         Looking for coaching or a readiness intensive?
                       </button>
                     ) : (
-                      <Button variant="ghost" onClick={() => setStep('type')}>\u2190 Back</Button>
+                      <Button variant="ghost" onClick={() => setStep('type')}>← Back</Button>
                     )}
                   </div>
                 </div>
@@ -683,7 +748,7 @@ export const BookingCalendar = () => {
                     ))}
                   </div>
                   {availableSlots.length === 0 && !loading && <p className="text-center text-muted-foreground">No available times for this date.</p>}
-                  <div className="flex justify-between"><Button variant="ghost" onClick={() => setStep('date')}>\u2190 Back</Button></div>
+                  <div className="flex justify-between"><Button variant="ghost" onClick={() => setStep('date')}>← Back</Button></div>
                 </div>
               )}
 
@@ -699,7 +764,7 @@ export const BookingCalendar = () => {
                   <div className="space-y-2"><Label htmlFor="name" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name *</Label><Input id="name" value={customerInfo.name} onChange={(e) => { setCustomerInfo({ ...customerInfo, name: e.target.value }); if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined }); }} placeholder="John Smith" maxLength={100} required className={validationErrors.name ? 'border-destructive' : ''} />{validationErrors.name && <p className="text-sm text-destructive">{validationErrors.name}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="email" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email *</Label><Input id="email" type="email" value={customerInfo.email} onChange={(e) => { setCustomerInfo({ ...customerInfo, email: e.target.value }); if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined }); }} placeholder="john@example.com" maxLength={255} required className={validationErrors.email ? 'border-destructive' : ''} />{validationErrors.email && <p className="text-sm text-destructive">{validationErrors.email}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="phone" className="flex items-center gap-2"><Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}</Label><Input id="phone" type="tel" value={customerInfo.phone} onChange={(e) => { setCustomerInfo({ ...customerInfo, phone: e.target.value }); if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined }); }} placeholder="(555) 123-4567" maxLength={20} required={bookingType === 'consultation'} className={validationErrors.phone ? 'border-destructive' : ''} />{validationErrors.phone && <p className="text-sm text-destructive">{validationErrors.phone}</p>}</div>
-                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>\u2190 Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? (bookingType === 'aftercare-planning' ? 'Book Planning Call' : 'Book Consultation') : 'Continue to Payment'}</Button></div>
+                  <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>← Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? (bookingType === 'aftercare-planning' ? 'Book Planning Call' : 'Book Consultation') : 'Continue to Payment'}</Button></div>
                 </form>
               )}
 
@@ -720,7 +785,7 @@ export const BookingCalendar = () => {
                     <div className="space-y-2"><Label htmlFor="fri-signer-name">Type your full legal name</Label><Input id="fri-signer-name" value={friSignerName} onChange={(e) => { setFriSignerName(e.target.value); if (friAgreementError) setFriAgreementError(null); }} placeholder="Full legal name" maxLength={100} /></div>
                     <div className="flex items-start gap-3 rounded-lg border p-4"><Checkbox id="fri-agreement-accepted" checked={friAgreementAccepted} onCheckedChange={(checked) => { setFriAgreementAccepted(checked === true); if (friAgreementError) setFriAgreementError(null); }} /><Label htmlFor="fri-agreement-accepted" className="leading-6 font-normal">I have read this agreement, understand it, and agree to its terms, including the nonrefundable nature of the fee.</Label></div>
                     {friAgreementError && <p className="text-sm text-destructive">{friAgreementError}</p>}
-                    <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep('details')}>\u2190 Back</Button><Button onClick={() => { const signerName = friSignerName.trim(); if (!friAgreementAccepted || !signerName) { setFriAgreementError('Please type your full name and accept the agreement before continuing.'); return; } setFriAgreementError(null); setStep('payment'); }} className="flex-1">Continue to Payment</Button></div>
+                    <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep('details')}>← Back</Button><Button onClick={() => { const signerName = friSignerName.trim(); if (!friAgreementAccepted || !signerName) { setFriAgreementError('Please type your full name and accept the agreement before continuing.'); return; } setFriAgreementError(null); setStep('payment'); }} className="flex-1">Continue to Payment</Button></div>
                   </div>
                 </div>
               )}
@@ -734,7 +799,7 @@ export const BookingCalendar = () => {
                     <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
-                    {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-1">\u2713 Includes 7 days of follow-up support by Zoom, phone, text, or email</p>}
+                    {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-1">✓ Includes 7 days of follow-up support by Zoom, phone, text, or email</p>}
                     <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
                   </div>
                   <div className="rounded-lg border bg-card p-6 space-y-4">
@@ -744,7 +809,7 @@ export const BookingCalendar = () => {
                       <p>You’ll return here after payment. This gives you a more professional payment experience than the embedded card field.</p>
                     </div>
                   </div>
-                  <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'details')}>\u2190 Back</Button><Button onClick={handleHostedCheckout} disabled={loading} className="flex-1 flex items-center gap-2">{loading ? 'Redirecting...' : `Continue to Square Checkout`}</Button></div>
+                  <div className="flex gap-2"><Button variant="ghost" onClick={() => setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'details')}>← Back</Button><Button onClick={handleHostedCheckout} disabled={loading} className="flex-1 flex items-center gap-2">{loading ? 'Redirecting...' : `Continue to Square Checkout`}</Button></div>
                 </div>
               )}
 
