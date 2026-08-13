@@ -2,12 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.jpeg";
-import partyWreckersLogo from "@/assets/party-wreckers-logo.jpg";
-import soberHelplineLogo from "@/assets/sober-helpline-logo.png";
 import TrackedPhoneLink from "./TrackedPhoneLink";
 import WhatsAppChatButton from "./WhatsAppChatButton";
 import { Link } from "react-router-dom";
-import AppStoreBadge from "@/components/AppStoreBadge";
 
 const servicesLinks = [
   { name: "Family Intervention", href: "/family-intervention" },
@@ -133,29 +130,6 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
               onToggle={() => setOpenSection(openSection === "resources" ? null : "resources")}
               onNavigate={() => setIsOpen(false)}
             />
-            <a href="https://soberhelpline.com/monday-zoom-registration" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2 flex items-center gap-2 px-4" onClick={() => setIsOpen(false)}>
-              <img src={soberHelplineLogo} alt="Sober Helpline" className="h-6 w-auto" />
-              <span>Free Weekly Family Support</span>
-            </a>
-            <a
-              href="https://apps.apple.com/app/id6744403069"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-3 rounded-xl bg-primary/10 border border-primary/20 text-foreground font-medium"
-              onClick={() => setIsOpen(false)}
-            >
-              <div>
-                <div className="text-sm font-semibold">FamilyBridge</div>
-                <div className="text-xs text-muted-foreground">AI support for families</div>
-              </div>
-              <div className="ml-auto">
-                <AppStoreBadge height={28} />
-              </div>
-            </a>
-            <a href="/party-wreckers-podcast" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium py-2 flex items-center gap-2 px-4" onClick={() => setIsOpen(false)}>
-              <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-6 w-auto" width={1024} height={1024} />
-              <span className="font-lobster">The Party Wreckers Podcast</span>
-            </a>
             <TrackedPhoneLink phoneNumber="+14582988000" metadata={{ location: "navbar_mobile" }}>
               <Button variant="hero" size="default" className="mt-2 w-full">
                 <Phone className="w-4 h-4 mr-2" />
@@ -163,25 +137,40 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
               </Button>
             </TrackedPhoneLink>
             <WhatsAppChatButton variant="solid" size="default" label="WhatsApp" className="w-full" />
+            <p className="px-4 pt-1 text-sm text-muted-foreground">
+              Need free family support first?{" "}
+              <a
+                href="https://soberhelpline.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+                onClick={() => setIsOpen(false)}
+              >
+                Sober Helpline is separate and free.
+              </a>
+            </p>
           </div>
         )}
       </div>
 
       {!dark && (
         <div className="border-t border-border/50 hidden md:block">
-          <div className="container mx-auto px-6 py-1 flex justify-between items-center">
-            <a href="https://soberhelpline.com/monday-zoom-registration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-              <img src={soberHelplineLogo} alt="Sober Helpline" className="h-8 md:h-10 w-auto" />
-              <span className="text-muted-foreground">Free Weekly Family Support Meetings</span>
-            </a>
-            <AppStoreBadge height={30} />
-            <a href="/party-wreckers-podcast" className="inline-flex items-center gap-2">
-              <img src={partyWreckersLogo} alt="The Party Wreckers Podcast" className="h-8 md:h-10 w-auto" width={1024} height={1024} />
-              <span className="font-lobster text-sm md:text-base text-foreground">The Party Wreckers Podcast</span>
-            </a>
+          <div className="container mx-auto px-6 py-1.5">
+            <p className="text-sm text-muted-foreground">
+              Need free family support first?{" "}
+              <a
+                href="https://soberhelpline.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Sober Helpline is separate and free.
+              </a>
+            </p>
           </div>
         </div>
       )}
+
     </nav>
   );
 };

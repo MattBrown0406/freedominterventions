@@ -63,6 +63,17 @@ const Footer = () => {
               <AppStoreBadge height={38} />
               <p className="text-xs text-muted-foreground mt-2 max-w-[200px]">AI support for families navigating a loved one's addiction.</p>
             </div>
+            <p className="pt-4 text-sm text-muted-foreground">
+              Need free family support first?{" "}
+              <a
+                href="https://soberhelpline.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Sober Helpline is separate and free.
+              </a>
+            </p>
           </div>
 
           {/* Links */}
