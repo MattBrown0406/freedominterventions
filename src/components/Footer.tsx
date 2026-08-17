@@ -13,6 +13,7 @@ const Footer = () => {
       { name: "Treatment Planning", href: "/treatment-planning", isRoute: true },
       { name: "Aftercare Guidance", href: "/aftercare-guidance", isRoute: true },
       { name: "It Didn't Stick", href: "/it-didnt-stick", isRoute: true },
+      { name: "Two Households", href: "/two-households", isRoute: true },
     ],
     company: [
       { name: "About Matt", href: "/interventionist", isRoute: true },

@@ -67,6 +67,12 @@ const sourceDoors = [
     event: "start_here_it_didnt_stick_bridge",
   },
   {
+    title: "Two households / the other parent is running a different plan",
+    body: "If one house pays rent and the other hands over the keys, the addiction is using the gap. This is a case type, not a family-court problem.",
+    href: "/two-households",
+    event: "start_here_two_households_bridge",
+  },
+  {
     title: "Coming from No More Enabling",
     body: "You already see the enabling pattern. Move from education into a professional family plan.",
     href: "/from-no-more-enabling",

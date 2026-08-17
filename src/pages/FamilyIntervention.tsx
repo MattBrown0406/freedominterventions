@@ -13,6 +13,7 @@ import {
   PhoneCall,
   ChevronDown,
   MapPin,
+  ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -556,6 +557,29 @@ const FamilyIntervention = () => {
         description="Use the decision path before your family spends money or makes another confrontation. It routes you to the lowest safe next step."
         className="bg-muted/20 border-y border-border"
       />
+
+      <section className="py-10 md:py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-6 md:p-8">
+            <p className="mb-3 w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+              Case type
+            </p>
+            <h2 className="font-serif text-2xl font-bold text-foreground">
+              Two households / the other parent is running a different plan
+            </h2>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              If you and the other parent are not holding the same line on money, housing, and contact, the addiction is using the gap. That is a case type, not a footnote.
+            </p>
+            <Link
+              to="/two-households"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary"
+            >
+              Read the two-household page
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* FAQ Section */}
       <section className="py-16 md:py-24 bg-card" id="faq">

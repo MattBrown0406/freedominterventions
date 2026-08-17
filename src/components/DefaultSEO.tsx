@@ -89,6 +89,10 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
     title: "Crisis Support — Immediate Addiction Help | Freedom Interventions",
     description: "In crisis right now? Immediate resources and guidance for families facing an addiction emergency. You're not alone — help is available.",
   },
+  "/two-households": {
+    title: "Two Households. One Disease. | Freedom Interventions",
+    description: "If one parent pays rent and the other hands over the keys, the addiction is using the gap. Talk with Matt Brown about a two-household case. Call (458) 298-8000.",
+  },
   "/aftercare-guidance": {
     title: "Aftercare Guidance — Post-Treatment Support | Freedom Interventions",
     description: "Treatment is just the beginning. Aftercare guidance for families: what to expect, how to support recovery, and how to protect your own wellbeing.",
