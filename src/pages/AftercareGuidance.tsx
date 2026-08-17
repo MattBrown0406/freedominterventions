@@ -247,6 +247,13 @@ const AftercareGuidance = () => {
                 <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
                   If your loved one is in treatment now, about to discharge, or already starting to wobble, Matt can help your family build the next plan. This is where long-term recovery either gets stronger or starts slipping. Handle it on purpose.
                 </p>
+                <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                  Already been through treatment once and it did not hold?{" "}
+                  <Link to="/it-didnt-stick" className="text-primary underline underline-offset-4">
+                    Start here instead
+                  </Link>
+                  .
+                </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button asChild size="lg" className="gap-2">
                     <Link to="/#contact">
