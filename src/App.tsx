@@ -4,7 +4,7 @@ import FloatingContactForm from "@/components/FloatingContactForm";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Reschedule from "./pages/Reschedule";
@@ -14,6 +14,7 @@ import FamilyReadinessIntensive from "./pages/FamilyReadinessIntensive";
 import CrisisSupport from "./pages/CrisisSupport";
 import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
+import ItDidntStick from "./pages/ItDidntStick";
 import Testimonials from "./pages/Testimonials";
 import Contact from "./pages/Contact";
 import FromSoberHelpline from "./pages/FromSoberHelpline";
@@ -255,6 +256,11 @@ const App = () => (
             <Route path="/crisis-support" element={<CrisisSupport />} />
             <Route path="/treatment-planning" element={<TreatmentPlanning />} />
             <Route path="/aftercare-guidance" element={<AftercareGuidance />} />
+            <Route path="/it-didnt-stick" element={<ItDidntStick />} />
+            <Route
+              path="/relapse-after-treatment"
+              element={<Navigate to="/it-didnt-stick" replace />}
+            />
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/contact" element={<Contact />} />
             <Route

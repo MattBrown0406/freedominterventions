@@ -12,6 +12,7 @@ const Footer = () => {
       { name: "Crisis Support", href: "/crisis-support", isRoute: true },
       { name: "Treatment Planning", href: "/treatment-planning", isRoute: true },
       { name: "Aftercare Guidance", href: "/aftercare-guidance", isRoute: true },
+      { name: "It Didn't Stick", href: "/it-didnt-stick", isRoute: true },
     ],
     company: [
       { name: "About Matt", href: "/interventionist", isRoute: true },
