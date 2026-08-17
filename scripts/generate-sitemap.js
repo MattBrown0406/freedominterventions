@@ -29,7 +29,9 @@ const appRoutes = routeMatches
       path !== "/unsubscribe" &&
       path !== "/start-contract" &&
       path !== "/intervention-agreement" &&
-      path !== "/family-portal",
+      path !== "/family-portal" &&
+      path !== "/split-house" &&
+      path !== "/divorced-parents",
   );
 const interventionAnswerRoutes = [
   ...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g),

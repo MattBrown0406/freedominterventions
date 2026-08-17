@@ -254,6 +254,25 @@ const CrisisSupport = () => {
               ))}
             </section>
 
+            <section className="rounded-2xl border border-border bg-background p-6 md:p-8">
+              <p className="mb-3 w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                Case type
+              </p>
+              <h2 className="text-xl md:text-2xl font-serif font-semibold text-foreground">
+                Two households / the other parent is running a different plan
+              </h2>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                If one house is holding the line and the other is still rescuing, the crisis will keep resetting in the softer kitchen. That is a case type, not a custody problem.
+              </p>
+              <Link
+                to="/two-households"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary"
+              >
+                Read the two-household page
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </section>
+
             <section id="cta" className="bg-card rounded-2xl p-8 md:p-12 text-center border border-border/50">
               <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground mb-4">If Things Are Escalating, Get Clarity Before the Next Crisis Hits</h2>
               <p className="text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">

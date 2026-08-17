@@ -12,6 +12,7 @@ const STATIC_PAGES = [
   { path: '/crisis-support', priority: '0.9', changefreq: 'monthly' },
   { path: '/treatment-planning', priority: '0.9', changefreq: 'monthly' },
   { path: '/aftercare-guidance', priority: '0.9', changefreq: 'monthly' },
+  { path: '/two-households', priority: '0.9', changefreq: 'monthly' },
   { path: '/how-intervention-works', priority: '0.9', changefreq: 'monthly' },
   { path: '/when-is-it-time-for-an-intervention', priority: '0.8', changefreq: 'monthly' },
   { path: '/what-if-they-refuse-treatment', priority: '0.8', changefreq: 'monthly' },

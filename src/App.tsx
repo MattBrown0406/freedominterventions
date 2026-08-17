@@ -15,6 +15,7 @@ import CrisisSupport from "./pages/CrisisSupport";
 import TreatmentPlanning from "./pages/TreatmentPlanning";
 import AftercareGuidance from "./pages/AftercareGuidance";
 import ItDidntStick from "./pages/ItDidntStick";
+import TwoHouseholds from "./pages/TwoHouseholds";
 import Testimonials from "./pages/Testimonials";
 import Contact from "./pages/Contact";
 import FromSoberHelpline from "./pages/FromSoberHelpline";
@@ -260,6 +261,15 @@ const App = () => (
             <Route
               path="/relapse-after-treatment"
               element={<Navigate to="/it-didnt-stick" replace />}
+            />
+            <Route path="/two-households" element={<TwoHouseholds />} />
+            <Route
+              path="/split-house"
+              element={<Navigate to="/two-households" replace />}
+            />
+            <Route
+              path="/divorced-parents"
+              element={<Navigate to="/two-households" replace />}
             />
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/contact" element={<Contact />} />

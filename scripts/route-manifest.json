@@ -6,6 +6,7 @@
   { "path": "/treatment-planning", "priority": "0.9", "changefreq": "monthly" },
   { "path": "/aftercare-guidance", "priority": "0.9", "changefreq": "monthly" },
   { "path": "/it-didnt-stick", "priority": "0.9", "changefreq": "monthly" },
+  { "path": "/two-households", "priority": "0.9", "changefreq": "monthly" },
   { "path": "/how-intervention-works", "priority": "0.9", "changefreq": "monthly" },
   { "path": "/intervention-answers", "priority": "0.9", "changefreq": "monthly" },
   { "path": "/when-is-it-time-for-an-intervention", "priority": "0.8", "changefreq": "monthly" },
