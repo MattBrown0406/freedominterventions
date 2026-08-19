@@ -175,7 +175,7 @@ const BookInterventionConsultation = () => {
             </Button>
           </div>
         </div>
-        <BookingCalendar />
+        <BookingCalendar defaultBookingType="crisis-coaching" />
         <ClosePathProof source="book_intervention_consultation" />
       </main>
       <Footer />

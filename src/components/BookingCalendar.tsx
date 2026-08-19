@@ -145,7 +145,11 @@ By signing below, Client acknowledges that Client has read this Agreement, under
 
 type Step = 'type' | 'date' | 'time' | 'details' | 'agreement' | 'payment' | 'confirmation';
 
-export const BookingCalendar = () => {
+interface BookingCalendarProps {
+  defaultBookingType?: BookingType;
+}
+
+export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) => {
   const [bookingType, setBookingType] = useState<BookingType | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string>("");
@@ -259,6 +263,9 @@ export const BookingCalendar = () => {
       }
       const cleanUrl = window.location.pathname + window.location.hash;
       window.history.replaceState({}, "", cleanUrl);
+    } else if (defaultBookingType) {
+      setBookingType(defaultBookingType);
+      setStep("date");
     }
   }, []);
 
