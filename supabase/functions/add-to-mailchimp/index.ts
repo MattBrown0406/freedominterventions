@@ -24,6 +24,9 @@ serve(async (req) => {
     }
 
     const listId = '1078537d9b';
+    // Mailchimp keys are suffixed with their datacenter (e.g. "-us14"); a mismatch returns 401
+    const dc = apiKey.includes('-') ? apiKey.split('-').pop() : 'us2';
+    const apiBase = `https://${dc}.api.mailchimp.com/3.0`;
 
     // MD5 hash of lowercase email (Deno Web Crypto lacks MD5; use std/crypto)
     const encoder = new TextEncoder();
