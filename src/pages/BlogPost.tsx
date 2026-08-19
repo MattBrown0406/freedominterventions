@@ -8,15 +8,13 @@ import ShareButtons from "@/components/ShareButtons";
 import { Calendar, ArrowLeft, Phone } from "lucide-react";
 import TrackedPhoneLink from "@/components/TrackedPhoneLink";
 import { supabase } from "@/integrations/supabase/client";
+import { legacyBlogSlugRedirects } from "@/lib/legacyRedirects";
+import NotFound from "./NotFound";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
 import AppStoreBadge from "@/components/AppStoreBadge";
-
-const slugRedirects: Record<string, string> = {
-  "preparing-for-an-intervention": "how-to-prepare-for-an-intervention",
-  "waiting-for-right-time-addiction-risk": "waiting-for-the-right-time-addiction-risk",
-};
+import { Button } from "@/components/ui/button";
 
 type GscPostOptimization = {
   title: string;
@@ -103,9 +101,9 @@ const rewriteLegacyFreedomPhone = (html: string) =>
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const canonicalSlug = slug ? slugRedirects[slug] || slug : "";
+  const canonicalSlug = slug ? legacyBlogSlugRedirects[slug] || slug : "";
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch, isFetching } = useQuery({
     queryKey: ["blog-post", canonicalSlug],
     enabled: !!canonicalSlug,
     queryFn: async () => {
@@ -162,8 +160,8 @@ const BlogPost = () => {
     });
   };
 
-  if (slug && slugRedirects[slug]) {
-    return <Navigate to={`/blog/${slugRedirects[slug]}`} replace />;
+  if (slug && legacyBlogSlugRedirects[slug]) {
+    return <Navigate to={`/blog/${legacyBlogSlugRedirects[slug]}`} replace />;
   }
 
   if (isLoading) {
@@ -188,8 +186,39 @@ const BlogPost = () => {
     );
   }
 
-  if (error || !post) {
-    return <Navigate to="/404" replace />;
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SEOHead
+          title="Article Temporarily Unavailable | Freedom Interventions"
+          description="This article could not be loaded right now. Please try again."
+          noindex={true}
+        />
+        <Navbar />
+        <main className="pt-36 pb-24">
+          <div className="container px-6">
+            <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-8 text-center">
+              <h1 className="font-serif text-3xl font-bold text-foreground mb-4">
+                We couldn't load this article
+              </h1>
+              <p className="text-muted-foreground mb-6">
+                The page may be temporarily unavailable. Try loading it again rather than losing the article you requested.
+              </p>
+              <Button onClick={() => void refetch()} disabled={isFetching}>
+                {isFetching ? "Trying again…" : "Try again"}
+              </Button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!post) {
+    // Render the 404 at the requested URL so Analytics retains the missing path
+    // instead of collapsing every missing article into a generic /404 row.
+    return <NotFound />;
   }
 
   const imageUrl = post.image_url

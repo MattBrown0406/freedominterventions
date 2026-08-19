@@ -52,6 +52,7 @@ import MobileStickyCTA from "./components/MobileStickyCTA";
 import InterventionAnswers from "./pages/InterventionAnswers";
 import InterventionAnswerDetail from "./pages/InterventionAnswerDetail";
 import WhichHelpDoWeNeed from "./pages/WhichHelpDoWeNeed";
+import { legacyPageRedirects } from "@/lib/legacyRedirects";
 
 const Alabama = lazy(() => import("./pages/Alabama"));
 const Alaska = lazy(() => import("./pages/Alaska"));
@@ -242,6 +243,13 @@ const App = () => (
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
+            {Object.entries(legacyPageRedirects).map(([from, to]) => (
+              <Route
+                key={from}
+                path={from}
+                element={<Navigate to={to} replace />}
+              />
+            ))}
             <Route path="/booking" element={<Index />} />
             <Route path="/book" element={<BookACall />} />
             <Route path="/schedule" element={<BookACall />} />
