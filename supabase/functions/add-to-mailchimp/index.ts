@@ -25,12 +25,12 @@ serve(async (req) => {
 
     const listId = '1078537d9b';
 
-    // MD5 hash of lowercase email
+    // MD5 hash of lowercase email (Deno Web Crypto lacks MD5; use std/crypto)
     const encoder = new TextEncoder();
     const data = encoder.encode(email.toLowerCase().trim());
-    const hashBuffer = await crypto.subtle.digest('MD5', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const emailHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const hashBuffer = await stdCrypto.subtle.digest('MD5', data);
+    const emailHash = encodeHex(new Uint8Array(hashBuffer));
+
 
     // Upsert contact
     const upsertUrl = `https://us2.api.mailchimp.com/3.0/lists/${listId}/members/${emailHash}`;
