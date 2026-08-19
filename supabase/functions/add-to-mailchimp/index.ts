@@ -36,7 +36,7 @@ serve(async (req) => {
 
 
     // Upsert contact
-    const upsertUrl = `https://us2.api.mailchimp.com/3.0/lists/${listId}/members/${emailHash}`;
+    const upsertUrl = `${apiBase}/lists/${listId}/members/${emailHash}`;
     const upsertRes = await fetch(upsertUrl, {
       method: 'PUT',
       headers: {
@@ -63,7 +63,7 @@ serve(async (req) => {
     console.log('Mailchimp contact upserted:', upsertData.id);
 
     // Apply tag
-    const tagUrl = `https://us2.api.mailchimp.com/3.0/lists/${listId}/members/${emailHash}/tags`;
+    const tagUrl = `${apiBase}/lists/${listId}/members/${emailHash}/tags`;
     const tagRes = await fetch(tagUrl, {
       method: 'POST',
       headers: {
