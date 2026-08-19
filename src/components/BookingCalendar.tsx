@@ -263,6 +263,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       }
       const cleanUrl = window.location.pathname + window.location.hash;
       window.history.replaceState({}, "", cleanUrl);
+    } else if (defaultBookingType) {
+      setBookingType(defaultBookingType);
+      setStep("date");
     }
   }, []);
 
