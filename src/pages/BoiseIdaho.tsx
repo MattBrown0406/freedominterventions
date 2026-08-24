@@ -14,8 +14,8 @@ const BoiseIdaho = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Boise Drug Interventionist | Freedom Interventions"
-        description="Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (458) 298-8000."
+        title="Drug Interventions in Boise | Confidential Family Help"
+        description="Planning a drug intervention in Boise? Get a confidential family plan, treatment options, and direct help from Matt Brown. Call (458) 298-8000."
         canonical="https://freedominterventions.com/boise-idaho"
         keywords="drug intervention in Boise, Boise professional interventionist, Boise addiction intervention, Idaho drug intervention, Boise family intervention, meth intervention Boise, fentanyl intervention Boise"
       />
@@ -64,13 +64,13 @@ const BoiseIdaho = () => {
               If your family needs a drug intervention in Boise, Matt Brown helps you prepare the conversation, line up treatment, and stop the cycle of rescuing, arguing, and waiting. Freedom Interventions serves Boise, Meridian, Nampa, Caldwell, Eagle, and the Treasure Valley.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+              <Button asChild variant="outline" size="lg">
                 <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
                 <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
@@ -223,13 +223,13 @@ const BoiseIdaho = () => {
               Our free, confidential consultation helps you understand your options and create an action plan. We serve all Treasure Valley communities including Boise, Meridian, Nampa, Caldwell, Eagle, and surrounding areas.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+              <Button asChild variant="outline" size="lg">
                 <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
                 <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now

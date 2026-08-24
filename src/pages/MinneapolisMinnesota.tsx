@@ -21,8 +21,8 @@ const MinneapolisMinnesota = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Minneapolis Professional Interventions | Freedom Interventions"
-        description="Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan intervention and treatment entry. Call (458) 298-8000."
+        title="Minneapolis Professional Interventions | Call Matt Brown"
+        description="Need a professional intervention in Minneapolis? Get a confidential family plan, treatment options, and direct help from Matt Brown. Call (458) 298-8000."
         keywords="Minneapolis professional interventions, Minneapolis professional interventionist, Minneapolis addiction intervention, Minnesota drug intervention, Twin Cities family intervention, fentanyl intervention Minneapolis, alcohol intervention Minneapolis"
         canonical="https://freedominterventions.com/minneapolis-minnesota"
       />
@@ -59,13 +59,13 @@ const MinneapolisMinnesota = () => {
               If your family is searching for professional interventions in Minneapolis, the next step is a confidential call with Matt Brown. He helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis. Freedom Interventions serves Minneapolis, St. Paul, Bloomington, and surrounding communities with direct, confidential help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+              <Button asChild variant="outline" size="lg">
                 <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
                 <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now
@@ -218,13 +218,13 @@ const MinneapolisMinnesota = () => {
               Our free, confidential consultation helps you understand your options and create an action plan. We serve the entire Twin Cities metro including Minneapolis, St. Paul, Bloomington, and surrounding communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+              <Button asChild variant="outline" size="lg">
                 <Link to="/book-intervention-consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
                 <a href="tel:+14582988000">
                   <Phone className="mr-2 h-5 w-5" />
                   Call Matt Now

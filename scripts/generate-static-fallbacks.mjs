@@ -41,17 +41,17 @@ const staticMetadata = {
     body: "Matt Brown helps families plan the conversation, line up treatment, and set boundaries before addiction gets another chance to negotiate.",
   },
   "/minneapolis-minnesota": {
-    title: "Minneapolis Professional Interventions | Freedom Interventions",
+    title: "Minneapolis Professional Interventions | Call Matt Brown",
     description:
-      "Need professional interventions in Minneapolis? Matt Brown helps Twin Cities families plan intervention and treatment entry. Call (458) 298-8000.",
+      "Need a professional intervention in Minneapolis? Get a confidential family plan, treatment options, and direct help from Matt Brown. Call (458) 298-8000.",
     heading:
       "Professional Interventions in Minneapolis for Families Facing Addiction",
     body: "Freedom Interventions helps Twin Cities families prepare the intervention, line up treatment, and stop reacting crisis by crisis.",
   },
   "/boise-idaho": {
-    title: "Boise Drug Interventionist | Freedom Interventions",
+    title: "Drug Interventions in Boise | Confidential Family Help",
     description:
-      "Need a drug intervention in Boise? Matt Brown helps Treasure Valley families prepare the conversation, treatment entry, and next steps. Call (458) 298-8000.",
+      "Planning a drug intervention in Boise? Get a confidential family plan, treatment options, and direct help from Matt Brown. Call (458) 298-8000.",
     heading: "Drug Intervention in Boise for Families Who Need a Real Plan",
     body: "Freedom Interventions helps Boise families prepare the intervention, line up treatment, and stop the cycle of rescuing, arguing, and waiting.",
   },
