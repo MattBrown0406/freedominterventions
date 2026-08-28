@@ -159,9 +159,14 @@ const handler = async (req: Request): Promise<Response> => {
     }: BookingConfirmationRequest = await req.json();
 
     const meta = getBookingMeta(bookingType);
-    const effectiveDuration = typeof durationMinutes === 'number' && durationMinutes > 0
-      ? durationMinutes
-      : meta.defaultDuration;
+    // For known session types, the canonical length always wins — a paid
+    // coaching session must never go out as a 15-minute meeting even if the
+    // caller passed a wrong durationMinutes.
+    const effectiveDuration = meta.known
+      ? meta.defaultDuration
+      : (typeof durationMinutes === 'number' && durationMinutes > 0
+        ? durationMinutes
+        : meta.defaultDuration);
 
     console.log("Processing booking confirmation for:", customerEmail, "type:", bookingType);
 
