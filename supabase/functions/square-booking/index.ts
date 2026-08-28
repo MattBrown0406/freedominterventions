@@ -21,6 +21,25 @@ const BOOKING_FEES_CENTS: Record<string, number> = {
   'crisis-coaching': 15000,
   'readiness-intensive': 250000,
 };
+// Server-authoritative session lengths. Never trust client-supplied durationMinutes:
+// a paid session must always get its full allotted time.
+const BOOKING_DURATION_MINUTES: Record<string, number> = {
+  consultation: 15,
+  coaching: 60,
+  'crisis-coaching': 60,
+  'readiness-intensive': 90,
+  'aftercare-planning': 30,
+  'intervention-contract': 60,
+};
+
+function resolveBookingDurationMinutes(bookingType: string, requested: unknown): number {
+  const canonical = BOOKING_DURATION_MINUTES[bookingType];
+  if (typeof canonical === 'number') return canonical;
+  if (typeof requested === 'number' && Number.isFinite(requested)) {
+    return Math.min(Math.max(requested, 15), 180);
+  }
+  return 60;
+}
 const SITE_URL = 'https://freedominterventions.com';
 
 // Rate limiting is handled via shared durable limiter (public.check_rate_limit RPC).
