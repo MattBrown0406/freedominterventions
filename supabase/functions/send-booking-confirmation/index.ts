@@ -125,19 +125,19 @@ async function sendEmail(
 }
 
 // Map booking type → display label and default duration
-function getBookingMeta(bookingType: string): { label: string; defaultDuration: number; emailNoun: string } {
+function getBookingMeta(bookingType: string): { label: string; defaultDuration: number; emailNoun: string; known: boolean } {
   switch (bookingType) {
     case 'consultation':
-      return { label: 'Free Consultation', defaultDuration: 15, emailNoun: 'Consultation' };
+      return { label: 'Free Consultation', defaultDuration: 15, emailNoun: 'Consultation', known: true };
     case 'crisis-coaching':
     case 'coaching': // legacy fallback
-      return { label: 'Crisis Coaching Session', defaultDuration: 60, emailNoun: 'Crisis Coaching Session' };
+      return { label: 'Crisis Coaching Session', defaultDuration: 60, emailNoun: 'Crisis Coaching Session', known: true };
     case 'readiness-intensive':
-      return { label: 'Family Readiness Intensive', defaultDuration: 90, emailNoun: 'Family Readiness Intensive' };
+      return { label: 'Family Readiness Intensive', defaultDuration: 90, emailNoun: 'Family Readiness Intensive', known: true };
     case 'aftercare-planning':
-      return { label: 'Aftercare Planning Call', defaultDuration: 30, emailNoun: 'Aftercare Planning Call' };
+      return { label: 'Aftercare Planning Call', defaultDuration: 30, emailNoun: 'Aftercare Planning Call', known: true };
     default:
-      return { label: 'Appointment', defaultDuration: 60, emailNoun: 'Appointment' };
+      return { label: 'Appointment', defaultDuration: 60, emailNoun: 'Appointment', known: false };
   }
 }
 
@@ -159,9 +159,14 @@ const handler = async (req: Request): Promise<Response> => {
     }: BookingConfirmationRequest = await req.json();
 
     const meta = getBookingMeta(bookingType);
-    const effectiveDuration = typeof durationMinutes === 'number' && durationMinutes > 0
-      ? durationMinutes
-      : meta.defaultDuration;
+    // For known session types, the canonical length always wins — a paid
+    // coaching session must never go out as a 15-minute meeting even if the
+    // caller passed a wrong durationMinutes.
+    const effectiveDuration = meta.known
+      ? meta.defaultDuration
+      : (typeof durationMinutes === 'number' && durationMinutes > 0
+        ? durationMinutes
+        : meta.defaultDuration);
 
     console.log("Processing booking confirmation for:", customerEmail, "type:", bookingType);
 
