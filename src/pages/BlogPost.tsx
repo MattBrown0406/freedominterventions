@@ -77,6 +77,7 @@ const familyBridgeFitSlugs = new Set([
   "social-media-addiction-help-for-families",
   "compulsive-shopping-addiction-family-guide",
   "kratom-addiction-warning-signs-families",
+  "addicted-family-member-stealing-what-to-do",
 ]);
 
 const LEGACY_AREA = ["5", "4", "1"].join("");
