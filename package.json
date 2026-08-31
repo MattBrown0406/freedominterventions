@@ -9,6 +9,8 @@
     "prebuild:client": "npm run check:phone",
     "check:phone": "node scripts/check-phone-consistency.mjs",
     "build": "vite build && node scripts/generate-static-fallbacks.mjs && node scripts/generate-blog-share-fallbacks.mjs && ALLOW_PRERENDER_SKIP=true node scripts/prerender.mjs",
+    "seo:validate": "node scripts/validate-seo-output.mjs",
+    "test:seo-worker": "node scripts/test-og-worker.mjs",
     "build:client": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

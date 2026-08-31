@@ -19,7 +19,7 @@ const InterventionFAQPage = () => {
     },
     {
       question: "How successful are interventions?",
-      answer: "When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success."
+      answer: "No outcome can be guaranteed. Professional preparation helps families align their message, arrange appropriate treatment options, and follow through consistently whether help is accepted immediately or not."
     },
     {
       question: "How long does an intervention take?",

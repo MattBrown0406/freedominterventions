@@ -36,9 +36,9 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1 space-y-4">
-            <a href="#" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <img src={logo} alt="Freedom Interventions" className="h-24 md:h-[10.5rem] w-auto mix-blend-multiply" />
-            </a>
+            </Link>
             <p className="text-muted-foreground max-w-xs text-sm md:text-base">
               Direct addiction intervention services led by Matt Brown, helping families find clarity and a real plan.
             </p>

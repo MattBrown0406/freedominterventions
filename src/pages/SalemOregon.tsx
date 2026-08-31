@@ -194,7 +194,7 @@ const SalemOregon = () => {
                     Recovery is possible, even in the most severe cases. We've helped families throughout the Willamette Valley guide their loved ones into treatment—and witnessed life-changing transformations that restored families, careers, and futures.
                   </p>
                   <p>
-                    Professional intervention isn't about forcing someone into treatment. It's about creating the right conditions, with the right people, at the right moment—giving your loved one the clearest possible opportunity to choose recovery. When families are prepared and unified, the chance of success exceeds 90%.
+                    Professional intervention isn't about forcing someone into treatment. It's about creating the right conditions, with the right people, at the right moment—giving your loved one the clearest possible opportunity to choose recovery. Preparation and family alignment make the conversation clearer and the next step easier to act on.
                   </p>
                 </div>
               </div>

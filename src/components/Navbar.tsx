@@ -17,7 +17,7 @@ const resourceLinks = [
   { name: "Blog", href: "/blog" },
   { name: "FAQ", href: "/intervention-faq" },
   { name: "Substance Guide", href: "/substance-guide" },
-  { name: "Assessment", href: "/assessment" },
+  { name: "Self-Assessment", href: "/self-assessment" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -26,7 +26,7 @@ const navLinks = [
   { name: "Start Here", href: "/start-here" },
   { name: "How It Works", href: "/family-intervention#process" },
   { name: "About Matt", href: "/interventionist" },
-  { name: "Assessment", href: "/assessment" },
+  { name: "Self-Assessment", href: "/self-assessment" },
   { name: "Contact", href: "/contact" },
 ];
 

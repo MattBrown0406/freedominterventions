@@ -250,7 +250,7 @@ const App = () => (
                 element={<Navigate to={to} replace />}
               />
             ))}
-            <Route path="/booking" element={<Index />} />
+            <Route path="/booking" element={<Navigate to="/book" replace />} />
             <Route path="/book" element={<BookACall />} />
             <Route path="/schedule" element={<BookACall />} />
             <Route path="/interventionist" element={<Interventionist />} />

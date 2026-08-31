@@ -2,6 +2,8 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { fitSeoDescription, fitSeoTitle, markHelmetManagedTags } from "./helmet-markup.mjs";
+import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -253,13 +255,9 @@ const getRoutes = async () => {
     ...interventionAnswerContent.matchAll(/slug:\s*"([^"]+)"/g),
   ].map((match) => `/intervention-answers/${match[1]}`);
 
-  return [...new Set([...appRoutes, ...interventionAnswerRoutes])]
+  return [...new Set([...appRoutes, ...interventionAnswerRoutes, ...canonicalRouteAliases.keys()])]
     .filter((route) => !route.includes(":"))
-    .filter((route) => !route.includes("*"))
-    .filter((route) => !route.startsWith("/admin"))
-    .filter(
-      (route) => !["/404", "/reschedule", "/family-portal"].includes(route),
-    );
+    .filter((route) => !route.includes("*"));
 };
 
 const getMetadata = (route) => {
@@ -315,12 +313,18 @@ const fallbackHtml = ({ heading, body }) => `
 `;
 
 const upsertHead = (html, route, metadata) => {
-  const canonical = `${BASE_URL}${route === "/" ? "" : route}`;
-  const title = escapeHtml(metadata.title);
-  const description = escapeHtml(metadata.description);
+  const canonicalPath = canonicalRouteAliases.get(route) ?? route;
+  const canonical = `${BASE_URL}${canonicalPath === "/" ? "" : canonicalPath}`;
+  const noindex = excludedSitemapRoutes.has(route) && !canonicalRouteAliases.has(route);
+  const preserveMeasuredTitle =
+    ["/boise-idaho", "/interventionist", "/minneapolis-minnesota"].includes(route) ||
+    /^(Addiction Intervention Services|Professional Interventionist|Drug & Alcohol Interventionist) (in|on) /i.test(metadata.title);
+  const title = escapeHtml(preserveMeasuredTitle ? metadata.title : fitSeoTitle(metadata.title));
+  const description = escapeHtml(fitSeoDescription(metadata.description));
   const canonicalTag = `<link rel="canonical" href="${canonical}">`;
   const metaTags = [
     `<meta name="description" content="${description}">`,
+    `<meta name="robots" content="${noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}">`,
     canonicalTag,
     `<meta property="og:title" content="${title}">`,
     `<meta property="og:description" content="${description}">`,
@@ -334,6 +338,7 @@ const upsertHead = (html, route, metadata) => {
   return html
     .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
     .replace(/<meta name="description" content=".*?">\n?/g, "")
+    .replace(/<meta name="robots" content=".*?">\n?/g, "")
     .replace(/<link rel="canonical" href=".*?">\n?/g, "")
     .replace("</title>", `</title>\n    ${metaTags}`);
 };
@@ -363,10 +368,10 @@ const main = async () => {
 
   for (const route of routes) {
     const metadata = getMetadata(route);
-    const html = replaceNoscript(
+    const html = markHelmetManagedTags(replaceNoscript(
       upsertHead(template, route, metadata),
       metadata,
-    );
+    ));
     const destinations = outputPaths(route);
     for (const destination of destinations) {
       await mkdir(path.dirname(destination), { recursive: true });

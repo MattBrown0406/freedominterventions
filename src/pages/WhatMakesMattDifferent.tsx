@@ -71,7 +71,7 @@ const WhatMakesMattDifferent = () => {
             <section>
               <h2 className="font-serif text-3xl font-bold text-foreground mb-6">He's Been Where Your Loved One Is</h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed">
-                <p>Matt has more than 22 years of personal sobriety. He knows what it is like to be the person everyone is worried about.</p>
+                <p>Matt has more than 23 years of personal sobriety. He knows what it is like to be the person everyone is worried about.</p>
                 <p>
                   That is not just a line in a bio. It changes how he reads denial, fear, manipulation, and resistance in the room. It also changes what he says when the moment gets real. He brings empathy without enabling, and understanding without excuses.
                 </p>
@@ -115,7 +115,7 @@ const WhatMakesMattDifferent = () => {
                   "Certified Intervention Professional, CIP.",
                   "Certified family intervention specialist since 2004.",
                   "Trained in ARISE, CRAFT, and traditional intervention models.",
-                  "More than 22 years of personal sobriety and more than 20 years working with families.",
+                  "More than 23 years of personal sobriety and more than 20 years working with families.",
                 ].map((item) => (
                   <div key={item} className="rounded-2xl border border-border bg-card p-6 text-muted-foreground leading-relaxed">{item}</div>
                 ))}

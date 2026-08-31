@@ -1,5 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
+import { isNoIndexRoute } from "@/lib/indexability";
+import { fitSeoDescription, fitSeoTitle } from "@/lib/seoText";
 
 interface SEOHeadProps {
   title: string;
@@ -21,6 +23,11 @@ interface SEOHeadProps {
 }
 
 const BASE_URL = "https://freedominterventions.com";
+const METADATA_COOLDOWN_ROUTES = new Set([
+  "/boise-idaho",
+  "/interventionist",
+  "/minneapolis-minnesota",
+]);
 
 const normalizeCanonicalUrl = (url: string) => {
   const normalizedDomain = url.replace(/^https?:\/\/www\.freedominterventions\.com/i, BASE_URL);
@@ -40,8 +47,8 @@ const SEOHead = ({
   image = `${BASE_URL}/og-share.jpg`,
   imageAlt,
   noindex = false,
-  geoRegion = "US-OR",
-  geoPlacename = "Oregon",
+  geoRegion,
+  geoPlacename,
   geoPosition,
   publishedTime,
   modifiedTime,
@@ -57,15 +64,19 @@ const SEOHead = ({
   const normalizedPath = rawPath.toLowerCase();
   const resolvedCanonical = normalizeCanonicalUrl(canonical || `${BASE_URL}${normalizedPath}`);
   
-  const fullTitle = title.includes("Freedom Interventions")
+  const titleCandidate = title.includes("Freedom Interventions")
     ? title
     : `${title} | Freedom Interventions`;
+  const preserveMeasuredTitle =
+    location.pathname.startsWith("/blog/") ||
+    METADATA_COOLDOWN_ROUTES.has(location.pathname) ||
+    /^(Addiction Intervention Services|Professional Interventionist|Drug & Alcohol Interventionist) (in|on) /i.test(titleCandidate);
+  const fullTitle = preserveMeasuredTitle ? titleCandidate : fitSeoTitle(titleCandidate);
   
-  const truncatedDescription = description.length > 160 
-    ? description.substring(0, 157) + "..."
-    : description;
+  const truncatedDescription = fitSeoDescription(description);
+  const effectiveNoIndex = noindex || isNoIndexRoute(location.pathname);
 
-  const extendedAiDescription = aiDescription || `${description} Freedom Interventions provides professional addiction intervention services with over 20 years of experience. Call (458) 298-8000 for a free consultation. Serving all 50 US states and Canadian provinces 24/7.`;
+  const extendedAiDescription = aiDescription || `${description} Freedom Interventions provides professional addiction intervention services with over 20 years of experience. Call (458) 298-8000 for a free consultation. If someone is in immediate danger, call 911; for suicidal crisis, call or text 988.`;
 
   const ogImageAlt = imageAlt || `${title} - Freedom Interventions addiction intervention services`;
 
@@ -76,8 +87,8 @@ const SEOHead = ({
       <meta name="description" content={truncatedDescription} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={resolvedCanonical} />
-      {noindex && <meta name="robots" content="noindex, nofollow" />}
-      {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
+      {effectiveNoIndex && <meta name="robots" content="noindex, nofollow" />}
+      {!effectiveNoIndex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
       <meta name="ai:description" content={extendedAiDescription} />
       <meta name="llm:description" content={extendedAiDescription} />
@@ -110,8 +121,8 @@ const SEOHead = ({
 
       <meta name="author" content="Freedom Interventions" />
       <meta name="publisher" content="Freedom Interventions" />
-      <meta name="geo.region" content={geoRegion} />
-      <meta name="geo.placename" content={geoPlacename} />
+      {geoRegion && <meta name="geo.region" content={geoRegion} />}
+      {geoPlacename && <meta name="geo.placename" content={geoPlacename} />}
       {geoPosition && <meta name="geo.position" content={geoPosition} />}
       {geoPosition && <meta name="ICBM" content={geoPosition} />}
       

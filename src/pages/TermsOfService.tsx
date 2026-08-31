@@ -73,7 +73,7 @@ const TermsOfService = () => {
               <section className="space-y-4">
                 <h2 className="text-2xl font-serif font-semibold text-foreground">Professional Qualifications and Limitations</h2>
                 <p>
-                  Matt Brown is a Certified Intervention Professional (CIP) with over 20 years of experience and 22+ years of personal recovery. However, users should understand:
+                  Matt Brown is a Certified Intervention Professional (CIP) with over 20 years of experience and 23+ years of personal recovery. However, users should understand:
                 </p>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Intervention services complement but do not replace medical or psychiatric care</li>

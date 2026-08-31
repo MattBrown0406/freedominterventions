@@ -1,107 +1,8 @@
 import { Helmet } from "react-helmet";
 
-// Organization Schema
-export const OrganizationSchema = () => {
-  const schema = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": ["LocalBusiness", "ProfessionalService"],
-        "@id": "https://freedominterventions.com/#organization",
-        name: "Freedom Interventions",
-        alternateName: "Freedom Interventions LLC",
-        url: "https://freedominterventions.com",
-        logo: "https://freedominterventions.com/og-share.jpg",
-        image: "https://freedominterventions.com/og-share.jpg",
-        description:
-          "Professional addiction intervention services led by Matt Brown, Certified Intervention Professional with 20+ years of experience.",
-        telephone: "+1-458-298-8000",
-        email: "matt@freedominterventions.com",
-        foundingDate: "2004",
-        founder: {
-          "@type": "Person",
-          "@id": "https://freedominterventions.com/interventionist#person",
-          name: "Matt Brown",
-          jobTitle: "Professional Interventionist",
-          description: "Drug & alcohol interventionist with over 20 years of experience and 22 years of personal recovery. Has conducted over 1,000 professional interventions.",
-          knowsAbout: ["Addiction Intervention", "Drug Intervention", "Alcohol Intervention", "Family Intervention", "Substance Abuse", "Recovery"],
-        },
-        address: {
-          "@type": "PostalAddress",
-          addressRegion: "OR",
-          addressCountry: "US",
-        },
-        areaServed: { "@type": "Country", name: "United States" },
-        serviceType: [
-          "Addiction Intervention",
-          "Drug Intervention",
-          "Alcohol Intervention",
-          "Family Intervention",
-          "Crisis Intervention",
-          "Treatment Planning",
-        ],
-        priceRange: "$$$$",
-        openingHoursSpecification: {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          opens: "00:00",
-          closes: "23:59",
-        },
-        sameAs: [
-          "https://www.facebook.com/FreedomInterventions",
-          "https://www.instagram.com/freedominterventions",
-          "https://soberhelpline.com",
-          "https://nomoreenabling.com",
-          "https://partywreckers.com",
-        ],
-        category: "Addiction Intervention Services",
-        hasOfferCatalog: {
-          "@type": "OfferCatalog",
-          name: "Intervention Services",
-          itemListElement: [
-            {
-              "@type": "Offer",
-              itemOffered: {
-                "@type": "Service",
-                name: "Free Consultation",
-                description: "Complimentary phone consultation to discuss your situation",
-              },
-            },
-            {
-              "@type": "Offer",
-              itemOffered: {
-                "@type": "Service",
-                name: "Family Intervention",
-                description: "Professional intervention services to help families guide loved ones to treatment",
-              },
-            },
-            {
-              "@type": "Offer",
-              itemOffered: {
-                "@type": "Service",
-                name: "Treatment Planning",
-                description: "Comprehensive treatment planning and placement services",
-              },
-            },
-          ],
-        },
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://freedominterventions.com/#website",
-        url: "https://freedominterventions.com",
-        name: "Freedom Interventions",
-        publisher: { "@id": "https://freedominterventions.com/#organization" },
-      },
-    ],
-  };
-
-  return (
-    <Helmet>
-      <script type="application/ld+json">{JSON.stringify(schema)}</script>
-    </Helmet>
-  );
-};
+// Organization and WebSite entities are emitted once in index.html so every
+// route has a stable pre-hydration identity graph without duplicate nodes.
+export const OrganizationSchema = () => null;
 
 type ServiceAreaType = "City" | "AdministrativeArea" | "State" | "Province" | "Place";
 
@@ -154,12 +55,6 @@ export const LocalBusinessSchema = ({
       audienceType: "Families dealing with addiction",
     },
     priceRange: "$$",
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "00:00",
-      closes: "23:59",
-    },
   };
 
   return (
@@ -248,20 +143,17 @@ export const QAPageSchema = ({
 }) => {
   const schema = {
     "@context": "https://schema.org",
-    "@type": "QAPage",
-    mainEntity: {
-      "@type": "Question",
-      name: question,
-      answerCount: 1,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: answer,
-        author: {
-          "@type": "Person",
-          name: "Matt Brown",
-          url: "https://freedominterventions.com/interventionist",
-        },
-      },
+    "@type": "Article",
+    headline: question,
+    articleBody: answer,
+    author: {
+      "@type": "Person",
+      name: "Matt Brown",
+      url: "https://freedominterventions.com/interventionist",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
     },
     url,
     isPartOf: { "@id": "https://freedominterventions.com/#website" },
@@ -301,9 +193,9 @@ export const ArticleSchema = ({
     dateModified: dateModified || datePublished,
     url: url,
     author: {
-      "@type": "Person",
-      name: "Matt Brown",
-      url: "https://freedominterventions.com/interventionist",
+      "@type": "Organization",
+      name: "Freedom Interventions",
+      url: "https://freedominterventions.com",
     },
     publisher: {
       "@type": "Organization",
@@ -591,56 +483,12 @@ export const SpeakableSchema = ({
   );
 };
 
-// Location FAQ Schema for state/city pages
-export const LocationFAQSchema = ({ 
-  location, 
-  locationType = "state" 
-}: { 
-  location: string; 
+// Location pages do not emit templated FAQ schema unless the same questions
+// and answers are visibly rendered and reviewed on that page.
+export const LocationFAQSchema = (_props: {
+  location: string;
   locationType?: "state" | "city" | "province";
-}) => {
-  const faqs = [
-    {
-      question: `What is a professional intervention in ${location}?`,
-      answer: `A professional intervention is a structured, compassionate conversation facilitated by a trained interventionist to help someone in ${location} struggling with addiction accept treatment. The process includes family preparation, development of an intervention strategy, facilitated conversation, and immediate treatment placement if accepted.`,
-    },
-    {
-      question: `How much does addiction intervention cost in ${location}?`,
-      answer: `Intervention costs vary based on the complexity of the situation, travel requirements, and specific services needed. Freedom Interventions offers a free initial consultation to assess your situation and discuss options. Call (458) 298-8000 for a confidential consultation.`,
-    },
-    {
-      question: `How do professional interventions improve the chances of treatment entry in ${location}?`,
-      answer: `When families are prepared, united, and a treatment plan is in place, professional interventions have a significantly higher chance of success. Key factors include proper family preparation, unified messaging, pre-arranged treatment, and professional facilitation.`,
-    },
-    {
-      question: `How quickly can an intervention be arranged in ${location}?`,
-      answer: `In crisis situations, interventions can be arranged within 24-72 hours. Standard preparation typically takes 1-2 weeks for optimal results. Freedom Interventions serves all of ${location} and can coordinate treatment placement nationwide.`,
-    },
-    {
-      question: `What types of addiction does Freedom Interventions address in ${location}?`,
-      answer: `Freedom Interventions addresses all substance use disorders including alcohol addiction, opioid and fentanyl addiction, methamphetamine addiction, cocaine addiction, prescription drug misuse, and co-occurring mental health disorders throughout ${location}.`,
-    },
-  ];
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
-
-  return (
-    <Helmet>
-      <script type="application/ld+json">{JSON.stringify(schema)}</script>
-    </Helmet>
-  );
-};
+}) => null;
 
 // How-To Schema for intervention process
 export const HowToSchema = () => {

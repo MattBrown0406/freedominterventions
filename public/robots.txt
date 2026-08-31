@@ -27,8 +27,9 @@ Allow: /
 
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /admin-login
+
+# Private and transactional pages use noindex in their HTML so crawlers can
+# observe the directive. Do not block those routes here.
 
 # Sitemap
 Sitemap: https://freedominterventions.com/sitemap.xml

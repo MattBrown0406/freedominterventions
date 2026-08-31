@@ -3,6 +3,8 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
+import { fitSeoDescription, markHelmetManagedTags } from "./helmet-markup.mjs";
+import { canonicalRouteAliases } from "./seo-routes.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -69,16 +71,27 @@ const imageType = (url) => {
 const stripManagedHeadTags = (html) =>
   html
     .replace(/<meta name="description" content="[^"]*"\s*\/?>\n?/gi, "")
+    .replace(/<meta name="robots" content="[^"]*"\s*\/?>\n?/gi, "")
     .replace(/<link rel="canonical" href="[^"]*"\s*\/?>\n?/gi, "")
     .replace(/<meta property="og:[^"]+" content="[^"]*"\s*\/?>\n?/gi, "")
     .replace(/<meta name="twitter:[^"]+" content="[^"]*"\s*\/?>\n?/gi, "")
     .replace(/<meta property="article:[^"]+" content="[^"]*"\s*\/?>\n?/gi, "");
 
-const fallbackHtml = ({ title, excerpt, imageUrl, canonical }) => `
+const toPlainText = (value = "") => String(value)
+  .replace(/<script[\s\S]*?<\/script>/gi, " ")
+  .replace(/<style[\s\S]*?<\/style>/gi, " ")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/&nbsp;/gi, " ")
+  .replace(/&amp;/gi, "&")
+  .replace(/\s+/g, " ")
+  .trim();
+
+const fallbackHtml = ({ title, excerpt, content, imageUrl, canonical }) => `
       <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <h1 style="color: #1a365d; margin-bottom: 20px;">${escapeHtml(title)}</h1>
         <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 20px;">
         <p>${escapeHtml(excerpt)}</p>
+        <article><p>${escapeHtml(toPlainText(content))}</p></article>
         <p><a href="${escapeHtml(canonical)}" style="color: #2c5282;">Read this article on Freedom Interventions</a></p>
         <div style="background: #f7fafc; padding: 20px; margin: 20px 0; border-left: 4px solid #2c5282;">
           <p><strong>Phone:</strong> <a href="tel:+14582988000" style="color: #2c5282;">(458) 298-8000</a></p>
@@ -91,18 +104,32 @@ const replaceNoscript = (html, metadata) =>
   html.replace(/<noscript>[\s\S]*?<\/noscript>/, `<noscript>${fallbackHtml(metadata)}    </noscript>`);
 
 const upsertHead = (html, post) => {
-  const canonical = `${BASE_URL}/blog/${post.slug}`;
+  const route = `/blog/${post.slug}`;
+  const canonical = `${BASE_URL}${canonicalRouteAliases.get(route) ?? route}`;
   const imageUrl = absoluteUrl(post.image_url);
   const metadataOverride = gscMetadataOverrides[post.slug];
   const rawTitle = metadataOverride?.title || post.title;
   const rawDescription = metadataOverride?.description || post.excerpt || "";
   const title = rawTitle.includes("Freedom Interventions") ? rawTitle : `${rawTitle} | Freedom Interventions`;
-  const description = rawDescription.length > 160 ? `${rawDescription.slice(0, 157)}...` : rawDescription;
+  const description = fitSeoDescription(rawDescription);
   const published = post.published_at || post.created_at;
   const modified = post.updated_at || published;
+  const articleSchema = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: rawTitle,
+    description,
+    image: imageUrl,
+    datePublished: published,
+    dateModified: modified,
+    mainEntityOfPage: canonical,
+    author: { "@type": "Organization", name: "Freedom Interventions", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "Freedom Interventions", url: BASE_URL },
+  }).replaceAll("<", "\\u003c");
 
   const tags = [
     `<meta name="description" content="${escapeHtml(description)}">`,
+    `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">`,
     `<link rel="canonical" href="${canonical}">`,
     `<meta property="og:type" content="article">`,
     `<meta property="og:title" content="${escapeHtml(title)}">`,
@@ -123,12 +150,14 @@ const upsertHead = (html, post) => {
     `<meta name="twitter:image" content="${escapeHtml(imageUrl)}">`,
     `<meta name="twitter:image:alt" content="${escapeHtml(rawTitle)}">`,
     `<meta name="twitter:site" content="@freedominterventions">`,
+    `<script type="application/ld+json">${articleSchema}</script>`,
   ].filter(Boolean).join("\n    ");
 
   const withCleanHead = stripManagedHeadTags(html).replace(/<title>.*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
   return replaceNoscript(withCleanHead.replace("</title>", `</title>\n    ${tags}`), {
     title: rawTitle,
     excerpt: description,
+    content: post.content || "",
     imageUrl,
     canonical,
   });
@@ -154,7 +183,7 @@ const main = async () => {
 
   const { data: posts, error } = await supabase
     .from("blog_posts")
-    .select("slug, title, excerpt, image_url, category, published_at, updated_at, created_at")
+    .select("slug, title, excerpt, content, image_url, category, published_at, updated_at, created_at")
     .eq("published", true)
     .order("published_at", { ascending: false });
 
@@ -167,7 +196,7 @@ const main = async () => {
   const template = await readFile(indexFile, "utf8");
   for (const post of posts ?? []) {
     if (!post.slug || !post.title) continue;
-    const html = upsertHead(template, post);
+    const html = markHelmetManagedTags(upsertHead(template, post));
     for (const destination of outputPaths(post.slug)) {
       await mkdir(path.dirname(destination), { recursive: true });
       await writeFile(destination, html, "utf8");

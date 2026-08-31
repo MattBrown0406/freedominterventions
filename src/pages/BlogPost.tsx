@@ -271,10 +271,14 @@ const BlogPost = () => {
             </Link>
             <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">{displayTitle}</h1>
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-6">
+              <span>By Freedom Interventions Editorial Team</span>
               <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 {formatDate(post.published_at)}
               </span>
+              {post.updated_at && post.updated_at !== post.published_at && (
+                <span>Updated {formatDate(post.updated_at)}</span>
+              )}
               <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">{post.category}</span>
             </div>
             <ShareButtons url={window.location.href} title={displayTitle} description={displayDescription} slug={post.slug} />

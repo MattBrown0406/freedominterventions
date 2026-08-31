@@ -4,6 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
+import { markHelmetManagedTags } from "./helmet-markup.mjs";
+import { canonicalRouteAliases } from "./seo-routes.mjs";
 
 const defaultChromeExecutablePath =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -69,13 +71,9 @@ const getStaticRoutes = async () => {
     ...answerContent.matchAll(/slug:\s*"([^"]+)"/g),
   ].map((match) => `/intervention-answers/${match[1]}`);
 
-  return [...new Set([...appRoutes, ...interventionAnswerRoutes])]
+  return [...new Set([...appRoutes, ...interventionAnswerRoutes, ...canonicalRouteAliases.keys()])]
     .filter((route) => !route.includes(":"))
-    .filter((route) => !route.includes("*"))
-    .filter((route) => !route.startsWith("/admin"))
-    .filter(
-      (route) => !["/404", "/reschedule", "/family-portal"].includes(route),
-    );
+    .filter((route) => !route.includes("*"));
 };
 
 const getBlogRoutes = async (env) => {
@@ -259,7 +257,7 @@ const main = async () => {
 
       await waitForAppReady(page, route);
 
-      const html = await page.content();
+      const html = markHelmetManagedTags(await page.content());
       const outputPaths = toOutputPaths(route);
       for (const outputPath of outputPaths) {
         await mkdir(path.dirname(outputPath), { recursive: true });

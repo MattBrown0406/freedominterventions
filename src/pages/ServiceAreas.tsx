@@ -106,7 +106,7 @@ const ServiceAreas = () => {
                   Call Now: (458) 298-8000
                 </Button>
               </a>
-              <Link to="/assessment">
+              <Link to="/book">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Schedule Free Consultation
                 </Button>

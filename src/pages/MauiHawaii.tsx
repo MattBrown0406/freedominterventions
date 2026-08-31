@@ -192,7 +192,7 @@ const MauiHawaii = () => {
                 </h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Matt Brown travels to Maui and works with your family through the entire intervention process — preparation, execution, and follow-up. With 20+ years of experience and 22 years of personal recovery, he brings both professional expertise and lived understanding.
+                    Matt Brown travels to Maui and works with your family through the entire intervention process — preparation, execution, and follow-up. With 20+ years of experience and 23 years of personal recovery, he brings both professional expertise and lived understanding.
                   </p>
                   <p>
                     <strong className="text-foreground">Trauma-Informed Approach:</strong> Especially relevant for Lahaina-area families, Matt integrates trauma awareness into every aspect of the intervention process — understanding that grief and loss can fuel addiction in ways that require a different conversation.

@@ -152,6 +152,9 @@ const CrisisSupport = () => {
             <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               This service is for families dealing with immediate danger: overdose risk, self-harm threats, acute mental health breaks, repeated hospital visits, jail, or a situation that is getting worse fast. Matt works directly with families to slow the chaos down, assess what is real, and move the situation toward stabilization and treatment.
             </p>
+            <p className="mt-4 font-semibold text-destructive">
+              If someone is in immediate danger or may be overdosing, call 911 now. For a suicidal crisis, call or text 988. Freedom Interventions is not emergency medical care.
+            </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <a href="tel:+14582988000">
                 <Button variant="default" size="lg" className="w-full sm:w-auto">
@@ -163,8 +166,8 @@ const CrisisSupport = () => {
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
                   Schedule a Consultation
                 </Button>
-                <WhatsAppChatButton variant="solid" size="lg" />
               </Link>
+              <WhatsAppChatButton variant="solid" size="lg" />
             </div>
           </div>
         </div>

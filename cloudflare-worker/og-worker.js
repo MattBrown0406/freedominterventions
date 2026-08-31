@@ -370,8 +370,8 @@ function generateLocationHtml(meta) {
     <p>${safeDesc}</p>
     <section>
       <h2>Professional Addiction Intervention in ${safeCity}, ${safeState}</h2>
-      <p>Matt Brown is a certified intervention specialist with over 20 years of experience helping families throughout ${safeState} navigate addiction crises. Freedom Interventions provides compassionate, evidence-based intervention services with a 90%+ success rate for treatment entry.</p>
-      <p>If your family is facing a substance use crisis in ${safeCity}, do not wait. Professional intervention dramatically increases the likelihood of your loved one accepting treatment and achieving lasting recovery.</p>
+      <p>Matt Brown is a certified intervention specialist with over 20 years of experience helping families navigate addiction crises. Freedom Interventions provides structured family preparation, treatment planning, and facilitated intervention support.</p>
+      <p>If your family is facing a substance use crisis in ${safeCity}, professional guidance can help the family assess risk, align around boundaries, and prepare an appropriate next step.</p>
       <h2>Why Choose a Professional Interventionist?</h2>
       <ul>
         <li>Certified, experienced intervention specialist with 20+ years in ${safeState}</li>
@@ -437,13 +437,7 @@ function getStaticRouteMeta(pathname) {
     };
   }
 
-  const formatted = titleCase(slug);
-  return {
-    title: `${formatted} | Freedom Interventions`,
-    description: 'Professional addiction intervention services, family support, and treatment planning guidance. Free consultation: (458) 298-8000.',
-    heading: formatted,
-    body: 'Freedom Interventions helps families dealing with addiction find clarity, structure, and a real next step.',
-  };
+  return null;
 }
 
 function generateStaticRouteHtml(meta, pageUrl) {
@@ -514,6 +508,231 @@ function generateStaticRouteHtml(meta, pageUrl) {
 const SUPABASE_URL = 'https://rizfkjgwhcpwiryyqejx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpemZramd3aGNwd2lyeXlxZWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2NTA1NTQsImV4cCI6MjA4MDIyNjU1NH0.7FENiqyiZCFTXJWzlNpxu7Jtf0JROfJAK44oAWHZeH4';
 const SITE_URL = 'https://freedominterventions.com';
+const EDGE_REDIRECTS = new Map([
+  ['/about', '/what-makes-matt-different'],
+  ['/booking', '/book'],
+  ['/schedule', '/book'],
+  ['/relapse-after-treatment', '/it-didnt-stick'],
+  ['/services', '/which-help-do-we-need'],
+  ['/split-house', '/two-households'],
+  ['/divorced-parents', '/two-households'],
+  ['/blog/how-addiction-progresses-before-families-realize', '/blog/when-families-realize-situation-no-longer-wait-and-see'],
+  ['/blog/addiction-progression-families-notice-late', '/blog/when-families-realize-situation-no-longer-wait-and-see'],
+  ['/blog/addiction-no-single-breaking-point', '/blog/addiction-family-crisis-without-breaking-point'],
+  ['/blog/boundaries-emotional-fatigue', '/blog/strong-boundaries-reduce-emotional-fatigue'],
+  ['/blog/castle-boundaries-healthy-limits', '/blog/family-boundaries-castle-metaphor'],
+  ['/blog/dual-diagnosis-mental-health-addiction', '/blog/hidden-driver-addiction-untreated-mental-health-dual-diagnosis'],
+  ['/blog/early-recovery-balance-growth', '/blog/finding-balance-early-recovery'],
+  ['/blog/emotional-avoidance-addiction', '/blog/emotional-avoidance-addiction-family-enabling'],
+  ['/blog/high-functioning-addiction-hidden-crisis', '/blog/high-functioning-addiction-success-hides-problem'],
+  ['/blog/how-to-talk-to-loved-one-about-addiction', '/blog/talk-to-loved-one-about-addiction'],
+  ['/blog/legal-consequences-treatment-leverage', '/blog/legal-consequences-leverage-treatment'],
+  ['/blog/love-turns-monitoring-addiction-family', '/blog/love-turns-constant-monitoring-addiction-family'],
+  ['/blog/parental-addiction-intervention', '/blog/professional-interventionist-parental-addiction'],
+  ['/blog/rebuilding-trust-after-addiction', '/blog/rebuilding-trust-after-addiction-how-healing-really-happens'],
+  ['/blog/sports-betting-addiction-hidden-crisis', '/blog/sports-betting-apps-fueling-gambling-addiction'],
+  ['/blog/why-professional-interventions-work-for-families', '/blog/why-professional-interventions-work'],
+  ['/blog/preparing-for-an-intervention', '/blog/how-to-prepare-for-an-intervention'],
+  ['/blog/waiting-for-right-time-addiction-risk', '/blog/waiting-for-the-right-time-addiction-risk'],
+]);
+
+const PUBLIC_STATIC_PATHS = new Set([
+  '/',
+  '/aftercare-guidance',
+  '/alabama',
+  '/alaska',
+  '/alberta',
+  '/albuquerque-new-mexico',
+  '/anaheim-california',
+  '/anchorage-alaska',
+  '/arizona',
+  '/arkansas',
+  '/aurora-colorado',
+  '/austin-texas',
+  '/baltimore-maryland',
+  '/beaverton-oregon',
+  '/before-you-call',
+  '/bellevue-washington',
+  '/bend-oregon',
+  '/big-island-hawaii',
+  '/blog',
+  '/boise-idaho',
+  '/book',
+  '/book-intervention-consultation',
+  '/british-columbia',
+  '/california',
+  '/chandler-arizona',
+  '/chicago-illinois',
+  '/colorado',
+  '/colorado-springs-colorado',
+  '/columbus-ohio',
+  '/connecticut',
+  '/contact',
+  '/corvallis-oregon',
+  '/crisis-support',
+  '/dallas-texas',
+  '/delaware',
+  '/denver-colorado',
+  '/detroit-michigan',
+  '/el-paso-texas',
+  '/eugene-oregon',
+  '/everett-washington',
+  '/family-intervention',
+  '/family-readiness-intensive',
+  '/florida',
+  '/fort-collins-colorado',
+  '/fort-worth-texas',
+  '/from-no-more-enabling',
+  '/from-sober-helpline',
+  '/georgia',
+  '/gresham-oregon',
+  '/hawaii',
+  '/henderson-nevada',
+  '/hillsboro-oregon',
+  '/hipaa-compliance',
+  '/houston-texas',
+  '/how-intervention-works',
+  '/idaho',
+  '/illinois',
+  '/indiana',
+  '/indianapolis-indiana',
+  '/intervention-answers',
+  '/intervention-answers/can-intervention-happen-if-they-are-high',
+  '/intervention-answers/can-you-do-intervention-without-rock-bottom',
+  '/intervention-answers/does-family-need-to-agree',
+  '/intervention-answers/does-intervention-still-work-if-they-are-angry',
+  '/intervention-answers/emergency-intervention-help',
+  '/intervention-answers/how-fast-can-intervention-happen',
+  '/intervention-answers/how-much-does-intervention-cost',
+  '/intervention-answers/how-to-convince-someone-to-go-to-rehab',
+  '/intervention-answers/how-to-set-boundaries-with-addicted-adult-child',
+  '/intervention-answers/intervention-for-alcoholic-parent',
+  '/intervention-answers/intervention-for-fentanyl-use',
+  '/intervention-answers/interventionist-near-me',
+  '/intervention-answers/is-consultation-confidential',
+  '/intervention-answers/should-i-stop-giving-money-to-addict',
+  '/intervention-answers/what-boundaries-after-intervention',
+  '/intervention-answers/what-does-interventionist-do-first',
+  '/intervention-answers/what-happens-before-intervention',
+  '/intervention-answers/what-if-they-refuse-rehab',
+  '/intervention-answers/what-if-they-refuse-treatment',
+  '/intervention-answers/what-signs-mean-intervention-level',
+  '/intervention-answers/what-to-say-to-someone-who-needs-rehab',
+  '/intervention-answers/when-to-call-interventionist',
+  '/intervention-cost',
+  '/intervention-faq',
+  '/intervention-readiness',
+  '/intervention-toolkit',
+  '/interventionist',
+  '/iowa',
+  '/irvine-california',
+  '/it-didnt-stick',
+  '/kansas',
+  '/kansas-city-missouri',
+  '/kauai-hawaii',
+  '/kentucky',
+  '/knoxville-tennessee',
+  '/las-cruces-new-mexico',
+  '/las-vegas-nevada',
+  '/long-beach-california',
+  '/los-angeles-california',
+  '/louisiana',
+  '/maine',
+  '/manitoba',
+  '/maryland',
+  '/massachusetts',
+  '/maui-hawaii',
+  '/medford-oregon',
+  '/meridian-idaho',
+  '/mesa-arizona',
+  '/miami-florida',
+  '/michigan',
+  '/minneapolis-minnesota',
+  '/minnesota',
+  '/mississippi',
+  '/missouri',
+  '/montana',
+  '/nampa-idaho',
+  '/nashville-tennessee',
+  '/nebraska',
+  '/nevada',
+  '/new-brunswick',
+  '/new-hampshire',
+  '/new-jersey',
+  '/new-mexico',
+  '/new-orleans-louisiana',
+  '/new-york',
+  '/newfoundland-labrador',
+  '/north-carolina',
+  '/north-dakota',
+  '/nova-scotia',
+  '/oahu-hawaii',
+  '/oakland-california',
+  '/ogden-utah',
+  '/ohio',
+  '/oklahoma',
+  '/oklahoma-city-oklahoma',
+  '/olympia-washington',
+  '/omaha-nebraska',
+  '/ontario',
+  '/orange-county-california',
+  '/oregon',
+  '/overland-park-kansas',
+  '/party-wreckers-podcast',
+  '/pasadena-california',
+  '/pennsylvania',
+  '/philadelphia-pennsylvania',
+  '/phoenix-arizona',
+  '/plano-texas',
+  '/portland-oregon',
+  '/prince-edward-island',
+  '/privacy-policy',
+  '/provo-utah',
+  '/quebec',
+  '/reno-nevada',
+  '/rhode-island',
+  '/sacramento-california',
+  '/salem-oregon',
+  '/salt-lake-city-utah',
+  '/san-antonio-texas',
+  '/san-francisco-california',
+  '/san-jose-california',
+  '/santa-fe-new-mexico',
+  '/saskatchewan',
+  '/scottsdale-arizona',
+  '/seattle-washington',
+  '/self-assessment',
+  '/service-areas',
+  '/south-carolina',
+  '/south-dakota',
+  '/spokane-washington',
+  '/start-here',
+  '/substance-guide',
+  '/tacoma-washington',
+  '/tennessee',
+  '/terms',
+  '/terms-of-service',
+  '/testimonials',
+  '/texas',
+  '/topeka-kansas',
+  '/treatment-planning',
+  '/tucson-arizona',
+  '/two-households',
+  '/utah',
+  '/vancouver-washington',
+  '/vermont',
+  '/virginia',
+  '/washington',
+  '/west-virginia',
+  '/what-if-they-refuse-treatment',
+  '/what-makes-matt-different',
+  '/when-is-it-time-for-an-intervention',
+  '/which-help-do-we-need',
+  '/wichita-kansas',
+  '/wisconsin',
+  '/wyoming',
+  '/yakima-washington',
+]);
 
 // Social preview crawler detection (search bots should see the real page, not the OG stub)
 const SOCIAL_CRAWLER_USER_AGENTS = [
@@ -556,8 +775,7 @@ async function fetchBlogPost(slug) {
   );
 
   if (!response.ok) {
-    console.error('Supabase fetch error:', response.status);
-    return null;
+    throw new Error(`Supabase fetch error: ${response.status}`);
   }
 
   const data = await response.json();
@@ -621,6 +839,15 @@ export default {
     const url = new URL(request.url);
     const userAgent = request.headers.get('user-agent') || '';
 
+    const redirectTarget = EDGE_REDIRECTS.get(url.pathname);
+    if (redirectTarget) {
+      return Response.redirect(`${SITE_URL}${redirectTarget}${url.search}`, 301);
+    }
+
+    if (url.pathname !== '/' && url.pathname.endsWith('/')) {
+      return Response.redirect(`${SITE_URL}${url.pathname.replace(/\/+$/, '')}${url.search}`, 301);
+    }
+
     // Temporary diagnostics: confirms whether this worker is attached to the domain.
     if (url.pathname === '/worker-health') {
       return new Response('Freedom Interventions worker active', {
@@ -633,76 +860,30 @@ export default {
       });
     }
 
-    // Serve dynamic sitemap from edge function
+    // The versioned static sitemap is authoritative and includes published
+    // Supabase blog posts plus reliable per-page lastmod dates.
     if (url.pathname === '/sitemap.xml') {
-      try {
-        const sitemapResponse = await fetch(
-          `${SUPABASE_URL}/functions/v1/generate-sitemap`,
-          {
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            },
-          }
-        );
-        if (sitemapResponse.ok) {
-          const xml = await sitemapResponse.text();
-          return new Response(xml, {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/xml; charset=utf-8',
-              'Cache-Control': 'public, max-age=3600',
-            },
-          });
-        }
-      } catch (e) {
-        console.error('Sitemap proxy error:', e);
-      }
-      // Fall through to origin if edge function fails
       return fetch(request);
     }
 
-    // Handle Oregon location pages for search crawlers
-    const locationMeta = LOCATION_META[url.pathname];
-    if (locationMeta && isSearchCrawler(userAgent)) {
-      console.log(`Search crawler detected for location page: ${url.pathname}`);
-      try {
-        const html = generateLocationHtml(locationMeta);
-        return new Response(html, {
-          status: 200,
-          headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'public, max-age=86400',
-            'X-Prerendered': 'true',
-          },
-        });
-      } catch (error) {
-        console.error('Location prerender error:', error);
-        return fetch(request);
-      }
-    }
-
-    // Serve route-specific metadata and fallback content to search crawlers.
-    // Normal visitors still get the Lovable app from the origin.
-    const staticRouteMeta = getStaticRouteMeta(url.pathname);
-    if (staticRouteMeta && isSearchCrawler(userAgent)) {
-      console.log(`Search crawler detected for static page: ${url.pathname}`);
-      try {
-        const pageUrl = `${SITE_URL}${url.pathname === '/' ? '' : url.pathname}`;
-        const html = generateStaticRouteHtml(staticRouteMeta, pageUrl);
-        return new Response(html, {
-          status: 200,
-          headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'public, max-age=86400',
-            'Vary': 'User-Agent',
-            'X-Prerendered': 'true',
-          },
-        });
-      } catch (error) {
-        console.error('Static route prerender error:', error);
-        return fetch(request);
-      }
+    // Search crawlers use the same versioned, prerendered origin HTML as users.
+    // This avoids crawler-only content and keeps metadata in one implementation.
+    const isPageRequest = !/\.[a-z0-9]{1,8}$/i.test(url.pathname);
+    if (
+      isSearchCrawler(userAgent) &&
+      isPageRequest &&
+      !PUBLIC_STATIC_PATHS.has(url.pathname) &&
+      !url.pathname.startsWith('/blog/')
+    ) {
+      return new Response('Not Found', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-Robots-Tag': 'noindex, nofollow',
+          'Vary': 'User-Agent',
+        },
+      });
     }
 
     // Only intercept /blog/* paths for OG tags
@@ -722,9 +903,25 @@ export default {
       return fetch(request);
     }
 
-    // Search bots should get the real blog page so they can index actual content.
+    // Search bots get the real prerendered article. Validate the slug first so
+    // nonexistent blog URLs return a real noindex 404 instead of an SPA 200.
     if (isSearchCrawler(userAgent)) {
-      return fetch(request);
+      try {
+        const post = await fetchBlogPost(slug);
+        if (post) return fetch(request);
+      } catch (error) {
+        console.error('Blog slug validation error:', error);
+        return fetch(request);
+      }
+      return new Response('Not Found', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-Robots-Tag': 'noindex, nofollow',
+          'Vary': 'User-Agent',
+        },
+      });
     }
 
     // Only serve the OG HTML stub to social preview crawlers.

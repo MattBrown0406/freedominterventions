@@ -40,7 +40,7 @@ const Index = () => {
     {
       icon: HeartHandshake,
       title: "Personal Recovery",
-      description: "22+ years of sobriety. Matt brings lived experience, not just credentials.",
+      description: "23+ years of sobriety. Matt brings lived experience, not just credentials.",
     },
     {
       icon: Globe,

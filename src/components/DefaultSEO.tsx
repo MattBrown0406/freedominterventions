@@ -39,7 +39,7 @@ const staticRouteMetadata: Record<string, { title: string; description: string }
   },
   "/interventionist": {
     title: "About Matt Brown — Professional Interventionist | Freedom Interventions",
-    description: "Meet Matt Brown — professional interventionist with 20+ years experience, 22 years of personal recovery, and over 1,000 interventions conducted.",
+    description: "Meet Matt Brown — professional interventionist with 20+ years experience, 23 years of personal recovery, and over 1,000 interventions conducted.",
   },
   "/substance-guide": {
     title: "Substance Guide — Drug & Alcohol Information | Freedom Interventions",

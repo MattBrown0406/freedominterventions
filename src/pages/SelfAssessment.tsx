@@ -334,8 +334,7 @@ const SelfAssessment = () => {
                 <Card className="mb-6 bg-muted/30">
                   <CardContent className="pt-6">
                     <p className="text-sm text-muted-foreground">
-                      This is not a diagnosis—it is a pattern-recognition tool. Answer based on
-                      the past 6–12 months. There are no right or wrong answers.
+                      This is an educational pattern-recognition tool, not a diagnosis or clinically validated screening instrument. Its scoring is a practical conversation aid, not a medical determination. Answer based on the past 6–12 months.
                     </p>
                   </CardContent>
                 </Card>
@@ -665,11 +664,10 @@ const SelfAssessment = () => {
                       <p className="text-muted-foreground italic">
                         If you are asking, "Is it bad enough yet?"
                         <br />
-                        <strong className="text-foreground">That question alone is often your answer.</strong>
+                        <strong className="text-foreground">That question is a reason to pause and get outside perspective.</strong>
                       </p>
                       <p className="text-muted-foreground mt-3">
-                        Intervention is not reserved for rock bottom. It is most effective before
-                        irreversible consequences occur.
+                        You do not have to wait for rock bottom to ask for professional guidance. A consultation can help you evaluate risk, boundaries, and appropriate next steps.
                       </p>
                     </CardContent>
                   </Card>

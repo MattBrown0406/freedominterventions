@@ -296,15 +296,15 @@ const Assessment = () => {
   // Array manipulation helpers
   const addSubstance = () => setSubstancesUsed(prev => [...prev, { substance: "", ageFirstUsed: "", routeOfAdministration: "", frequency: "", lastUsed: "", currentlyUsing: false }]);
   const removeSubstance = (i: number) => setSubstancesUsed(prev => prev.filter((_, idx) => idx !== i));
-  const updateSubstance = (i: number, field: keyof SubstanceEntry, value: any) => setSubstancesUsed(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
+  const updateSubstance = (i: number, field: keyof SubstanceEntry, value: SubstanceEntry[keyof SubstanceEntry]) => setSubstancesUsed(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
 
   const addTreatment = () => setTreatmentHistory(prev => [...prev, { programName: "", programType: "", ageAtTreatment: "", dateAttended: "", durationDays: "", successfulCompletion: false, aftercareFollowed: false, reasonForLeaving: "" }]);
   const removeTreatment = (i: number) => setTreatmentHistory(prev => prev.filter((_, idx) => idx !== i));
-  const updateTreatment = (i: number, field: keyof TreatmentEntry, value: any) => setTreatmentHistory(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
+  const updateTreatment = (i: number, field: keyof TreatmentEntry, value: TreatmentEntry[keyof TreatmentEntry]) => setTreatmentHistory(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
 
   const addFamilyMember = () => setFamilyMembers(prev => [...prev, { name: "", relationship: "", willingToParticipate: false, hasLeverage: false, leverageDetails: "" }]);
   const removeFamilyMember = (i: number) => setFamilyMembers(prev => prev.filter((_, idx) => idx !== i));
-  const updateFamilyMember = (i: number, field: keyof FamilyMemberEntry, value: any) => setFamilyMembers(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
+  const updateFamilyMember = (i: number, field: keyof FamilyMemberEntry, value: FamilyMemberEntry[keyof FamilyMemberEntry]) => setFamilyMembers(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
 
   const addFamilyAddiction = () => setFamilyAddictionHistory(prev => [...prev, { relationship: "", condition: "", details: "" }]);
   const removeFamilyAddiction = (i: number) => setFamilyAddictionHistory(prev => prev.filter((_, idx) => idx !== i));
@@ -525,8 +525,8 @@ const Assessment = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEOHead
-        title="Comprehensive Clinical Assessment"
-        description="Complete our confidential DSM-V and ASAM-based assessment to help determine appropriate treatment placement and intervention approach."
+        title="Confidential Intervention Intake"
+        description="Share confidential background information with Freedom Interventions so Matt Brown can prepare for intervention planning and discuss appropriate next steps."
         canonical="https://freedominterventions.com/assessment"
         keywords="addiction assessment, DSM-V evaluation, ASAM criteria, treatment assessment, intervention intake"
       />
@@ -538,10 +538,10 @@ const Assessment = () => {
         <section className="bg-primary/10 py-12">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Comprehensive Clinical Intake Assessment
+              Confidential Intervention Intake
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              DSM-V & ASAM Criteria-Based Evaluation for Professional Intervention Planning
+              Background information for professional intervention planning
             </p>
           </div>
         </section>
@@ -565,8 +565,7 @@ const Assessment = () => {
             <Card className="mb-6">
               <CardContent className="pt-6">
                 <p className="text-muted-foreground text-sm">
-                  This comprehensive assessment gathers clinical information based on DSM-V diagnostic criteria and ASAM placement dimensions. 
-                  All information is strictly confidential and will be used only for treatment planning and intervention preparation.
+                  This intake gathers background information for intervention preparation and treatment-planning conversations. It is not a diagnosis, clinical evaluation, or substitute for assessment by a licensed healthcare professional. All information is handled confidentially.
                 </p>
               </CardContent>
             </Card>

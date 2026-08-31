@@ -12,7 +12,7 @@ const storyHighlights = testimonials.slice(0, 6).map((testimonial) => ({
 
 const proofMetrics = [
   { label: "Families guided", value: "1,000+" },
-  { label: "Enter treatment on intervention day", value: "90%" },
+  { label: "Years of intervention experience", value: "20+" },
   { label: "Average engagement", value: "45 days" },
 ];
 
