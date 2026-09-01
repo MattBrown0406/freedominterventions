@@ -390,9 +390,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Email sent successfully");
 
     // Update booking with Zoom meeting info
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+
 
     const { error: zoomUpdateError } = await supabase
       .from("bookings")
