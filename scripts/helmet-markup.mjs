@@ -10,23 +10,32 @@ const HELMET_META_KEYS = new Set([
 ]);
 
 const BRAND_SUFFIX = " | Freedom Interventions";
+
+const truncateAtWord = (value, maxLength) => {
+  if (value.length <= maxLength) return value;
+  const budget = Math.max(1, maxLength - 3);
+  const slice = value.slice(0, budget);
+  const lastSpace = slice.lastIndexOf(" ");
+  const base = lastSpace > Math.floor(budget * 0.5) ? slice.slice(0, lastSpace) : slice;
+  return `${base.replace(/[\s,;:\-–—|]+$/, "").trimEnd()}...`;
+};
+
 export const fitSeoTitle = (value, maxLength = 60) => {
   const cleaned = String(value || "").replace(/\s+/g, " ").trim();
   if (cleaned.length <= maxLength) return cleaned;
   if (cleaned.endsWith(BRAND_SUFFIX)) {
     const base = cleaned.slice(0, -BRAND_SUFFIX.length).trim();
-    const maxBase = maxLength - BRAND_SUFFIX.length;
-    return `${base.slice(0, Math.max(1, maxBase - 3)).trimEnd()}...${BRAND_SUFFIX}`;
+    if (base.length <= maxLength) return base;
+    return truncateAtWord(base, maxLength);
   }
-  return `${cleaned.slice(0, Math.max(1, maxLength - 3)).trimEnd()}...`;
+  return truncateAtWord(cleaned, maxLength);
 };
 
 export const fitSeoDescription = (value, maxLength = 160) => {
   const cleaned = String(value || "").replace(/\s+/g, " ").trim();
-  return cleaned.length <= maxLength
-    ? cleaned
-    : `${cleaned.slice(0, Math.max(1, maxLength - 3)).trimEnd()}...`;
+  return cleaned.length <= maxLength ? cleaned : truncateAtWord(cleaned, maxLength);
 };
+
 
 export const markHelmetManagedTags = (html) => html
   .replace(/<title(?![^>]*\bdata-react-helmet=)([^>]*)>/gi, '<title$1 data-react-helmet="true">')
