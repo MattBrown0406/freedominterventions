@@ -141,6 +141,18 @@ function getBookingMeta(bookingType: string): { label: string; defaultDuration: 
   }
 }
 
+async function deleteZoomMeeting(accessToken: string, meetingId: string): Promise<void> {
+  try {
+    const res = await fetch(`https://api.zoom.us/v2/meetings/${meetingId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    console.log("Deleted previous Zoom meeting", meetingId, "status:", res.status);
+  } catch (e) {
+    console.error("Failed to delete previous Zoom meeting:", e);
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -170,6 +182,58 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Processing booking confirmation for:", customerEmail, "type:", bookingType);
 
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // ---- Idempotency guard -------------------------------------------------
+    // Several paths can invoke this function for the same booking (client,
+    // square-booking verify, square-webhook). Without a claim, each one would
+    // create its own Zoom meeting, producing duplicate appointments.
+    const { data: existingBooking } = await supabase
+      .from("bookings")
+      .select("notes")
+      .eq("id", bookingId)
+      .maybeSingle();
+
+    const existingNotes: string = existingBooking?.notes ?? "";
+    const alreadyHasMeeting = existingNotes.includes("Join URL:");
+    const previousMeetingId = existingNotes.match(/Zoom Meeting ID:\s*(\d+)/)?.[1] ?? null;
+
+    if (alreadyHasMeeting && !isReschedule) {
+      console.log("Booking already has a Zoom meeting; skipping duplicate creation:", bookingId);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          duplicate: true,
+          zoomJoinUrl: existingNotes.match(/Join URL:\s*(\S+)/)?.[1] ?? null,
+          meetingId: previousMeetingId,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Atomically claim this booking so concurrent invocations bail out.
+    const claimMarker = `Zoom meeting pending (claimed ${new Date().toISOString()})`;
+    let claimQuery = supabase
+      .from("bookings")
+      .update({ notes: claimMarker, updated_at: new Date().toISOString() })
+      .eq("id", bookingId);
+    if (!isReschedule) {
+      claimQuery = claimQuery.or("notes.is.null,notes.not.ilike.%Join URL:%");
+    }
+    const { data: claimed, error: claimError } = await claimQuery.select("id");
+
+    if (claimError) {
+      console.error("Failed to claim booking for Zoom creation:", claimError);
+    } else if (!claimed || claimed.length === 0) {
+      console.log("Another invocation already claimed this booking:", bookingId);
+      return new Response(
+        JSON.stringify({ success: true, duplicate: true }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     // Format the meeting time for Zoom (ISO 8601)
     const meetingDateTime = new Date(`${bookingDate}T${bookingTime}`);
     const zoomStartTime = meetingDateTime.toISOString();
@@ -177,6 +241,11 @@ const handler = async (req: Request): Promise<Response> => {
     // Get Zoom access token and create meeting
     const accessToken = await getZoomAccessToken();
     console.log("Got Zoom access token");
+
+    // On a reschedule, remove the old meeting so only one appointment remains.
+    if (isReschedule && previousMeetingId) {
+      await deleteZoomMeeting(accessToken, previousMeetingId);
+    }
 
     const meetingTopic = `Freedom Interventions - ${meta.label} with ${customerName}`;
 
@@ -187,6 +256,7 @@ const handler = async (req: Request): Promise<Response> => {
       effectiveDuration
     );
     console.log("Created Zoom meeting:", meetingId);
+
 
     // Format date for email
     const formattedDate = meetingDateTime.toLocaleDateString("en-US", {
@@ -320,9 +390,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Email sent successfully");
 
     // Update booking with Zoom meeting info
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+
 
     const { error: zoomUpdateError } = await supabase
       .from("bookings")
