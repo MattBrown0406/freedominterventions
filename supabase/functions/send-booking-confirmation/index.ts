@@ -213,26 +213,50 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Atomically claim this booking so concurrent invocations bail out.
+    // A concurrent invocation may already be mid-flight. Its marker does not
+    // contain "Join URL:" yet, so it must be detected explicitly. Claims older
+    // than 10 minutes are treated as abandoned and may be retried.
+    const pendingClaimAt = existingNotes.match(/Zoom meeting pending \(claimed ([^)]+)\)/)?.[1] ?? null;
+    const CLAIM_TTL_MS = 10 * 60 * 1000;
+    if (pendingClaimAt) {
+      const claimAge = Date.now() - new Date(pendingClaimAt).getTime();
+      if (Number.isFinite(claimAge) && claimAge < CLAIM_TTL_MS) {
+        console.log("Zoom creation already in flight for booking:", bookingId);
+        return new Response(
+          JSON.stringify({ success: true, duplicate: true, pending: true }),
+          { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+      console.log("Stale Zoom claim detected; retrying booking:", bookingId);
+    }
+
+    // Compare-and-swap on the exact notes value we just read: only one
+    // concurrent invocation can win this update.
     const claimMarker = `Zoom meeting pending (claimed ${new Date().toISOString()})`;
     let claimQuery = supabase
       .from("bookings")
       .update({ notes: claimMarker, updated_at: new Date().toISOString() })
       .eq("id", bookingId);
-    if (!isReschedule) {
-      claimQuery = claimQuery.or("notes.is.null,notes.not.ilike.%Join URL:%");
-    }
+    claimQuery = existingBooking?.notes == null
+      ? claimQuery.is("notes", null)
+      : claimQuery.eq("notes", existingNotes);
     const { data: claimed, error: claimError } = await claimQuery.select("id");
 
     if (claimError) {
       console.error("Failed to claim booking for Zoom creation:", claimError);
-    } else if (!claimed || claimed.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Unable to send booking confirmation. Please try again later." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    if (!claimed || claimed.length === 0) {
       console.log("Another invocation already claimed this booking:", bookingId);
       return new Response(
         JSON.stringify({ success: true, duplicate: true }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
+
 
     // Format the meeting time for Zoom (ISO 8601)
     const meetingDateTime = new Date(`${bookingDate}T${bookingTime}`);
