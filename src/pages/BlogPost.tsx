@@ -44,13 +44,22 @@ const gscPostOptimizations: Record<string, GscPostOptimization> = {
     ctaText: "If social media use has become a family crisis, a consultation can help you decide whether coaching, therapy, treatment, or a structured intervention is appropriate.",
   },
   "compulsive-shopping-addiction-family-guide": {
-    title: "How to Deal With Spending Addiction in the Family | Freedom Interventions",
+    title: "Shopping & Spending Addiction: Help for Families",
     description:
-      "Learn how families can respond to compulsive shopping or spending addiction with boundaries, financial protection, treatment planning, and intervention support.",
+      "Worried about hidden purchases or mounting debt? Learn family boundaries for compulsive spending and book a confidential consultation with Matt Brown.",
     directAnswerHeading: "How to deal with spending addiction in the family",
     directAnswer:
       "Start by protecting the household from more financial damage: stop secretly covering debts, separate vulnerable accounts where appropriate, document the pattern, and have one calm conversation focused on facts and next steps. Compulsive spending often needs therapy, financial counseling, and support for anxiety, depression, ADHD, trauma, or other addictions underneath the behavior.",
     ctaText: "If the spending is creating debt, secrecy, or repeated broken promises, Matt Brown can help your family decide whether a structured intervention, family coaching, or FamilyBridge support is the right next step.",
+  },
+  "day-trading-crypto-addiction-help-for-families": {
+    title: "Day Trading & Crypto Addiction: Help for Families",
+    description:
+      "Hidden trading losses or broken promises to stop? Learn how to protect family finances, set boundaries, and ask Matt Brown about the next step.",
+    directAnswerHeading: "What should families do about compulsive trading?",
+    directAnswer:
+      "Focus on the harm, not on debating investments. Secrecy, borrowing to chase losses, and repeated failed attempts to stop are reasons to seek an assessment from a qualified mental health professional. Start by documenting what you have observed, protecting money needed for household essentials, and getting financial or legal advice before changing shared accounts. You can offer help finding care without agreeing to fund more trading.",
+    ctaText: "Book a confidential consultation with Matt Brown to discuss family boundaries and whether coaching or a structured intervention is appropriate when your loved one refuses help. For day-to-day communication support, download FamilyBridge below; it does not replace clinical care or financial advice.",
   },
   "kratom-addiction-warning-signs-families": {
     title: "Kratom Addiction Warning Signs & Family Help | Freedom Interventions",
@@ -76,6 +85,7 @@ const familyBridgeFitSlugs = new Set([
   "video-games-social-media-dopamine-addiction",
   "social-media-addiction-help-for-families",
   "compulsive-shopping-addiction-family-guide",
+  "day-trading-crypto-addiction-help-for-families",
   "kratom-addiction-warning-signs-families",
   "addicted-family-member-stealing-what-to-do",
 ]);
