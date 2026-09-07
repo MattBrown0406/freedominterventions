@@ -4,7 +4,11 @@ import "./index.css";
 
 // A fresh document isolates the guide from analytics/replay and application integrations.
 const isNextStep = /^\/next-step\/*$/i.test(window.location.pathname);
-const Page = lazy(() => isNextStep ? import("./pages/NextStep") : import("./App"));
+// Keep separate lazy callbacks so Vite assigns the correct CSS/dependency
+// preload list to each branch instead of reusing the normal app's list.
+const Page = isNextStep
+  ? lazy(() => import("./pages/NextStep"))
+  : lazy(() => import("./App"));
 if (!isNextStep) {
   void import("@/lib/analytics").then(({ initAnalytics }) => initAnalytics());
 }

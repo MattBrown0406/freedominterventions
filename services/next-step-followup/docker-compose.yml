@@ -1,0 +1,23 @@
+services:
+  followup-relay:
+    build: .
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 100
+    env_file: /root/.hermes/secrets/next_step_followup.env
+    environment:
+      DATA_DIR: /app/data
+      TRUST_PROXY: "1"
+    volumes:
+      - /root/next-step-followup-data:/app/data
+    tmpfs:
+      - /tmp:size=16m
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.next-step-followup.rule=Host(`followup.187.77.196.68.sslip.io`)
+      - traefik.http.routers.next-step-followup.entrypoints=websecure
+      - traefik.http.routers.next-step-followup.tls.certresolver=letsencrypt
+      - traefik.http.services.next-step-followup.loadbalancer.server.port=8080

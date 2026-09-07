@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import logo from "@/assets/logo.jpeg";
 import "./NextStep.css";
+import NextStepFollowUp from "@/components/NextStepFollowUp";
 
 const safety = "In the US or Canada, call 911 for immediate danger or a suspected overdose. Call or text 988 for a suicide crisis. Elsewhere, use your local emergency or crisis service. This guide is not monitored and cannot assess safety or replace urgent help.";
 const paths = [
@@ -90,7 +91,7 @@ export default function NextStep() {
       <p className="next-step-eyebrow">Not ready to call?</p>
       <h1>Make a plan for your next step</h1>
       <p>You can care about someone and still need time to think. Get a short, practical guide without signing up or sharing contact details.</p>
-      <p className="next-step-privacy">Your choices stay in this page's memory, not in a URL, saved browser storage, or a message to us. No analytics, session replay, chat, or popups run here. Reset or reload to clear your choices. Visiting the page may appear in browser history and ordinary hosting logs; downloaded files stay on your device.</p>
+      <p className="next-step-privacy">Your choices stay in this page's memory, not in a URL or saved browser storage. They are only sent to Matt if you submit the optional follow-up form and separately choose to share them. No analytics, session replay, chat, or popups run here. Reset or reload to clear your choices. Visiting the page may appear in browser history and ordinary hosting logs; downloaded files stay on your device.</p>
       <aside aria-label="Urgent help" className="next-step-safety"><strong>Do not wait if someone needs urgent help.</strong><p>{safety}</p><div><a href="tel:911">Call 911</a><a href="tel:988">Call 988</a><a href="sms:988">Text 988</a></div></aside>
       <section className="next-step-card" aria-labelledby="step-heading">
         <p className="next-step-eyebrow">{complete ? "Your guide" : current ? "Step 2 of 2" : "Step 1 of 2"}</p>
@@ -103,7 +104,8 @@ export default function NextStep() {
           <p className="next-step-disclaimer">General education, not a diagnosis, risk assessment, or treatment recommendation. You choose whether and when to seek non-emergency support.</p>
           <button onClick={download}>Download text guide</button>
           <p className="next-step-disclaimer">A download saves this guide to your device. Take care with shared devices.</p>
-          <div className="next-step-contact"><h3>Want a human conversation later?</h3><p>Optional: the link below opens our existing contact form. Nothing is sent unless you submit that form, and your guide choices are not carried over. That page uses the site's usual privacy and analytics practices.</p><a href="/contact">Contact Matt — opens contact form</a></div>
+          <NextStepFollowUp key={`${path}-${choice}`} guideSummary={`${current.label}\n${current.choices[choice]}`} />
+          <div className="next-step-contact"><h3>Other contact options</h3><p>Optional: the link below opens our existing contact form. Nothing is sent unless you submit that form, and your guide choices are not carried over. That page uses the site's usual privacy and analytics practices.</p><a href="/contact">Contact Matt — opens contact form</a></div>
         </>}
         {current && <div className="next-step-controls"><button onClick={() => { if (complete) setChoice(null); else setPath(null); setStatus(""); }}>Back</button><button onClick={reset}>Reset choices</button></div>}
         <p role="status" aria-live="polite">{status}</p>
