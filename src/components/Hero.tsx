@@ -80,6 +80,11 @@ const Hero = () => {
             </Link>
           </div>
 
+          <p className="mt-5 text-slate-200">
+            Not ready to call?{" "}
+            <a href="/next-step" className="underline underline-offset-4 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">Make a plan for your next step</a>
+          </p>
+
           <div className="fi-hero-microcopy">
             <ShieldCheck aria-hidden="true" />
             <span>Private, judgment-free guidance · Nationwide and international support</span>

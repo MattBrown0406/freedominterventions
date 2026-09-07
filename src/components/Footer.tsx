@@ -21,6 +21,7 @@ const Footer = () => {
       { name: "Testimonials", href: "/testimonials", isRoute: true },
       { name: "Blog", href: "/blog", isRoute: true },
       { name: "Contact", href: "/contact", isRoute: true },
+      { name: "Not ready to call?", href: "/next-step", isRoute: false },
     ],
     legal: [
       { name: "Privacy Policy", href: "/privacy-policy", isRoute: true },

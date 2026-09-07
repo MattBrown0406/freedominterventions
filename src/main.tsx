@@ -1,14 +1,17 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
-import { initAnalytics } from "@/lib/analytics";
 
-initAnalytics();
+// A fresh document isolates the guide from analytics/replay and application integrations.
+const isNextStep = /^\/next-step\/*$/i.test(window.location.pathname);
+const Page = lazy(() => isNextStep ? import("./pages/NextStep") : import("./App"));
+if (!isNextStep) {
+  void import("@/lib/analytics").then(({ initAnalytics }) => initAnalytics());
+}
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <Suspense fallback={<p role="status">Loading…</p>}><Page /></Suspense>
   </React.StrictMode>
 );
 

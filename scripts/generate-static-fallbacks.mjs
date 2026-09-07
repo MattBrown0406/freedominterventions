@@ -20,6 +20,12 @@ const indexFile = path.join(distDir, "index.html");
 const BASE_URL = "https://freedominterventions.com";
 
 const staticMetadata = {
+  "/next-step": {
+    title: "Not ready to call? | Freedom Interventions",
+    description: "Make a private next-step plan for understanding addiction support, preparing a family conversation, or finding urgent help. No sign-up required.",
+    heading: "Make a plan for your next step",
+    body: "Enable JavaScript to use this guide without sharing your choices. For immediate danger or suspected overdose, call 911 in the US or Canada. For a suicide crisis, call or text 988. This guide is not monitored and does not replace urgent help.",
+  },
   "/": {
     title: "Professional Addiction Interventionist | Freedom Interventions",
     description:

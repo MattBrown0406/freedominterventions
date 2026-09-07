@@ -215,11 +215,17 @@ const PageLoader = () => (
   </div>
 );
 
+// Never render sensitive choices inside a document with existing replay scripts.
+const NextStepDocument = () => {
+  window.location.replace("/next-step");
+  return <PageLoader />;
+};
+
 const PublicConversionChrome = () => {
   const { pathname } = useLocation();
   const isPrivateRoute =
     pathname.startsWith("/admin") || pathname.startsWith("/family-portal");
-  if (isPrivateRoute) return null;
+  if (isPrivateRoute || /^\/next-step\/*$/i.test(pathname)) return null;
   return (
     <>
       <FloatingContactForm />
@@ -243,6 +249,7 @@ const App = () => (
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/next-step" element={<NextStepDocument />} />
             {Object.entries(legacyPageRedirects).map(([from, to]) => (
               <Route
                 key={from}
