@@ -77,3 +77,9 @@ verify_jwt = false
 
 [functions.submit-self-assessment]
 verify_jwt = false
+
+[functions.track-followup-open]
+verify_jwt = false
+
+[functions.log-followup-reply]
+verify_jwt = false
