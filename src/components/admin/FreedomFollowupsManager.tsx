@@ -43,7 +43,7 @@ const priorityBadge = (priority: string) => {
 };
 
 const statusBadge = (status: string) => {
-  if (status === "sent") return <Badge className="bg-green-600 text-white hover:bg-green-600">Sent</Badge>;
+  if (status === "done" || status === "sent") return <Badge className="bg-green-600 text-white hover:bg-green-600">Done</Badge>;
   if (status === "failed") return <Badge variant="destructive">Failed</Badge>;
   if (status === "skipped") return <Badge variant="secondary">Skipped</Badge>;
   return <Badge variant="outline">Pending</Badge>;
@@ -89,7 +89,7 @@ const FreedomFollowupsManager = () => {
   const stats = useMemo(() => ({
     pending: rows.filter((row) => row.status === "pending").length,
     due: rows.filter((row) => row.status === "pending" && new Date(row.due_at).getTime() <= Date.now()).length,
-    sent: rows.filter((row) => row.status === "sent").length,
+    sent: rows.filter((row) => row.status === "done" || row.status === "sent").length,
     failed: rows.filter((row) => row.status === "failed").length,
   }), [rows]);
 
@@ -145,7 +145,7 @@ const FreedomFollowupsManager = () => {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Sent</p>
+            <p className="text-xs uppercase text-muted-foreground">Done</p>
             <p className="text-2xl font-bold text-green-600">{stats.sent}</p>
           </CardContent>
         </Card>
