@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-automation-secret",
 };
 
-type SupabaseClient = ReturnType<typeof createClient>;
+type SupabaseClient = any;
 type JsonValue = Record<string, unknown> | null;
 
 interface ContactRow {

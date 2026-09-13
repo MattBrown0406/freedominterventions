@@ -64,13 +64,13 @@ async function getAuthedClients(req: Request) {
   return { userClient, adminClient, user };
 }
 
-async function requireAdmin(userClient: ReturnType<typeof createClient>) {
+async function requireAdmin(userClient: any) {
   const { data, error } = await userClient.rpc("is_strict_admin");
   return !error && data === true;
 }
 
 async function maybeInviteFamilyUser(
-  adminClient: ReturnType<typeof createClient>,
+  adminClient: any,
   email: string,
   fullName: string,
   caseId: string,

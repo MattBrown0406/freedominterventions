@@ -42,7 +42,7 @@ async function sendEmail(row: FollowupRow) {
   });
 }
 
-async function shouldSkipBecauseConverted(supabase: ReturnType<typeof createClient>, row: FollowupRow) {
+async function shouldSkipBecauseConverted(supabase: any, row: FollowupRow) {
   if (row.followup_reason === "assessment_confirmation" || row.followup_reason === "contact_message_confirmation") {
     return false;
   }
@@ -75,7 +75,7 @@ async function shouldSkipBecauseConverted(supabase: ReturnType<typeof createClie
   return Boolean(bookings?.length || contracts?.length);
 }
 
-async function isAdminRequest(req: Request, supabase: ReturnType<typeof createClient>) {
+async function isAdminRequest(req: Request, supabase: any) {
   const authHeader = req.headers.get("authorization") || "";
   const token = authHeader.replace(/^Bearer\s+/i, "").trim();
   if (!token) return false;

@@ -41,7 +41,7 @@ function normalizeAttribution(value: unknown): Record<string, unknown> {
 }
 
 async function upsertContractCrm(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   contract: { id: string },
   payload: {
     clientName: string;
@@ -75,7 +75,7 @@ function normalizeDiscountCode(code: unknown): string {
   return typeof code === "string" ? code.trim().toUpperCase() : "";
 }
 
-async function resolveContractAmount(supabase: ReturnType<typeof createClient>, contractType: string, discountCode: unknown, clientEmail?: string) {
+async function resolveContractAmount(supabase: any, contractType: string, discountCode: unknown, clientEmail?: string) {
   if (contractType === "readiness-intensive") {
     return {
       amountCents: READINESS_INTENSIVE_FEE_CENTS,

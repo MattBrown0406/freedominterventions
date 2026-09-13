@@ -39,8 +39,8 @@ export interface SpinePayload {
   payment?: SpinePayment;
 }
 
-let cachedClient: SupabaseClient | null = null;
-function getServiceClient(): SupabaseClient | null {
+let cachedClient: any = null;
+function getServiceClient(): any {
   if (cachedClient) return cachedClient;
   const url = Deno.env.get("SUPABASE_URL");
   const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -56,7 +56,7 @@ function getServiceClient(): SupabaseClient | null {
 export async function enqueueSpineEvent(
   event_name: SpineEventName,
   payload: Omit<SpinePayload, "property"> & { property?: "freedom" },
-  client?: SupabaseClient,
+  client?: any,
 ): Promise<boolean> {
   try {
     const supabase = client ?? getServiceClient();
