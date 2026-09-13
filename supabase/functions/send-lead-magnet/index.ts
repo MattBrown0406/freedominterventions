@@ -93,6 +93,7 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
   const first = firstName(cleanName);
   const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(cleanName)}&email=${encodeURIComponent(cleanEmail)}${cleanPhone ? `&phone=${encodeURIComponent(cleanPhone)}` : ""}#booking`;
   const decisionUrl = `${SITE_URL}/which-help-do-we-need?source=checklist_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness_checklist`;
+  const readinessUrl = `${SITE_URL}/intervention-readiness?source=checklist_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness_checklist`;
 
   const rows = [
     {
