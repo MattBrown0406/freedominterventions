@@ -247,6 +247,18 @@ const FreedomFollowupsManager = () => {
                   <div className="flex flex-wrap gap-2">
                     {priorityBadge(row.priority)}
                     {statusBadge(row.status)}
+                    {row.first_opened_at && (
+                      <Badge className="bg-blue-600 text-white hover:bg-blue-600 gap-1">
+                        <Eye className="h-3 w-3" />
+                        Opened{(row.open_count ?? 0) > 1 ? ` ${row.open_count}x` : ""}
+                      </Badge>
+                    )}
+                    {row.replied_at && (
+                      <Badge className="bg-primary text-primary-foreground hover:bg-primary gap-1">
+                        <MessageSquare className="h-3 w-3" />
+                        Replied
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </CardHeader>
