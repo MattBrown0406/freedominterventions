@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fitSeoDescription, fitSeoTitle, markHelmetManagedTags } from "./helmet-markup.mjs";
 import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
+import { COST_ANSWER_ROUTE, costAnswerMetadata } from "./answer-fallback.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -371,6 +372,7 @@ const main = async () => {
 
   const template = await readFile(indexFile, "utf8");
   const routes = await getRoutes();
+  staticMetadata[COST_ANSWER_ROUTE] = costAnswerMetadata(await readFile(interventionAnswersFile, "utf8"));
 
   for (const route of routes) {
     const metadata = getMetadata(route);
