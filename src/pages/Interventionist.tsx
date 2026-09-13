@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { MapPin, Globe, Phone, Users } from "lucide-react";
 import mattHeadshot from "@/assets/matt-headshot-new.jpg";
+import WesternServiceAreas from "@/components/WesternServiceAreas";
 import SEOHead from "@/components/SEOHead";
 import { PersonSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
@@ -128,6 +129,7 @@ const Interventionist = () => {
             </div>
           </div>
         </section>
+        <WesternServiceAreas />
       </main>
 
       {/* Family Intervention CTA */}
