@@ -63,7 +63,7 @@ function normalizeAttribution(value: unknown): Record<string, unknown> {
 }
 
 async function upsertBookingCrm(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   booking: { id: string },
   payload: {
     customerName: string;
@@ -103,7 +103,7 @@ async function upsertBookingCrm(
 }
 
 async function queueConsultationPrep(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   booking: { id: string },
   payload: {
     customerName: string;

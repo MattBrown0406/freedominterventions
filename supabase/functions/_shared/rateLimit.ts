@@ -15,7 +15,7 @@ export function getClientIp(req: Request): string {
  * Fails OPEN on any DB error so a transient issue never blocks a legitimate submission.
  */
 export async function checkRateLimit(
-  supabase: SupabaseClient,
+  supabase: any,
   key: string,
   maxHits: number,
   windowSeconds: number,

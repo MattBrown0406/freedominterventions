@@ -37,7 +37,7 @@ function scoreAssessment(data: Record<string, any>) {
   return Math.min(score, 100);
 }
 
-async function queueAssessmentFollowups(supabase: ReturnType<typeof createClient>, assessmentId: string, assessmentData: Record<string, any>) {
+async function queueAssessmentFollowups(supabase: any, assessmentId: string, assessmentData: Record<string, any>) {
   const sourceAttribution = assessmentData.source_attribution && typeof assessmentData.source_attribution === "object"
     ? assessmentData.source_attribution
     : {};
