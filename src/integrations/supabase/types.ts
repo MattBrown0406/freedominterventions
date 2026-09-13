@@ -1471,12 +1471,17 @@ export type Database = {
           created_at: string
           due_at: string
           error_message: string | null
+          first_opened_at: string | null
           followup_reason: string
           id: string
+          last_opened_at: string | null
           lead_id: string | null
           lead_type: string
+          open_count: number
           priority: string
           recipient_type: string
+          replied_at: string | null
+          reply_snippet: string | null
           sent_at: string | null
           sequence_step: number
           source_attribution: Json
@@ -1492,12 +1497,17 @@ export type Database = {
           created_at?: string
           due_at?: string
           error_message?: string | null
+          first_opened_at?: string | null
           followup_reason: string
           id?: string
+          last_opened_at?: string | null
           lead_id?: string | null
           lead_type: string
+          open_count?: number
           priority?: string
           recipient_type?: string
+          replied_at?: string | null
+          reply_snippet?: string | null
           sent_at?: string | null
           sequence_step?: number
           source_attribution?: Json
@@ -1513,12 +1523,17 @@ export type Database = {
           created_at?: string
           due_at?: string
           error_message?: string | null
+          first_opened_at?: string | null
           followup_reason?: string
           id?: string
+          last_opened_at?: string | null
           lead_id?: string | null
           lead_type?: string
+          open_count?: number
           priority?: string
           recipient_type?: string
+          replied_at?: string | null
+          reply_snippet?: string | null
           sent_at?: string | null
           sequence_step?: number
           source_attribution?: Json
@@ -1704,6 +1719,10 @@ export type Database = {
         Returns: boolean
       }
       is_strict_admin: { Args: never; Returns: boolean }
+      record_followup_open: {
+        Args: { _followup_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user"

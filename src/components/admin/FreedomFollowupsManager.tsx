@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { MailCheck, Play, RefreshCw, SkipForward } from "lucide-react";
+import { Eye, MailCheck, MessageSquare, Play, RefreshCw, SkipForward } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,11 @@ interface FollowupRow {
   status: string;
   due_at: string;
   sent_at: string | null;
+  first_opened_at: string | null;
+  last_opened_at: string | null;
+  open_count: number | null;
+  replied_at: string | null;
+  reply_snippet: string | null;
   error_message: string | null;
   source_attribution: Record<string, unknown> | null;
   created_at: string;
@@ -91,7 +96,22 @@ const FreedomFollowupsManager = () => {
     due: rows.filter((row) => row.status === "pending" && new Date(row.due_at).getTime() <= Date.now()).length,
     sent: rows.filter((row) => row.status === "done" || row.status === "sent").length,
     failed: rows.filter((row) => row.status === "failed").length,
+    opened: rows.filter((row) => Boolean(row.first_opened_at)).length,
+    replied: rows.filter((row) => Boolean(row.replied_at)).length,
   }), [rows]);
+
+  const markReplied = async (id: string) => {
+    const { error } = await supabase.functions.invoke("log-followup-reply", {
+      body: { followupId: id, snippet: "Reply logged manually in admin dashboard" },
+    });
+
+    if (error) {
+      toast({ title: "Could not log reply", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Reply logged" });
+      fetchRows();
+    }
+  };
 
   const runProcessor = async () => {
     setProcessing(true);
@@ -150,7 +170,7 @@ const FreedomFollowupsManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
         <Card>
           <CardContent className="p-4">
             <p className="text-xs uppercase text-muted-foreground">Pending</p>
@@ -173,6 +193,18 @@ const FreedomFollowupsManager = () => {
           <CardContent className="p-4">
             <p className="text-xs uppercase text-muted-foreground">Failed</p>
             <p className="text-2xl font-bold text-red-600">{stats.failed}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs uppercase text-muted-foreground">Opened</p>
+            <p className="text-2xl font-bold text-blue-600">{stats.opened}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs uppercase text-muted-foreground">Replied</p>
+            <p className="text-2xl font-bold text-primary">{stats.replied}</p>
           </CardContent>
         </Card>
       </div>
@@ -215,6 +247,18 @@ const FreedomFollowupsManager = () => {
                   <div className="flex flex-wrap gap-2">
                     {priorityBadge(row.priority)}
                     {statusBadge(row.status)}
+                    {row.first_opened_at && (
+                      <Badge className="bg-blue-600 text-white hover:bg-blue-600 gap-1">
+                        <Eye className="h-3 w-3" />
+                        Opened{(row.open_count ?? 0) > 1 ? ` ${row.open_count}x` : ""}
+                      </Badge>
+                    )}
+                    {row.replied_at && (
+                      <Badge className="bg-primary text-primary-foreground hover:bg-primary gap-1">
+                        <MessageSquare className="h-3 w-3" />
+                        Replied
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </CardHeader>
@@ -237,21 +281,48 @@ const FreedomFollowupsManager = () => {
                     <p>{sourceLabel(row.source_attribution)}</p>
                   </div>
                 </div>
+                {(row.sent_at || row.first_opened_at || row.replied_at) && (
+                  <div className="grid gap-3 md:grid-cols-3 text-sm">
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Sent</p>
+                      <p>{row.sent_at ? format(new Date(row.sent_at), "MMM d, h:mm a") : "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">First Opened</p>
+                      <p>{row.first_opened_at ? format(new Date(row.first_opened_at), "MMM d, h:mm a") : "Not opened yet"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Replied</p>
+                      <p>{row.replied_at ? format(new Date(row.replied_at), "MMM d, h:mm a") : "No reply yet"}</p>
+                    </div>
+                  </div>
+                )}
+                {row.reply_snippet && (
+                  <p className="rounded-md bg-muted p-3 text-sm">{row.reply_snippet}</p>
+                )}
                 {row.error_message && (
                   <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{row.error_message}</p>
                 )}
-                {row.status === "pending" && (
-                  <div className="flex flex-wrap gap-2">
-                    <Button size="sm" disabled={processing} onClick={() => sendNow(row.id)} className="gap-2">
-                      <Play className="h-4 w-4" />
-                      Send Now
+                <div className="flex flex-wrap gap-2">
+                  {row.status === "pending" && (
+                    <>
+                      <Button size="sm" disabled={processing} onClick={() => sendNow(row.id)} className="gap-2">
+                        <Play className="h-4 w-4" />
+                        Send Now
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => markSkipped(row.id)} className="gap-2">
+                        <SkipForward className="h-4 w-4" />
+                        Skip
+                      </Button>
+                    </>
+                  )}
+                  {row.sent_at && !row.replied_at && (
+                    <Button variant="outline" size="sm" onClick={() => markReplied(row.id)} className="gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      Log Reply
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => markSkipped(row.id)} className="gap-2">
-                      <SkipForward className="h-4 w-4" />
-                      Skip
-                    </Button>
-                  </div>
-                )}
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
