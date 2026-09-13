@@ -20,7 +20,14 @@ interface FollowupRow {
   created_at: string;
 }
 
-function wrapEmail(body: string) {
+function openPixel(followupId: string) {
+  const baseUrl = Deno.env.get("SUPABASE_URL");
+  if (!baseUrl) return "";
+  const src = `${baseUrl}/functions/v1/track-followup-open?id=${encodeURIComponent(followupId)}`;
+  return `<img src="${src}" alt="" width="1" height="1" style="display:block;width:1px;height:1px;border:0;opacity:0;" />`;
+}
+
+function wrapEmail(body: string, trackingPixel = "") {
   return `
     <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937;line-height:1.6;">
       ${body}
@@ -28,16 +35,19 @@ function wrapEmail(body: string) {
       <p style="font-size:12px;color:#6b7280;">
         Freedom Interventions · Matt Brown · <a href="tel:+14582988000" style="color:#1e40af;">458-298-8000</a>
       </p>
+      ${trackingPixel}
     </div>
   `;
 }
 
 async function sendEmail(row: FollowupRow) {
-  const toEmail = row.recipient_type === "owner" ? "matt@freedominterventions.com" : row.contact_email;
+  const isOwner = row.recipient_type === "owner";
+  const toEmail = isOwner ? "matt@freedominterventions.com" : row.contact_email;
   await sendResendEmail({
     to: toEmail,
     subject: row.subject,
-    html: wrapEmail(row.body_html),
+    // Only track opens on emails going out to families, never on internal owner alerts.
+    html: wrapEmail(row.body_html, isOwner ? "" : openPixel(row.id)),
     replyTo: "matt@freedominterventions.com",
   });
 }
