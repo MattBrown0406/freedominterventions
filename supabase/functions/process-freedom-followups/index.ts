@@ -115,11 +115,27 @@ serve(async (req: Request) => {
       }
     }
 
-    const { data: rows, error } = await supabase
+    let followupId: string | null = null;
+    try {
+      const body = await req.json();
+      if (body && typeof body.followupId === "string") followupId = body.followupId;
+    } catch (_) {
+      // no body
+    }
+
+    let query = supabase
       .from("freedom_followup_queue")
       .select("*")
-      .eq("status", "pending")
-      .lte("due_at", new Date().toISOString())
+      .eq("status", "pending");
+
+    if (followupId) {
+      // Manual "send now": ignore the scheduled due date
+      query = query.eq("id", followupId);
+    } else {
+      query = query.lte("due_at", new Date().toISOString());
+    }
+
+    const { data: rows, error } = await query
       .order("priority", { ascending: false })
       .order("due_at", { ascending: true })
       .limit(25);
