@@ -96,7 +96,22 @@ const FreedomFollowupsManager = () => {
     due: rows.filter((row) => row.status === "pending" && new Date(row.due_at).getTime() <= Date.now()).length,
     sent: rows.filter((row) => row.status === "done" || row.status === "sent").length,
     failed: rows.filter((row) => row.status === "failed").length,
+    opened: rows.filter((row) => Boolean(row.first_opened_at)).length,
+    replied: rows.filter((row) => Boolean(row.replied_at)).length,
   }), [rows]);
+
+  const markReplied = async (id: string) => {
+    const { error } = await supabase.functions.invoke("log-followup-reply", {
+      body: { followupId: id, snippet: "Reply logged manually in admin dashboard" },
+    });
+
+    if (error) {
+      toast({ title: "Could not log reply", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Reply logged" });
+      fetchRows();
+    }
+  };
 
   const runProcessor = async () => {
     setProcessing(true);
