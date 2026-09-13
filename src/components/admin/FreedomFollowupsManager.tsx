@@ -195,6 +195,18 @@ const FreedomFollowupsManager = () => {
             <p className="text-2xl font-bold text-red-600">{stats.failed}</p>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs uppercase text-muted-foreground">Opened</p>
+            <p className="text-2xl font-bold text-blue-600">{stats.opened}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-xs uppercase text-muted-foreground">Replied</p>
+            <p className="text-2xl font-bold text-primary">{stats.replied}</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex flex-wrap gap-2">
