@@ -281,21 +281,48 @@ const FreedomFollowupsManager = () => {
                     <p>{sourceLabel(row.source_attribution)}</p>
                   </div>
                 </div>
+                {(row.sent_at || row.first_opened_at || row.replied_at) && (
+                  <div className="grid gap-3 md:grid-cols-3 text-sm">
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Sent</p>
+                      <p>{row.sent_at ? format(new Date(row.sent_at), "MMM d, h:mm a") : "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">First Opened</p>
+                      <p>{row.first_opened_at ? format(new Date(row.first_opened_at), "MMM d, h:mm a") : "Not opened yet"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">Replied</p>
+                      <p>{row.replied_at ? format(new Date(row.replied_at), "MMM d, h:mm a") : "No reply yet"}</p>
+                    </div>
+                  </div>
+                )}
+                {row.reply_snippet && (
+                  <p className="rounded-md bg-muted p-3 text-sm">{row.reply_snippet}</p>
+                )}
                 {row.error_message && (
                   <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{row.error_message}</p>
                 )}
-                {row.status === "pending" && (
-                  <div className="flex flex-wrap gap-2">
-                    <Button size="sm" disabled={processing} onClick={() => sendNow(row.id)} className="gap-2">
-                      <Play className="h-4 w-4" />
-                      Send Now
+                <div className="flex flex-wrap gap-2">
+                  {row.status === "pending" && (
+                    <>
+                      <Button size="sm" disabled={processing} onClick={() => sendNow(row.id)} className="gap-2">
+                        <Play className="h-4 w-4" />
+                        Send Now
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => markSkipped(row.id)} className="gap-2">
+                        <SkipForward className="h-4 w-4" />
+                        Skip
+                      </Button>
+                    </>
+                  )}
+                  {row.sent_at && !row.replied_at && (
+                    <Button variant="outline" size="sm" onClick={() => markReplied(row.id)} className="gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      Log Reply
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => markSkipped(row.id)} className="gap-2">
-                      <SkipForward className="h-4 w-4" />
-                      Skip
-                    </Button>
-                  </div>
-                )}
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
