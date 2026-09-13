@@ -2,6 +2,7 @@ import { getAnalyticsAttributionParams } from "@/lib/funnelAttribution";
 import { supabase } from "@/integrations/supabase/client";
 
 let scriptLoaded = false;
+const privatePage = () => typeof window !== "undefined" && /^\/(admin|family-portal)(\/|$)/i.test(window.location.pathname);
 
 export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-HQ53XPK2Z9";
 
@@ -13,7 +14,7 @@ declare global {
 }
 
 export const initAnalytics = () => {
-  if (typeof window === "undefined" || scriptLoaded) {
+  if (typeof window === "undefined" || scriptLoaded || privatePage()) {
     return;
   }
 
@@ -39,7 +40,7 @@ export const initAnalytics = () => {
 };
 
 export const trackEvent = (action: string, params: Record<string, unknown> = {}) => {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || privatePage()) return;
 
   const enrichedParams: Record<string, unknown> = {
     ...getAnalyticsAttributionParams(),

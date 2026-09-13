@@ -1,5 +1,8 @@
 project_id = "rizfkjgwhcpwiryyqejx"
 
+[functions.attribution-ingest]
+verify_jwt = false
+
 [functions.square-booking]
 verify_jwt = false
 

@@ -1,540 +1,475 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
-import { AlertCircle, BarChart3, PhoneCall, RefreshCw, TrendingUp } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  AlertCircle,
+  BarChart3,
+  PhoneCall,
+  RefreshCw,
+  ShieldCheck,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Json } from "@/integrations/supabase/types";
+import { Badge } from "@/components/ui/badge";
 
-interface SourceAttribution {
-  source?: string;
-  utm_source?: string | null;
-  utm_campaign?: string | null;
-  first_landing_page?: string;
-  landing_page?: string;
-}
-
-interface CrmContactRow {
-  id: string;
-  email: string;
-  first_name: string | null;
-  last_name: string | null;
-  phone: string | null;
-  source: string;
-  source_attribution: Json;
-  lead_score: number;
-  revenue_path: string | null;
-  pipeline_status: string;
-  next_action: string | null;
-  next_action_due_at: string | null;
-  last_engagement_at: string | null;
-  created_at: string;
-}
-
-interface AssessmentRow {
-  id: string;
-  contact_email: string;
-  source_attribution: Json;
-  created_at: string;
-}
-
-interface BookingRow {
-  id: string;
-  customer_email: string;
-  booking_type: string;
+const sites = {
+  freedom: "Freedom Interventions",
+  sober_helpline: "Sober Helpline",
+  nme: "No More Enabling",
+  partywreckers: "Party Wreckers",
+  familybridge: "FamilyBridge",
+  ayuda_sobria: "AyudaSobria",
+  unknown: "Unknown routing",
+};
+type Row = {
+  feed: string;
+  site: keyof typeof sites;
+  day: string;
+  metric: string;
+  channel: string;
+  value: number;
+};
+type Feed = {
+  feed: string;
+  site: keyof typeof sites;
   status: string;
-  amount_cents: number | null;
-  source_attribution: Json;
-  created_at: string;
-}
-
-interface ContractRow {
-  id: string;
-  client_email: string;
-  contract_type: string;
-  status: string;
-  amount_cents: number;
-  source_attribution: Json;
-  created_at: string;
-}
-
-interface CallRow {
-  id: string;
-  source_attribution: Json;
-  metadata: Json | null;
-  page_path: string;
-  phone_number: string;
-  created_at: string;
-}
-
-interface ContactMessageRow {
-  id: string;
-  source_attribution: Json;
-  created_at: string;
-}
-
-interface FollowupRow {
-  id: string;
-  status: string;
-  source_attribution: Json;
-  created_at: string;
-}
-
-interface SourceStats {
-  source: string;
-  contacts: number;
-  calls: number;
-  contactMessages: number;
-  assessments: number;
-  consultations: number;
-  paidBookings: number;
-  contractsSigned: number;
-  contractsPaid: number;
-  followupsPending: number;
-  bookedRevenueCents: number;
-  contractRevenueCents: number;
-}
-
-const asSourceAttribution = (value: Json | null | undefined): SourceAttribution => {
-  if (value && typeof value === "object" && !Array.isArray(value)) {
-    return value as SourceAttribution;
-  }
-  return {};
+  coverage_start: string | null;
+  coverage_end: string | null;
+  last_success_at: string | null;
+  checked_at: string;
+};
+type Snapshot = { rows: Row[]; feeds: Feed[] };
+const pacificToday = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+const daysBefore = (day: string, days: number) => {
+  const d = new Date(`${day}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - days);
+  return d.toISOString().slice(0, 10);
+};
+const timestamp = (date: string | null) =>
+  date
+    ? new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Los_Angeles",
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date(date)) + " PT"
+    : "Never synced";
+const metricNames: Record<string, string> = {
+  sessions: "Recorded sessions",
+  engaged_sessions: "Engaged sessions",
+  phone_connections: "Phone connections",
+  ai_audio_observed: "AI audio observed",
+  transfer_requested: "Transfer requested",
+  transfer_bridged: "Transfer bridged",
+  call_ended: "Call ended",
+  callback_requested: "Callback requested",
 };
 
-const asRecord = (value: Json | null | undefined): Record<string, unknown> => {
-  if (value && typeof value === "object" && !Array.isArray(value)) {
-    return value as Record<string, unknown>;
-  }
-  return {};
-};
-
-const sourceKey = (value: Json | null | undefined, fallback = "unknown") => {
-  const attribution = asSourceAttribution(value);
-  return attribution.source || attribution.utm_source || fallback;
-};
-
-const sourceFamily = (source: string) => {
-  if (source.includes("no_more_enabling") || source.includes("nme")) return "no_more_enabling";
-  if (source.includes("sober_helpline") || source.includes("family_squares")) return "sober_helpline";
-  if (source.includes("party_wreckers")) return "party_wreckers";
-  return source;
-};
-
-const stringFromMetadata = (metadata: Json | null | undefined, key: string) => {
-  const value = asRecord(metadata)[key];
-  return typeof value === "string" && value.trim().length > 0 ? value : null;
-};
-
-const formatUsd = (cents: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(cents / 100);
-};
-
-const formatPercent = (numerator: number, denominator: number) => {
-  if (!denominator) return "0%";
-  return `${Math.round((numerator / denominator) * 100)}%`;
-};
-
-const sourceTitle = (source: string) => {
-  const labels: Record<string, string> = {
-    sober_helpline: "Sober Helpline",
-    no_more_enabling: "No More Enabling",
-    party_wreckers: "Party Wreckers",
-    organic_google: "Google Organic",
-    organic_bing: "Bing Organic",
-    direct: "Direct",
-    referral: "Referral",
-    contact_message: "Contact Form",
-    booking: "Booking",
-    assessment: "Assessment",
-    contract: "Contract",
-    unknown: "Unknown",
-  };
-  const key = sourceFamily(source);
-  return labels[key] || key.replace(/_/g, " ");
-};
-
-const locationTitle = (location: string) => {
-  const labels: Record<string, string> = {
-    hero_primary_cta: "Homepage hero",
-    header_phone: "Header phone",
-    footer_phone: "Footer phone",
-    mobile_sticky_cta: "Mobile sticky CTA",
-    contact_page: "Contact page",
-  };
-  return labels[location] || location.replace(/_/g, " ");
-};
-
-const RevenueAttributionManager = () => {
+export default function RevenueAttributionManager() {
+  const today = pacificToday();
+  const [start, setStart] = useState(daysBefore(today, 27));
+  const [end, setEnd] = useState(today);
+  const [site, setSite] = useState("");
+  const [view, setView] = useState("overview");
+  const [channel, setChannel] = useState("all");
+  const [data, setData] = useState<Snapshot | null>(null);
   const [loading, setLoading] = useState(true);
-  const [contacts, setContacts] = useState<CrmContactRow[]>([]);
-  const [assessments, setAssessments] = useState<AssessmentRow[]>([]);
-  const [bookings, setBookings] = useState<BookingRow[]>([]);
-  const [contracts, setContracts] = useState<ContractRow[]>([]);
-  const [calls, setCalls] = useState<CallRow[]>([]);
-  const [contactMessages, setContactMessages] = useState<ContactMessageRow[]>([]);
-  const [followups, setFollowups] = useState<FollowupRow[]>([]);
-  const [dataIssues, setDataIssues] = useState<string[]>([]);
-
-  const fetchAttribution = useCallback(async () => {
+  const [error, setError] = useState("");
+  const generation = useRef(0);
+  const load = useCallback(async () => {
+    const id = ++generation.current;
     setLoading(true);
-    const [
-      contactsResult,
-      assessmentsResult,
-      bookingsResult,
-      contractsResult,
-      callsResult,
-      contactMessagesResult,
-      followupsResult,
-    ] = await Promise.all([
-      supabase.from("crm_contacts").select("id,email,first_name,last_name,phone,source,source_attribution,lead_score,revenue_path,pipeline_status,next_action,next_action_due_at,last_engagement_at,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("assessments").select("id,contact_email,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("bookings").select("id,customer_email,booking_type,status,amount_cents,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("contracts").select("id,client_email,contract_type,status,amount_cents,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("call_analytics").select("id,source_attribution,metadata,page_path,phone_number,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("contact_messages").select("id,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
-      supabase.from("freedom_followup_queue").select("id,status,source_attribution,created_at").order("created_at", { ascending: false }).limit(500),
-    ]);
-
-    const issues: string[] = [];
-    if (contactsResult.error) issues.push("CRM contacts");
-    if (assessmentsResult.error) issues.push("assessments");
-    if (bookingsResult.error) issues.push("bookings");
-    if (contractsResult.error) issues.push("contracts");
-    if (callsResult.error) issues.push("call tracking");
-    if (contactMessagesResult.error) issues.push("contact messages");
-    if (followupsResult.error) issues.push("follow-up queue");
-
-    setContacts((contactsResult.error ? [] : contactsResult.data ?? []) as CrmContactRow[]);
-    setAssessments((assessmentsResult.error ? [] : assessmentsResult.data ?? []) as AssessmentRow[]);
-    setBookings((bookingsResult.error ? [] : bookingsResult.data ?? []) as BookingRow[]);
-    setContracts((contractsResult.error ? [] : contractsResult.data ?? []) as ContractRow[]);
-    setCalls((callsResult.error ? [] : callsResult.data ?? []) as CallRow[]);
-    setContactMessages((contactMessagesResult.error ? [] : contactMessagesResult.data ?? []) as ContactMessageRow[]);
-    setFollowups((followupsResult.error ? [] : followupsResult.data ?? []) as FollowupRow[]);
-    setDataIssues(issues);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    fetchAttribution();
-  }, [fetchAttribution]);
-
-  const sourceStats = useMemo(() => {
-    const map = new Map<string, SourceStats>();
-    const get = (source: string) => {
-      const existing = map.get(source);
-      if (existing) return existing;
-      const next: SourceStats = {
-        source,
-        contacts: 0,
-        calls: 0,
-        contactMessages: 0,
-        assessments: 0,
-        consultations: 0,
-        paidBookings: 0,
-        contractsSigned: 0,
-        contractsPaid: 0,
-        followupsPending: 0,
-        bookedRevenueCents: 0,
-        contractRevenueCents: 0,
-      };
-      map.set(source, next);
-      return next;
-    };
-
-    contacts.forEach((row) => {
-      get(sourceFamily(sourceKey(row.source_attribution, row.source))).contacts += 1;
-    });
-
-    calls.forEach((row) => {
-      get(sourceFamily(sourceKey(row.source_attribution))).calls += 1;
-    });
-
-    contactMessages.forEach((row) => {
-      get(sourceFamily(sourceKey(row.source_attribution, "contact_message"))).contactMessages += 1;
-    });
-
-    assessments.forEach((row) => {
-      get(sourceFamily(sourceKey(row.source_attribution, "assessment"))).assessments += 1;
-    });
-
-    bookings.forEach((row) => {
-      const stats = get(sourceFamily(sourceKey(row.source_attribution, "booking")));
-      if (row.booking_type === "consultation") {
-        stats.consultations += 1;
-      } else {
-        stats.paidBookings += 1;
-        if (row.status === "confirmed") stats.bookedRevenueCents += row.amount_cents || 0;
-      }
-    });
-
-    contracts.forEach((row) => {
-      const stats = get(sourceFamily(sourceKey(row.source_attribution, "contract")));
-      if (row.status === "paid") {
-        stats.contractsPaid += 1;
-        stats.contractRevenueCents += row.amount_cents || 0;
-      } else if (row.status === "signed-awaiting-payment") {
-        stats.contractsSigned += 1;
-      }
-    });
-
-    followups.forEach((row) => {
-      if (row.status === "pending") get(sourceFamily(sourceKey(row.source_attribution))).followupsPending += 1;
-    });
-
-    return [...map.values()].sort((a, b) => {
-      const aRevenue = a.bookedRevenueCents + a.contractRevenueCents;
-      const bRevenue = b.bookedRevenueCents + b.contractRevenueCents;
-      if (aRevenue !== bRevenue) return bRevenue - aRevenue;
-      return b.contacts + b.assessments + b.consultations - (a.contacts + a.assessments + a.consultations);
-    });
-  }, [assessments, bookings, calls, contactMessages, contacts, contracts, followups]);
-
-  const topLeads = useMemo(() => {
-    return [...contacts]
-      .sort((a, b) => {
-        if (b.lead_score !== a.lead_score) return b.lead_score - a.lead_score;
-        return new Date(b.last_engagement_at || b.created_at).getTime() - new Date(a.last_engagement_at || a.created_at).getTime();
-      })
-      .slice(0, 12);
-  }, [contacts]);
-
-  const callSourceStats = useMemo(() => {
-    const map = new Map<string, {
-      key: string;
-      count: number;
-      phoneNumber: string;
-      source: string;
-      location: string;
-      pagePath: string;
-      latestAt: string;
-    }>();
-
-    calls.forEach((call) => {
-      const location = stringFromMetadata(call.metadata, "call_location") || stringFromMetadata(call.metadata, "location") || "unknown";
-      const source = sourceFamily(sourceKey(call.source_attribution));
-      const key = `${call.phone_number}|${source}|${location}`;
-      const existing = map.get(key);
-      if (existing) {
-        existing.count += 1;
-        if (new Date(call.created_at).getTime() > new Date(existing.latestAt).getTime()) {
-          existing.latestAt = call.created_at;
-          existing.pagePath = call.page_path;
-        }
-        return;
-      }
-
-      map.set(key, {
-        key,
-        count: 1,
-        phoneNumber: call.phone_number,
-        source,
-        location,
-        pagePath: call.page_path,
-        latestAt: call.created_at,
+    setError("");
+    setData(null);
+    if (
+      !start ||
+      !end ||
+      start > end ||
+      end > pacificToday() ||
+      (Date.parse(end) - Date.parse(start)) / 86400000 > 89
+    ) {
+      setError(
+        "Choose a valid date window of at most 90 days, ending today or earlier.",
+      );
+      setLoading(false);
+      return;
+    }
+    try {
+      const result = await supabase.rpc("get_central_attribution", {
+        p_start: start,
+        p_end: end,
+        ...(site ? { p_site: site } : {}),
       });
-    });
-
-    return [...map.values()].sort((a, b) => {
-      if (b.count !== a.count) return b.count - a.count;
-      return new Date(b.latestAt).getTime() - new Date(a.latestAt).getTime();
-    });
-  }, [calls]);
-
-  const totals = useMemo(() => {
-    return sourceStats.reduce(
-      (acc, row) => ({
-        contacts: acc.contacts + row.contacts,
-        calls: acc.calls + row.calls,
-        assessments: acc.assessments + row.assessments,
-        consultations: acc.consultations + row.consultations,
-        paidBookings: acc.paidBookings + row.paidBookings,
-        contractsPaid: acc.contractsPaid + row.contractsPaid,
-        revenue: acc.revenue + row.bookedRevenueCents + row.contractRevenueCents,
-      }),
-      { contacts: 0, calls: 0, assessments: 0, consultations: 0, paidBookings: 0, contractsPaid: 0, revenue: 0 },
-    );
-  }, [sourceStats]);
-
+      if (result.error) throw result.error;
+      const value = result.data as unknown as Snapshot;
+      if (!value || !Array.isArray(value.rows) || !Array.isArray(value.feeds))
+        throw new Error("Invalid response");
+      if (id === generation.current) setData(value);
+    } catch {
+      if (id === generation.current)
+        setError(
+          "Attribution could not be loaded. Check admin access and backend deployment, then retry. No missing data is counted as zero.",
+        );
+    } finally {
+      if (id === generation.current) setLoading(false);
+    }
+  }, [start, end, site]);
+  useEffect(() => {
+    void load();
+    return () => {
+      generation.current++;
+    };
+  }, [load]);
+  const selectedSites = Object.entries(sites).filter(
+    ([key]) => !site || key === site,
+  );
+  const rows =
+    data?.rows.filter((r) => r.feed === "livekit" || r.channel === channel) ??
+    [];
+  const total = (metric: string) => {
+    const values = rows.filter((r) => r.metric === metric);
+    return values.length
+      ? values.reduce((sum, r) => sum + r.value, 0).toLocaleString()
+      : "—";
+  };
+  const breakdown = rows.filter(
+    (r) =>
+      (view === "phone"
+        ? r.feed === "livekit"
+        : view === "traffic"
+          ? r.feed === "ga4"
+          : true) && r.value > 0,
+  );
+  const preset = (days: number) => {
+    setStart(daysBefore(today, days - 1));
+    setEnd(today);
+  };
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-5">
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Attributed Leads</p>
-            <p className="text-2xl font-bold">{totals.contacts}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Tracked Calls</p>
-            <p className="text-2xl font-bold">{totals.calls}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Consults Booked</p>
-            <p className="text-2xl font-bold">{totals.consultations}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Paid Conversions</p>
-            <p className="text-2xl font-bold">{totals.paidBookings + totals.contractsPaid}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Tracked Revenue</p>
-            <p className="text-2xl font-bold text-green-700">{formatUsd(totals.revenue)}</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <Button variant="outline" onClick={fetchAttribution} className="gap-2">
-          <RefreshCw className="h-4 w-4" />
+    <section className="space-y-6" aria-label="Central attribution">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-wider text-teal-700">
+            Ecosystem intelligence
+          </p>
+          <h2 className="text-2xl font-bold">Attribution & phone outcomes</h2>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+            Recorded website traffic and LiveKit operational outcomes.
+            Aggregate-only, strict-admin access. Dates and call-day grouping use
+            Pacific time.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => void load()}
+          disabled={loading}
+        >
+          <RefreshCw
+            className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+          />
           Refresh
         </Button>
       </div>
-
-      {dataIssues.length > 0 && (
-        <Card className="border-amber-300 bg-amber-50 text-amber-950">
-          <CardContent className="flex flex-col gap-2 p-4 md:flex-row md:items-start">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-            <div className="text-sm">
-              <p className="font-semibold">Some attribution data is not available yet.</p>
-              <p className="mt-1">
-                This tab is still usable. These sources could not be read from the current backend session: {dataIssues.join(", ")}.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {loading ? (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">Loading attribution...</CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-primary" />
-                Source Performance
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {sourceStats.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No attribution data yet.</p>
-              ) : (
-                sourceStats.map((row) => (
-                  <div key={row.source} className="rounded-xl border border-border p-4">
-                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                      <div>
-                        <h3 className="font-semibold capitalize">{sourceTitle(row.source)}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {row.contacts} leads · {row.calls} calls · {row.assessments} assessments · {row.consultations} consults
-                        </p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          Consult rate {formatPercent(row.consultations, row.contacts)} · paid close rate {formatPercent(row.paidBookings + row.contractsPaid, row.contacts)} · revenue per lead {formatUsd(row.contacts ? Math.round((row.bookedRevenueCents + row.contractRevenueCents) / row.contacts) : 0)}
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline">{row.paidBookings} paid bookings</Badge>
-                        <Badge variant="outline">{row.contractsSigned} signed contracts</Badge>
-                        <Badge className="bg-green-700 text-white hover:bg-green-700">
-                          {formatUsd(row.bookedRevenueCents + row.contractRevenueCents)}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
-
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PhoneCall className="h-5 w-5 text-primary" />
-                  OpenClaw Call Clarity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {callSourceStats.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No tracked calls yet.</p>
-                ) : (
-                  callSourceStats.map((row) => (
-                    <div key={row.key} className="rounded-lg border border-border p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-semibold">{row.phoneNumber}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {sourceTitle(row.source)} · {locationTitle(row.location)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Last click: {format(new Date(row.latestAt), "MMM d, h:mm a")} · {row.pagePath}
-                          </p>
-                        </div>
-                        <Badge>{row.count}</Badge>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  Highest-Intent Leads
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {topLeads.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No CRM leads yet.</p>
-                ) : (
-                  topLeads.map((lead) => (
-                    <div key={lead.id} className="rounded-lg border border-border p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-semibold">
-                            {[lead.first_name, lead.last_name].filter(Boolean).join(" ") || lead.email}
-                          </p>
-                          <p className="text-sm text-muted-foreground">{lead.email}</p>
-                          {lead.phone && <p className="text-sm text-muted-foreground">{lead.phone}</p>}
-                        </div>
-                        <Badge>{lead.lead_score}</Badge>
-                      </div>
-                      <div className="mt-3 space-y-1 text-sm">
-                        <p><span className="text-muted-foreground">Source:</span> {sourceTitle(sourceKey(lead.source_attribution, lead.source))}</p>
-                        <p><span className="text-muted-foreground">Path:</span> {lead.revenue_path || "Not set"}</p>
-                        <p><span className="text-muted-foreground">Status:</span> {lead.pipeline_status}</p>
-                        {lead.next_action && <p><span className="text-muted-foreground">Next:</span> {lead.next_action}</p>}
-                        {lead.next_action_due_at && (
-                          <p className="text-muted-foreground">Due {format(new Date(lead.next_action_due_at), "MMM d, h:mm a")}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </CardContent>
-            </Card>
-          </div>
+      <div className="flex flex-wrap items-end gap-3 rounded-xl border bg-muted/30 p-4">
+        <label className="flex flex-col gap-1 text-sm">
+          Website / business
+          <select
+            className="h-10 max-w-full rounded-md border bg-background px-3"
+            value={site}
+            onChange={(e) => setSite(e.target.value)}
+          >
+            <option value="">All businesses</option>
+            {Object.entries(sites).map(([key, name]) => (
+              <option key={key} value={key}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          From
+          <input
+            aria-label="From date"
+            className="h-10 rounded-md border bg-background px-3"
+            type="date"
+            value={start}
+            max={end}
+            onChange={(e) => setStart(e.target.value)}
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          Through
+          <input
+            aria-label="Through date"
+            className="h-10 rounded-md border bg-background px-3"
+            type="date"
+            value={end}
+            min={start}
+            max={today}
+            onChange={(e) => setEnd(e.target.value)}
+          />
+        </label>
+        {[1, 7, 28].map((days) => (
+          <Button key={days} variant="outline" onClick={() => preset(days)}>
+            {days === 1 ? "Today" : `${days} days`}
+          </Button>
+        ))}
+      </div>
+      <nav className="flex flex-wrap gap-2" aria-label="Attribution views">
+        {["overview", "traffic", "phone", "coverage"].map((tab) => (
+          <Button
+            key={tab}
+            variant={view === tab ? "default" : "outline"}
+            aria-pressed={view === tab}
+            onClick={() => setView(tab)}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+          </Button>
+        ))}
+      </nav>
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4"
+        >
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <p>{error}</p>
         </div>
       )}
-    </div>
+      {loading && (
+        <p role="status" className="py-8 text-muted-foreground">
+          Loading authorized aggregate data…
+        </p>
+      )}
+      {!loading && data && (
+        <>
+          {(view === "overview" || view === "traffic") && (
+            <>
+              <div className="flex flex-wrap items-center gap-3">
+                <BarChart3 className="h-5 w-5" />
+                <h3 className="font-semibold">Website acquisition</h3>
+                <label className="text-sm">
+                  Channel{" "}
+                  <select
+                    className="ml-2 rounded-md border bg-background p-2"
+                    value={channel}
+                    onChange={(e) => setChannel(e.target.value)}
+                  >
+                    <option value="all">All traffic</option>
+                    <option value="organic">Organic search</option>
+                    <option value="chatgpt">ChatGPT (exact source)</option>
+                  </select>
+                </label>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {["sessions", "engaged_sessions"].map((metric) => (
+                  <Card key={metric}>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        {metricNames[metric]}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-3xl font-bold">{total(metric)}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Available coverage only · sums across properties, not
+                        unique people
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                GA4 excludes the latest two complete days for processing lag.
+                Today may have no GA4 coverage. ChatGPT means exact
+                sessionSource=chatgpt.com, not verified citations or
+                recommendations. Channel subsets overlap All traffic; never add
+                them together. Campaign names are withheld until an approved
+                safe taxonomy exists.
+              </p>
+            </>
+          )}
+          {(view === "overview" || view === "phone") && (
+            <>
+              <h3 className="flex items-center gap-2 font-semibold">
+                <PhoneCall className="h-5 w-5" />
+                LiveKit phone outcomes
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {[
+                  "phone_connections",
+                  "ai_audio_observed",
+                  "transfer_requested",
+                  "transfer_bridged",
+                  "call_ended",
+                  "callback_requested",
+                ].map((metric) => {
+                  const values = data.rows.filter(
+                    (r) => r.metric === metric && r.channel === "all",
+                  );
+                  return (
+                    <Card key={metric}>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium">
+                          {metricNames[metric]}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-3xl font-bold">
+                          {values.length
+                            ? values
+                                .reduce((sum, r) => sum + r.value, 0)
+                                .toLocaleString()
+                            : "—"}
+                        </p>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          {metric === "transfer_bridged"
+                            ? "Human vs voicemail is unverified"
+                            : "Observed operational record, not a phone-link click"}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+              <p className="rounded-lg border bg-amber-50 p-4 text-sm text-amber-950">
+                A phone connection means a participant reached the LiveKit
+                worker. It does not mean Matt answered. The current
+                announce-then-bridge flow can connect either a human or
+                voicemail; those are not separately measured. Calls missed
+                before worker arrival, voicemail messages left, and completed
+                consultations are unknown. Entry business uses the trusted
+                called-number map; unknown numbers remain unknown. No
+                visitor-to-caller matching is performed.
+              </p>
+            </>
+          )}
+          {view !== "coverage" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">
+                  Daily breakdown · Pacific dates · nonzero rows
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[540px] text-left text-sm">
+                    <caption className="sr-only">
+                      Daily recorded aggregates, not individual visitors or
+                      callers
+                    </caption>
+                    <thead>
+                      <tr className="border-b">
+                        <th className="p-2">Date</th>
+                        <th className="p-2">Business</th>
+                        <th className="p-2">Measure</th>
+                        <th className="p-2 text-right">Count</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {breakdown.map((r) => (
+                        <tr
+                          className="border-b"
+                          key={`${r.feed}/${r.site}/${r.day}/${r.metric}/${r.channel}`}
+                        >
+                          <td className="p-2 whitespace-nowrap">{r.day}</td>
+                          <td className="p-2">{sites[r.site]}</td>
+                          <td className="p-2">
+                            {metricNames[r.metric] ?? r.metric}
+                          </td>
+                          <td className="p-2 text-right tabular-nums">
+                            {r.value.toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {rows.length === 0 && (
+                  <p className="py-6 text-muted-foreground">
+                    No aggregate rows for this selection. Check coverage below;
+                    an absent feed is not zero activity.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+          <div className="space-y-3">
+            <h3 className="flex items-center gap-2 font-semibold">
+              <ShieldCheck className="h-5 w-5" />
+              Connections, freshness & coverage
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              {selectedSites.map(([key, name]) => (
+                <Card key={key}>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">{name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {["ga4", "livekit"].map((feed) => {
+                      const f = data.feeds.find(
+                        (f) => f.site === key && f.feed === feed,
+                      );
+                      const stale =
+                        f?.last_success_at &&
+                        Date.now() - Date.parse(f.last_success_at) >
+                          36 * 3600000;
+                      return (
+                        <div key={feed} className="text-sm">
+                          <div className="flex flex-wrap justify-between gap-2">
+                            <span>
+                              {feed === "ga4"
+                                ? "GA4"
+                                : "LiveKit operational records"}
+                            </span>
+                            <Badge
+                              variant={
+                                f?.status === "ok" && !stale
+                                  ? "secondary"
+                                  : "outline"
+                              }
+                            >
+                              {!f
+                                ? "Not connected"
+                                : stale
+                                  ? `${f.status} · stale`
+                                  : f.status.replace(/_/g, " ")}
+                            </Badge>
+                          </div>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {timestamp(f?.last_success_at ?? null)}
+                            {f?.coverage_start &&
+                              ` · ${f.coverage_start} to ${f.coverage_end}`}
+                          </p>
+                          {f?.status === "error" && (
+                            <p className="text-xs text-destructive">
+                              Latest sync failed; any rows shown are last-known
+                              data.
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <p className="text-xs text-muted-foreground">
+                      Bookings, registrations, payments and browser phone
+                      clicks: not connected to this aggregate feed.
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+      <p className="text-xs text-muted-foreground">
+        Privacy: no caller numbers, names, email addresses, recordings,
+        transcripts, case details, raw URLs, query strings or session
+        identifiers. Historical GA4 consent status remains unverified; no new
+        browser tracking is added.
+      </p>
+    </section>
   );
-};
-
-export default RevenueAttributionManager;
+}
