@@ -20,6 +20,11 @@ interface FollowupRow {
   status: string;
   due_at: string;
   sent_at: string | null;
+  first_opened_at: string | null;
+  last_opened_at: string | null;
+  open_count: number | null;
+  replied_at: string | null;
+  reply_snippet: string | null;
   error_message: string | null;
   source_attribution: Record<string, unknown> | null;
   created_at: string;
