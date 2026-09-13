@@ -1,0 +1,2 @@
+ALTER TABLE public.freedom_followup_queue DROP CONSTRAINT freedom_followup_queue_status_check;
+ALTER TABLE public.freedom_followup_queue ADD CONSTRAINT freedom_followup_queue_status_check CHECK (status IN ('pending','sent','done','skipped','failed'));
