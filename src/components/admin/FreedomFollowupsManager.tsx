@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { MailCheck, Play, RefreshCw, SkipForward } from "lucide-react";
+import { Eye, MailCheck, MessageSquare, Play, RefreshCw, SkipForward } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
