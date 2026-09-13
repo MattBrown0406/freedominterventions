@@ -8,7 +8,7 @@ const RouteAnalytics = () => {
   const hasTrackedInitialPage = useRef(false);
 
   useEffect(() => {
-    if (/^\/(admin|family-portal)(\/|$)/i.test(location.pathname)) return;
+    if (/^\/(admin(?:-login)?|family-portal)(\/|$)/i.test(location.pathname)) return;
     captureFunnelAttribution();
 
     if (!hasTrackedInitialPage.current) {

@@ -2,7 +2,7 @@ import { getAnalyticsAttributionParams } from "@/lib/funnelAttribution";
 import { supabase } from "@/integrations/supabase/client";
 
 let scriptLoaded = false;
-const privatePage = () => typeof window !== "undefined" && /^\/(admin|family-portal)(\/|$)/i.test(window.location.pathname);
+const privatePage = () => typeof window !== "undefined" && /^\/(admin(?:-login)?|family-portal)(\/|$)/i.test(window.location.pathname);
 
 export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-HQ53XPK2Z9";
 
