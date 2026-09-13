@@ -143,7 +143,7 @@ serve(async (req: Request) => {
         await sendEmail(row);
         await supabase
           .from("freedom_followup_queue")
-          .update({ status: "sent", sent_at: new Date().toISOString(), error_message: null })
+          .update({ status: "done", sent_at: new Date().toISOString(), error_message: null })
           .eq("id", row.id);
         results.sent++;
       } catch (sendError) {
