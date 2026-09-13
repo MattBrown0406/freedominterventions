@@ -145,7 +145,7 @@ const FreedomFollowupsManager = () => {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs uppercase text-muted-foreground">Sent</p>
+            <p className="text-xs uppercase text-muted-foreground">Done</p>
             <p className="text-2xl font-bold text-green-600">{stats.sent}</p>
           </CardContent>
         </Card>
