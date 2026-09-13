@@ -170,7 +170,7 @@ const FreedomFollowupsManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
         <Card>
           <CardContent className="p-4">
             <p className="text-xs uppercase text-muted-foreground">Pending</p>
