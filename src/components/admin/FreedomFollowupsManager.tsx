@@ -116,6 +116,26 @@ const FreedomFollowupsManager = () => {
     setProcessing(false);
   };
 
+  const sendNow = async (id: string) => {
+    setProcessing(true);
+    const { data, error } = await supabase.functions.invoke("process-freedom-followups", {
+      body: { manual: true, followupId: id },
+    });
+
+    if (error) {
+      toast({ title: "Could not send follow-up", description: error.message, variant: "destructive" });
+    } else {
+      const result = data as { sent?: number; skipped?: number; failed?: number } | null;
+      toast({
+        title: result?.sent ? "Follow-up sent" : "Follow-up not sent",
+        description: `${result?.sent ?? 0} sent, ${result?.skipped ?? 0} skipped, ${result?.failed ?? 0} failed.`,
+        variant: result?.sent ? "default" : "destructive",
+      });
+      fetchRows();
+    }
+    setProcessing(false);
+  };
+
   const markSkipped = async (id: string) => {
     const { error } = await followupTable()
       .update({ status: "skipped", error_message: "Skipped manually in admin dashboard" })
@@ -221,10 +241,16 @@ const FreedomFollowupsManager = () => {
                   <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{row.error_message}</p>
                 )}
                 {row.status === "pending" && (
-                  <Button variant="outline" size="sm" onClick={() => markSkipped(row.id)} className="gap-2">
-                    <SkipForward className="h-4 w-4" />
-                    Skip
-                  </Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="sm" disabled={processing} onClick={() => sendNow(row.id)} className="gap-2">
+                      <Play className="h-4 w-4" />
+                      Send Now
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => markSkipped(row.id)} className="gap-2">
+                      <SkipForward className="h-4 w-4" />
+                      Skip
+                    </Button>
+                  </div>
                 )}
               </CardContent>
             </Card>
