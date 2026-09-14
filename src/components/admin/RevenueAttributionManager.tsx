@@ -72,6 +72,9 @@ const metricNames: Record<string, string> = {
 
 export default function RevenueAttributionManager() {
   const today = pacificToday();
+  // The existing operational attribution view stays the default until the
+  // central aggregate feed is actually receiving data.
+  const [mode, setMode] = useState<"operational" | "central">("operational");
   const [start, setStart] = useState(daysBefore(today, 27));
   const [end, setEnd] = useState(today);
   const [site, setSite] = useState("");
