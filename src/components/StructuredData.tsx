@@ -337,30 +337,16 @@ export const ItemListSchema = ({
   );
 };
 
-// Person Schema for Matt Brown
+// Reference the existing static Person; do not mint a second identity or
+// competing credential description on the profile page.
 export const PersonSchema = () => {
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Matt Brown",
-    jobTitle: "Professional Interventionist",
-    description:
-      "Professional interventionist since 2004. Over 20 years sober, helping hundreds of families navigate addiction recovery.",
+    "@type": "ProfilePage",
     url: "https://freedominterventions.com/interventionist",
-    image: "https://freedominterventions.com/favicon.jpeg",
-    worksFor: {
-      "@type": "Organization",
-      name: "Freedom Interventions",
-      url: "https://freedominterventions.com",
+    mainEntity: {
+      "@id": "https://freedominterventions.com/#matt-brown",
     },
-    knowsAbout: [
-      "Addiction Intervention",
-      "Substance Abuse Treatment",
-      "Family Counseling",
-      "Recovery Support",
-    ],
-    alumniOf: [],
-    sameAs: [],
   };
 
   return (

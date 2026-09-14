@@ -6,6 +6,7 @@ import { spawn } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
 import { markHelmetManagedTags } from "./helmet-markup.mjs";
 import { canonicalRouteAliases } from "./seo-routes.mjs";
+import { removePilotSummary } from "./full-guide-fallback.mjs";
 
 const defaultChromeExecutablePath =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -139,7 +140,7 @@ const waitForAppReady = async (page, route) => {
 const startPreviewServer = () => {
   const child = spawn(
     "npx",
-    ["vite", "preview", "--host", "127.0.0.1", "--port", String(previewPort)],
+    ["vite", "preview", "--strictPort", "--host", "127.0.0.1", "--port", String(previewPort)],
     {
       cwd: root,
       stdio: ["ignore", "pipe", "pipe"],
@@ -147,6 +148,11 @@ const startPreviewServer = () => {
     },
   );
 
+  let previewStarted = false;
+  child.stdout.on("data", (chunk) => {
+    if (chunk.toString().includes(previewOrigin)) previewStarted = true;
+  });
+  child.stderr.on("data", (chunk) => process.stderr.write(chunk));
   const ready = (async () => {
     for (let attempt = 0; attempt < 120; attempt += 1) {
       if (child.exitCode !== null) {
@@ -156,8 +162,10 @@ const startPreviewServer = () => {
       }
 
       try {
-        const response = await fetch(previewOrigin);
-        if (response.ok) return;
+        if (previewStarted) {
+          const response = await fetch(previewOrigin);
+          if (response.ok) return;
+        }
       } catch {
         // wait and retry
       }
@@ -255,9 +263,13 @@ const main = async () => {
         throw new Error(`Failed to load ${route}: ${response?.status()}`);
       }
 
-      await waitForAppReady(page, route);
+      try {
+        await waitForAppReady(page, route);
+      } catch (error) {
+        throw new Error(`Prerender content did not become ready for ${route}`, { cause: error });
+      }
 
-      const html = markHelmetManagedTags(await page.content());
+      const html = markHelmetManagedTags(removePilotSummary(await page.content(), route));
       const outputPaths = toOutputPaths(route);
       for (const outputPath of outputPaths) {
         await mkdir(path.dirname(outputPath), { recursive: true });

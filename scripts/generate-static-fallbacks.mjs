@@ -6,6 +6,7 @@ import { fitSeoDescription, fitSeoTitle, markHelmetManagedTags } from "./helmet-
 import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
 import { COST_ANSWER_ROUTE, costAnswerMetadata } from "./answer-fallback.mjs";
 import { pageFallbackSources, pageFallbackMetadata } from "./page-fallback.mjs";
+import { FULL_GUIDE_ROUTE, renderFullGuide, installFullGuide } from "./full-guide-fallback.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -372,6 +373,7 @@ const main = async () => {
     throw new Error("dist/index.html not found. Run vite build first.");
 
   const template = await readFile(indexFile, "utf8");
+  const fullGuide = await renderFullGuide(root);
   const routes = await getRoutes();
   staticMetadata[COST_ANSWER_ROUTE] = costAnswerMetadata(await readFile(interventionAnswersFile, "utf8"));
 
@@ -381,12 +383,13 @@ const main = async () => {
 
   for (const route of routes) {
     const metadata = getMetadata(route);
-    const html = markHelmetManagedTags(replaceNoscript(
+    let html = markHelmetManagedTags(replaceNoscript(
       upsertHead(route === "/next-step"
         ? template.replace(/<link\b[^>]*href="https:\/\/fonts\.(?:googleapis|gstatic)\.com[^>]*>/g, "")
         : template, route, metadata),
       metadata,
     ));
+    if (route === FULL_GUIDE_ROUTE) html = installFullGuide(html, fullGuide);
     const destinations = outputPaths(route);
     for (const destination of destinations) {
       await mkdir(path.dirname(destination), { recursive: true });
