@@ -1,5 +1,6 @@
 const NOINDEX_ROUTES = new Set([
   "/404",
+  "/next-step",
   "/admin",
   "/admin-login",
   "/after-consultation",

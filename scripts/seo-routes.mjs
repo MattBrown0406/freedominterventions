@@ -2,6 +2,7 @@ export const SITE_URL = "https://freedominterventions.com";
 
 export const excludedSitemapRoutes = new Set([
   "/404",
+  "/next-step",
   "/admin",
   "/admin-login",
   "/after-consultation",

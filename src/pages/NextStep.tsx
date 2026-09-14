@@ -85,6 +85,7 @@ export default function NextStep() {
       <link rel="canonical" href="https://freedominterventions.com/next-step" />
       <meta property="og:url" content="https://freedominterventions.com/next-step" />
       <meta name="referrer" content="no-referrer" />
+      <meta name="robots" content="noindex, follow" />
     </Helmet>
     <header><a href="/" className="next-step-brand"><img src={logo} alt="" width="40" height="44" />Freedom Interventions</a><a href="#guide">Skip to guide</a></header>
     <main id="guide">

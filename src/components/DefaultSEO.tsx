@@ -256,6 +256,9 @@ function getRouteMetadata(pathname: string): { title: string; description: strin
  */
 const DefaultSEO = () => {
   const location = useLocation();
+  // These reviewed pages own their metadata; do not race their SEOHead with
+  // a second, differently worded default during direct load or SPA navigation.
+  if (["/intervention-toolkit", "/how-intervention-works", "/service-areas"].includes(location.pathname.replace(/\/+$/, ""))) return null;
   const metadata = getRouteMetadata(location.pathname);
 
   if (!metadata) return null;

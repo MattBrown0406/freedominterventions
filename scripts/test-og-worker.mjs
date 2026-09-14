@@ -36,7 +36,7 @@ const unknown = await worker.fetch(request("/definitely-not-a-real-page"));
 assert.equal(unknown.status, 404);
 assert.match(unknown.headers.get("x-robots-tag") || "", /noindex/);
 
-for (const resource of ["/robots.txt", "/favicon.jpeg", "/assets/index-abc.js"]) {
+for (const resource of ["/robots.txt", "/favicon.jpeg", "/assets/index-abc.js", "/post-sitemap.xml", "/next-step"]) {
   const response = await worker.fetch(request(resource));
   assert.equal(response.status, 200);
   assert.equal(await response.text(), "ORIGIN");
@@ -71,4 +71,4 @@ assert.equal(sitemap.status, 200);
 assert.equal(await sitemap.text(), "ORIGIN");
 assert(originFetches.some((url) => url.endsWith("/sitemap.xml")));
 
-console.log(JSON.stringify({ redirects: 2, noindex404s: 2, resourcePassThroughs: 3, upstreamFailOpen: true, sitemapOrigin: true }));
+console.log(JSON.stringify({ redirects: 2, noindex404s: 2, resourcePassThroughs: 5, upstreamFailOpen: true, sitemapOrigin: true }));

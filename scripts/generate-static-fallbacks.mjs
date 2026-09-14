@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { fitSeoDescription, fitSeoTitle, markHelmetManagedTags } from "./helmet-markup.mjs";
 import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
 import { COST_ANSWER_ROUTE, costAnswerMetadata } from "./answer-fallback.mjs";
+import { pageFallbackSources, pageFallbackMetadata } from "./page-fallback.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -331,7 +332,7 @@ const upsertHead = (html, route, metadata) => {
   const canonicalTag = `<link rel="canonical" href="${canonical}">`;
   const metaTags = [
     `<meta name="description" content="${description}">`,
-    `<meta name="robots" content="${noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}">`,
+    `<meta name="robots" content="${noindex ? (route === "/next-step" ? "noindex, follow" : "noindex, nofollow") : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}">`,
     canonicalTag,
     `<meta property="og:title" content="${title}">`,
     `<meta property="og:description" content="${description}">`,
@@ -374,10 +375,16 @@ const main = async () => {
   const routes = await getRoutes();
   staticMetadata[COST_ANSWER_ROUTE] = costAnswerMetadata(await readFile(interventionAnswersFile, "utf8"));
 
+  for (const [route, sourceFile] of Object.entries(pageFallbackSources)) {
+    staticMetadata[route] = pageFallbackMetadata(await readFile(path.join(root, sourceFile), "utf8"), route);
+  }
+
   for (const route of routes) {
     const metadata = getMetadata(route);
     const html = markHelmetManagedTags(replaceNoscript(
-      upsertHead(template, route, metadata),
+      upsertHead(route === "/next-step"
+        ? template.replace(/<link\b[^>]*href="https:\/\/fonts\.(?:googleapis|gstatic)\.com[^>]*>/g, "")
+        : template, route, metadata),
       metadata,
     ));
     const destinations = outputPaths(route);

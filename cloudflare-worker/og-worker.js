@@ -537,6 +537,8 @@ const EDGE_REDIRECTS = new Map([
 ]);
 
 const PUBLIC_STATIC_PATHS = new Set([
+  // Publicly usable, but intentionally noindexed; crawlers must read its robots tag.
+  '/next-step',
   '/',
   '/aftercare-guidance',
   '/alabama',
