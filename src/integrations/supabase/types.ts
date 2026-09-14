@@ -1701,10 +1701,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_central_attribution: {
-        Args: { p_start: string; p_end: string; p_site?: string }
-        Returns: Json
-      }
       check_assessment_access_rate: { Args: never; Returns: boolean }
       check_bookings_access_rate: { Args: never; Returns: boolean }
       check_rate_limit: {
