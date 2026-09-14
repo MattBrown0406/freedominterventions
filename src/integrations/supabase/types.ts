@@ -1474,6 +1474,192 @@ export type Database = {
         }
         Relationships: []
       }
+      family_portal_cases: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          family_name: string
+          id: string
+          is_active: boolean
+          loved_one_name: string | null
+          next_step: string | null
+          next_step_due_at: string | null
+          phase: string
+          primary_contact_email: string
+          primary_contact_name: string
+          primary_contact_phone: string | null
+          risk_level: string
+          status: string
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          family_name: string
+          id?: string
+          is_active?: boolean
+          loved_one_name?: string | null
+          next_step?: string | null
+          next_step_due_at?: string | null
+          phase?: string
+          primary_contact_email: string
+          primary_contact_name: string
+          primary_contact_phone?: string | null
+          risk_level?: string
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          family_name?: string
+          id?: string
+          is_active?: boolean
+          loved_one_name?: string | null
+          next_step?: string | null
+          next_step_due_at?: string | null
+          phase?: string
+          primary_contact_email?: string
+          primary_contact_name?: string
+          primary_contact_phone?: string | null
+          risk_level?: string
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      family_portal_members: {
+        Row: {
+          case_id: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          invited_at: string | null
+          last_login_at: string | null
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          invited_at?: string | null
+          last_login_at?: string | null
+          role?: string
+          user_id?: string | null
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          invited_at?: string | null
+          last_login_at?: string | null
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_portal_members_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "family_portal_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_portal_messages: {
+        Row: {
+          admin_notified_at: string | null
+          case_id: string
+          created_at: string
+          id: string
+          is_read_by_admin: boolean
+          message: string
+          sender_email: string
+          sender_name: string
+          sender_user_id: string | null
+        }
+        Insert: {
+          admin_notified_at?: string | null
+          case_id: string
+          created_at?: string
+          id?: string
+          is_read_by_admin?: boolean
+          message: string
+          sender_email: string
+          sender_name: string
+          sender_user_id?: string | null
+        }
+        Update: {
+          admin_notified_at?: string | null
+          case_id?: string
+          created_at?: string
+          id?: string
+          is_read_by_admin?: boolean
+          message?: string
+          sender_email?: string
+          sender_name?: string
+          sender_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_portal_messages_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "family_portal_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_portal_updates: {
+        Row: {
+          body: string
+          case_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_visible_to_family: boolean
+          title: string
+          update_type: string
+        }
+        Insert: {
+          body: string
+          case_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_visible_to_family?: boolean
+          title: string
+          update_type?: string
+        }
+        Update: {
+          body?: string
+          case_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_visible_to_family?: boolean
+          title?: string
+          update_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_portal_updates_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "family_portal_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_reviews: {
         Row: {
           approved: boolean | null
@@ -1792,6 +1978,10 @@ export type Database = {
       }
       is_assigned_to_assessment: {
         Args: { _assessment_id: string }
+        Returns: boolean
+      }
+      is_family_portal_case_member: {
+        Args: { case_uuid: string }
         Returns: boolean
       }
       is_strict_admin: { Args: never; Returns: boolean }
