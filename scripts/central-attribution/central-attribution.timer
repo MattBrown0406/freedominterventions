@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly central attribution aggregates (not Monday SEO)
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=120
+Persistent=true
+Unit=central-attribution.service
+
+[Install]
+WantedBy=timers.target

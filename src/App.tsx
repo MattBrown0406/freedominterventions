@@ -221,6 +221,16 @@ const NextStepDocument = () => {
   return <PageLoader />;
 };
 
+// A private screen must never mount inside a previously public/replayed document.
+const privateDocumentAtBoot = /^\/(admin(?:-login)?|family-portal)(\/|$)/i.test(window.location.pathname);
+const PrivateDocument = ({ children }: { children: React.ReactNode }) => {
+  if (!privateDocumentAtBoot) {
+    window.location.replace(window.location.href);
+    return <PageLoader />;
+  }
+  return <>{children}</>;
+};
+
 const PublicConversionChrome = () => {
   const { pathname } = useLocation();
   const isPrivateRoute =
@@ -308,9 +318,9 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/assessment" element={<Assessment />} />
             <Route path="/self-assessment" element={<SelfAssessment />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/family-portal" element={<FamilyPortal />} />
+            <Route path="/admin-login" element={<PrivateDocument><AdminLogin /></PrivateDocument>} />
+            <Route path="/admin" element={<PrivateDocument><AdminDashboard /></PrivateDocument>} />
+            <Route path="/family-portal" element={<PrivateDocument><FamilyPortal /></PrivateDocument>} />
             <Route path="/reschedule" element={<Reschedule />} />
             <Route path="/substance-guide" element={<SubstanceGuide />} />
             <Route

@@ -1,0 +1,15 @@
+[Unit]
+Description=Freedom aggregate-only central attribution feed
+After=network-online.target docker.service
+Wants=network-online.target
+ConditionPathExists=/root/.config/central-attribution/ingest.env
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/central-attribution-dashboard/repo
+EnvironmentFile=/root/.config/central-attribution/ingest.env
+UMask=0077
+ExecStart=/usr/local/lib/hermes-agent/venv/bin/python3 scripts/central-attribution/collect.py --days 28 --output /root/central-attribution-dashboard/latest-aggregates.json --push
+TimeoutStartSec=300
+# Template only: install after authorized target deployment/readback.
