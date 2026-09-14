@@ -134,11 +134,15 @@ export default function RevenueAttributionManager() {
     }
   }, [start, end, site]);
   useEffect(() => {
+    if (mode !== "central") {
+      setLoading(false);
+      return;
+    }
     void load();
     return () => {
       generation.current++;
     };
-  }, [load]);
+  }, [load, mode]);
   const selectedSites = Object.entries(sites).filter(
     ([key]) => !site || key === site,
   );
