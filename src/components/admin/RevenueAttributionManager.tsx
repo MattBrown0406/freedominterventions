@@ -167,6 +167,18 @@ export default function RevenueAttributionManager() {
     setStart(daysBefore(today, days - 1));
     setEnd(today);
   };
+  if (mode === "operational") {
+    return (
+      <section className="space-y-6" aria-label="Attribution">
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Button variant="outline" onClick={() => setMode("central")}>
+            Ecosystem feed (new)
+          </Button>
+        </div>
+        <LegacyRevenueAttributionManager />
+      </section>
+    );
+  }
   if (backendMissing && !loading) {
     return (
       <section className="space-y-6" aria-label="Legacy attribution while central backend is unavailable">
@@ -192,17 +204,23 @@ export default function RevenueAttributionManager() {
             Pacific time.
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => void load()}
-          disabled={loading}
-        >
-          <RefreshCw
-            className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
-          />
-          Refresh
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" onClick={() => setMode("operational")}>
+            Back to Freedom attribution
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => void load()}
+            disabled={loading}
+          >
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </Button>
+        </div>
       </div>
+
       <div className="flex flex-wrap items-end gap-3 rounded-xl border bg-muted/30 p-4">
         <label className="flex flex-col gap-1 text-sm">
           Website / business
