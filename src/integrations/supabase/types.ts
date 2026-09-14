@@ -790,6 +790,66 @@ export type Database = {
         }
         Relationships: []
       }
+      attribution_daily: {
+        Row: {
+          channel: string
+          day: string
+          feed: string
+          metric: string
+          observed_at: string
+          site: string
+          value: number
+        }
+        Insert: {
+          channel: string
+          day: string
+          feed: string
+          metric: string
+          observed_at: string
+          site: string
+          value: number
+        }
+        Update: {
+          channel?: string
+          day?: string
+          feed?: string
+          metric?: string
+          observed_at?: string
+          site?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      attribution_feeds: {
+        Row: {
+          checked_at: string
+          coverage_end: string | null
+          coverage_start: string | null
+          feed: string
+          last_success_at: string | null
+          site: string
+          status: string
+        }
+        Insert: {
+          checked_at: string
+          coverage_end?: string | null
+          coverage_start?: string | null
+          feed: string
+          last_success_at?: string | null
+          site: string
+          status: string
+        }
+        Update: {
+          checked_at?: string
+          coverage_end?: string | null
+          coverage_start?: string | null
+          feed?: string
+          last_success_at?: string | null
+          site?: string
+          status?: string
+        }
+        Relationships: []
+      }
       availability_settings: {
         Row: {
           created_at: string
@@ -1707,10 +1767,26 @@ export type Database = {
         Args: { p_key: string; p_max_hits: number; p_window_seconds: number }
         Returns: boolean
       }
+      get_central_attribution: {
+        Args: { p_end: string; p_site?: string; p_start: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
+        }
+        Returns: boolean
+      }
+      ingest_attribution_snapshot: {
+        Args: {
+          p_end: string
+          p_feed: string
+          p_observed: string
+          p_rows: Json
+          p_site: string
+          p_start: string
+          p_status: string
         }
         Returns: boolean
       }

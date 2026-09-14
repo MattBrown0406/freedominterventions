@@ -1,5 +1,4 @@
 -- Aggregate-only attribution. No contacts, caller IDs, transcripts or arbitrary payloads.
-begin;
 create table public.attribution_daily (
   feed text not null check(feed in ('livekit','ga4')),
   site text not null check(site in ('freedom','sober_helpline','nme','partywreckers','familybridge','ayuda_sobria','unknown')),
@@ -74,4 +73,3 @@ begin
 end $$;
 revoke all on function public.get_central_attribution(date,date,text) from public,anon;
 grant execute on function public.get_central_attribution(date,date,text) to authenticated;
-commit;
