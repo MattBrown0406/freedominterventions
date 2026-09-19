@@ -38,6 +38,8 @@ import TrailingSlashRedirect from "./components/TrailingSlashRedirect";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
 import TermsOfService from "./pages/TermsOfService";
+import ReferralFitPrivacy from "./pages/ReferralFitPrivacy";
+import ReferralFitTerms from "./pages/ReferralFitTerms";
 import HipaaCompliance from "./pages/HipaaCompliance";
 import HowInterventionWorks from "./pages/HowInterventionWorks";
 import WhenIsItTime from "./pages/WhenIsItTime";
@@ -371,6 +373,8 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/referralfit/privacy" element={<ReferralFitPrivacy />} />
+            <Route path="/referralfit/terms" element={<ReferralFitTerms />} />
             <Route path="/hipaa-compliance" element={<HipaaCompliance />} />
 
             {/* US States */}

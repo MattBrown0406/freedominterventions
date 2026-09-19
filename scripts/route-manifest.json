@@ -32,6 +32,8 @@
   { "path": "/terms", "priority": "0.3", "changefreq": "yearly" },
   { "path": "/terms-of-service", "priority": "0.3", "changefreq": "yearly" },
   { "path": "/hipaa-compliance", "priority": "0.3", "changefreq": "yearly" },
+  { "path": "/referralfit/privacy", "priority": "0.3", "changefreq": "yearly" },
+  { "path": "/referralfit/terms", "priority": "0.3", "changefreq": "yearly" },
   { "path": "/alabama", "priority": "0.6", "changefreq": "monthly" },
   { "path": "/alaska", "priority": "0.6", "changefreq": "monthly" },
   { "path": "/arizona", "priority": "0.6", "changefreq": "monthly" },
