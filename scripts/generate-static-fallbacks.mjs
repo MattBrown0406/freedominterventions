@@ -7,6 +7,7 @@ import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
 import { COST_ANSWER_ROUTE, costAnswerMetadata } from "./answer-fallback.mjs";
 import { pageFallbackSources, pageFallbackMetadata } from "./page-fallback.mjs";
 import { FULL_GUIDE_ROUTE, renderFullGuide, installFullGuide } from "./full-guide-fallback.mjs";
+import { SERVICE_AREAS_ROUTE, renderServiceAreas, installServiceAreas } from "./service-areas-fallback.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -374,6 +375,7 @@ const main = async () => {
 
   const template = await readFile(indexFile, "utf8");
   const fullGuide = await renderFullGuide(root);
+  const serviceAreas = await renderServiceAreas(root);
   const routes = await getRoutes();
   staticMetadata[COST_ANSWER_ROUTE] = costAnswerMetadata(await readFile(interventionAnswersFile, "utf8"));
 
@@ -390,6 +392,7 @@ const main = async () => {
       metadata,
     ));
     if (route === FULL_GUIDE_ROUTE) html = installFullGuide(html, fullGuide);
+    if (route === SERVICE_AREAS_ROUTE) html = installServiceAreas(html, serviceAreas);
     const destinations = outputPaths(route);
     for (const destination of destinations) {
       await mkdir(path.dirname(destination), { recursive: true });

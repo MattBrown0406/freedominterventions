@@ -83,6 +83,7 @@ const ServiceAreas = () => {
 
       <Navbar />
 
+      <main id="service-areas-content">
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-6">
@@ -310,6 +311,7 @@ const ServiceAreas = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );
