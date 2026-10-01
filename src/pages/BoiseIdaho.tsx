@@ -65,7 +65,7 @@ const BoiseIdaho = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild variant="outline" size="lg">
-                <Link to="/book-intervention-consultation#booking">
+                <Link to="/book-intervention-consultation?type=consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>
@@ -224,7 +224,7 @@ const BoiseIdaho = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild variant="outline" size="lg">
-                <Link to="/book-intervention-consultation#booking">
+                <Link to="/book-intervention-consultation?type=consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>

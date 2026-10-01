@@ -60,7 +60,7 @@ const FortWorthTexas = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/book-intervention-consultation#booking">
+                <Link to="/book-intervention-consultation?type=consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>
@@ -216,7 +216,7 @@ const FortWorthTexas = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link to="/book-intervention-consultation#booking">
+                <Link to="/book-intervention-consultation?type=consultation#booking">
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Confidential Consultation
                 </Link>

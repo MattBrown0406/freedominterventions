@@ -187,6 +187,16 @@ const StartContract = () => {
     }
   }, [toast]);
 
+  // If the visitor comes back from Square via the back button (bfcache restore),
+  // re-enable the checkout button that was left disabled during the redirect.
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setIsLaunching(false);
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   const onSubmit = async (data: ContractFormData) => {
     setIsLaunching(true);
     const agreementSignedAt = new Date().toISOString();
@@ -262,7 +272,6 @@ const StartContract = () => {
       });
 
       const contractId = crypto.randomUUID();
-      const pdfPath = `intervention/${contractId}.pdf`;
       const bookingDate = new Date().toISOString().slice(0, 10);
       const contractResponse = await supabase.functions.invoke("contracts", {
         body: {
@@ -272,13 +281,11 @@ const StartContract = () => {
           clientName: data.clientName.trim(),
           clientPhone: data.clientPhone.trim(),
           signerName: data.signerName.trim(),
-          signedAt: agreementSignedAt,
           agreementText,
           agreementVersion: INTERVENTION_CONTRACT_VERSION,
           amountCents: resolvedFinalAmountCents,
           discountCode: resolvedDiscountCode || null,
           discountCents: resolvedDiscountCents,
-          contractPdfPath: pdfPath,
           contractPdfBase64: pdfBase64,
           metadata: {
             lovedOneName: data.lovedOneName.trim(),
@@ -320,6 +327,8 @@ const StartContract = () => {
         discountCode: resolvedDiscountCode,
       });
 
+      // Leave the button disabled while the browser navigates to Square, so a
+      // second click can't create a duplicate contract / payment link.
       window.location.href = checkoutResponse.data.checkoutUrl;
     } catch (error) {
       console.error("Contract checkout error:", error);
@@ -328,7 +337,6 @@ const StartContract = () => {
         description: error instanceof Error ? error.message : "Please try again. If this keeps happening, copy the browser console error and the exact step where it failed.",
         variant: "destructive",
       });
-    } finally {
       setIsLaunching(false);
     }
   };

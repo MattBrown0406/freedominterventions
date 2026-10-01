@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { sendResendEmail } from "../_shared/resend.ts";
+import { escapeHtml, sendResendEmail } from "../_shared/resend.ts";
+import { isServiceOrAdmin, unauthorized } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -15,6 +16,8 @@ interface FollowupRow {
   contact_name: string;
   recipient_type: "lead" | "owner";
   followup_reason: string;
+  priority: string;
+  due_at: string;
   subject: string;
   body_html: string;
   created_at: string;
@@ -27,27 +30,35 @@ function openPixel(followupId: string) {
   return `<img src="${src}" alt="" width="1" height="1" style="display:block;width:1px;height:1px;border:0;opacity:0;" />`;
 }
 
-function wrapEmail(body: string, trackingPixel = "") {
+const SITE_URL = "https://freedominterventions.com";
+// priority is a text column, so ORDER BY sorts alphabetically (urgent, normal, high); rank in code instead.
+const PRIORITY_RANK: Record<string, number> = { urgent: 0, high: 1, normal: 2 };
+
+function wrapEmail(body: string, trackingPixel = "", unsubscribeToken: string | null = null) {
+  // Same link format as send-campaign / the /unsubscribe page.
+  const unsubscribeLine = unsubscribeToken
+    ? `<br><a href="${escapeHtml(`${SITE_URL}/unsubscribe?token=${encodeURIComponent(unsubscribeToken)}`)}" style="color:#6b7280;">Unsubscribe</a>`
+    : "";
   return `
     <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#1f2937;line-height:1.6;">
       ${body}
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0 14px;">
       <p style="font-size:12px;color:#6b7280;">
-        Freedom Interventions · Matt Brown · <a href="tel:+14582988000" style="color:#1e40af;">458-298-8000</a>
+        Freedom Interventions · Matt Brown · <a href="tel:+14582988000" style="color:#1e40af;">458-298-8000</a>${unsubscribeLine}
       </p>
       ${trackingPixel}
     </div>
   `;
 }
 
-async function sendEmail(row: FollowupRow) {
+async function sendEmail(row: FollowupRow, unsubscribeToken: string | null) {
   const isOwner = row.recipient_type === "owner";
   const toEmail = isOwner ? "matt@freedominterventions.com" : row.contact_email;
   await sendResendEmail({
     to: toEmail,
     subject: row.subject,
     // Only track opens on emails going out to families, never on internal owner alerts.
-    html: wrapEmail(row.body_html, isOwner ? "" : openPixel(row.id)),
+    html: wrapEmail(row.body_html, isOwner ? "" : openPixel(row.id), isOwner ? null : unsubscribeToken),
     replyTo: "matt@freedominterventions.com",
   });
 }
@@ -85,23 +96,19 @@ async function shouldSkipBecauseConverted(supabase: any, row: FollowupRow) {
   return Boolean(bookings?.length || contracts?.length);
 }
 
-async function isAdminRequest(req: Request, supabase: any) {
-  const authHeader = req.headers.get("authorization") || "";
-  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
-  if (!token) return false;
-
-  const { data: userData, error: userError } = await supabase.auth.getUser(token);
-  const userId = userData?.user?.id;
-  if (userError || !userId) return false;
-
-  const { data: role } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
-
-  return Boolean(role);
+/** Lead has replied to any follow-up in this lead's sequence (or, without a lead_id, to this address). */
+async function leadHasReplied(supabase: any, row: FollowupRow) {
+  let query = supabase
+    .from("freedom_followup_queue")
+    .select("id")
+    .not("replied_at", "is", null)
+    .limit(1);
+  query = row.lead_id
+    ? query.eq("lead_type", row.lead_type).eq("lead_id", row.lead_id)
+    : query.eq("contact_email", row.contact_email);
+  const { data, error } = await query;
+  if (error) throw new Error(`Reply check failed: ${error.message}`);
+  return Boolean(data?.length);
 }
 
 serve(async (req: Request) => {
@@ -109,21 +116,15 @@ serve(async (req: Request) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Fail closed: cron (service-role bearer and/or x-automation-secret) or a strict admin.
+  if (!(await isServiceOrAdmin(req, "FOLLOWUP_AUTOMATION_SECRET"))) {
+    return unauthorized(corsHeaders);
+  }
+
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
-
-    const expectedSecret = Deno.env.get("FOLLOWUP_AUTOMATION_SECRET");
-    if (expectedSecret && req.headers.get("x-automation-secret") !== expectedSecret) {
-      const admin = await isAdminRequest(req, supabase);
-      if (!admin) {
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-    }
 
     let followupId: string | null = null;
     try {
@@ -145,39 +146,78 @@ serve(async (req: Request) => {
       query = query.lte("due_at", new Date().toISOString());
     }
 
-    const { data: rows, error } = await query
-      .order("priority", { ascending: false })
+    const { data: candidates, error } = await query
       .order("due_at", { ascending: true })
-      .limit(25);
+      .limit(200);
 
     if (error) throw error;
 
-    const results = { processed: 0, sent: 0, skipped: 0, failed: 0 };
+    const rows = ((candidates || []) as FollowupRow[])
+      .sort((a, b) =>
+        (PRIORITY_RANK[a.priority] ?? 3) - (PRIORITY_RANK[b.priority] ?? 3) ||
+        a.due_at.localeCompare(b.due_at)
+      )
+      .slice(0, 25);
 
-    for (const row of (rows || []) as FollowupRow[]) {
+    const results = { processed: 0, sent: 0, skipped: 0, failed: 0 };
+    const skip = async (row: FollowupRow, reason: string) => {
+      await supabase
+        .from("freedom_followup_queue")
+        .update({ status: "skipped", sent_at: null, error_message: reason })
+        .eq("id", row.id);
+      results.skipped++;
+    };
+
+    for (const row of rows) {
+      // Atomically claim the row (pending -> done) so overlapping cron runs or a double-click
+      // can't send it twice. On skip/failure the status is corrected below.
+      const { data: claimed, error: claimError } = await supabase
+        .from("freedom_followup_queue")
+        .update({ status: "done", sent_at: new Date().toISOString(), error_message: null })
+        .eq("id", row.id)
+        .eq("status", "pending")
+        .select("id");
+      if (claimError) {
+        console.error(`Follow-up ${row.id} claim failed:`, claimError.message);
+        continue;
+      }
+      if (!claimed?.length) continue; // claimed by another run
+
       results.processed++;
       try {
+        let unsubscribeToken: string | null = null;
+        if (row.recipient_type !== "owner") {
+          const { data: contact, error: contactError } = await supabase
+            .from("crm_contacts")
+            .select("unsubscribed, unsubscribe_token")
+            .eq("email", row.contact_email.toLowerCase().trim())
+            .maybeSingle();
+          if (contactError) throw new Error(`Contact lookup failed: ${contactError.message}`);
+          if (contact?.unsubscribed) {
+            await skip(row, "Skipped because contact unsubscribed");
+            continue;
+          }
+          unsubscribeToken = contact?.unsubscribe_token ?? null;
+
+          if (await leadHasReplied(supabase, row)) {
+            await skip(row, "Skipped because lead already replied");
+            continue;
+          }
+        }
+
         if (await shouldSkipBecauseConverted(supabase, row)) {
-          await supabase
-            .from("freedom_followup_queue")
-            .update({ status: "skipped", error_message: "Skipped because lead converted or completed the next step" })
-            .eq("id", row.id);
-          results.skipped++;
+          await skip(row, "Skipped because lead converted or completed the next step");
           continue;
         }
 
-        await sendEmail(row);
-        await supabase
-          .from("freedom_followup_queue")
-          .update({ status: "done", sent_at: new Date().toISOString(), error_message: null })
-          .eq("id", row.id);
+        await sendEmail(row, unsubscribeToken);
         results.sent++;
       } catch (sendError) {
         const message = sendError instanceof Error ? sendError.message : "Unknown follow-up error";
         console.error(`Follow-up ${row.id} failed:`, message);
         await supabase
           .from("freedom_followup_queue")
-          .update({ status: "failed", error_message: message })
+          .update({ status: "failed", sent_at: null, error_message: message })
           .eq("id", row.id);
         results.failed++;
       }

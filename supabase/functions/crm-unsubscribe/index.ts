@@ -27,7 +27,11 @@ Deno.serve(async (req) => {
     token = String(body.token || token);
   }
 
-  if (!/^[0-9a-f-]{36}$/i.test(token)) return json({ error: "Invalid unsubscribe token" }, 400);
+  // Prod tokens default to replace(gen_random_uuid()::text, '-', '') (32 hex); also accept hyphenated UUIDs.
+  token = token.trim();
+  if (!/^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.test(token)) {
+    return json({ error: "Invalid unsubscribe token" }, 400);
+  }
 
   const { data: contact, error } = await admin
     .from("crm_contacts")

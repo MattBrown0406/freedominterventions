@@ -5,8 +5,9 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
 import { markHelmetManagedTags } from "./helmet-markup.mjs";
-import { canonicalRouteAliases } from "./seo-routes.mjs";
+import { SITE_URL, canonicalRouteAliases, excludedSitemapRoutes } from "./seo-routes.mjs";
 import { removePilotSummary } from "./full-guide-fallback.mjs";
+import { recordBuildWarning } from "./build-warnings.mjs";
 
 const defaultChromeExecutablePath =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -27,6 +28,13 @@ const previewPort = Number(process.env.PRERENDER_PREVIEW_PORT || 4274);
 const previewOrigin = `http://127.0.0.1:${previewPort}`;
 const heavyAssetPattern =
   /\.(png|jpe?g|webp|gif|svg|ico|woff2?|ttf|otf|mp4|webm|mov)(\?.*)?$/i;
+// Prerendering must never record real analytics/page views.
+const analyticsRequestPattern =
+  /^https?:\/\/(?:[^/]+\.)?(?:googletagmanager\.com|google-analytics\.com|clarity\.ms)(?:[/:?]|$)|\/functions\/v1\/track-freedom-event\b/i;
+const injectedAnalyticsScriptSelector =
+  'script[src*="googletagmanager.com"], script[src*="google-analytics.com"], script[src*="clarity.ms"]';
+const readinessTimeoutMs = Number(process.env.PRERENDER_READY_TIMEOUT_MS || 30000);
+const maxConsecutiveReadinessFailures = 10;
 
 const loadEnv = async () => {
   const env = {
@@ -106,6 +114,13 @@ const toOutputPaths = (route) => {
   ];
 };
 
+const expectedCanonical = (route) => {
+  const target = canonicalRouteAliases.get(route) ?? route;
+  return target === "/" ? SITE_URL : `${SITE_URL}${target.toLowerCase()}`;
+};
+
+// Wait for route-specific content, not just any text: the Suspense loader
+// ("Loading...") and the Navbar "Blog" link must not count as ready.
 const waitForAppReady = async (page, route) => {
   try {
     await page.waitForLoadState("networkidle", { timeout: 2500 });
@@ -114,25 +129,38 @@ const waitForAppReady = async (page, route) => {
   }
 
   await page.waitForFunction(
-    () => {
+    ({ strict, canonical, isBlogIndex, isBlogPost }) => {
       const root = document.querySelector("#root");
-      return !!root && root.textContent && root.textContent.trim().length > 0;
+      const text = root?.textContent?.trim() || "";
+      if (!text || /^Loading\.*$/i.test(text)) return false;
+      // Private/noindex routes (admin, redirects, 404) only need a rendered app.
+      if (!strict) return true;
+
+      const heading = [...root.querySelectorAll("h1")].some((h1) => {
+        const value = h1.textContent?.trim() || "";
+        return value && !/^Loading\b/i.test(value);
+      });
+      if (!heading) return false;
+
+      const canonicals = document.head.querySelectorAll('link[rel="canonical"]');
+      if (canonicals.length !== 1 || canonicals[0].getAttribute("href") !== canonical) return false;
+
+      if (isBlogIndex) {
+        const postLinks = [...root.querySelectorAll('a[href^="/blog/"]')]
+          .filter((link) => !link.closest("nav, header, footer"));
+        if (!postLinks.length) return false;
+      }
+      if (isBlogPost && !/Back to Blog/.test(document.body.innerText)) return false;
+      return true;
     },
-    { timeout: 30000 },
+    {
+      strict: !excludedSitemapRoutes.has(route),
+      canonical: expectedCanonical(route),
+      isBlogIndex: route === "/blog",
+      isBlogPost: route.startsWith("/blog/"),
+    },
+    { timeout: readinessTimeoutMs },
   );
-
-  if (route === "/blog") {
-    await page.waitForFunction(() => /\bBlog\b/.test(document.body.innerText), {
-      timeout: 30000,
-    });
-  }
-
-  if (route.startsWith("/blog/")) {
-    await page.waitForFunction(
-      () => /Back to Blog/.test(document.body.innerText),
-      { timeout: 30000 },
-    );
-  }
 
   await page.waitForTimeout(150);
 };
@@ -222,8 +250,10 @@ const main = async () => {
     const message =
       "Playwright/Chrome is required for prerendering SEO pages. Set ALLOW_PRERENDER_SKIP=true only for local development.";
     if (process.env.ALLOW_PRERENDER_SKIP === "true") {
-      console.warn(`⚠️  ${message}`);
-      console.warn("   Skipping prerender because ALLOW_PRERENDER_SKIP=true.");
+      recordBuildWarning(
+        "prerender",
+        `SKIPPED ENTIRELY: ${message} (${e?.message?.split("\n")[0] || e}). ALLOW_PRERENDER_SKIP=true, so this build ships static fallbacks only (no rendered page content).`,
+      );
       return;
     }
     throw new Error(message);
@@ -240,6 +270,7 @@ const main = async () => {
   const browser = await chromium.launch(resolveChromiumLaunchOptions());
   const context = await browser.newContext();
   await context.route(heavyAssetPattern, (route) => route.abort());
+  await context.route((url) => analyticsRequestPattern.test(url.href), (route) => route.abort());
 
   try {
     await ready;
@@ -247,6 +278,10 @@ const main = async () => {
       `Prerendering ${routes.length} routes (${blogRoutes.length} blog posts)`,
     );
 
+    const notReady = [];
+    let consecutiveFailures = 0;
+    let aborted = false;
+    let rendered = 0;
     for (const [index, route] of routes.entries()) {
       if (index === 0 || index % 25 === 0 || index === routes.length - 1) {
         console.log(`  ${index + 1}/${routes.length}: ${route}`);
@@ -265,17 +300,47 @@ const main = async () => {
 
       try {
         await waitForAppReady(page, route);
-      } catch (error) {
-        throw new Error(`Prerender content did not become ready for ${route}`, { cause: error });
+      } catch {
+        // Keep the existing static fallback rather than writing a loader or
+        // half-rendered snapshot over it.
+        notReady.push(route);
+        consecutiveFailures += 1;
+        console.warn(`⚠️  Prerender not ready for ${route}; keeping its static fallback.`);
+        await page.close();
+        if (consecutiveFailures >= maxConsecutiveReadinessFailures) {
+          aborted = true;
+          break;
+        }
+        continue;
       }
+      consecutiveFailures = 0;
 
+      await page.evaluate((selector) => {
+        document.querySelectorAll(selector).forEach((node) => node.remove());
+      }, injectedAnalyticsScriptSelector);
       const html = markHelmetManagedTags(removePilotSummary(await page.content(), route));
+      // page.content() already serializes the doctype.
+      const output = /^\s*<!doctype/i.test(html) ? html : `<!DOCTYPE html>\n${html}`;
       const outputPaths = toOutputPaths(route);
       for (const outputPath of outputPaths) {
         await mkdir(path.dirname(outputPath), { recursive: true });
-        await writeFile(outputPath, `<!DOCTYPE html>\n${html}`, "utf8");
+        await writeFile(outputPath, output, "utf8");
       }
+      rendered += 1;
       await page.close();
+    }
+
+    if (notReady.length) {
+      recordBuildWarning(
+        "prerender",
+        `${notReady.length} route(s) never became ready and kept their static fallback: ${notReady.slice(0, 20).join(", ")}${notReady.length > 20 ? ", ..." : ""}`,
+      );
+    }
+    if (aborted) {
+      recordBuildWarning(
+        "prerender",
+        `ABORTED after ${maxConsecutiveReadinessFailures} consecutive readiness failures; remaining routes kept their static fallbacks.`,
+      );
     }
 
     if (existsSync(path.join(distDir, "200.html"))) {
@@ -283,7 +348,7 @@ const main = async () => {
     }
 
     console.log(
-      `✅ Prerendered ${routes.length} routes (${blogRoutes.length} blog posts)`,
+      `✅ Prerendered ${rendered}/${routes.length} routes (${blogRoutes.length} blog posts discovered)`,
     );
   } finally {
     await context.close();

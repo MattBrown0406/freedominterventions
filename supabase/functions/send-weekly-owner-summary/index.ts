@@ -140,6 +140,8 @@ const formatDate = (value: string | null) => {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
+    timeZone: "America/Los_Angeles",
+    timeZoneName: "short",
   }).format(new Date(value));
 };
 
@@ -439,7 +441,7 @@ function buildEmailHtml(params: {
 }) {
   const bestChannel = params.channelStats[0];
   const callToConsultGap = Math.max(params.totals.calls - params.totals.consultations, 0);
-  const range = `${params.start.toLocaleDateString("en-US", { month: "short", day: "numeric" })} - ${params.end.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+  const range = `${params.start.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Los_Angeles" })} - ${params.end.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Los_Angeles" })}`;
   const rows = params.channelStats.slice(0, 6).map((row) => `
     <tr>
       <td style="padding:10px;border-bottom:1px solid #e5e7eb;"><strong>${escapeHtml(sourceTitle(row.source))}</strong></td>
@@ -630,9 +632,8 @@ serve(async (req: Request) => {
           .select("id,contact_name,contact_email,contact_phone,followup_reason,priority,status,source_attribution,due_at,created_at")
           .eq("status", "pending")
           .lte("due_at", now)
-          .order("priority", { ascending: false })
           .order("due_at", { ascending: true })
-          .limit(50),
+          .limit(500),
         dataIssues,
       ),
       queryRows<EventRow>(
@@ -647,6 +648,13 @@ serve(async (req: Request) => {
         dataIssues,
       ),
     ]);
+
+    // priority is text (alphabetical ORDER BY would put normal before high), so rank in code.
+    const priorityRank: Record<string, number> = { urgent: 0, high: 1, normal: 2 };
+    dueFollowups.sort((a, b) =>
+      (priorityRank[a.priority] ?? 3) - (priorityRank[b.priority] ?? 3) ||
+      String(a.due_at).localeCompare(String(b.due_at))
+    );
 
     const channelStats = buildChannelStats(contacts, assessments, bookings, contracts, calls, dueFollowups);
     const answerPageStats = buildAnswerPageStats(answerEvents, calls);
@@ -689,7 +697,7 @@ serve(async (req: Request) => {
       .sort((a, b) => (b.lead_score || 0) - (a.lead_score || 0))
       .slice(0, 10);
 
-    const subjectDate = end.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const subjectDate = end.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Los_Angeles" });
     const html = buildEmailHtml({
       start,
       end,

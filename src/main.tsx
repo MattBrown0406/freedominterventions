@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+// Must run before any module loads the Supabase client (which clears the URL hash).
+import "@/lib/authRedirect";
 
 // A fresh document isolates the guide from analytics/replay and application integrations.
 const isNextStep = /^\/next-step\/*$/i.test(window.location.pathname);

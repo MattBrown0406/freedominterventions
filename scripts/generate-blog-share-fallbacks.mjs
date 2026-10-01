@@ -5,12 +5,16 @@ import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 import { fitSeoDescription, markHelmetManagedTags } from "./helmet-markup.mjs";
 import { canonicalRouteAliases } from "./seo-routes.mjs";
+import { recordBuildWarning } from "./build-warnings.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..");
 const distDir = path.join(root, "dist");
 const indexFile = path.join(distDir, "index.html");
+// Pristine Vite shell snapshotted by generate-static-fallbacks.mjs before it
+// rewrites dist/index.html with the home page fallback.
+const spaShellFile = path.join(distDir, "spa-shell.html");
 const envFile = path.join(root, ".env");
 const BASE_URL = "https://freedominterventions.com";
 
@@ -68,14 +72,13 @@ const imageType = (url) => {
   return "image/jpeg";
 };
 
+// Attribute-tolerant: also matches tags carrying data-react-helmet or other attributes.
 const stripManagedHeadTags = (html) =>
   html
-    .replace(/<meta name="description" content="[^"]*"\s*\/?>\n?/gi, "")
-    .replace(/<meta name="robots" content="[^"]*"\s*\/?>\n?/gi, "")
-    .replace(/<link rel="canonical" href="[^"]*"\s*\/?>\n?/gi, "")
-    .replace(/<meta property="og:[^"]+" content="[^"]*"\s*\/?>\n?/gi, "")
-    .replace(/<meta name="twitter:[^"]+" content="[^"]*"\s*\/?>\n?/gi, "")
-    .replace(/<meta property="article:[^"]+" content="[^"]*"\s*\/?>\n?/gi, "");
+    .replace(/[ \t]*<meta\b[^>]*\bname="(?:description|robots|title)"[^>]*>\n?/gi, "")
+    .replace(/[ \t]*<link\b[^>]*\brel="canonical"[^>]*>\n?/gi, "")
+    .replace(/[ \t]*<meta\b[^>]*\bproperty="(?:og|article):[^"]+"[^>]*>\n?/gi, "")
+    .replace(/[ \t]*<meta\b[^>]*\bname="twitter:[^"]+"[^>]*>\n?/gi, "");
 
 const toPlainText = (value = "") => String(value)
   .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -100,8 +103,13 @@ const fallbackHtml = ({ title, excerpt, content, imageUrl, canonical }) => `
       </div>
 `;
 
+// Target the body content fallback, not the font-stylesheet <noscript> in <head>
+// (same selector as generate-static-fallbacks.mjs).
 const replaceNoscript = (html, metadata) =>
-  html.replace(/<noscript>[\s\S]*?<\/noscript>/, `<noscript>${fallbackHtml(metadata)}    </noscript>`);
+  html.replace(
+    /<noscript>\s*<div style="max-width:[\s\S]*?<\/div>\s*<\/noscript>/,
+    `<noscript>${fallbackHtml(metadata)}    </noscript>`,
+  );
 
 const upsertHead = (html, post) => {
   const route = `/blog/${post.slug}`;
@@ -130,11 +138,11 @@ const upsertHead = (html, post) => {
   const tags = [
     `<meta name="description" content="${escapeHtml(description)}">`,
     `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">`,
-    `<link rel="canonical" href="${canonical}">`,
+    `<link rel="canonical" href="${escapeHtml(canonical)}">`,
     `<meta property="og:type" content="article">`,
     `<meta property="og:title" content="${escapeHtml(title)}">`,
     `<meta property="og:description" content="${escapeHtml(description)}">`,
-    `<meta property="og:url" content="${canonical}">`,
+    `<meta property="og:url" content="${escapeHtml(canonical)}">`,
     `<meta property="og:site_name" content="Freedom Interventions">`,
     `<meta property="og:locale" content="en_US">`,
     `<meta property="og:image" content="${escapeHtml(imageUrl)}">`,
@@ -153,7 +161,7 @@ const upsertHead = (html, post) => {
     `<script type="application/ld+json">${articleSchema}</script>`,
   ].filter(Boolean).join("\n    ");
 
-  const withCleanHead = stripManagedHeadTags(html).replace(/<title>.*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
+  const withCleanHead = stripManagedHeadTags(html).replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
   return replaceNoscript(withCleanHead.replace("</title>", `</title>\n    ${tags}`), {
     title: rawTitle,
     excerpt: description,
@@ -173,7 +181,7 @@ const main = async () => {
 
   const env = await loadEnv();
   if (!env.VITE_SUPABASE_URL || !env.VITE_SUPABASE_PUBLISHABLE_KEY) {
-    console.warn("Skipping blog share fallbacks: missing Supabase environment variables.");
+    recordBuildWarning("blog-share-fallbacks", "SKIPPED: missing VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY; /blog/<slug> raw HTML falls back to the SPA document.");
     return;
   }
 
@@ -189,11 +197,18 @@ const main = async () => {
 
   if (error) {
     if (process.env.BLOG_SHARE_FALLBACK_STRICT === "true") throw error;
-    console.warn(`Skipping blog share fallbacks: ${error.message || "Supabase query failed"}.`);
+    recordBuildWarning("blog-share-fallbacks", `SKIPPED: Supabase query failed (${error.message || "unknown error"}); /blog/<slug> raw HTML falls back to the SPA document. Set BLOG_SHARE_FALLBACK_STRICT=true to fail instead.`);
     return;
   }
 
-  const template = await readFile(indexFile, "utf8");
+  // Never use dist/index.html once generate-static-fallbacks has rewritten it
+  // into the home page; its home canonical/title would leak into every post.
+  const template = await readFile(existsSync(spaShellFile) ? spaShellFile : indexFile, "utf8");
+  if (/data-react-helmet=|rel="canonical"/i.test(template)) {
+    if (process.env.BLOG_SHARE_FALLBACK_STRICT === "true") throw new Error("Blog share fallback template is not the pristine Vite shell.");
+    recordBuildWarning("blog-share-fallbacks", "SKIPPED: template is not the pristine Vite shell (dist/spa-shell.html missing?). Run vite build, then generate-static-fallbacks first.");
+    return;
+  }
   for (const post of posts ?? []) {
     if (!post.slug || !post.title) continue;
     const html = markHelmetManagedTags(upsertHead(template, post));

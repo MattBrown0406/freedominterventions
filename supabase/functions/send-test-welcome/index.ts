@@ -1,4 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { isStrictAdminRequest, unauthorized } from "../_shared/auth.ts";
+import { escapeHtml } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,8 +14,11 @@ const SITE_URL = "https://freedominterventions.com";
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  if (!(await isStrictAdminRequest(req))) return unauthorized(corsHeaders);
+
   try {
     const { to = "matt@soberhelpline.com", name = "there" } = await req.json().catch(() => ({}));
+    if (typeof to !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) throw new Error("Invalid recipient email");
     const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
     if (!sendgridApiKey) throw new Error("SENDGRID_API_KEY not configured");
 
@@ -30,7 +35,7 @@ serve(async (req) => {
           <h1 style="color:#fbbf24;margin:0;font-size:22px;letter-spacing:0.5px;">FREEDOM INTERVENTIONS</h1>
         </td></tr>
         <tr><td style="padding:36px 32px;">
-          <h2 style="color:#1e3a8a;margin:0 0 18px;font-size:22px;">Thank You, ${name}</h2>
+          <h2 style="color:#1e3a8a;margin:0 0 18px;font-size:22px;">Thank You, ${escapeHtml(name)}</h2>
           <p style="font-size:16px;line-height:1.6;margin:0 0 18px;">
             Thank you for trusting Freedom Interventions to help your family. Reaching out for help is one of the hardest — and most courageous — steps a family can take, and I'm honored you've chosen me to walk alongside you.
           </p>

@@ -1,12 +1,13 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const NOTION_API_TOKEN = Deno.env.get("NOTION_API_TOKEN") ?? "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";
+const NOTION_API_TOKEN = Deno.env.get("NOTION_API_TOKEN");
 const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
 const CRM_DB_ID = "2bb286dad2cf81499fc8d8151ee033a8";
 const TELEGRAM_CHAT_ID = "7932321341";
@@ -143,7 +144,10 @@ function addDays(date: Date, days: number): Date {
 function inferState(value: string | null): string | null {
   if (!value) return null;
 
+  // Full state names match case-insensitively; 2-letter abbreviations only match as
+  // standalone UPPERCASE tokens so common words ("in", "or", "me", "ok") are ignored.
   const normalized = ` ${value.toLowerCase().replace(/[^a-z]/g, " ").replace(/\s+/g, " ").trim()} `;
+  const upperTokens = new Set(value.split(/[^A-Za-z]+/).filter((t) => t.length === 2 && t === t.toUpperCase()));
   const states: Array<[string, string[]]> = [
     ["Alabama", ["alabama", "al"]],
     ["Alaska", ["alaska", "ak"]],
@@ -197,10 +201,13 @@ function inferState(value: string | null): string | null {
     ["Wyoming", ["wyoming", "wy"]],
   ];
 
-  for (const [state, needles] of states) {
-    if (needles.some((needle) => normalized.includes(` ${needle} `))) {
-      return state;
-    }
+  // Longest names first so "West Virginia" wins over "Virginia".
+  const byName = [...states].sort((a, b) => b[0].length - a[0].length);
+  for (const [state, [name]] of byName) {
+    if (normalized.includes(` ${name} `)) return state;
+  }
+  for (const [state, [, abbr]] of states) {
+    if (upperTokens.has(abbr.toUpperCase())) return state;
   }
 
   return null;
@@ -424,6 +431,18 @@ serve(async (req) => {
     });
   }
 
+  if (!(await isServiceRoleRequest(req))) {
+    return unauthorized(corsHeaders);
+  }
+
+  if (!NOTION_API_TOKEN) {
+    console.error("assessment-to-notion: NOTION_API_TOKEN not configured");
+    return new Response(JSON.stringify({ success: false, error: "Notion integration not configured" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   let notionPageId: string | null = null;
   let notionSuccess = false;
   let telegramSuccess = false;
@@ -431,10 +450,6 @@ serve(async (req) => {
   let telegramError: string | null = null;
 
   try {
-    if (!NOTION_API_TOKEN) {
-      throw new Error("NOTION_API_TOKEN not configured");
-    }
-
     const payload = await req.json();
     const record = extractAssessmentRecord(payload);
     const asamLevel = calculateAsamLevel(record);

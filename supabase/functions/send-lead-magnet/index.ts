@@ -2,7 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
-import { checkRateLimit } from "../_shared/rateLimit.ts";
+import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { upsertCrmContact } from "../_shared/crm.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -51,7 +52,10 @@ function urgencyLabel(value: string | undefined) {
 async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName: string, cleanEmail: string, cleanPhone: string | null) {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!supabaseUrl || !serviceKey) return;
+  if (!supabaseUrl || !serviceKey) {
+    console.error("send-lead-magnet: Supabase env missing; lead not stored");
+    return;
+  }
 
   const supabase = createClient(supabaseUrl, serviceKey);
   const sourceAttribution = payload.sourceAttribution && typeof payload.sourceAttribution === "object"
@@ -75,7 +79,7 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
     payload.urgency === "refusing_treatment" ? 55 :
     payload.urgency === "family_divided" ? 45 : 35;
 
-  await supabase.from("crm_contacts").upsert({
+  const { error: crmError } = await upsertCrmContact(supabase, {
     email: cleanEmail,
     first_name: nameParts[0] || null,
     last_name: nameParts.slice(1).join(" ") || null,
@@ -87,8 +91,21 @@ async function storeLeadAndQueueFollowups(payload: LeadMagnetRequest, cleanName:
     pipeline_status: "new",
     next_action: leadScore >= 60 ? "Review checklist lead and offer readiness/consultation path" : "Send checklist and invite to consultation",
     next_action_due_at: new Date(Date.now() + (leadScore >= 60 ? 60 : 240) * 60 * 1000).toISOString(),
-    last_engagement_at: new Date().toISOString(),
-  }, { onConflict: "email" });
+  });
+  if (crmError) console.error("Failed to upsert lead-magnet CRM contact:", crmError);
+
+  // A retry of the same request (e.g. after an email failure) must not queue the sequence twice.
+  const { data: alreadyQueued } = await supabase
+    .from("freedom_followup_queue")
+    .select("id")
+    .eq("contact_email", cleanEmail)
+    .eq("followup_reason", "lead_magnet_checklist_confirmation")
+    .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+    .limit(1);
+  if (alreadyQueued?.length) {
+    console.log("Lead magnet sequence already queued in the last 24h for:", cleanEmail);
+    return;
+  }
 
   const first = firstName(cleanName);
   const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(cleanName)}&email=${encodeURIComponent(cleanEmail)}${cleanPhone ? `&phone=${encodeURIComponent(cleanPhone)}` : ""}#booking`;
@@ -219,7 +236,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
       throw new Error("Invalid name");
     }
-    if (!email || typeof email !== "string" || !email.includes("@") || email.length > 255) {
+    if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || email.length > 255) {
       throw new Error("Invalid email");
     }
 
@@ -227,12 +244,14 @@ const handler = async (req: Request): Promise<Response> => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPhone = typeof phone === "string" && phone.trim().length > 0 ? phone.trim().slice(0, 40) : null;
 
-    // Durable rate limit: 5 per hour per email
+    // Durable rate limits: 5 per hour per email and 10 per hour per IP
     const rlUrl = Deno.env.get("SUPABASE_URL");
     const rlKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (rlUrl && rlKey) {
       const rlClient = createClient(rlUrl, rlKey);
-      const allowed = await checkRateLimit(rlClient, `lead-magnet:${cleanEmail}`, 5, 3600);
+      const allowed =
+        (await checkRateLimit(rlClient, `lead-magnet-ip:${getClientIp(req)}`, 10, 3600)) &&
+        (await checkRateLimit(rlClient, `lead-magnet:${cleanEmail}`, 5, 3600));
       if (!allowed) {
         return new Response(
           JSON.stringify({ error: "Too many requests. Please try again later." }),
@@ -344,7 +363,14 @@ const handler = async (req: Request): Promise<Response> => {
 </html>
     `;
 
-    // Send the email
+    // Persist the lead + follow-up sequence first so an email failure never loses the lead.
+    try {
+      await storeLeadAndQueueFollowups(payload, cleanName, cleanEmail, cleanPhone);
+    } catch (storeError) {
+      console.error("Failed to store lead magnet lead:", storeError);
+    }
+
+    // Send the checklist. This is what the visitor asked for, so a failure is surfaced to them.
     await sendResendEmail({
       to: cleanEmail,
       subject: `${firstName(cleanName)}, your intervention checklist is ready`,
@@ -354,27 +380,29 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Lead magnet email sent successfully to:", cleanEmail);
 
-    // Also notify Matt about new lead
-    await sendSystemEmail({
-      to: "matt@freedominterventions.com",
-      replyTo: cleanEmail,
-      subject: `New Lead: ${cleanName} downloaded the checklist`,
-      html: `
-        <h2>New Lead Magnet Download</h2>
-        <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
-        <p><strong>Phone:</strong> ${escapeHtml(cleanPhone || "Not provided")}</p>
-        <p><strong>Urgency:</strong> ${escapeHtml(urgencyLabel(payload.urgency))}</p>
-        <p><strong>Source:</strong> ${escapeHtml(payload.source || "lead_magnet")}</p>
-        <p><strong>Page:</strong> ${escapeHtml(payload.pagePath || "Unknown")}</p>
-        <p><strong>Downloaded:</strong> Intervention Planning Checklist</p>
-        <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
-        <hr>
-        <p>Consider following up within 24-48 hours while they're actively researching.</p>
-      `,
-    });
-
-    await storeLeadAndQueueFollowups(payload, cleanName, cleanEmail, cleanPhone);
+    // Also notify Matt about new lead (best-effort)
+    try {
+      await sendSystemEmail({
+        to: "matt@freedominterventions.com",
+        replyTo: cleanEmail,
+        subject: `New Lead: ${cleanName} downloaded the checklist`,
+        html: `
+          <h2>New Lead Magnet Download</h2>
+          <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(cleanPhone || "Not provided")}</p>
+          <p><strong>Urgency:</strong> ${escapeHtml(urgencyLabel(payload.urgency))}</p>
+          <p><strong>Source:</strong> ${escapeHtml(payload.source || "lead_magnet")}</p>
+          <p><strong>Page:</strong> ${escapeHtml(payload.pagePath || "Unknown")}</p>
+          <p><strong>Downloaded:</strong> Intervention Planning Checklist</p>
+          <p><strong>Time:</strong> ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })} PT</p>
+          <hr>
+          <p>Consider following up within 24-48 hours while they're actively researching.</p>
+        `,
+      });
+    } catch (notifyError) {
+      console.error("Lead magnet owner notification failed:", notifyError);
+    }
 
     return new Response(
       JSON.stringify({ success: true }),

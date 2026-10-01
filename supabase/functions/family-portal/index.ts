@@ -69,6 +69,25 @@ async function requireAdmin(userClient: any) {
   return !error && data === true;
 }
 
+// listUsers() only returns one page (50 users by default), so page through
+// all auth users until the email is found.
+async function findAuthUserByEmail(adminClient: any, email: string) {
+  const target = email.toLowerCase();
+  const perPage = 1000;
+  for (let page = 1; page <= 100; page++) {
+    const { data, error } = await adminClient.auth.admin.listUsers({ page, perPage });
+    if (error) {
+      console.error("family portal listUsers error", error);
+      return null;
+    }
+    const users = (data?.users ?? []) as Array<{ id: string; email?: string | null }>;
+    const match = users.find((candidate) => candidate.email?.toLowerCase() === target);
+    if (match) return match;
+    if (users.length < perPage) return null;
+  }
+  return null;
+}
+
 async function maybeInviteFamilyUser(
   adminClient: any,
   email: string,
@@ -76,10 +95,7 @@ async function maybeInviteFamilyUser(
   caseId: string,
   shouldInvite: boolean,
 ) {
-  const { data: existingUsers } = await adminClient.auth.admin.listUsers();
-  const existing = existingUsers?.users?.find(
-    (candidate) => candidate.email?.toLowerCase() === email.toLowerCase(),
-  );
+  const existing = await findAuthUserByEmail(adminClient, email);
   if (existing?.id)
     return { invited: false, userId: existing.id, existingUser: true };
 
@@ -295,9 +311,31 @@ serve(async (req: Request) => {
         "risk_level",
         "is_active",
       ];
+      // NOT NULL columns may not be cleared; nullable ones become NULL when cleared.
+      const requiredText = new Set([
+        "family_name",
+        "primary_contact_name",
+        "primary_contact_email",
+        "status",
+        "phase",
+        "risk_level",
+      ]);
       const updates: Record<string, unknown> = {};
-      for (const key of allowed)
-        if (key in payload) updates[key] = payload[key] || null;
+      for (const key of allowed) {
+        if (!(key in payload)) continue;
+        const value = payload[key];
+        if (key === "is_active") {
+          if (typeof value === "boolean") updates[key] = value;
+          continue;
+        }
+        const text = asText(value);
+        if (requiredText.has(key)) {
+          if (!text) return json({ error: `${key.replace(/_/g, " ")} cannot be empty` }, 400);
+          updates[key] = key === "primary_contact_email" ? text.toLowerCase() : text;
+        } else {
+          updates[key] = text || null;
+        }
+      }
       const { data, error } = await adminClient
         .from("family_portal_cases")
         .update(updates)

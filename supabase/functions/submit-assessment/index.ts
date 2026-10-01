@@ -1,8 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
+import { escapeHtml, sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { upsertCrmContact } from "../_shared/crm.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,13 +12,15 @@ const corsHeaders = {
 
 const SITE_URL = "https://freedominterventions.com";
 
-function escapeHtml(value: string) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+// Form urgency values: crisis | urgent | soon | planning ("crisis" is the top level).
+const TOP_URGENCY = /\b(crisis|critical|immediate)\b/i;
+
+// Free-text "safety concerns" answers that mean "no concerns".
+function hasSafetyConcern(value: unknown): boolean {
+  if (typeof value !== "string") return false;
+  const v = value.trim().toLowerCase().replace(/[.!\s]+$/g, "");
+  if (!v) return false;
+  return !/^(none|no|nope|n\/?a|na|not applicable|nothing|no concerns?|none at this time|none currently|not at this time|-+)$/.test(v);
 }
 
 function includesYes(value: unknown) {
@@ -26,12 +29,12 @@ function includesYes(value: unknown) {
 
 function scoreAssessment(data: Record<string, any>) {
   let score = 25;
-  if (/urgent|high|immediate|critical/i.test(data.urgency_level || "")) score += 25;
+  if (/crisis|urgent|high|immediate|critical/i.test(data.urgency_level || "")) score += 25;
   if ((data.dsm_yes_count || 0) >= 6) score += 20;
   if (includesYes(data.overdose_history)) score += 20;
   if (includesYes(data.suicide_ideation) || includesYes(data.suicide_attempts_history)) score += 25;
   if (includesYes(data.violence_history)) score += 15;
-  if (includesYes(data.immediate_safety_concerns)) score += 20;
+  if (hasSafetyConcern(data.immediate_safety_concerns) && includesYes(data.immediate_safety_concerns)) score += 20;
   if (includesYes(data.family_ready_intervention)) score += 15;
   if (data.contact_phone) score += 5;
   return Math.min(score, 100);
@@ -47,41 +50,26 @@ async function queueAssessmentFollowups(supabase: any, assessmentId: string, ass
   const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(assessmentData.contact_name || "")}&email=${encodeURIComponent(assessmentData.contact_email || "")}${assessmentData.contact_phone ? `&phone=${encodeURIComponent(assessmentData.contact_phone)}` : ""}#booking`;
   const readinessUrl = `${SITE_URL}/intervention-readiness?source=assessment_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness`;
 
-  await supabase
-    .from("crm_contacts")
-    .update({
-      source_attribution: sourceAttribution,
-      lead_score: leadScore,
-      revenue_path: leadScore >= 75 ? "intervention_or_readiness" : "consultation_or_coaching",
-      pipeline_status: "new",
-      next_action: leadScore >= 75 ? "Call this assessment lead first" : "Review assessment and invite to consultation",
-      next_action_due_at: new Date(Date.now() + (leadScore >= 75 ? 30 : 180) * 60 * 1000).toISOString(),
-      last_engagement_at: new Date().toISOString(),
-    })
-    .eq("email", assessmentData.contact_email);
+  const nameParts = String(assessmentData.contact_name || "").trim().split(/\s+/);
+  const { error: crmError } = await upsertCrmContact(supabase, {
+    email: assessmentData.contact_email,
+    first_name: nameParts[0] || null,
+    last_name: nameParts.slice(1).join(" ") || null,
+    phone: assessmentData.contact_phone || null,
+    source: "assessment",
+    source_id: assessmentId,
+    source_attribution: sourceAttribution,
+    lead_score: leadScore,
+    revenue_path: leadScore >= 75 ? "intervention_or_readiness" : "consultation_or_coaching",
+    pipeline_status: "new",
+    next_action: leadScore >= 75 ? "Call this assessment lead first" : "Review assessment and invite to consultation",
+    next_action_due_at: new Date(Date.now() + (leadScore >= 75 ? 30 : 180) * 60 * 1000).toISOString(),
+  });
+  if (crmError) console.error("Failed to upsert assessment CRM contact:", crmError);
 
+  // Step 1 (the confirmation) is sent immediately by the handler below, so only
+  // the later sequence steps are queued here.
   const rows = [
-    {
-      lead_type: "assessment",
-      lead_id: assessmentId,
-      contact_email: assessmentData.contact_email,
-      contact_name: assessmentData.contact_name,
-      contact_phone: assessmentData.contact_phone || null,
-      followup_reason: "assessment_confirmation",
-      priority,
-      sequence_step: 1,
-      subject: `${firstName}, I received your family assessment`,
-      body_html: `
-        <p>Hi ${escapeHtml(firstName)},</p>
-        <p>I received your family assessment. Thank you for taking the time to lay out what is happening. That information helps me understand urgency, safety, treatment history, and where the family may need to get aligned.</p>
-        <p>If things are escalating or you need answers sooner, you can book a free consultation here:</p>
-        <p><a href="${consultUrl}">Book a free consultation</a></p>
-        <p>If there is immediate danger, call 911 or local emergency services. For intervention planning or family strategy, you can call me directly at <a href="tel:+14582988000">458-298-8000</a>.</p>
-        <p>- Matt Brown<br>Freedom Interventions</p>
-      `,
-      source_attribution: sourceAttribution,
-      due_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-    },
     {
       lead_type: "assessment",
       lead_id: assessmentId,
@@ -375,7 +363,7 @@ serve(async (req) => {
     const { data, error: dbError } = await supabase
       .from("assessments")
       .insert(assessmentData)
-      .select("id")
+      .select("*")
       .single();
 
     if (dbError) {
@@ -394,6 +382,16 @@ serve(async (req) => {
       console.error("Assessment followup queue failed:", followupError);
     }
 
+    // Notion CRM + Telegram alert (previously a DB trigger). Best-effort: never fails the submission.
+    try {
+      const { error: notionInvokeError } = await supabase.functions.invoke("assessment-to-notion", {
+        body: { record: data },
+      });
+      if (notionInvokeError) console.error("assessment-to-notion invoke failed:", notionInvokeError);
+    } catch (notionError) {
+      console.error("assessment-to-notion invoke threw:", notionError);
+    }
+
     // Spine: forward NON-SENSITIVE summary to the hub (additive — never blocks).
     try {
       await enqueueSpineEvent(
@@ -402,7 +400,7 @@ serve(async (req) => {
           email: assessmentData.contact_email ?? null,
           phone: assessmentData.contact_phone ?? null,
           name: assessmentData.contact_name ?? null,
-          utm: extractUtm(body),
+          utm: extractUtm(assessmentData.source_attribution as Record<string, any>),
           props: { score: scoreAssessment(body) },
         },
         supabase,
@@ -422,9 +420,9 @@ serve(async (req) => {
             const symptoms = JSON.parse(assessmentData.withdrawal_symptoms);
             const physical = symptoms.physical?.length ? symptoms.physical.join(", ") : "None";
             const psychological = symptoms.psychological?.length ? symptoms.psychological.join(", ") : "None";
-            withdrawalInfo = `Physical: ${physical}<br>Psychological: ${psychological}`;
+            withdrawalInfo = `Physical: ${escapeHtml(physical)}<br>Psychological: ${escapeHtml(psychological)}`;
           } catch {
-            withdrawalInfo = assessmentData.withdrawal_symptoms;
+            withdrawalInfo = escapeHtml(assessmentData.withdrawal_symptoms);
           }
         }
 
@@ -432,14 +430,15 @@ serve(async (req) => {
         let treatmentInfo = "None reported";
         if (assessmentData.treatment_history && Array.isArray(assessmentData.treatment_history)) {
           treatmentInfo = assessmentData.treatment_history.map((t: any) => 
-            `${t.programName || "Unknown"} (${t.programType || "Unknown"}) - Age ${t.ageAtTreatment || "?"}, ${t.successfulCompletion ? "Completed" : "Did not complete"}, ${t.aftercareFollowed ? "Followed aftercare" : "Did not follow aftercare"}`
+            `${escapeHtml(t.programName || "Unknown")} (${escapeHtml(t.programType || "Unknown")}) - Age ${escapeHtml(t.ageAtTreatment || "?")}, ${t.successfulCompletion ? "Completed" : "Did not complete"}, ${t.aftercareFollowed ? "Followed aftercare" : "Did not follow aftercare"}`
           ).join("<br>");
         }
 
         // Determine urgency styling
-        const isHighUrgency = assessmentData.urgency_level === "critical" || 
-                              assessmentData.suicide_ideation === "yes" || 
-                              assessmentData.immediate_safety_concerns;
+        const safetyConcern = hasSafetyConcern(assessmentData.immediate_safety_concerns);
+        const isHighUrgency = TOP_URGENCY.test(String(assessmentData.urgency_level || "")) ||
+                              assessmentData.suicide_ideation === "yes" ||
+                              safetyConcern;
         const urgencyColor = isHighUrgency ? "#dc2626" : "#059669";
         const urgencyText = isHighUrgency ? "⚠️ HIGH PRIORITY" : "Standard";
 
@@ -465,86 +464,86 @@ serve(async (req) => {
               <p>Submitted ${new Date().toLocaleString('en-US', { timeZone: 'America/Denver' })}</p>
             </div>
             
-            <div class="urgency">${urgencyText} - Severity: ${assessmentData.severity_level || "Not assessed"} (${assessmentData.dsm_yes_count}/11 DSM criteria)</div>
+            <div class="urgency">${urgencyText} - Severity: ${escapeHtml(assessmentData.severity_level || "Not assessed")} (${escapeHtml(assessmentData.dsm_yes_count)}/11 DSM criteria)</div>
             
             ${isHighUrgency ? `
             <div class="warning">
               <strong>⚠️ Safety Concerns Noted:</strong><br>
               ${assessmentData.suicide_ideation === "yes" ? "• Suicidal ideation reported<br>" : ""}
-              ${assessmentData.immediate_safety_concerns ? `• ${assessmentData.immediate_safety_concerns}` : ""}
+              ${safetyConcern ? `• ${escapeHtml(assessmentData.immediate_safety_concerns)}` : ""}
             </div>
             ` : ""}
             
             <div class="section">
               <h3>👤 Individual Information</h3>
-              <p><span class="label">Name:</span> <span class="value">${assessmentData.loved_one_name}</span></p>
-              <p><span class="label">Age:</span> <span class="value">${assessmentData.loved_one_age || "Not provided"}</span></p>
-              <p><span class="label">Gender:</span> <span class="value">${assessmentData.loved_one_gender || "Not provided"}</span></p>
-              <p><span class="label">Employment:</span> <span class="value">${assessmentData.employment_status || "Not provided"}</span></p>
-              <p><span class="label">Living Situation:</span> <span class="value">${assessmentData.living_situation || "Not provided"}</span></p>
+              <p><span class="label">Name:</span> <span class="value">${escapeHtml(assessmentData.loved_one_name)}</span></p>
+              <p><span class="label">Age:</span> <span class="value">${escapeHtml(assessmentData.loved_one_age || "Not provided")}</span></p>
+              <p><span class="label">Gender:</span> <span class="value">${escapeHtml(assessmentData.loved_one_gender || "Not provided")}</span></p>
+              <p><span class="label">Employment:</span> <span class="value">${escapeHtml(assessmentData.employment_status || "Not provided")}</span></p>
+              <p><span class="label">Living Situation:</span> <span class="value">${escapeHtml(assessmentData.living_situation || "Not provided")}</span></p>
             </div>
             
             <div class="section">
               <h3>📞 Contact Information</h3>
-              <p><span class="label">Contact Name:</span> <span class="value">${assessmentData.contact_name}</span></p>
-              <p><span class="label">Relationship:</span> <span class="value">${assessmentData.contact_relationship || "Not specified"}</span></p>
-              <p><span class="label">Email:</span> <span class="value"><a href="mailto:${assessmentData.contact_email}">${assessmentData.contact_email}</a></span></p>
-              <p><span class="label">Phone:</span> <span class="value">${assessmentData.contact_phone || "Not provided"}</span></p>
-              <p><span class="label">Best Time:</span> <span class="value">${assessmentData.best_day_to_contact || "Any day"} - ${assessmentData.best_time_to_contact || "Any time"}</span></p>
+              <p><span class="label">Contact Name:</span> <span class="value">${escapeHtml(assessmentData.contact_name)}</span></p>
+              <p><span class="label">Relationship:</span> <span class="value">${escapeHtml(assessmentData.contact_relationship || "Not specified")}</span></p>
+              <p><span class="label">Email:</span> <span class="value"><a href="mailto:${encodeURIComponent(assessmentData.contact_email || "")}">${escapeHtml(assessmentData.contact_email)}</a></span></p>
+              <p><span class="label">Phone:</span> <span class="value">${escapeHtml(assessmentData.contact_phone || "Not provided")}</span></p>
+              <p><span class="label">Best Time:</span> <span class="value">${escapeHtml(assessmentData.best_day_to_contact || "Any day")} - ${escapeHtml(assessmentData.best_time_to_contact || "Any time")}</span></p>
             </div>
             
             <div class="section">
               <h3>💊 Substance Use Summary</h3>
-              <p><span class="label">Primary Substances:</span> <span class="value">${assessmentData.primary_substances || "Not specified"}</span></p>
-              <p><span class="label">Duration:</span> <span class="value">${assessmentData.duration_of_use || "Not specified"}</span></p>
-              <p><span class="label">IV Drug Use:</span> <span class="value">${assessmentData.iv_drug_use || "Not specified"}</span></p>
-              <p><span class="label">Overdose History:</span> <span class="value">${assessmentData.overdose_history || "Not specified"}</span></p>
-              <p><span class="label">Longest Sobriety:</span> <span class="value">${assessmentData.longest_sobriety_period || "Not specified"}</span></p>
+              <p><span class="label">Primary Substances:</span> <span class="value">${escapeHtml(assessmentData.primary_substances || "Not specified")}</span></p>
+              <p><span class="label">Duration:</span> <span class="value">${escapeHtml(assessmentData.duration_of_use || "Not specified")}</span></p>
+              <p><span class="label">IV Drug Use:</span> <span class="value">${escapeHtml(assessmentData.iv_drug_use || "Not specified")}</span></p>
+              <p><span class="label">Overdose History:</span> <span class="value">${escapeHtml(assessmentData.overdose_history || "Not specified")}</span></p>
+              <p><span class="label">Longest Sobriety:</span> <span class="value">${escapeHtml(assessmentData.longest_sobriety_period || "Not specified")}</span></p>
             </div>
             
             <div class="section">
               <h3>⚕️ Withdrawal & Medical</h3>
-              <p><span class="label">Seizure History:</span> <span class="value">${assessmentData.seizure_history || "Not specified"}</span></p>
-              <p><span class="label">Delirium Tremens:</span> <span class="value">${assessmentData.delirium_tremens_history || "Not specified"}</span></p>
+              <p><span class="label">Seizure History:</span> <span class="value">${escapeHtml(assessmentData.seizure_history || "Not specified")}</span></p>
+              <p><span class="label">Delirium Tremens:</span> <span class="value">${escapeHtml(assessmentData.delirium_tremens_history || "Not specified")}</span></p>
               <p><span class="label">Withdrawal Symptoms:</span><br>${withdrawalInfo}</p>
             </div>
             
             <div class="section">
               <h3>🧠 Mental Health</h3>
-              <p><span class="label">Psychiatric History:</span> <span class="value">${assessmentData.psychiatric_history || "Not specified"}</span></p>
-              <p><span class="label">Trauma History:</span> <span class="value">${assessmentData.trauma_history || "Not specified"}</span></p>
-              <p><span class="label">Suicide Ideation:</span> <span class="value">${assessmentData.suicide_ideation || "Not specified"}</span></p>
-              <p><span class="label">Suicide Attempts:</span> <span class="value">${assessmentData.suicide_attempts_history || "Not specified"}</span></p>
+              <p><span class="label">Psychiatric History:</span> <span class="value">${escapeHtml(assessmentData.psychiatric_history || "Not specified")}</span></p>
+              <p><span class="label">Trauma History:</span> <span class="value">${escapeHtml(assessmentData.trauma_history || "Not specified")}</span></p>
+              <p><span class="label">Suicide Ideation:</span> <span class="value">${escapeHtml(assessmentData.suicide_ideation || "Not specified")}</span></p>
+              <p><span class="label">Suicide Attempts:</span> <span class="value">${escapeHtml(assessmentData.suicide_attempts_history || "Not specified")}</span></p>
             </div>
             
             <div class="section">
               <h3>📚 Treatment History</h3>
-              <p><span class="label">Prior Treatment:</span> <span class="value">${assessmentData.prior_treatment || "Not specified"}</span></p>
+              <p><span class="label">Prior Treatment:</span> <span class="value">${escapeHtml(assessmentData.prior_treatment || "Not specified")}</span></p>
               <p>${treatmentInfo}</p>
             </div>
             
             <div class="section">
               <h3>👨‍👩‍👧‍👦 Family Dynamics</h3>
-              <p><span class="label">Family Unity:</span> <span class="value">${assessmentData.family_unity_level || "Not assessed"}</span></p>
-              <p><span class="label">Ready for Intervention:</span> <span class="value">${assessmentData.family_ready_intervention || "Not specified"}</span></p>
-              <p><span class="label">Intervention Barriers:</span> <span class="value">${assessmentData.intervention_barriers || "None noted"}</span></p>
-              <p><span class="label">Who Holds Leverage:</span> <span class="value">${assessmentData.who_holds_leverage || "Not specified"}</span></p>
+              <p><span class="label">Family Unity:</span> <span class="value">${escapeHtml(assessmentData.family_unity_level || "Not assessed")}</span></p>
+              <p><span class="label">Ready for Intervention:</span> <span class="value">${escapeHtml(assessmentData.family_ready_intervention || "Not specified")}</span></p>
+              <p><span class="label">Intervention Barriers:</span> <span class="value">${escapeHtml(assessmentData.intervention_barriers || "None noted")}</span></p>
+              <p><span class="label">Who Holds Leverage:</span> <span class="value">${escapeHtml(assessmentData.who_holds_leverage || "Not specified")}</span></p>
             </div>
             
             <div class="section">
               <h3>🎯 Intervention Planning</h3>
-              <p><span class="label">Stage of Change:</span> <span class="value">${assessmentData.stage_of_change || "Not assessed"}</span></p>
-              <p><span class="label">Urgency Level:</span> <span class="value">${assessmentData.urgency_level || "Not specified"}</span></p>
-              <p><span class="label">Treatment Preferences:</span> <span class="value">${assessmentData.treatment_preferences || "None specified"}</span></p>
-              <p><span class="label">Geographic Preferences:</span> <span class="value">${assessmentData.geographic_preferences || "None specified"}</span></p>
-              <p><span class="label">Budget:</span> <span class="value">${assessmentData.budget_for_treatment || "Not specified"}</span></p>
-              <p><span class="label">Insurance:</span> <span class="value">${assessmentData.insurance_information || "Not provided"}</span></p>
+              <p><span class="label">Stage of Change:</span> <span class="value">${escapeHtml(assessmentData.stage_of_change || "Not assessed")}</span></p>
+              <p><span class="label">Urgency Level:</span> <span class="value">${escapeHtml(assessmentData.urgency_level || "Not specified")}</span></p>
+              <p><span class="label">Treatment Preferences:</span> <span class="value">${escapeHtml(assessmentData.treatment_preferences || "None specified")}</span></p>
+              <p><span class="label">Geographic Preferences:</span> <span class="value">${escapeHtml(assessmentData.geographic_preferences || "None specified")}</span></p>
+              <p><span class="label">Budget:</span> <span class="value">${escapeHtml(assessmentData.budget_for_treatment || "Not specified")}</span></p>
+              <p><span class="label">Insurance:</span> <span class="value">${escapeHtml(assessmentData.insurance_information || "Not provided")}</span></p>
             </div>
             
             ${assessmentData.additional_information ? `
             <div class="section">
               <h3>📝 Additional Information</h3>
-              <p>${assessmentData.additional_information}</p>
+              <p>${escapeHtml(assessmentData.additional_information)}</p>
             </div>
             ` : ""}
             

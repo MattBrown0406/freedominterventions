@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { clearAuthRedirect, getAuthRedirect } from "@/lib/authRedirect";
 
 type PortalCase = {
   id: string;
@@ -95,8 +96,29 @@ export default function FamilyPortal() {
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  // Invited members and password-reset links arrive with a session but no
+  // (known) password — make them set one before entering the portal.
+  const [needsPasswordSet, setNeedsPasswordSet] = useState(
+    () => getAuthRedirect().type !== null,
+  );
+  const [passwordMode, setPasswordMode] = useState<"invite" | "recovery">(
+    () => getAuthRedirect().type ?? "recovery",
+  );
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [settingPassword, setSettingPassword] = useState(false);
 
   useEffect(() => {
+    const { errorDescription } = getAuthRedirect();
+    if (errorDescription) {
+      toast({
+        title: "That link didn't work",
+        description: `${errorDescription}. Request a new reset link below.`,
+        variant: "destructive",
+      });
+      clearAuthRedirect();
+    }
+
     const init = async () => {
       const {
         data: { session },
@@ -108,8 +130,12 @@ export default function FamilyPortal() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthed(Boolean(session));
+      if (event === "PASSWORD_RECOVERY") {
+        setPasswordMode("recovery");
+        setNeedsPasswordSet(true);
+      }
       if (session) setTimeout(() => loadPortal(), 0);
     });
 
@@ -181,7 +207,11 @@ export default function FamilyPortal() {
       setCases(caseRows ?? []);
       setUpdates(updateRows ?? []);
       setMessages(messageRows ?? []);
-      if (!activeCaseId && caseRows?.[0]?.id) setActiveCaseId(caseRows[0].id);
+      // Functional update: this runs from a long-lived auth listener whose
+      // closure would otherwise see a stale (null) activeCaseId and reset the
+      // family's selected case on every token refresh.
+      const firstCaseId: string | null = caseRows?.[0]?.id ?? null;
+      setActiveCaseId((current) => current ?? firstCaseId);
     } catch (error) {
       toast({
         title: "Could not load your portal",
@@ -235,8 +265,49 @@ export default function FamilyPortal() {
     });
   };
 
+  const handleSetPassword = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (newPassword.length < 8) {
+      toast({
+        title: "Password too short",
+        description: "Use at least 8 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Passwords don't match",
+        description: "Re-enter the same password in both fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setSettingPassword(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setSettingPassword(false);
+    if (error) {
+      toast({
+        title: "Could not set password",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    clearAuthRedirect();
+    setNeedsPasswordSet(false);
+    setNewPassword("");
+    setConfirmPassword("");
+    toast({
+      title: "Password saved",
+      description: "Use this password next time you sign in to the portal.",
+    });
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    clearAuthRedirect();
+    setNeedsPasswordSet(false);
     setIsAuthed(false);
     setCases([]);
     setUpdates([]);
@@ -370,6 +441,80 @@ export default function FamilyPortal() {
               </CardContent>
             </Card>
           </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (needsPasswordSet) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>Set Your Password | Freedom Interventions</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <Navbar />
+        <main className="container mx-auto max-w-md px-4 py-16">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {passwordMode === "invite"
+                  ? "Welcome — set your password"
+                  : "Set a new password"}
+              </CardTitle>
+              <CardDescription>
+                {passwordMode === "invite"
+                  ? "Choose a password for your family portal account. You'll use it with your email to sign in next time."
+                  : "Choose a new password for your family portal account."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSetPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New password</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    autoComplete="new-password"
+                    minLength={8}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    At least 8 characters.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Confirm password</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    autoComplete="new-password"
+                    minLength={8}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button
+                  className="w-full"
+                  type="submit"
+                  disabled={settingPassword}
+                >
+                  {settingPassword ? "Saving..." : "Save password & continue"}
+                </Button>
+              </form>
+              <Button
+                variant="link"
+                className="mt-3 w-full"
+                onClick={handleLogout}
+              >
+                Sign out
+              </Button>
+            </CardContent>
+          </Card>
         </main>
         <Footer />
       </div>

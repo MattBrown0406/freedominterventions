@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isStrictAdminRequest, unauthorized } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,12 +11,24 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (!(await isStrictAdminRequest(req))) {
+    return unauthorized(corsHeaders);
+  }
+
   try {
     const { postId, title, category, customPrompt } = await req.json();
 
     if (!postId || !title) {
       return new Response(
         JSON.stringify({ error: "postId and title are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // postId is used in a storage path; only accept a UUID.
+    if (typeof postId !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(postId)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid postId" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

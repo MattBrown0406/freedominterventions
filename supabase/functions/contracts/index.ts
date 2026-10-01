@@ -2,6 +2,9 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { enqueueSpineEvent } from "../_shared/spine.ts";
+import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
+import { upsertCrmContact } from "../_shared/crm.ts";
+import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -15,6 +18,11 @@ const SQUARE_LOCATION_ID = Deno.env.get("SQUARE_LOCATION_ID");
 const SQUARE_BASE_URL = "https://connect.squareup.com/v2";
 const STANDARD_INTERVENTION_FEE_CENTS = 950000;
 const READINESS_INTENSIVE_FEE_CENTS = 250000;
+const READINESS_INTENSIVE_DURATION_MINUTES = 90;
+const MAX_CONTRACT_PDF_BYTES = 10 * 1024 * 1024;
+const SITE_URL = "https://freedominterventions.com";
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const TIME_RE = /^\d{2}:\d{2}(:\d{2})?$/;
 const INTERVENTION_DISCOUNT_CODES: Record<string, number> = {
   SAVE500: 50000,
   SAVE1000: 100000,
@@ -54,21 +62,237 @@ async function upsertContractCrm(
   const nameParts = payload.clientName.trim().split(/\s+/);
   const firstName = nameParts[0] || null;
   const lastName = nameParts.slice(1).join(" ") || null;
-  await supabase.from("crm_contacts").upsert({
-    email: payload.clientEmail,
-    first_name: firstName,
-    last_name: lastName,
-    phone: payload.clientPhone,
-    source: "contract",
-    source_id: contract.id,
-    source_attribution: payload.sourceAttribution,
-    lead_score: payload.contractType === "intervention" ? 100 : 95,
-    revenue_path: payload.contractType === "intervention" ? "intervention_contract" : "family_readiness_intensive",
-    pipeline_status: "contract_signed",
-    next_action: "Confirm payment and prepare fulfillment",
-    next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-    last_engagement_at: new Date().toISOString(),
-  }, { onConflict: "email" });
+  try {
+    const { error } = await upsertCrmContact(supabase, {
+      email: payload.clientEmail,
+      first_name: firstName,
+      last_name: lastName,
+      phone: payload.clientPhone,
+      source: "contract",
+      source_id: contract.id,
+      source_attribution: payload.sourceAttribution,
+      lead_score: payload.contractType === "intervention" ? 100 : 95,
+      revenue_path: payload.contractType === "intervention" ? "intervention_contract" : "family_readiness_intensive",
+      pipeline_status: "contract_signed",
+      next_action: "Confirm payment and prepare fulfillment",
+      next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    });
+    if (error) console.error("CRM upsert failed for contract", contract.id, error);
+  } catch (crmError) {
+    console.error("CRM upsert threw for contract", contract.id, crmError);
+  }
+}
+
+// Only redirect Square checkout back to our own site (or a Lovable preview / local dev).
+function resolveRedirectOrigin(req: Request): string {
+  const origin = req.headers.get("origin");
+  if (!origin) return SITE_URL;
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol === "https:" && (
+      host === "freedominterventions.com" ||
+      host === "www.freedominterventions.com" ||
+      host.endsWith(".lovable.app") ||
+      host.endsWith(".lovableproject.com")
+    )) return url.origin;
+    if (url.protocol === "http:" && (host === "localhost" || host === "127.0.0.1")) return url.origin;
+  } catch {
+    // fall through
+  }
+  return SITE_URL;
+}
+
+// A client-supplied redirect must be a same-site path, never an absolute/protocol-relative URL.
+function safeRedirectPath(path: unknown, fallback: string): string {
+  if (typeof path !== "string" || !path.startsWith("/") || path.startsWith("//") || path.includes("\\")) {
+    return fallback;
+  }
+  return path;
+}
+
+// Decodes the client-generated contract PDF and checks it really is a reasonably sized PDF.
+function decodeContractPdf(base64: string): Uint8Array {
+  const cleaned = base64.replace(/\s+/g, "");
+  if (cleaned.length > Math.ceil(MAX_CONTRACT_PDF_BYTES / 3) * 4 + 4) {
+    throw new Error("Contract PDF is too large");
+  }
+  let binaryString: string;
+  try {
+    binaryString = atob(cleaned);
+  } catch {
+    throw new Error("Contract PDF is not valid");
+  }
+  if (binaryString.length === 0 || binaryString.length > MAX_CONTRACT_PDF_BYTES) {
+    throw new Error("Contract PDF is too large");
+  }
+  if (!binaryString.startsWith("%PDF")) throw new Error("Contract PDF is not valid");
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+  return bytes;
+}
+
+type PaidContractRow = {
+  id: string;
+  contract_type: string;
+  status: string;
+  client_name: string;
+  client_email: string;
+  client_phone: string | null;
+  signer_name: string;
+  signed_at: string;
+  agreement_text: string;
+  agreement_version: string;
+  amount_cents: number | null;
+  payment_id: string | null;
+  contract_pdf_path: string | null;
+  metadata: Record<string, unknown> | null;
+  source_attribution: Record<string, unknown> | null;
+};
+
+const PAID_CONTRACT_COLUMNS =
+  "id, contract_type, status, client_name, client_email, client_phone, signer_name, signed_at, agreement_text, agreement_version, amount_cents, payment_id, contract_pdf_path, metadata, source_attribution";
+
+// The Family Readiness Intensive is paid through a contract, so the session itself only
+// exists as contracts.metadata until payment. Create the confirmed booking (idempotent per
+// contract) and send its Zoom confirmation.
+async function ensureReadinessBooking(supabase: any, contract: PaidContractRow): Promise<void> {
+  if (contract.contract_type !== "readiness-intensive" || contract.status !== "paid") return;
+
+  const metadata = contract.metadata ?? {};
+  const bookingDate = metadata.bookingDate;
+  const bookingTime = metadata.bookingTime;
+  if (typeof bookingDate !== "string" || !DATE_RE.test(bookingDate) || typeof bookingTime !== "string" || !TIME_RE.test(bookingTime)) {
+    console.error("Paid Readiness Intensive contract has no valid session date/time:", contract.id);
+    return;
+  }
+
+  const findBookings = () => supabase
+    .from("bookings")
+    .select("id, created_at")
+    .contains("contract_metadata", { contract_id: contract.id })
+    .order("created_at", { ascending: true })
+    .order("id", { ascending: true });
+
+  const { data: existing, error: existingError } = await findBookings();
+  if (existingError) {
+    console.error("Failed to look up Readiness Intensive booking:", contract.id, existingError);
+    return;
+  }
+
+  let bookingId: string | null = existing?.[0]?.id ?? null;
+  if (!bookingId) {
+    const slotTime = bookingTime.slice(0, 5);
+    const { data: conflicts } = await supabase
+      .from("bookings")
+      .select("id")
+      .eq("booking_date", bookingDate)
+      .eq("booking_time", slotTime)
+      .eq("status", "confirmed")
+      .limit(1);
+    if (conflicts && conflicts.length > 0) {
+      console.warn("Readiness Intensive paid for a slot that is already booked; creating it anyway for admin follow-up:", contract.id);
+    }
+
+    const { data: inserted, error: insertError } = await supabase
+      .from("bookings")
+      .insert({
+        booking_type: "readiness-intensive",
+        customer_name: contract.client_name,
+        customer_email: contract.client_email,
+        customer_phone: contract.client_phone ? contract.client_phone.slice(0, 25) : null,
+        booking_date: bookingDate,
+        booking_time: slotTime,
+        duration_minutes: READINESS_INTENSIVE_DURATION_MINUTES,
+        status: "confirmed",
+        payment_id: contract.payment_id,
+        amount_cents: contract.amount_cents,
+        agreement_accepted: true,
+        agreement_signer_name: contract.signer_name,
+        agreement_signed_at: contract.signed_at,
+        agreement_text: contract.agreement_text,
+        agreement_version: contract.agreement_version,
+        contract_pdf_path: contract.contract_pdf_path,
+        contract_metadata: {
+          contract_id: contract.id,
+          follow_up_included: metadata.followUpIncluded === true,
+        },
+        source_attribution: contract.source_attribution ?? {},
+      })
+      .select("id")
+      .single();
+    if (insertError || !inserted) {
+      if (insertError?.code !== "23505") {
+        console.error("Failed to create Readiness Intensive booking:", contract.id, insertError);
+        return;
+      }
+    }
+
+    // Two fulfillment paths can race (webhook + browser). Keep only the earliest row.
+    const { data: rows } = await findBookings();
+    bookingId = rows?.[0]?.id ?? inserted?.id ?? null;
+    if (inserted?.id && bookingId && inserted.id !== bookingId) {
+      await supabase.from("bookings").delete().eq("id", inserted.id);
+    }
+  }
+
+  if (!bookingId) return;
+  // Idempotent: send-booking-confirmation skips bookings that already have a Zoom meeting.
+  const { error: confirmError } = await supabase.functions.invoke("send-booking-confirmation", {
+    body: { bookingId },
+  });
+  if (confirmError) console.error("Readiness Intensive booking confirmation failed:", bookingId, confirmError);
+}
+
+// Runs exactly once, by whichever path (browser mark-paid or Square webhook) actually
+// flipped the contract to paid.
+async function fulfillPaidContract(supabase: any, contractId: string): Promise<void> {
+  const { data: contract, error } = await supabase
+    .from("contracts")
+    .select(PAID_CONTRACT_COLUMNS)
+    .eq("id", contractId)
+    .maybeSingle();
+  if (error || !contract) {
+    console.error("fulfillPaidContract: contract not found", contractId, error);
+    return;
+  }
+  if (contract.status !== "paid") {
+    console.error("fulfillPaidContract: contract is not paid", contractId, contract.status);
+    return;
+  }
+
+  const { error: notifyError } = await supabase.functions.invoke("send-contract-notification", {
+    body: { contractId, event: "paid" },
+  });
+  if (notifyError) console.error("Failed to send paid contract notification:", contractId, notifyError);
+
+  try {
+    await enqueueSpineEvent(
+      "payment",
+      {
+        email: contract.client_email ?? null,
+        phone: contract.client_phone ?? null,
+        name: contract.client_name ?? null,
+        props: { source: "contract", contract_type: contract.contract_type },
+        payment: { processor: "square", amount_cents: contract.amount_cents ?? 0, kind: "intervention" },
+      },
+      supabase,
+    );
+  } catch (spineError) {
+    console.error("Spine enqueue failed (payment/contract):", spineError);
+  }
+
+  if (contract.contract_type === "readiness-intensive") {
+    const { error: cartError } = await supabase
+      .from("abandoned_carts")
+      .update({ status: "recovered", recovered_at: new Date().toISOString() })
+      .eq("customer_email", String(contract.client_email).toLowerCase().trim())
+      .eq("booking_type", "readiness-intensive")
+      .in("status", ["pending", "recovery_sent"]);
+    if (cartError) console.error("Failed to mark abandoned carts recovered:", cartError);
+  }
+
+  await ensureReadinessBooking(supabase, contract as PaidContractRow);
 }
 
 function normalizeDiscountCode(code: unknown): string {
@@ -83,29 +307,50 @@ async function resolveContractAmount(supabase: any, contractType: string, discou
       discountCode: null,
       discountCents: 0,
       discountCodeId: null,
+      reusedFromContractId: null as string | null,
     };
   }
 
   const normalizedDiscountCode = normalizeDiscountCode(discountCode);
+  const normalizedEmail = typeof clientEmail === "string" ? clientEmail.toLowerCase().trim() : "";
   if (normalizedDiscountCode) {
     const { data: dynamicCode } = await supabase
       .from("discount_codes")
-      .select("id, code, base_amount_cents, amount_cents, issued_to_email, expires_at, used_at")
+      .select("id, code, base_amount_cents, amount_cents, issued_to_email, expires_at, used_at, used_by_email, used_by_contract_id")
       .eq("code", normalizedDiscountCode)
       .maybeSingle();
 
-    if (dynamicCode && !dynamicCode.used_at) {
+    // A one-time code stays usable by the same email while the contract it was
+    // claimed for is still unpaid (abandoned / failed checkout, then resubmit).
+    let reusedFromContractId: string | null = null;
+    let usable = Boolean(dynamicCode && !dynamicCode.used_at);
+    if (dynamicCode?.used_at && normalizedEmail && dynamicCode.used_by_contract_id &&
+        String(dynamicCode.used_by_email ?? "").toLowerCase().trim() === normalizedEmail) {
+      const { data: priorContract } = await supabase
+        .from("contracts")
+        .select("id, status")
+        .eq("id", dynamicCode.used_by_contract_id)
+        .maybeSingle();
+      if (!priorContract || priorContract.status !== "paid") {
+        usable = true;
+        reusedFromContractId = dynamicCode.used_by_contract_id;
+      }
+    }
+
+    if (dynamicCode && usable) {
       const isExpired = dynamicCode.expires_at && new Date(dynamicCode.expires_at).getTime() < Date.now();
-      const emailMatches = !dynamicCode.issued_to_email || !clientEmail || dynamicCode.issued_to_email.toLowerCase().trim() === clientEmail.toLowerCase().trim();
+      const emailMatches = !dynamicCode.issued_to_email || !normalizedEmail || dynamicCode.issued_to_email.toLowerCase().trim() === normalizedEmail;
       if (!isExpired && emailMatches) {
         const baseAmountCents = typeof dynamicCode.base_amount_cents === "number" ? dynamicCode.base_amount_cents : STANDARD_INTERVENTION_FEE_CENTS;
-        const discountCents = Math.min(dynamicCode.amount_cents, baseAmountCents - 1);
+        // amount_cents may be 0 for a custom-price quote code (no discount, custom base).
+        const discountCents = Math.max(Math.min(dynamicCode.amount_cents ?? 0, baseAmountCents - 1), 0);
         return {
           amountCents: Math.max(baseAmountCents - discountCents, 0),
           baseAmountCents,
           discountCode: dynamicCode.code,
           discountCents,
           discountCodeId: dynamicCode.id,
+          reusedFromContractId,
         };
       }
     }
@@ -118,6 +363,7 @@ async function resolveContractAmount(supabase: any, contractType: string, discou
     discountCode: discountCents > 0 ? normalizedDiscountCode : null,
     discountCents,
     discountCodeId: null,
+    reusedFromContractId: null as string | null,
   };
 }
 
@@ -167,17 +413,26 @@ serve(async (req) => {
 
     switch (action) {
       case "create-contract": {
+        const clientIP = getClientIp(req);
+        const allowed = await checkRateLimit(supabase, `contract:${clientIP}`, 10, 3600);
+        if (!allowed) {
+          return new Response(JSON.stringify({ error: "Too many attempts. Please try again later." }), {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "3600" },
+          });
+        }
+
+        // contractPdfPath and signedAt from the client are intentionally ignored: the
+        // storage path and signature time are set server-side.
         const {
           contractType,
           clientName,
           clientEmail,
           clientPhone,
           signerName,
-          signedAt,
           agreementText,
           agreementVersion,
           discountCode,
-          contractPdfPath,
           contractPdfBase64,
           metadata,
           sourceAttribution,
@@ -201,13 +456,32 @@ serve(async (req) => {
           throw new Error("Agreement amount does not match approved contract amount");
         }
 
+        const normalizedClientEmail = clientEmail.toLowerCase().trim();
+        const contractMetadata = metadata && typeof metadata === "object" && !Array.isArray(metadata) ? metadata : {};
+
+        // The Readiness Intensive books a session slot: validate it server-side.
+        if (contractType === "readiness-intensive") {
+          const { bookingDate, bookingTime } = contractMetadata as Record<string, unknown>;
+          if (typeof bookingDate !== "string" || !DATE_RE.test(bookingDate) || typeof bookingTime !== "string" || !TIME_RE.test(bookingTime)) {
+            throw new Error("A valid session date and time are required");
+          }
+          const { data: slotData, error: slotError } = await supabase.functions.invoke("square-booking", {
+            body: { action: "check-slot", date: bookingDate, time: bookingTime, holderEmail: normalizedClientEmail },
+          });
+          if (slotError) {
+            console.error("Slot check failed:", slotError);
+            throw new Error("Unable to verify the selected time. Please try again.");
+          }
+          if (!slotData?.available) throw new Error("That time is no longer available. Please choose another time.");
+        }
+
         const contractId = crypto.randomUUID();
-        const resolvedPdfPath = typeof contractPdfPath === "string" && contractPdfPath.trim() ? contractPdfPath : `${contractType}/${contractId}.pdf`;
+        let resolvedPdfPath: string | null = null;
 
         if (typeof contractPdfBase64 === "string" && contractPdfBase64.trim()) {
-          const binaryString = atob(contractPdfBase64);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+          const bytes = decodeContractPdf(contractPdfBase64);
+          // Server-built path; never a client-chosen storage location.
+          resolvedPdfPath = `${contractType}/${contractId}.pdf`;
 
           const { error: uploadError } = await supabase.storage
             .from("contracts")
@@ -225,10 +499,10 @@ serve(async (req) => {
             contract_type: contractType,
             status: "signed-awaiting-payment",
             client_name: sanitizeString(clientName),
-            client_email: clientEmail.toLowerCase().trim(),
+            client_email: normalizedClientEmail,
             client_phone: clientPhone ? sanitizeString(clientPhone).slice(0, 25) : null,
             signer_name: sanitizeString(signerName),
-            signed_at: typeof signedAt === "string" ? signedAt : new Date().toISOString(),
+            signed_at: new Date().toISOString(),
             agreement_text: agreementText.trim(),
             agreement_version: agreementVersion.trim(),
             amount_cents: resolvedAmount.amountCents,
@@ -236,13 +510,16 @@ serve(async (req) => {
             discount_cents: resolvedAmount.discountCents,
             contract_pdf_path: resolvedPdfPath,
             contract_pdf_url: null,
-            metadata: metadata && typeof metadata === "object" ? metadata : {},
+            metadata: contractMetadata,
             source_attribution: normalizedSourceAttribution,
           })
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          if (resolvedPdfPath) await supabase.storage.from("contracts").remove([resolvedPdfPath]);
+          throw error;
+        }
 
         await upsertContractCrm(supabase, data, {
           clientName: sanitizeString(clientName),
@@ -253,31 +530,31 @@ serve(async (req) => {
         });
 
         if (resolvedAmount.discountCodeId) {
-          const { error: claimError } = await supabase
+          // Atomic claim: either the code is unused, or it is being moved from this same
+          // email's earlier, still-unpaid contract (compare-and-swap on used_by_contract_id).
+          let claimQuery = supabase
             .from("discount_codes")
             .update({
               used_at: new Date().toISOString(),
-              used_by_email: clientEmail.toLowerCase().trim(),
+              used_by_email: normalizedClientEmail,
               used_by_contract_id: data.id,
             })
-            .eq("id", resolvedAmount.discountCodeId)
-            .is("used_at", null)
-            .select("id")
-            .single();
-          if (claimError) {
+            .eq("id", resolvedAmount.discountCodeId);
+          claimQuery = resolvedAmount.reusedFromContractId
+            ? claimQuery.eq("used_by_contract_id", resolvedAmount.reusedFromContractId).eq("used_by_email", normalizedClientEmail)
+            : claimQuery.is("used_at", null);
+          const { data: claimedCode, error: claimError } = await claimQuery.select("id");
+          if (claimError || !claimedCode || claimedCode.length !== 1) {
             await supabase.from("contracts").delete().eq("id", data.id);
             if (resolvedPdfPath) await supabase.storage.from("contracts").remove([resolvedPdfPath]);
             throw new Error("This discount code was already used. Please refresh and try again.");
           }
         }
 
-        try {
-          await supabase.functions.invoke("send-contract-notification", {
-            body: { contractId: data.id, event: "signed" },
-          });
-        } catch (notifyError) {
-          console.error("Failed to send signed contract notification:", notifyError);
-        }
+        const { error: signedNotifyError } = await supabase.functions.invoke("send-contract-notification", {
+          body: { contractId: data.id, event: "signed" },
+        });
+        if (signedNotifyError) console.error("Failed to send signed contract notification:", data.id, signedNotifyError);
 
         // Spine: forward contract_signed (additive — never blocks).
         try {
@@ -336,8 +613,8 @@ serve(async (req) => {
         if (contract.client_email !== customerEmail.toLowerCase().trim()) throw new Error("Customer email does not match this contract");
         if (typeof contract.amount_cents !== "number" || contract.amount_cents <= 0) throw new Error("Contract amount is invalid");
 
-        const origin = req.headers.get("origin") || "https://freedominterventions.com";
-        const successUrl = new URL(redirectPath || "/start-contract?contract_status=success", origin);
+        const origin = resolveRedirectOrigin(req);
+        const successUrl = new URL(safeRedirectPath(redirectPath, "/start-contract?contract_status=success"), origin);
         successUrl.searchParams.set("contract_id", contractId);
 
         const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
@@ -393,7 +670,7 @@ serve(async (req) => {
       }
 
       case "mark-paid": {
-        const { contractId, paymentId } = params;
+        const { contractId } = params;
         if (!validateString(contractId, 100)) throw new Error("Valid contract ID is required");
 
         const { data: contract, error: contractError } = await supabase
@@ -403,6 +680,14 @@ serve(async (req) => {
           .single();
         if (contractError || !contract) throw contractError || new Error("Contract not found");
         if (contract.status === "paid") {
+          // The webhook may have won the flip. Safety net: make sure a paid Readiness
+          // Intensive has its booking (idempotent; no duplicate notifications).
+          const { data: paidContract } = await supabase
+            .from("contracts")
+            .select(PAID_CONTRACT_COLUMNS)
+            .eq("id", contractId)
+            .maybeSingle();
+          if (paidContract) await ensureReadinessBooking(supabase, paidContract as PaidContractRow);
           return new Response(JSON.stringify({ success: true, alreadyPaid: true }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
@@ -418,27 +703,39 @@ serve(async (req) => {
           });
         }
 
-        const verifiedPaymentId = paymentId || verification.order?.tenders?.[0]?.payment_id || verification.order?.tenders?.[0]?.id || null;
+        // Use Square's verified tender id, never a client-supplied payment id.
+        const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id || verification.order?.tenders?.[0]?.id || null;
 
-        const { error } = await supabase
+        // Conditional flip: only the path that actually marks it paid (this or the
+        // Square webhook) sends the paid notification + Spine event, exactly once.
+        const { data: flipped, error } = await supabase
           .from("contracts")
           .update({
             status: "paid",
             payment_id: typeof verifiedPaymentId === "string" ? sanitizeString(verifiedPaymentId).slice(0, 200) : null,
             updated_at: new Date().toISOString(),
           })
-          .eq("id", contractId);
+          .eq("id", contractId)
+          .neq("status", "paid")
+          .select("id");
 
         if (error) throw error;
 
-        try {
-          await supabase.functions.invoke("send-contract-notification", {
-            body: { contractId, event: "paid" },
-          });
-        } catch (notifyError) {
-          console.error("Failed to send paid contract notification:", notifyError);
+        if (flipped && flipped.length > 0) {
+          await fulfillPaidContract(supabase, contractId);
         }
 
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Service-only: the Square webhook calls this after it flips a contract to paid.
+      case "fulfill-paid-contract": {
+        if (!(await isServiceRoleRequest(req))) return unauthorized(corsHeaders);
+        const { contractId } = params;
+        if (!validateString(contractId, 100)) throw new Error("Valid contract ID is required");
+        await fulfillPaidContract(supabase, contractId);
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

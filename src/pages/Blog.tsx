@@ -33,7 +33,7 @@ const fallbackDescriptions: Record<string, string> = {
 const Blog = () => {
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const { data: blogPosts, isLoading } = useQuery({
+  const { data: blogPosts, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -135,6 +135,15 @@ const Blog = () => {
                     <div className="h-4 bg-muted rounded w-24"></div>
                   </div>
                 ))}
+              </div>
+            ) : isError && !blogPosts?.length ? (
+              <div className="text-center py-16">
+                <p className="text-muted-foreground text-lg mb-4">
+                  We couldn't load articles right now. Please check your connection and try again.
+                </p>
+                <Button variant="outline" onClick={() => refetch()} disabled={isFetching}>
+                  {isFetching ? "Retrying..." : "Try again"}
+                </Button>
               </div>
             ) : blogPosts && blogPosts.length > 0 ? (
               <>

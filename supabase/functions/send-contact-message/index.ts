@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { upsertCrmContact } from "../_shared/crm.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,6 +15,7 @@ interface ContactMessageRequest {
   email: string;
   phone?: string;
   message: string;
+  callMeBack?: boolean;
   company?: string; // honeypot
   pagePath?: string;
   sourceAttribution?: Record<string, unknown>;
@@ -26,10 +28,11 @@ function firstName(name: string) {
   return name.trim().split(/\s+/)[0] || "there";
 }
 
-async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
+/** Returns true when the contact message row was stored. */
+async function storeLeadAndQueueFollowups(payload: ContactMessageRequest): Promise<boolean> {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!supabaseUrl || !serviceKey) return;
+  if (!supabaseUrl || !serviceKey) return false;
 
   const supabase = createClient(supabaseUrl, serviceKey);
   const sourceAttribution = payload.sourceAttribution && typeof payload.sourceAttribution === "object"
@@ -51,14 +54,14 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
 
   if (messageError) {
     console.error("Failed to store contact message:", messageError);
-    return;
+    return false;
   }
 
   const nameParts = payload.name.trim().split(/\s+/);
   const first = nameParts[0] || null;
   const last = nameParts.slice(1).join(" ") || null;
-  await supabase.from("crm_contacts").upsert({
-    email: payload.email.toLowerCase().trim(),
+  const { error: crmError } = await upsertCrmContact(supabase, {
+    email: payload.email,
     first_name: first,
     last_name: last,
     phone: payload.phone || null,
@@ -68,10 +71,12 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
     lead_score: 35,
     revenue_path: "free_consultation",
     pipeline_status: "new",
-    next_action: "Reply to contact message or invite to consultation",
+    next_action: payload.callMeBack
+      ? "Call back (requested on contact form)"
+      : "Reply to contact message or invite to consultation",
     next_action_due_at: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-    last_engagement_at: new Date().toISOString(),
-  }, { onConflict: "email" });
+  });
+  if (crmError) console.error("Failed to upsert contact-message CRM contact:", crmError);
 
   const consultUrl = `${SITE_URL}/?type=consultation#booking`;
   const readinessUrl = `${SITE_URL}/intervention-readiness?source=contact_followup&utm_source=freedom_followup&utm_medium=email&utm_campaign=intervention_readiness`;
@@ -151,6 +156,7 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest) {
     utm: extractUtm(sourceAttribution as Record<string, any>),
     props: { source: "contact_form" },
   }, supabase);
+  return true;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -161,6 +167,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const body: ContactMessageRequest = await req.json();
     const { name, email, phone, message, company, pagePath, sourceAttribution } = body;
+    const callMeBack = body.callMeBack === true;
 
     // Honeypot: silently succeed if filled
     if (typeof company === "string" && company.trim().length > 0) {
@@ -225,6 +232,7 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Name:</strong> ${escapeHtml(name)}</p>
           <p><strong>Email:</strong> ${escapeHtml(email)}</p>
           <p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p>
+          <p><strong>Preferred response:</strong> ${callMeBack ? "<strong>Call me back</strong>" : "Reply by email"}</p>
         </div>
         
         <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -236,18 +244,32 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    console.log("Sending contact notification via Resend");
+    // Persist first so a notification failure never makes the user retry (and duplicate).
+    let stored = false;
+    try {
+      stored = await storeLeadAndQueueFollowups({ name, email, phone, message, callMeBack, pagePath, sourceAttribution });
+    } catch (storeError) {
+      console.error("Failed to store contact lead:", storeError);
+    }
 
-    await sendSystemEmail({
-      to: "matt@freedominterventions.com",
-      replyTo: email,
-      subject: `Contact Form: Message from ${name}`,
-      html: emailHtml,
-    });
+    let notified = false;
+    try {
+      console.log("Sending contact notification via Resend");
+      await sendSystemEmail({
+        to: "matt@freedominterventions.com",
+        replyTo: email,
+        subject: `Contact Form${callMeBack ? " (CALL BACK)" : ""}: Message from ${name}`,
+        html: emailHtml,
+      });
+      notified = true;
+      console.log("Contact notification sent successfully via Resend");
+    } catch (notifyError) {
+      console.error("Contact notification failed:", notifyError);
+    }
 
-    console.log("Contact notification sent successfully via Resend");
-
-    await storeLeadAndQueueFollowups({ name, email, phone, message, pagePath, sourceAttribution });
+    if (!stored && !notified) {
+      throw new Error("Contact message was neither stored nor delivered");
+    }
 
     return new Response(
       JSON.stringify({ success: true }),

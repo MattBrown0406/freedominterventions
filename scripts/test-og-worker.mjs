@@ -12,15 +12,22 @@ globalThis.fetch = async (input) => {
   const url = typeof input === "string" ? input : input.url;
   if (url.includes("/rest/v1/blog_posts")) {
     if (url.includes("error-article")) return new Response("upstream error", { status: 503 });
-    const exists = url.includes("known-article");
-    return new Response(JSON.stringify(exists ? [{
-      title: "Known Article",
+    const slug = ["known-article", "late-article"].find((candidate) => url.includes(candidate));
+    return new Response(JSON.stringify(slug ? [{
+      title: "Known <Article>",
       excerpt: "Known article excerpt",
-      image_url: "/og-share.jpg",
-      slug: "known-article",
+      image_url: slug === "known-article" ? '/og-share.jpg?x="><script>' : "/og-share.jpg",
+      slug,
     }] : []), { status: 200, headers: { "Content-Type": "application/json" } });
   }
   originFetches.push(url);
+  if (url.endsWith("/spa-shell.html")) return new Response("SHELL", { status: 200, headers: { "Content-Type": "text/html" } });
+  if (url.endsWith("/blog/late-article")) {
+    return new Response('<html><head><link rel="canonical" href="https://freedominterventions.com" data-react-helmet="true"></head></html>', {
+      status: 200,
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
   return new Response("ORIGIN", { status: 200 });
 };
 
@@ -31,6 +38,10 @@ const request = (pathname, userAgent = "Googlebot") => new Request(`https://free
 const redirect = await worker.fetch(request("/schedule?source=test"));
 assert.equal(redirect.status, 301);
 assert.equal(redirect.headers.get("location"), "https://freedominterventions.com/book?source=test");
+
+const legacySlash = await worker.fetch(request("/about/?source=test"));
+assert.equal(legacySlash.status, 301);
+assert.equal(legacySlash.headers.get("location"), "https://freedominterventions.com/what-makes-matt-different?source=test");
 
 const unknown = await worker.fetch(request("/definitely-not-a-real-page"));
 assert.equal(unknown.status, 404);
@@ -54,6 +65,31 @@ const knownAnswer = await worker.fetch(request("/intervention-answers/can-interv
 assert.equal(knownAnswer.status, 200);
 assert.equal(await knownAnswer.text(), "ORIGIN");
 
+for (const route of ["/referralfit/privacy", "/referralfit/terms"]) {
+  const response = await worker.fetch(request(route));
+  assert.equal(response.status, 200, route);
+  assert.equal(await response.text(), "ORIGIN");
+}
+
+const inspectionTool = await worker.fetch(request("/definitely-not-a-real-page", "Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)"));
+assert.equal(inspectionTool.status, 404);
+
+const nestedBlog = await worker.fetch(request("/blog/known-article/extra"));
+assert.equal(nestedBlog.status, 404);
+
+const lateBlog = await worker.fetch(request("/blog/late-article"));
+assert.equal(lateBlog.status, 200);
+assert.equal(await lateBlog.text(), "SHELL");
+
+const shellDirect = await worker.fetch(request("/spa-shell.html"));
+assert.match(shellDirect.headers.get("x-robots-tag") || "", /noindex/);
+
+const socialShare = await worker.fetch(request("/blog/known-article", "facebookexternalhit/1.1"));
+const socialHtml = await socialShare.text();
+assert.equal(socialShare.status, 200);
+assert(!socialHtml.includes('"><script>'), "OG attributes must be escaped");
+assert(!socialHtml.includes("<Article>"), "OG text must be escaped");
+
 const unknownBlog = await worker.fetch(request("/blog/missing-article"));
 assert.equal(unknownBlog.status, 404);
 assert.match(unknownBlog.headers.get("x-robots-tag") || "", /noindex/);
@@ -71,4 +107,4 @@ assert.equal(sitemap.status, 200);
 assert.equal(await sitemap.text(), "ORIGIN");
 assert(originFetches.some((url) => url.endsWith("/sitemap.xml")));
 
-console.log(JSON.stringify({ redirects: 2, noindex404s: 2, resourcePassThroughs: 5, upstreamFailOpen: true, sitemapOrigin: true }));
+console.log(JSON.stringify({ redirects: 3, noindex404s: 4, resourcePassThroughs: 5, upstreamFailOpen: true, sitemapOrigin: true, spaShellFallback: true, ogEscaped: true }));

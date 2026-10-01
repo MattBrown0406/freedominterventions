@@ -1,21 +1,39 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendResendEmail } from "../_shared/resend.ts";
+import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Server-to-server only. Every customer/booking detail is loaded from the bookings
+// row; the request body only identifies the booking.
 interface BookingConfirmationRequest {
   bookingId: string;
-  customerName: string;
-  customerEmail: string;
-  bookingType: string;
-  bookingDate: string;
-  bookingTime: string;
-  durationMinutes?: number;
   isReschedule?: boolean;
+}
+
+const PACIFIC_TZ = "America/Los_Angeles";
+
+// Bookings store Pacific wall-clock date ("YYYY-MM-DD") and time ("HH:MM[:SS]").
+function formatPacificDate(date: string): string {
+  // Noon UTC on that calendar date, formatted in UTC, so the weekday/day never shifts.
+  return new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function formatPacificTime(time: string): string {
+  const [h, m] = time.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hour12 = h % 12 || 12;
+  return `${hour12}:${String(m || 0).padStart(2, "0")} ${ampm}`;
 }
 
 async function getZoomAccessToken(): Promise<string> {
@@ -81,9 +99,10 @@ async function createZoomMeeting(
     body: JSON.stringify({
       topic,
       type: 2,
+      // Local wall-clock time (no "Z"), interpreted by Zoom in the given timezone.
       start_time: startTime,
       duration,
-      timezone: "America/Los_Angeles",
+      timezone: PACIFIC_TZ,
       settings: {
         host_video: true,
         participant_video: true,
@@ -124,20 +143,22 @@ async function sendEmail(
   console.log("Booking email sent successfully via Resend");
 }
 
-// Map booking type → display label and default duration
-function getBookingMeta(bookingType: string): { label: string; defaultDuration: number; emailNoun: string; known: boolean } {
+// Map booking type → display label, duration and email "Type" line.
+// Mirrors the offers in src/components/BookingCalendar.tsx (OFFERS) and
+// square-booking BOOKING_FEES_CENTS / BOOKING_DURATION_MINUTES.
+function getBookingMeta(bookingType: string): { label: string; defaultDuration: number; emailNoun: string; typeLine: string; known: boolean } {
   switch (bookingType) {
     case 'consultation':
-      return { label: 'Free Consultation', defaultDuration: 15, emailNoun: 'Consultation', known: true };
+      return { label: 'Free Consultation', defaultDuration: 15, emailNoun: 'Consultation', typeLine: 'Free Consultation (15 minutes)', known: true };
     case 'crisis-coaching':
     case 'coaching': // legacy fallback
-      return { label: 'Crisis Coaching Session', defaultDuration: 60, emailNoun: 'Crisis Coaching Session', known: true };
+      return { label: 'Crisis Coaching Session', defaultDuration: 60, emailNoun: 'Crisis Coaching Session', typeLine: 'Crisis Coaching Session (60 minutes - $150)', known: true };
     case 'readiness-intensive':
-      return { label: 'Family Readiness Intensive', defaultDuration: 90, emailNoun: 'Family Readiness Intensive', known: true };
+      return { label: 'Family Readiness Intensive', defaultDuration: 90, emailNoun: 'Family Readiness Intensive', typeLine: 'Family Readiness Intensive (90 minutes - $2,500)', known: true };
     case 'aftercare-planning':
-      return { label: 'Aftercare Planning Call', defaultDuration: 30, emailNoun: 'Aftercare Planning Call', known: true };
+      return { label: 'Aftercare Planning Call', defaultDuration: 30, emailNoun: 'Aftercare Planning Call', typeLine: 'Aftercare Planning Call (30 minutes - free)', known: true };
     default:
-      return { label: 'Appointment', defaultDuration: 60, emailNoun: 'Appointment', known: false };
+      return { label: 'Appointment', defaultDuration: 60, emailNoun: 'Appointment', typeLine: 'Appointment', known: false };
   }
 }
 
@@ -153,64 +174,104 @@ async function deleteZoomMeeting(accessToken: string, meetingId: string): Promis
   }
 }
 
+const jsonResponse = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only our own Edge Functions (service-role bearer) may trigger confirmations.
+  if (!(await isServiceRoleRequest(req))) {
+    return unauthorized(corsHeaders);
+  }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  let bookingId = "";
+  let claimMarker: string | null = null;
+  let notesBeforeClaim: string | null = null;
+  let accessToken: string | null = null;
+  let newMeetingId: string | null = null;
+  let customerEmailSent = false;
+
+  // Release our claim (and remove a meeting we created but never delivered) so a
+  // later retry can succeed instead of seeing a permanent "pending" marker.
+  const rollback = async () => {
+    if (newMeetingId && accessToken && !customerEmailSent) {
+      await deleteZoomMeeting(accessToken, newMeetingId);
+    }
+    if (claimMarker && bookingId && !customerEmailSent) {
+      const { error: releaseError } = await supabase
+        .from("bookings")
+        .update({ notes: notesBeforeClaim, updated_at: new Date().toISOString() })
+        .eq("id", bookingId)
+        .eq("notes", claimMarker);
+      if (releaseError) console.error("Failed to release Zoom claim:", releaseError);
+    }
+  };
+
   try {
-    const {
-      bookingId,
-      customerName,
-      customerEmail,
-      bookingType,
-      bookingDate,
-      bookingTime,
-      durationMinutes,
-      isReschedule = false,
-    }: BookingConfirmationRequest = await req.json();
+    const body: BookingConfirmationRequest = await req.json();
+    bookingId = typeof body?.bookingId === "string" ? body.bookingId.trim() : "";
+    const isReschedule = body?.isReschedule === true;
+    if (!bookingId) return jsonResponse({ error: "bookingId is required" }, 400);
 
-    const meta = getBookingMeta(bookingType);
-    // For known session types, the canonical length always wins — a paid
-    // coaching session must never go out as a 15-minute meeting even if the
-    // caller passed a wrong durationMinutes.
-    const effectiveDuration = meta.known
-      ? meta.defaultDuration
-      : (typeof durationMinutes === 'number' && durationMinutes > 0
-        ? durationMinutes
-        : meta.defaultDuration);
-
-    console.log("Processing booking confirmation for:", customerEmail, "type:", bookingType);
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // ---- Idempotency guard -------------------------------------------------
-    // Several paths can invoke this function for the same booking (client,
-    // square-booking verify, square-webhook). Without a claim, each one would
-    // create its own Zoom meeting, producing duplicate appointments.
-    const { data: existingBooking } = await supabase
+    const { data: booking, error: bookingError } = await supabase
       .from("bookings")
-      .select("notes")
+      .select("id, customer_name, customer_email, booking_type, booking_date, booking_time, duration_minutes, status, notes")
       .eq("id", bookingId)
       .maybeSingle();
 
-    const existingNotes: string = existingBooking?.notes ?? "";
+    if (bookingError) {
+      console.error("Failed to load booking:", bookingError);
+      return jsonResponse({ error: "Unable to send booking confirmation. Please try again later." }, 500);
+    }
+    if (!booking) return jsonResponse({ error: "Booking not found" }, 404);
+    if (booking.status !== "confirmed") {
+      console.log("Refusing confirmation for non-confirmed booking:", bookingId, booking.status);
+      return jsonResponse({ error: "Booking is not confirmed" }, 409);
+    }
+
+    const customerName: string = booking.customer_name;
+    const customerEmail: string = booking.customer_email;
+    const bookingType: string = booking.booking_type;
+    const bookingDate: string = booking.booking_date;
+    const bookingTime: string = String(booking.booking_time).slice(0, 5);
+
+    const meta = getBookingMeta(bookingType);
+    // For known session types, the canonical length always wins — a paid
+    // coaching session must never go out as a 15-minute meeting.
+    const effectiveDuration = meta.known
+      ? meta.defaultDuration
+      : (typeof booking.duration_minutes === 'number' && booking.duration_minutes > 0
+        ? booking.duration_minutes
+        : meta.defaultDuration);
+
+    console.log("Processing booking confirmation for booking:", bookingId, "type:", bookingType);
+
+    // ---- Idempotency guard -------------------------------------------------
+    // Several paths can invoke this function for the same booking (square-booking
+    // verify, square-webhook, contracts). Without a claim, each one would
+    // create its own Zoom meeting, producing duplicate appointments.
+    const existingNotes: string = booking.notes ?? "";
     const alreadyHasMeeting = existingNotes.includes("Join URL:");
     const previousMeetingId = existingNotes.match(/Zoom Meeting ID:\s*(\d+)/)?.[1] ?? null;
 
     if (alreadyHasMeeting && !isReschedule) {
       console.log("Booking already has a Zoom meeting; skipping duplicate creation:", bookingId);
-      return new Response(
-        JSON.stringify({
-          success: true,
-          duplicate: true,
-          zoomJoinUrl: existingNotes.match(/Join URL:\s*(\S+)/)?.[1] ?? null,
-          meetingId: previousMeetingId,
-        }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return jsonResponse({
+        success: true,
+        duplicate: true,
+        zoomJoinUrl: existingNotes.match(/Join URL:\s*(\S+)/)?.[1] ?? null,
+        meetingId: previousMeetingId,
+      });
     }
 
     // A concurrent invocation may already be mid-flight. Its marker does not
@@ -222,54 +283,43 @@ const handler = async (req: Request): Promise<Response> => {
       const claimAge = Date.now() - new Date(pendingClaimAt).getTime();
       if (Number.isFinite(claimAge) && claimAge < CLAIM_TTL_MS) {
         console.log("Zoom creation already in flight for booking:", bookingId);
-        return new Response(
-          JSON.stringify({ success: true, duplicate: true, pending: true }),
-          { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
+        return jsonResponse({ success: true, duplicate: true, pending: true });
       }
       console.log("Stale Zoom claim detected; retrying booking:", bookingId);
     }
 
     // Compare-and-swap on the exact notes value we just read: only one
-    // concurrent invocation can win this update.
-    const claimMarker = `Zoom meeting pending (claimed ${new Date().toISOString()})`;
+    // concurrent invocation can win this update. On a reschedule the previous
+    // meeting details are kept in the marker so a rollback can restore them.
+    const marker = `Zoom meeting pending (claimed ${new Date().toISOString()})`;
     let claimQuery = supabase
       .from("bookings")
-      .update({ notes: claimMarker, updated_at: new Date().toISOString() })
+      .update({ notes: marker, updated_at: new Date().toISOString() })
       .eq("id", bookingId);
-    claimQuery = existingBooking?.notes == null
+    claimQuery = booking.notes == null
       ? claimQuery.is("notes", null)
       : claimQuery.eq("notes", existingNotes);
     const { data: claimed, error: claimError } = await claimQuery.select("id");
 
     if (claimError) {
       console.error("Failed to claim booking for Zoom creation:", claimError);
-      return new Response(
-        JSON.stringify({ error: "Unable to send booking confirmation. Please try again later." }),
-        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return jsonResponse({ error: "Unable to send booking confirmation. Please try again later." }, 500);
     }
     if (!claimed || claimed.length === 0) {
       console.log("Another invocation already claimed this booking:", bookingId);
-      return new Response(
-        JSON.stringify({ success: true, duplicate: true }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return jsonResponse({ success: true, duplicate: true });
     }
+    claimMarker = marker;
+    // Restore a real meeting reference on failure, but never a stale pending marker.
+    notesBeforeClaim = pendingClaimAt ? null : booking.notes;
 
+    // Zoom wants local wall-clock time (no "Z") plus the timezone field.
+    const zoomStartTime = `${bookingDate}T${bookingTime}:00`;
 
-    // Format the meeting time for Zoom (ISO 8601)
-    const meetingDateTime = new Date(`${bookingDate}T${bookingTime}`);
-    const zoomStartTime = meetingDateTime.toISOString();
-
-    // Get Zoom access token and create meeting
-    const accessToken = await getZoomAccessToken();
+    // Get Zoom access token and create the NEW meeting first; the old one (on a
+    // reschedule) is only deleted once the new one exists and has been emailed.
+    accessToken = await getZoomAccessToken();
     console.log("Got Zoom access token");
-
-    // On a reschedule, remove the old meeting so only one appointment remains.
-    if (isReschedule && previousMeetingId) {
-      await deleteZoomMeeting(accessToken, previousMeetingId);
-    }
 
     const meetingTopic = `Freedom Interventions - ${meta.label} with ${customerName}`;
 
@@ -279,30 +329,13 @@ const handler = async (req: Request): Promise<Response> => {
       zoomStartTime,
       effectiveDuration
     );
+    newMeetingId = meetingId;
     console.log("Created Zoom meeting:", meetingId);
 
-
-    // Format date for email
-    const formattedDate = meetingDateTime.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const formattedTime = meetingDateTime.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    let appointmentType: string;
-    if (bookingType === 'consultation') {
-      appointmentType = 'Free Consultation (15 minutes)';
-    } else if (bookingType === 'readiness-intensive') {
-      appointmentType = 'Family Readiness Intensive (90 minutes - $2,500)';
-    } else {
-      appointmentType = 'Crisis Coaching Session (60 minutes - $150)';
-    }
+    // Format date/time for email (already Pacific wall-clock values)
+    const formattedDate = formatPacificDate(bookingDate);
+    const formattedTime = formatPacificTime(bookingTime);
+    const appointmentType = meta.typeLine;
 
     const emailTitle = isReschedule
       ? "Your Appointment Has Been Rescheduled!"
@@ -325,10 +358,12 @@ const handler = async (req: Request): Promise<Response> => {
       : '';
 
     // Send confirmation email
-    // Send confirmation email
     const safeCustomerName = escapeHtml(customerName);
-    const safeJoinUrl = encodeURI(joinUrl);
+    const safeJoinUrl = escapeHtml(encodeURI(joinUrl));
     const safeBookingId = escapeHtml(bookingId);
+    const safeAppointmentType = escapeHtml(appointmentType);
+    const safeDate = escapeHtml(formattedDate);
+    const safeTime = escapeHtml(formattedTime);
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #1e40af;">${emailTitle}</h1>
@@ -341,9 +376,9 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Appointment Details</h2>
           <p><strong>Booking ID:</strong> ${safeBookingId}</p>
-          <p><strong>Type:</strong> ${appointmentType}</p>
-          <p><strong>Date:</strong> ${formattedDate}</p>
-          <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
+          <p><strong>Type:</strong> ${safeAppointmentType}</p>
+          <p><strong>Date:</strong> ${safeDate}</p>
+          <p><strong>Time:</strong> ${safeTime} (Pacific Time)</p>
         </div>
 
         ${intensiveBlock}
@@ -376,46 +411,9 @@ const handler = async (req: Request): Promise<Response> => {
       emailSubject,
       emailHtml
     );
+    customerEmailSent = true;
 
-    // Send notification email to Matt
-    const adminIntensiveNote = bookingType === 'readiness-intensive'
-      ? `<p style="margin: 8px 0 0; font-size: 13px; color: #065f46;"><strong>Includes 7 days of follow-up support</strong> by Zoom, phone, text, or email.</p>`
-      : '';
-
-    const adminNotificationHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #1e40af;">New Booking ${isReschedule ? '(Rescheduled)' : 'Received'}</h1>
-
-        <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
-          <p><strong>Booking ID:</strong> ${bookingId}</p>
-          <p><strong>Client Name:</strong> ${customerName}</p>
-          <p><strong>Client Email:</strong> ${customerEmail}</p>
-          <p><strong>Type:</strong> ${appointmentType}</p>
-          <p><strong>Date:</strong> ${formattedDate}</p>
-          <p><strong>Time:</strong> ${formattedTime} (Pacific Time)</p>
-          ${adminIntensiveNote}
-        </div>
-
-        <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h2 style="color: #1e40af; margin-top: 0;">Zoom Meeting</h2>
-          <p><a href="${joinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Join Zoom Meeting</a></p>
-          <p style="margin-top: 15px; font-size: 14px; color: #666;">Meeting ID: ${meetingId}</p>
-        </div>
-      </div>
-    `;
-
-    await sendEmail(
-      "matt@freedominterventions.com",
-      `New ${meta.emailNoun} Booking - ${customerName}`,
-      adminNotificationHtml
-    );
-
-    console.log("Email sent successfully");
-
-    // Update booking with Zoom meeting info
-
-
+    // Store the new Zoom meeting on the booking (releases our claim marker).
     const { error: zoomUpdateError } = await supabase
       .from("bookings")
       .update({
@@ -428,26 +426,60 @@ const handler = async (req: Request): Promise<Response> => {
       console.error("Failed to store Zoom details on booking:", zoomUpdateError);
     }
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        zoomJoinUrl: joinUrl,
-        meetingId 
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+    // On a reschedule, remove the old meeting now that the new one exists.
+    if (isReschedule && previousMeetingId && previousMeetingId !== meetingId) {
+      await deleteZoomMeeting(accessToken, previousMeetingId);
+    }
+
+    // Send notification email to Matt (failure here must not roll back the customer's meeting)
+    const adminIntensiveNote = bookingType === 'readiness-intensive'
+      ? `<p style="margin: 8px 0 0; font-size: 13px; color: #065f46;"><strong>Includes 7 days of follow-up support</strong> by Zoom, phone, text, or email.</p>`
+      : '';
+
+    const adminNotificationHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #1e40af;">New Booking ${isReschedule ? '(Rescheduled)' : 'Received'}</h1>
+
+        <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
+          <p><strong>Booking ID:</strong> ${safeBookingId}</p>
+          <p><strong>Client Name:</strong> ${safeCustomerName}</p>
+          <p><strong>Client Email:</strong> ${escapeHtml(customerEmail)}</p>
+          <p><strong>Type:</strong> ${safeAppointmentType}</p>
+          <p><strong>Date:</strong> ${safeDate}</p>
+          <p><strong>Time:</strong> ${safeTime} (Pacific Time)</p>
+          ${adminIntensiveNote}
+        </div>
+
+        <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="color: #1e40af; margin-top: 0;">Zoom Meeting</h2>
+          <p><a href="${safeJoinUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Join Zoom Meeting</a></p>
+          <p style="margin-top: 15px; font-size: 14px; color: #666;">Meeting ID: ${escapeHtml(meetingId)}</p>
+        </div>
+      </div>
+    `;
+
+    try {
+      await sendEmail(
+        "matt@freedominterventions.com",
+        `New ${meta.emailNoun} Booking - ${customerName.replace(/[\r\n]+/g, " ")}`,
+        adminNotificationHtml
+      );
+    } catch (adminEmailError) {
+      console.error("Failed to send admin booking notification:", adminEmailError);
+    }
+
+    console.log("Email sent successfully");
+
+    return jsonResponse({
+      success: true,
+      zoomJoinUrl: joinUrl,
+      meetingId,
+    });
   } catch (error: any) {
     console.error("Error in send-booking-confirmation:", error);
-    return new Response(
-      JSON.stringify({ error: "Unable to send booking confirmation. Please try again later." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      }
-    );
+    await rollback();
+    return jsonResponse({ error: "Unable to send booking confirmation. Please try again later." }, 500);
   }
 };
 

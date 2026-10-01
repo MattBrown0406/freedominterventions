@@ -37,6 +37,11 @@ export default function InterventionAnswerDetail() {
   if (!answer) {
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead
+          title="Answer Not Found | Freedom Interventions"
+          description="This intervention answer doesn't exist. Browse all intervention answers for families."
+          noindex={true}
+        />
         <Navbar />
         <main className="container px-6 py-32 text-center">
           <h1 className="font-serif text-4xl font-bold text-foreground">Answer not found</h1>

@@ -76,7 +76,11 @@ const neighboringProvinces: Record<string, string[]> = {
   "Newfoundland and Labrador": ["Quebec"],
 };
 
-const LocationLinks = ({ currentLocation, locationType, parentState }: LocationLinksProps) => {
+const LocationLinks = ({ currentLocation, locationType, parentState: parentStateProp }: LocationLinksProps) => {
+  // Many city pages omit parentState; derive it from the locations data so they still render links.
+  const parentState = parentStateProp
+    ?? (locationType === "city" ? usCities.find(c => c.name === currentLocation)?.state : undefined);
+
   // Get cities in this state (for state pages)
   const citiesInState = locationType === "state" ? getCitiesByState(currentLocation) : [];
   

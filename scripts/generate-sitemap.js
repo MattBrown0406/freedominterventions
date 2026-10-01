@@ -14,7 +14,26 @@ const envPath = join(root, ".env");
 const routeManifest = JSON.parse(readFileSync(join(__dirname, "route-manifest.json"), "utf8"));
 const appSource = readFileSync(appPath, "utf8");
 const answerSource = readFileSync(answersPath, "utf8");
-const today = new Date().toISOString().slice(0, 10);
+const isDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value || "");
+const xmlEscape = (value) => String(value)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&apos;");
+
+// When no trustworthy date exists (e.g. shallow clone), reuse the previously
+// published lastmod for that URL, or omit <lastmod>. Never invent "today".
+const previousLastmods = new Map();
+if (existsSync(outputPath)) {
+  for (const [, loc, lastmod] of readFileSync(outputPath, "utf8").matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) {
+    previousLastmods.set(loc, lastmod);
+  }
+}
+const gitHistoryUsable = (() => {
+  const result = spawnSync("git", ["rev-parse", "--is-shallow-repository"], { cwd: root, encoding: "utf8" });
+  return result.status === 0 && result.stdout.trim() === "false";
+})();
 
 const loadEnv = () => {
   const env = {
@@ -67,19 +86,19 @@ for (const post of posts ?? []) {
   const route = `/blog/${post.slug}`;
   if (canonicalRouteAliases.has(route)) continue;
   const date = String(post.updated_at || post.published_at || post.created_at || "").slice(0, 10);
-  blogDates.set(route, /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : today);
+  blogDates.set(route, isDate(date) ? date : null);
 }
 
 const gitDateCache = new Map();
 const gitLastModified = (sourcePath) => {
-  if (!sourcePath) return today;
+  if (!sourcePath || !gitHistoryUsable) return null;
   if (gitDateCache.has(sourcePath)) return gitDateCache.get(sourcePath);
   const result = spawnSync("git", ["log", "-1", "--format=%cs", "--", sourcePath], {
     cwd: root,
     encoding: "utf8",
   });
   const value = result.status === 0 ? result.stdout.trim() : "";
-  const date = /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : today;
+  const date = isDate(value) ? value : null;
   gitDateCache.set(sourcePath, date);
   return date;
 };
@@ -106,12 +125,19 @@ const lastModifiedFor = (route) => {
   return gitLastModified(routeSourceFiles.get(route) || "src/App.tsx");
 };
 
+let missingLastmods = 0;
 const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map((route) => {
   const configured = manifestMap.get(route);
   const priority = configured?.priority ?? (route.startsWith("/blog/") ? "0.7" : "0.7");
   const changefreq = configured?.changefreq ?? (route.startsWith("/blog/") ? "monthly" : "monthly");
-  return `  <url>\n    <loc>${SITE_URL}${route}</loc>\n    <lastmod>${lastModifiedFor(route)}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+  const loc = xmlEscape(`${SITE_URL}${route}`);
+  const lastmod = lastModifiedFor(route) || previousLastmods.get(loc);
+  if (!lastmod) missingLastmods += 1;
+  const lastmodTag = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : "";
+  return `  <url>\n    <loc>${loc}</loc>${lastmodTag}\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
 }).join("\n")}\n</urlset>\n`;
 
 writeFileSync(outputPath, xml);
 console.log(`✅ Sitemap generated with ${routes.length} URLs (${blogDates.size} published blog posts) -> ${relative(root, outputPath)}`);
+if (!gitHistoryUsable) console.warn("⚠️  Git history unavailable or shallow: page lastmod values reuse the previous sitemap or are omitted.");
+if (missingLastmods) console.warn(`⚠️  ${missingLastmods} sitemap URL(s) have no trustworthy lastmod and omit <lastmod>.`);

@@ -15,7 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle } from "lucide-react";
+import { FunctionsHttpError } from "@supabase/supabase-js";
+import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle } from "lucide-react";
 import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION, PHYSICAL_WITHDRAWAL_SYMPTOMS, PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS } from "@/components/assessment/types";
 import InsuranceCardUpload from "@/components/assessment/InsuranceCardUpload";
 import { trackEvent } from "@/lib/analytics";
@@ -55,9 +56,28 @@ interface FamilyHistoryEntry {
   details: string;
 }
 
+// Required fields per wizard section. Only the visible section is rendered, so
+// native HTML `required` can't enforce fields on other sections — validate here.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const REQUIRED_FIELDS: Record<number, { field: string; label: string; email?: boolean }[]> = {
+  1: [
+    { field: "contactName", label: "Your Full Name" },
+    { field: "contactRelationship", label: "Relationship to Individual" },
+    { field: "contactEmail", label: "Email Address", email: true },
+    { field: "contactPhone", label: "Phone Number" },
+  ],
+  2: [
+    { field: "fullName", label: "Full Legal Name" },
+    { field: "age", label: "Age" },
+  ],
+  3: [{ field: "primarySubstances", label: "Primary Substance(s) of Concern" }],
+  12: [{ field: "familySignature", label: "Electronic Signature" }],
+};
+
 const Assessment = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [currentSection, setCurrentSection] = useState(1);
   const totalSections = 12;
 
@@ -314,8 +334,34 @@ const Assessment = () => {
   const removeFamilyMentalHealth = (i: number) => setFamilyMentalHealthHistory(prev => prev.filter((_, idx) => idx !== i));
   const updateFamilyMentalHealth = (i: number, field: keyof FamilyHistoryEntry, value: string) => setFamilyMentalHealthHistory(prev => prev.map((e, idx) => idx === i ? { ...e, [field]: value } : e));
 
+  // Returns a user-facing message for the first missing/invalid required field in a section, or null.
+  const getSectionError = (section: number): string | null => {
+    for (const { field, label, email } of REQUIRED_FIELDS[section] ?? []) {
+      const value = String((formData as Record<string, unknown>)[field] ?? "").trim();
+      if (!value) return `Please complete "${label}" in Section ${section}: ${sectionTitles[section - 1]}.`;
+      if (email && !EMAIL_RE.test(value)) return `Please enter a valid email address in Section ${section}: ${sectionTitles[section - 1]}.`;
+    }
+    return null;
+  };
+
+  const showSectionError = (message: string) => {
+    toast({ title: "Required information missing", description: message, variant: "destructive" });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting || isSubmitted) return;
+
+    for (let section = 1; section <= totalSections; section++) {
+      const sectionError = getSectionError(section);
+      if (sectionError) {
+        setCurrentSection(section);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showSectionError(sectionError);
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -474,7 +520,18 @@ const Assessment = () => {
       };
 
       const { error } = await supabase.functions.invoke("submit-assessment", { body: assessmentData });
-      if (error) throw new Error(error.message);
+      if (error) {
+        let message = "We couldn't submit your assessment. Please try again or call us directly.";
+        if (error instanceof FunctionsHttpError) {
+          try {
+            const body = await error.context.json();
+            if (body && typeof body.error === "string" && body.error) message = body.error;
+          } catch {
+            // Non-JSON error body — keep the generic message.
+          }
+        }
+        throw new Error(message);
+      }
 
       trackEvent("assessment_submitted", {
         urgency_level: formData.urgencyLevel || undefined,
@@ -482,6 +539,8 @@ const Assessment = () => {
         dsm_yes_count: Object.values(formData.dsmBehaviors).filter(Boolean).length,
       });
 
+      setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
         title: "Assessment Submitted Successfully",
         description: "Thank you. We will review your comprehensive assessment and contact you within 24 hours.",
@@ -513,6 +572,11 @@ const Assessment = () => {
   ];
 
   const nextSection = () => {
+    const sectionError = getSectionError(currentSection);
+    if (sectionError) {
+      showSectionError(sectionError);
+      return;
+    }
     setCurrentSection(prev => Math.min(prev + 1, totalSections));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -546,6 +610,22 @@ const Assessment = () => {
           </div>
         </section>
 
+        {isSubmitted ? (
+          <section className="py-12">
+            <div className="container mx-auto px-4 max-w-2xl">
+              <Card>
+                <CardContent className="pt-8 pb-8 text-center space-y-4">
+                  <CheckCircle className="h-12 w-12 text-primary mx-auto" />
+                  <h2 className="text-2xl font-bold text-foreground">Thank you — your assessment was received</h2>
+                  <p className="text-muted-foreground">
+                    We will review your information confidentially and contact you within 24 hours. If this is an emergency, call 911.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+        ) : (
+        <>
         {/* Progress Bar */}
         <div className="sticky top-16 z-10 bg-background/95 backdrop-blur-sm border-b py-4">
           <div className="container mx-auto px-4 max-w-4xl">
@@ -1774,7 +1854,7 @@ const Assessment = () => {
                     Next <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting || isSubmitted}>
                     {isSubmitting ? "Submitting..." : "Submit Assessment"}
                   </Button>
                 )}
@@ -1782,6 +1862,8 @@ const Assessment = () => {
             </form>
           </div>
         </section>
+        </>
+        )}
       </main>
 
       <Footer />

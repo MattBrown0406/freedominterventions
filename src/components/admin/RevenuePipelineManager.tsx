@@ -97,7 +97,8 @@ const toDatetimeLocal = (value: string | null) => {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toISOString().slice(0, 16);
+  // datetime-local inputs expect local wall time; toISOString() would shift by the UTC offset.
+  return format(date, "yyyy-MM-dd'T'HH:mm");
 };
 
 const fromDatetimeLocal = (value: string) => {

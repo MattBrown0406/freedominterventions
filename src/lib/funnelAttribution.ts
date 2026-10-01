@@ -86,7 +86,19 @@ const normalizeSource = (source: string | null) => {
 const sourceFromReferrer = (referrer: string | null) => {
   if (!referrer) return null;
   try {
-    const host = new URL(referrer).hostname.replace(/^www\./, "");
+    const rawHost = new URL(referrer).hostname.toLowerCase();
+    const host = rawHost.replace(/^www\./, "");
+    // Internal navigation and returns from Square checkout must not overwrite the original source.
+    const isHost = (domain: string) => host === domain || host.endsWith(`.${domain}`);
+    if (
+      isHost("freedominterventions.com") ||
+      (isBrowser() && rawHost === window.location.hostname.toLowerCase()) ||
+      isHost("squareup.com") ||
+      isHost("squareupsandbox.com") ||
+      isHost("square.link")
+    ) {
+      return null;
+    }
     if (host.includes("soberhelpline.com")) return "sober_helpline";
     if (host.includes("nomoreenabling.com")) return "no_more_enabling";
     if (host.includes("familybridgeapp.com")) return "family_bridge";

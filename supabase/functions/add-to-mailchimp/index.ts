@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 import { crypto as stdCrypto } from "https://deno.land/std@0.224.0/crypto/mod.ts";
 import { encodeHex } from "https://deno.land/std@0.224.0/encoding/hex.ts";
 
@@ -10,6 +11,10 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  if (!(await isServiceRoleRequest(req))) {
+    return unauthorized(corsHeaders);
   }
 
   try {

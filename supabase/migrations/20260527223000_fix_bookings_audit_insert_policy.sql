@@ -25,12 +25,14 @@ DROP POLICY IF EXISTS "No direct modifications to bookings audit log" ON public.
 DROP POLICY IF EXISTS "No direct client inserts allowed" ON public.bookings_access_audit;
 
 -- Block UPDATE / DELETE so the audit trail stays immutable.
+DROP POLICY IF EXISTS "Audit log is immutable - no updates" ON public.bookings_access_audit;
 CREATE POLICY "Audit log is immutable - no updates"
   ON public.bookings_access_audit
   FOR UPDATE
   USING (false)
   WITH CHECK (false);
 
+DROP POLICY IF EXISTS "Audit log is immutable - no deletes" ON public.bookings_access_audit;
 CREATE POLICY "Audit log is immutable - no deletes"
   ON public.bookings_access_audit
   FOR DELETE
@@ -39,6 +41,7 @@ CREATE POLICY "Audit log is immutable - no deletes"
 -- Allow INSERT — the trigger function is the only writer, and SECURITY DEFINER
 -- runs it as the function owner who has INSERT privilege on the table. Direct
 -- client inserts are blocked by absence of INSERT grants to anon/authenticated.
+DROP POLICY IF EXISTS "Audit log accepts trigger-driven inserts" ON public.bookings_access_audit;
 CREATE POLICY "Audit log accepts trigger-driven inserts"
   ON public.bookings_access_audit
   FOR INSERT

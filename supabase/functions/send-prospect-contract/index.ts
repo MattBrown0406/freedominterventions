@@ -39,6 +39,8 @@ const formatUsd = (cents: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Must match STANDARD_INTERVENTION_FEE_CENTS in contracts/index.ts (the price used when no code is given).
+const STANDARD_INTERVENTION_FEE_CENTS = 950000;
 
 function generateCode() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -104,7 +106,11 @@ Deno.serve(async (req) => {
     let codeId: string | null = null;
     let expiresAt: string | null = null;
 
-    if (discountAmountCents > 0 && !previewOnly) {
+    // A code carries base_amount_cents to the contract, so one is needed whenever the price
+    // differs from the standard fee — including a custom base price with no discount.
+    const needsCode = discountAmountCents > 0 || baseAmountCents !== STANDARD_INTERVENTION_FEE_CENTS;
+
+    if (needsCode && !previewOnly) {
       expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString();
       for (let index = 0; index < 5; index++) {
         const candidate = generateCode();
@@ -133,7 +139,7 @@ Deno.serve(async (req) => {
         }
       }
       if (!code) return json({ error: "Failed to generate a unique discount code" }, 500);
-    } else if (discountAmountCents > 0) {
+    } else if (needsCode) {
       code = "FREEDOM-PRVW";
     }
 

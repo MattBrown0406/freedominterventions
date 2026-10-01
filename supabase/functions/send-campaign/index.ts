@@ -192,46 +192,68 @@ Deno.serve(async (req) => {
         if (response.ok) {
           sent++;
           if (campaignId) {
-            await admin.from("email_campaign_sends").insert({
+            const { error: sendLogError } = await admin.from("email_campaign_sends").insert({
               campaign_id: campaignId,
               contact_id: recipient.id === "test" ? null : recipient.id,
               email: recipient.email,
               status: "sent",
               sent_at: new Date().toISOString(),
             });
-            await admin.from("crm_contacts").update({ last_contacted_at: new Date().toISOString() }).eq("id", recipient.id);
+            if (sendLogError) console.error("Failed to log campaign send:", sendLogError.message);
+            const { error: contactError } = await admin
+              .from("crm_contacts")
+              .update({ last_contacted_at: new Date().toISOString() })
+              .eq("id", recipient.id);
+            if (contactError) console.error("Failed to update last_contacted_at:", contactError.message);
           }
         } else {
           failed++;
           const detail = await response.text().catch(() => "");
           errors.push(`${recipient.email}: ${response.status} ${detail.slice(0, 200)}`);
           if (campaignId) {
-            await admin.from("email_campaign_sends").insert({
+            const { error: sendLogError } = await admin.from("email_campaign_sends").insert({
               campaign_id: campaignId,
               contact_id: recipient.id === "test" ? null : recipient.id,
               email: recipient.email,
               status: "failed",
-              error_message: detail.slice(0, 500),
+              error: detail.slice(0, 500),
             });
+            if (sendLogError) console.error("Failed to log campaign failure:", sendLogError.message);
           }
         }
       } catch (error) {
         failed++;
         errors.push(`${recipient.email}: ${String(error).slice(0, 200)}`);
+        if (campaignId) {
+          const { error: sendLogError } = await admin.from("email_campaign_sends").insert({
+            campaign_id: campaignId,
+            contact_id: recipient.id,
+            email: recipient.email,
+            status: "failed",
+            error: String(error).slice(0, 500),
+          });
+          if (sendLogError) console.error("Failed to log campaign failure:", sendLogError.message);
+        }
       }
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
 
     if (campaignId) {
-      await admin
+      const finalStatus = {
+        status: failed === 0 ? "sent" : "sent_with_errors",
+        sent_count: sent,
+        failed_count: failed,
+      };
+      const { error: finalizeError } = await admin
         .from("email_campaigns")
-        .update({
-          status: failed === 0 ? "sent" : "sent_with_errors",
-          sent_count: sent,
-          failed_count: failed,
-          sent_at: new Date().toISOString(),
-        })
+        .update({ ...finalStatus, sent_at: new Date().toISOString() })
         .eq("id", campaignId);
+      if (finalizeError) {
+        console.error("Failed to finalize campaign (retrying without sent_at):", finalizeError.message);
+        // Never leave the campaign stuck at 'sending' (e.g. if sent_at is missing).
+        const { error: retryError } = await admin.from("email_campaigns").update(finalStatus).eq("id", campaignId);
+        if (retryError) console.error("Failed to finalize campaign:", retryError.message);
+      }
     }
 
     return json({ success: true, test: Boolean(testEmail), campaignId, recipientCount: recipients.length, sent, failed, errors: errors.slice(0, 10) });

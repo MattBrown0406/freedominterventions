@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { sendResendEmail } from "../_shared/resend.ts";
+import { escapeHtml, sendResendEmail } from "../_shared/resend.ts";
+import { isServiceOrAdmin, unauthorized } from "../_shared/auth.ts";
 import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
@@ -51,16 +52,22 @@ function buildResumeUrl(cart: AbandonedCart): string {
   return `${SITE_URL}/?${params.toString()}#booking`;
 }
 
+// Escape Telegram legacy-Markdown control characters in user-supplied text.
+function escapeTelegramMarkdown(value: unknown): string {
+  return String(value ?? "").replace(/([_*`\[])/g, "\\$1");
+}
+
 async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
   const offer = getOfferMeta(cart.booking_type);
   const resumeUrl = buildResumeUrl(cart);
+  const firstName = cart.customer_name.split(" ")[0];
 
-  const subject = `${cart.customer_name.split(" ")[0]}, your ${offer.label} is still waiting`;
+  const subject = `${firstName.replace(/[\r\n]+/g, " ")}, your ${offer.label} is still waiting`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1f2937;">
       <h1 style="color: #1e40af; margin-bottom: 8px;">We saved your spot</h1>
-      <p style="font-size: 16px;">Hi ${cart.customer_name.split(" ")[0]},</p>
+      <p style="font-size: 16px;">Hi ${escapeHtml(firstName)},</p>
       <p style="font-size: 16px; line-height: 1.6;">
         I noticed you started booking a <strong>${offer.label}</strong> with Freedom Interventions but didn't finish. 
         I want you to know — when families reach out, they're usually at a moment that matters. I don't want you to lose that momentum.
@@ -70,11 +77,11 @@ async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
         <h2 style="color: #1e40af; margin-top: 0; font-size: 18px;">${offer.label}</h2>
         <p style="margin: 4px 0;"><strong>What you get:</strong> ${offer.duration}</p>
         <p style="margin: 4px 0;"><strong>Investment:</strong> ${offer.price}</p>
-        ${cart.booking_date && cart.booking_time ? `<p style="margin: 4px 0;"><strong>Time you selected:</strong> ${cart.booking_date} at ${cart.booking_time} Pacific</p>` : ""}
+        ${cart.booking_date && cart.booking_time ? `<p style="margin: 4px 0;"><strong>Time you selected:</strong> ${escapeHtml(cart.booking_date)} at ${escapeHtml(cart.booking_time)} Pacific</p>` : ""}
       </div>
 
       <div style="text-align: center; margin: 32px 0;">
-        <a href="${resumeUrl}" style="display: inline-block; background-color: #1e40af; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
+        <a href="${escapeHtml(resumeUrl)}" style="display: inline-block; background-color: #1e40af; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
           Complete My Booking
         </a>
       </div>
@@ -127,11 +134,11 @@ async function sendTelegramAlert(cart: AbandonedCart): Promise<void> {
   const text =
     `🚨 *High-value abandoned cart*\n\n` +
     `*${offer.label}* (${offer.price})\n\n` +
-    `*Name:* ${cart.customer_name}\n` +
-    `*Email:* ${cart.customer_email}\n` +
-    (cart.customer_phone ? `*Phone:* ${cart.customer_phone}\n` : "") +
+    `*Name:* ${escapeTelegramMarkdown(cart.customer_name)}\n` +
+    `*Email:* ${escapeTelegramMarkdown(cart.customer_email)}\n` +
+    (cart.customer_phone ? `*Phone:* ${escapeTelegramMarkdown(cart.customer_phone)}\n` : "") +
     (cart.booking_date && cart.booking_time
-      ? `*Selected:* ${cart.booking_date} at ${cart.booking_time} PT\n`
+      ? `*Selected:* ${escapeTelegramMarkdown(cart.booking_date)} at ${escapeTelegramMarkdown(cart.booking_time)} PT\n`
       : "") +
     `\nRecovery email sent. Consider a personal follow-up.`;
 
@@ -149,6 +156,11 @@ async function sendTelegramAlert(cart: AbandonedCart): Promise<void> {
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // pg_cron sends a service-role bearer; AbandonedCartsManager sends a strict-admin JWT.
+  if (!(await isServiceOrAdmin(req))) {
+    return unauthorized(corsHeaders);
   }
 
   try {
@@ -191,66 +203,105 @@ serve(async (req: Request) => {
     for (const cart of (carts || []) as AbandonedCart[]) {
       results.processed++;
 
-      // Skip if customer already has a confirmed booking with same email after cart creation
-      const { data: bookings } = await supabase
+      // Skip if the customer has since completed the purchase: a confirmed booking or a
+      // paid contract for this email after the cart was created (pending rows don't count).
+      const cartEmail = cart.customer_email.toLowerCase().trim();
+      const { data: bookings, error: bookingsError } = await supabase
         .from("bookings")
         .select("id")
-        .eq("customer_email", cart.customer_email)
+        .eq("customer_email", cartEmail)
+        .eq("status", "confirmed")
         .gte("created_at", cart.created_at)
         .limit(1);
-
-      if (bookings && bookings.length > 0) {
-        await supabase
-          .from("abandoned_carts")
-          .update({ status: "recovered", recovered_at: new Date().toISOString() })
-          .eq("id", cart.id);
+      let completed = Boolean(bookings && bookings.length > 0);
+      if (!completed && cart.booking_type === "readiness-intensive") {
+        const { data: paidContracts, error: contractsError } = await supabase
+          .from("contracts")
+          .select("id")
+          .eq("client_email", cartEmail)
+          .eq("contract_type", "readiness-intensive")
+          .eq("status", "paid")
+          .gte("created_at", cart.created_at)
+          .limit(1);
+        if (contractsError) console.error("Paid contract lookup failed:", contractsError);
+        completed = Boolean(paidContracts && paidContracts.length > 0);
+      }
+      if (bookingsError) {
+        console.error(`Booking lookup failed for cart ${cart.id}; skipping this run:`, bookingsError);
         continue;
       }
 
-      try {
-        await sendRecoveryEmail(cart);
-
-        // Telegram alert only for premium tier
-        if (cart.booking_type === "readiness-intensive") {
-          try {
-            await sendTelegramAlert(cart);
-          } catch (e) {
-            console.error("Telegram alert failed:", e);
-          }
-        }
-
+      if (completed) {
         await supabase
           .from("abandoned_carts")
-          .update({
-            status: "recovery_sent",
-            recovery_email_sent_at: new Date().toISOString(),
-          })
-          .eq("id", cart.id);
+          .update({ status: "recovered", recovered_at: new Date().toISOString() })
+          .eq("id", cart.id)
+          .eq("status", "pending");
+        continue;
+      }
 
-        // Spine: forward cart_abandoned (additive — never blocks).
-        try {
-          await enqueueSpineEvent(
-            "cart_abandoned",
-            {
-              email: cart.customer_email,
-              phone: cart.customer_phone,
-              name: cart.customer_name,
-              props: {
-                booking_type: cart.booking_type,
-                amount_cents: cart.amount_cents,
-              },
-            },
-            supabase,
-          );
-        } catch (spineError) {
-          console.error("Spine enqueue failed (cart_abandoned):", spineError);
-        }
+      // Claim the cart atomically before sending so overlapping runs (cron + manual
+      // "run now") can never email the same customer twice.
+      const { data: claimed, error: claimError } = await supabase
+        .from("abandoned_carts")
+        .update({
+          status: "recovery_sent",
+          recovery_email_sent_at: new Date().toISOString(),
+        })
+        .eq("id", cart.id)
+        .eq("status", "pending")
+        .is("recovery_email_sent_at", null)
+        .select("id");
+      if (claimError) {
+        console.error(`Failed to claim cart ${cart.id}:`, claimError);
+        results.failed++;
+        continue;
+      }
+      if (!claimed || claimed.length === 0) continue;
 
-        results.sent++;
+      try {
+        await sendRecoveryEmail(cart);
       } catch (e) {
         console.error(`Failed to recover cart ${cart.id}:`, e);
         results.failed++;
+        // Release the claim so a later run can retry.
+        await supabase
+          .from("abandoned_carts")
+          .update({ status: "pending", recovery_email_sent_at: null })
+          .eq("id", cart.id)
+          .eq("status", "recovery_sent");
+        continue;
       }
+
+      // Telegram alert only for premium tier
+      if (cart.booking_type === "readiness-intensive") {
+        try {
+          await sendTelegramAlert(cart);
+        } catch (e) {
+          console.error("Telegram alert failed:", e);
+        }
+      }
+
+      // Spine: forward cart_abandoned (additive — never blocks).
+      try {
+        await enqueueSpineEvent(
+          "cart_abandoned",
+          {
+            email: cart.customer_email,
+            phone: cart.customer_phone,
+            name: cart.customer_name,
+            props: {
+              booking_type: cart.booking_type,
+              amount_cents: cart.amount_cents,
+            },
+          },
+          supabase,
+        );
+      } catch (spineError) {
+        console.error("Spine enqueue failed (cart_abandoned):", spineError);
+      }
+
+      results.sent++;
     }
 
     return new Response(JSON.stringify({ success: true, ...results }), {

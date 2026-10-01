@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sendSystemEmail, escapeHtml } from "../_shared/resend.ts";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { upsertCrmContact } from "../_shared/crm.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -193,14 +194,15 @@ serve(async (req) => {
     const priority: "normal" | "high" | "urgent" = leadScore >= 80 ? "urgent" : leadScore >= 60 ? "high" : "normal";
     const nameParts = contactName.split(/\s+/);
 
-    // CRM upsert (mirrors send-lead-magnet pattern)
+    // CRM upsert (never downgrades an existing contact)
     try {
-      await supabase.from("crm_contacts").upsert({
+      const { error: crmError } = await upsertCrmContact(supabase, {
         email: contactEmail,
         first_name: nameParts[0] || null,
         last_name: nameParts.slice(1).join(" ") || null,
         phone: contactPhone,
         source: "self_assessment",
+        source_id: data.id,
         source_attribution: sourceAttribution,
         lead_score: leadScore,
         revenue_path: leadScore >= 70 ? "intervention_or_readiness" : "consultation_or_coaching",
@@ -211,8 +213,8 @@ serve(async (req) => {
             ? "Call this self-assessment lead today"
             : "Review self-assessment and invite to consultation or coaching",
         next_action_due_at: new Date(Date.now() + (leadScore >= 70 ? 30 : 240) * 60 * 1000).toISOString(),
-        last_engagement_at: new Date().toISOString(),
-      }, { onConflict: "email" });
+      });
+      if (crmError) console.error("CRM upsert failed (self_assessment):", crmError);
     } catch (crmError) {
       console.error("CRM upsert failed (self_assessment):", crmError);
     }

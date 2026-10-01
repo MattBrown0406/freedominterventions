@@ -3,6 +3,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
+import { upsertCrmContact } from "../_shared/crm.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -41,6 +43,142 @@ function resolveBookingDurationMinutes(bookingType: string, requested: unknown):
   return 60;
 }
 const SITE_URL = 'https://freedominterventions.com';
+const PACIFIC_TZ = 'America/Los_Angeles';
+// A pending (checkout-in-progress) booking holds its slot for this long.
+const PENDING_HOLD_MS = 30 * 60 * 1000;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const TIME_RE = /^\d{2}:\d{2}(:\d{2})?$/;
+const ABANDONED_CART_TYPES = ['crisis-coaching', 'readiness-intensive'];
+
+// Only redirect Square checkout back to our own site (or a Lovable preview / local dev).
+function resolveRedirectOrigin(req: Request): string {
+  const origin = req.headers.get('origin');
+  if (!origin) return SITE_URL;
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol === 'https:' && (
+      host === 'freedominterventions.com' ||
+      host === 'www.freedominterventions.com' ||
+      host.endsWith('.lovable.app') ||
+      host.endsWith('.lovableproject.com')
+    )) return url.origin;
+    if (url.protocol === 'http:' && (host === 'localhost' || host === '127.0.0.1')) return url.origin;
+  } catch {
+    // fall through
+  }
+  return SITE_URL;
+}
+
+// A client-supplied redirect must be a same-site path, never an absolute/protocol-relative URL.
+function safeRedirectPath(path: unknown, fallback: string): string {
+  if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//') || path.includes('\\')) {
+    return fallback;
+  }
+  return path;
+}
+
+// Minutes Pacific time is offset from UTC at the given instant (e.g. -420 during PDT).
+function pacificOffsetMinutes(at: Date): number {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: PACIFIC_TZ,
+    hourCycle: 'h23',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  }).formatToParts(at);
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  const asUtc = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour') % 24, get('minute'), get('second'));
+  return Math.round((asUtc - at.getTime()) / 60000);
+}
+
+// Bookings store Pacific wall-clock date/time; convert to the real instant (DST-aware).
+function pacificWallTimeToInstant(date: string, time: string): Date {
+  const [y, m, d] = date.split('-').map(Number);
+  const [hh, mm] = time.split(':').map(Number);
+  const wallAsUtc = Date.UTC(y, m - 1, d, hh, mm);
+  let offset = pacificOffsetMinutes(new Date(wallAsUtc));
+  let instant = wallAsUtc - offset * 60000;
+  const corrected = pacificOffsetMinutes(new Date(instant));
+  if (corrected !== offset) {
+    offset = corrected;
+    instant = wallAsUtc - offset * 60000;
+  }
+  return new Date(instant);
+}
+
+function normalizeSlotTime(time: string): string {
+  return time.slice(0, 5);
+}
+
+// Rejects a slot that is malformed, in the past, outside availability, or already
+// held by a confirmed booking / recent pending checkout. Holds created by the same
+// email are ignored so a customer can retry their own abandoned checkout.
+async function assertSlotAvailable(
+  supabase: any,
+  date: unknown,
+  time: unknown,
+  opts: { excludeBookingId?: string; holderEmail?: string } = {},
+) {
+  if (typeof date !== 'string' || !DATE_RE.test(date) || typeof time !== 'string' || !TIME_RE.test(time)) {
+    throw new Error('Invalid booking date or time');
+  }
+  const slots = await generateTimeSlots(date, supabase, opts);
+  if (!slots.includes(normalizeSlotTime(time))) {
+    throw new Error('That time is no longer available. Please choose another time.');
+  }
+}
+
+async function markAbandonedCartsRecovered(supabase: any, email: string, bookingType: string) {
+  const { error } = await supabase
+    .from('abandoned_carts')
+    .update({ status: 'recovered', recovered_at: new Date().toISOString() })
+    .eq('customer_email', email.toLowerCase().trim())
+    .eq('booking_type', bookingType)
+    .in('status', ['pending', 'recovery_sent']);
+  if (error) console.error('Failed to mark abandoned carts recovered:', error);
+}
+
+// Runs exactly once, by whichever path (browser verify or Square webhook) actually
+// flipped a paid booking from pending to confirmed.
+async function fulfillPaidBooking(supabase: any, bookingId: string): Promise<{ confirmationError: string | null }> {
+  const { data: booking, error } = await supabase
+    .from('bookings')
+    .select('id, booking_type, customer_name, customer_email, customer_phone, amount_cents, status')
+    .eq('id', bookingId)
+    .maybeSingle();
+  if (error || !booking) {
+    console.error('fulfillPaidBooking: booking not found', bookingId, error);
+    return { confirmationError: 'Booking not found' };
+  }
+
+  let confirmationError: string | null = null;
+  const { error: invokeError } = await supabase.functions.invoke('send-booking-confirmation', {
+    body: { bookingId: booking.id },
+  });
+  if (invokeError) {
+    confirmationError = invokeError.message || 'Confirmation failed';
+    console.error('Failed to send booking confirmation:', booking.id, invokeError);
+  }
+
+  try {
+    await enqueueSpineEvent(
+      "payment",
+      {
+        email: booking.customer_email ?? null,
+        phone: booking.customer_phone ?? null,
+        name: booking.customer_name ?? null,
+        props: { source: "booking", booking_type: booking.booking_type },
+        payment: { processor: "square", amount_cents: booking.amount_cents ?? 0, kind: "intervention" },
+      },
+      supabase,
+    );
+  } catch (spineError) {
+    console.error("Spine enqueue failed (payment/booking):", spineError);
+  }
+
+  await markAbandonedCartsRecovered(supabase, booking.customer_email, booking.booking_type);
+  return { confirmationError };
+}
 
 // Rate limiting is handled via shared durable limiter (public.check_rate_limit RPC).
 
@@ -83,23 +221,27 @@ async function upsertBookingCrm(
     : 'crisis_coaching';
   const leadScore = payload.bookingType === 'consultation' ? 50 : payload.bookingType === 'readiness-intensive' ? 95 : 70;
 
-  await supabase.from('crm_contacts').upsert({
-    email: payload.customerEmail,
-    first_name: firstName,
-    last_name: lastName,
-    phone: payload.customerPhone,
-    source: 'booking',
-    source_id: booking.id,
-    source_attribution: payload.sourceAttribution,
-    lead_score: leadScore,
-    revenue_path: revenuePath,
-    pipeline_status: payload.bookingType === 'consultation' ? 'consultation_booked' : 'paid_booking_started',
-    next_action: payload.bookingType === 'consultation'
-      ? 'Review source, assessment status, and prepare for consultation'
-      : 'Confirm payment and prepare paid session',
-    next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-    last_engagement_at: new Date().toISOString(),
-  }, { onConflict: 'email' });
+  try {
+    const { error } = await upsertCrmContact(supabase, {
+      email: payload.customerEmail,
+      first_name: firstName,
+      last_name: lastName,
+      phone: payload.customerPhone,
+      source: 'booking',
+      source_id: booking.id,
+      source_attribution: payload.sourceAttribution,
+      lead_score: leadScore,
+      revenue_path: revenuePath,
+      pipeline_status: payload.bookingType === 'consultation' ? 'consultation_booked' : 'paid_booking_started',
+      next_action: payload.bookingType === 'consultation'
+        ? 'Review source, assessment status, and prepare for consultation'
+        : 'Confirm payment and prepare paid session',
+      next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    });
+    if (error) console.error('CRM upsert failed for booking', booking.id, error);
+  } catch (crmError) {
+    console.error('CRM upsert threw for booking', booking.id, crmError);
+  }
 }
 
 async function queueConsultationPrep(
@@ -182,7 +324,7 @@ serve(async (req) => {
     switch (action) {
       case 'get-available-slots': {
         const { date } = params;
-        if (!date || typeof date !== 'string') {
+        if (!date || typeof date !== 'string' || !DATE_RE.test(date)) {
           throw new Error('Valid date is required');
         }
         const slots = await generateTimeSlots(date, supabase);
@@ -251,52 +393,52 @@ serve(async (req) => {
           throw new Error('Booking not found or email does not match');
         }
 
-        // Update the booking
+        // Server-side slot check: not in the past, inside availability, not held by someone else.
+        await assertSlotAvailable(supabase, newDate, newTime, { excludeBookingId: existingBooking.id });
+
+        // Update the booking (conditional on it still being confirmed). A new time needs a new reminder.
         const { data: updatedBooking, error: updateError } = await supabase
           .from('bookings')
           .update({
             booking_date: newDate,
-            booking_time: newTime,
+            booking_time: normalizeSlotTime(newTime),
+            reminder_sent: false,
             updated_at: new Date().toISOString()
           })
           .eq('id', bookingId)
-          .select()
+          .eq('status', 'confirmed')
+          .select('id, booking_type, booking_date, booking_time, status')
           .single();
 
-        if (updateError) {
+        if (updateError || !updatedBooking) {
           console.error('Error updating booking:', updateError);
           throw new Error('Failed to reschedule booking');
         }
 
         console.log('Booking rescheduled successfully:', { bookingId: updatedBooking.id });
 
-        // Send reschedule confirmation email
-        try {
-          await supabase.functions.invoke('send-booking-confirmation', {
-            body: {
-              bookingId: updatedBooking.id,
-              customerName: existingBooking.customer_name,
-              customerEmail: email,
-              bookingType: existingBooking.booking_type,
-              bookingDate: newDate,
-              bookingTime: newTime,
-              isReschedule: true
-            }
-          });
-        } catch (emailError) {
-          console.error('Failed to send reschedule confirmation email:', emailError);
-          // Don't fail the reschedule if email fails
+        // Send reschedule confirmation email (moves the Zoom meeting). Don't fail the reschedule if it fails.
+        let confirmationError = false;
+        const { error: emailError } = await supabase.functions.invoke('send-booking-confirmation', {
+          body: {
+            bookingId: updatedBooking.id,
+            isReschedule: true,
+          }
+        });
+        if (emailError) {
+          confirmationError = true;
+          console.error('Failed to send reschedule confirmation email:', updatedBooking.id, emailError);
         }
 
-        return new Response(JSON.stringify({ 
-          success: true, 
-          booking: updatedBooking 
+        return new Response(JSON.stringify({
+          success: true,
+          booking: updatedBooking,
+          confirmationError,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
-      case 'create-payment':
       case 'create-checkout-link':
       case 'create-contract-payment-link': {
         const clientIP = getClientIp(req);
@@ -317,7 +459,6 @@ serve(async (req) => {
         }
 
         const {
-          sourceId,
           amount,
           customerEmail,
           customerName,
@@ -399,8 +540,8 @@ serve(async (req) => {
           if (contract.client_email !== sanitizedEmail) throw new Error('Customer email does not match this contract');
           if (typeof contract.amount_cents !== 'number' || contract.amount_cents <= 0) throw new Error('Contract amount is invalid');
 
-          const origin = req.headers.get('origin') || 'https://freedominterventions.com';
-          const successUrl = new URL(redirectPath || '/start-contract?contract_status=success', origin);
+          const origin = resolveRedirectOrigin(req);
+          const successUrl = new URL(safeRedirectPath(redirectPath, '/start-contract?contract_status=success'), origin);
           successUrl.searchParams.set('contract_id', contractId);
 
           const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
@@ -461,59 +602,8 @@ serve(async (req) => {
           });
         }
 
-        if (action === 'create-payment') {
-          if (!sourceId || typeof sourceId !== 'string' || sourceId.length > 500) {
-            throw new Error('Invalid payment source');
-          }
-
-          console.log('Processing direct payment', {
-            amount,
-            customerEmail: sanitizedEmail,
-            bookingDate,
-            bookingType: normalizedBookingType,
-          });
-
-          const paymentResponse = await fetch(`${SQUARE_BASE_URL}/payments`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
-              'Content-Type': 'application/json',
-              'Square-Version': '2024-01-18',
-            },
-            body: JSON.stringify({
-              source_id: sourceId,
-              idempotency_key: crypto.randomUUID(),
-              amount_money: {
-                amount: resolvedAmount,
-                currency: 'USD',
-              },
-              location_id: SQUARE_LOCATION_ID,
-              note: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
-              buyer_email_address: sanitizedEmail,
-            }),
-          });
-
-          const paymentData = await paymentResponse.json();
-          console.log('Square payment response status:', paymentResponse.status);
-
-          if (paymentData.errors) {
-            console.error('Square payment error:', paymentData.errors);
-            throw new Error(paymentData.errors[0]?.detail || 'Payment failed');
-          }
-
-          return new Response(JSON.stringify({
-            success: true,
-            payment: paymentData.payment,
-            bookingDetails: {
-              date: bookingDate,
-              time: bookingTime,
-              customerName: sanitizedName,
-              customerEmail: sanitizedEmail,
-            }
-          }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          });
-        }
+        // Server-side slot check before holding the slot with a pending booking.
+        await assertSlotAvailable(supabase, bookingDate, bookingTime, { holderEmail: sanitizedEmail });
 
         const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
 
@@ -523,7 +613,7 @@ serve(async (req) => {
           customer_email: sanitizedEmail,
           customer_phone: sanitizedPhone,
           booking_date: bookingDate,
-          booking_time: bookingTime,
+          booking_time: normalizeSlotTime(bookingTime),
           duration_minutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
           status: 'pending',
           payment_id: null,
@@ -558,16 +648,14 @@ serve(async (req) => {
           sourceAttribution: normalizedSourceAttribution,
         });
 
-        const origin = req.headers.get('origin') || 'https://freedominterventions.com';
+        // No PII (name/email/phone) in the redirect URL; the success page only needs these ids.
+        const origin = resolveRedirectOrigin(req);
         const successUrl = new URL(normalizedBookingType === 'intervention-contract' ? '/start-contract' : '/#booking', origin);
         successUrl.searchParams.set('square_status', 'success');
         successUrl.searchParams.set('booking_id', booking.id);
         successUrl.searchParams.set('type', normalizedBookingType);
         successUrl.searchParams.set('date', bookingDate);
-        successUrl.searchParams.set('time', bookingTime);
-        successUrl.searchParams.set('name', sanitizedName);
-        successUrl.searchParams.set('email', sanitizedEmail);
-        if (sanitizedPhone) successUrl.searchParams.set('phone', sanitizedPhone);
+        successUrl.searchParams.set('time', normalizeSlotTime(bookingTime));
 
         const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
           method: 'POST',
@@ -635,26 +723,27 @@ serve(async (req) => {
 
         const { data: booking, error: bookingError } = await supabase
           .from('bookings')
-          .select('id, booking_type, booking_date, booking_time, customer_name, customer_email, customer_phone, duration_minutes, amount_cents, payment_id, square_order_id, status, notes')
+          .select('id, booking_type, booking_date, booking_time, amount_cents, payment_id, square_order_id, status, notes')
           .eq('id', bookingId)
           .single();
         if (bookingError || !booking) throw bookingError || new Error('Booking not found');
+        // Only what the success page needs; never return customer PII or the Zoom link here.
+        const publicBooking = (b: { id: string; booking_type: string; booking_date: string; booking_time: string; status: string }) => ({
+          id: b.id,
+          booking_type: b.booking_type,
+          booking_date: b.booking_date,
+          booking_time: b.booking_time,
+          status: b.status,
+        });
         if (booking.status === 'confirmed' && booking.payment_id) {
           if (!booking.notes || !String(booking.notes).includes('Join URL:')) {
             console.log('Confirmed paid booking is missing Zoom details; sending confirmation now:', booking.id);
-            await supabase.functions.invoke('send-booking-confirmation', {
-              body: {
-                bookingId: booking.id,
-                customerName: booking.customer_name,
-                customerEmail: booking.customer_email,
-                bookingType: booking.booking_type,
-                bookingDate: booking.booking_date,
-                bookingTime: booking.booking_time,
-                durationMinutes: booking.duration_minutes,
-              }
-            }).catch((emailError) => console.error('Failed to send missing booking confirmation:', emailError));
+            const { error: emailError } = await supabase.functions.invoke('send-booking-confirmation', {
+              body: { bookingId: booking.id }
+            });
+            if (emailError) console.error('Failed to send missing booking confirmation:', booking.id, emailError);
           }
-          return new Response(JSON.stringify({ success: true, paid: true, booking }), {
+          return new Response(JSON.stringify({ success: true, paid: true, booking: publicBooking(booking) }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }
@@ -670,7 +759,9 @@ serve(async (req) => {
         }
 
         const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id ?? verification.order?.tenders?.[0]?.id ?? null;
-        const { data: confirmedBooking, error: updateError } = await supabase
+        // Conditional flip: only the path that actually moves it to confirmed runs fulfillment
+        // (the Square webhook may be racing us).
+        const { data: flipped, error: updateError } = await supabase
           .from('bookings')
           .update({
             status: 'confirmed',
@@ -678,27 +769,94 @@ serve(async (req) => {
             updated_at: new Date().toISOString(),
           })
           .eq('id', booking.id)
-          .select()
-          .single();
+          .neq('status', 'confirmed')
+          .select('id, booking_type, booking_date, booking_time, status');
         if (updateError) throw updateError;
 
-        try {
-          await supabase.functions.invoke('send-booking-confirmation', {
-            body: {
-              bookingId: booking.id,
-              customerName: booking.customer_name,
-              customerEmail: booking.customer_email,
-              bookingType: booking.booking_type,
-              bookingDate: booking.booking_date,
-              bookingTime: booking.booking_time,
-              durationMinutes: booking.duration_minutes,
-            }
-          });
-        } catch (emailError) {
-          console.error('Failed to send booking confirmation:', emailError);
+        let confirmationError = false;
+        if (flipped && flipped.length > 0) {
+          const result = await fulfillPaidBooking(supabase, booking.id);
+          confirmationError = Boolean(result.confirmationError);
         }
 
-        return new Response(JSON.stringify({ success: true, paid: true, booking: confirmedBooking }), {
+        return new Response(JSON.stringify({
+          success: true,
+          paid: true,
+          booking: publicBooking(flipped?.[0] ?? { ...booking, status: 'confirmed' }),
+          confirmationError,
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Service-only: the Square webhook calls this after it flips a booking to confirmed.
+      case 'fulfill-paid-booking': {
+        if (!(await isServiceRoleRequest(req))) return unauthorized(corsHeaders);
+        const { bookingId } = params;
+        if (!validateString(bookingId, 100)) throw new Error('Valid booking ID is required');
+        const result = await fulfillPaidBooking(supabase, bookingId);
+        return new Response(JSON.stringify({ success: !result.confirmationError, ...result }), {
+          status: result.confirmationError ? 502 : 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Service-only: lets other functions (contracts) run the same slot check.
+      case 'check-slot': {
+        if (!(await isServiceRoleRequest(req))) return unauthorized(corsHeaders);
+        const { date, time, holderEmail } = params;
+        let available = true;
+        try {
+          await assertSlotAvailable(supabase, date, time, {
+            holderEmail: typeof holderEmail === 'string' ? holderEmail.toLowerCase().trim() : undefined,
+          });
+        } catch (slotError) {
+          available = false;
+          console.log('Slot unavailable:', { date, time, reason: slotError instanceof Error ? slotError.message : slotError });
+        }
+        return new Response(JSON.stringify({ available }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Captures a paid-booking lead before checkout (the browser can no longer insert directly).
+      case 'capture-abandoned-cart': {
+        const clientIP = getClientIp(req);
+        const allowed = await checkRateLimit(supabase, `cart:${clientIP}`, 10, 3600);
+        if (!allowed) {
+          return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }), {
+            status: 429,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '3600' },
+          });
+        }
+
+        const { customerName, customerEmail, customerPhone, bookingType, bookingDate, bookingTime, sourceAttribution } = params;
+        if (!validateString(customerName, 100)) throw new Error('Valid customer name is required');
+        if (!validateEmail(customerEmail)) throw new Error('Valid email address is required');
+        if (customerPhone && !validateString(customerPhone, 20)) throw new Error('Invalid phone number');
+        if (!ABANDONED_CART_TYPES.includes(bookingType)) throw new Error('Valid booking type is required');
+        if (bookingDate != null && (typeof bookingDate !== 'string' || !DATE_RE.test(bookingDate))) throw new Error('Invalid booking date');
+        if (bookingTime != null && (typeof bookingTime !== 'string' || !TIME_RE.test(bookingTime))) throw new Error('Invalid booking time');
+
+        const { data: cart, error: cartError } = await supabase
+          .from('abandoned_carts')
+          .insert({
+            customer_name: sanitizeString(customerName),
+            customer_email: customerEmail.toLowerCase().trim(),
+            customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
+            booking_type: bookingType,
+            booking_date: bookingDate ?? null,
+            booking_time: bookingTime ? normalizeSlotTime(bookingTime) : null,
+            amount_cents: resolveBookingAmountCents(bookingType),
+            source_attribution: normalizeAttribution(sourceAttribution),
+          })
+          .select('id')
+          .single();
+        if (cartError || !cart) {
+          console.error('Failed to capture abandoned cart:', cartError);
+          throw new Error('Failed to save booking details');
+        }
+        return new Response(JSON.stringify({ success: true, cartId: cart.id }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
@@ -763,6 +921,9 @@ serve(async (req) => {
           }
         }
 
+        // Server-side slot check: reject past, unavailable, or already-held slots.
+        await assertSlotAvailable(supabase, bookingDate, bookingTime, { holderEmail: customerEmail.toLowerCase().trim() });
+
         const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
 
         const sanitizedData = {
@@ -771,7 +932,7 @@ serve(async (req) => {
           customer_email: customerEmail.toLowerCase().trim(),
           customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
           booking_date: bookingDate,
-          booking_time: bookingTime,
+          booking_time: normalizeSlotTime(bookingTime),
           duration_minutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
           status: 'confirmed',
           payment_id: paymentId || null,
@@ -823,24 +984,19 @@ serve(async (req) => {
           });
         }
 
-        // Send Zoom confirmation immediately for free consultations.
-        // This was the missing path that left recent booked consultations without Zoom links.
-        try {
-          await supabase.functions.invoke('send-booking-confirmation', {
-            body: {
-              bookingId: booking.id,
-              customerName: sanitizedData.customer_name,
-              customerEmail: sanitizedData.customer_email,
-              bookingType: sanitizedData.booking_type,
-              bookingDate: sanitizedData.booking_date,
-              bookingTime: sanitizedData.booking_time,
-              durationMinutes: sanitizedData.duration_minutes,
-            }
-          });
+        // Send Zoom confirmation immediately for free consultations (server-side only).
+        // functions.invoke resolves with { error } instead of throwing, so check it explicitly.
+        // The booking already exists, so report the failure instead of failing the request
+        // (failing would invite a duplicate rebooking).
+        let confirmationError = false;
+        const { error: confirmationInvokeError } = await supabase.functions.invoke('send-booking-confirmation', {
+          body: { bookingId: booking.id }
+        });
+        if (confirmationInvokeError) {
+          confirmationError = true;
+          console.error('Failed to send booking confirmation with Zoom link:', booking.id, confirmationInvokeError);
+        } else {
           console.log('Successfully sent booking confirmation with Zoom link');
-        } catch (confirmationError) {
-          console.error('Failed to send booking confirmation with Zoom link:', confirmationError);
-          throw new Error('Booking was created, but the Zoom confirmation email failed. Please contact Freedom Interventions.');
         }
 
         // Sync booking to Notion CRM (async, don't block response)
@@ -928,7 +1084,8 @@ serve(async (req) => {
 
         return new Response(JSON.stringify({ 
           success: true, 
-          booking 
+          booking,
+          confirmationError,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -951,10 +1108,15 @@ serve(async (req) => {
   }
 });
 
-async function generateTimeSlots(dateStr: string, supabase: any): Promise<string[]> {
+async function generateTimeSlots(
+  dateStr: string,
+  supabase: any,
+  opts: { excludeBookingId?: string; holderEmail?: string } = {},
+): Promise<string[]> {
   const slots: string[] = [];
-  const date = new Date(dateStr);
-  const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+  if (!DATE_RE.test(dateStr)) return slots;
+  // Parse as a calendar date (noon UTC) so the weekday never depends on server timezone.
+  const dayOfWeek = new Date(`${dateStr}T12:00:00Z`).getUTCDay(); // 0 = Sunday, 6 = Saturday
   
   // 1. Fetch availability for this day of week
   const { data: availability, error: availabilityError } = await supabase
@@ -967,38 +1129,60 @@ async function generateTimeSlots(dateStr: string, supabase: any): Promise<string
     return slots;
   }
   
-  // 2. Fetch existing bookings for this specific date
+  // 2. Fetch bookings that hold a slot on this date: confirmed ones, plus pending
+  //    checkouts created within the hold window.
+  const holdCutoffMs = Date.now() - PENDING_HOLD_MS;
+  const holderEmail = opts.holderEmail?.toLowerCase().trim();
   const { data: existingBookings, error: bookingsError } = await supabase
     .from('bookings')
-    .select('booking_time')
+    .select('id, booking_time, status, created_at, customer_email')
     .eq('booking_date', dateStr)
-    .eq('status', 'confirmed');
+    .in('status', ['confirmed', 'pending']);
 
   if (bookingsError) {
     console.error('Error fetching existing bookings:', bookingsError);
-    // Continue anyway, better to show possibly double-booked slots than none
+    throw new Error('Unable to check availability. Please try again.');
   }
 
-  // Create a set of taken times for fast lookup (normalize to HH:MM)
-  const takenSlots = new Set(
-    (existingBookings || []).map((b: { booking_time: string }) => {
-      // Postgres time might come back as "10:00:00"
-      const [h, m] = b.booking_time.split(':');
-      return `${h}:${m}`;
-    })
-  );
+  const takenSlots = new Set<string>();
+  for (const b of (existingBookings || []) as Array<{ id: string; booking_time: string; status: string; created_at: string; customer_email: string | null }>) {
+    if (opts.excludeBookingId && b.id === opts.excludeBookingId) continue;
+    if (b.status === 'pending') {
+      if (new Date(b.created_at).getTime() < holdCutoffMs) continue;
+      if (holderEmail && b.customer_email?.toLowerCase() === holderEmail) continue;
+    }
+    // Postgres time might come back as "10:00:00"
+    takenSlots.add(normalizeSlotTime(b.booking_time));
+  }
+
+  // Family Readiness Intensive checkouts run through signed contracts (no booking row until
+  // paid), so recent unpaid FRI contracts hold their selected slot too.
+  const { data: heldContracts, error: contractsError } = await supabase
+    .from('contracts')
+    .select('metadata, client_email')
+    .eq('contract_type', 'readiness-intensive')
+    .eq('status', 'signed-awaiting-payment')
+    .gte('created_at', new Date(holdCutoffMs).toISOString())
+    .eq('metadata->>bookingDate', dateStr);
+  if (contractsError) {
+    console.error('Error fetching held FRI contracts:', contractsError);
+  }
+  for (const c of (heldContracts || []) as Array<{ metadata: Record<string, unknown> | null; client_email: string | null }>) {
+    if (holderEmail && c.client_email?.toLowerCase() === holderEmail) continue;
+    const heldTime = c.metadata?.bookingTime;
+    if (typeof heldTime === 'string' && TIME_RE.test(heldTime)) takenSlots.add(normalizeSlotTime(heldTime));
+  }
   
-  // 3. Generate hourly slots based on availability settings
+  // 3. Generate hourly slots based on availability settings, skipping past times.
   const startHour = parseInt(availability.start_time.split(':')[0]);
   const endHour = parseInt(availability.end_time.split(':')[0]);
+  const now = Date.now();
   
   for (let hour = startHour; hour < endHour; hour++) {
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-    
-    // Only add if not already booked
-    if (!takenSlots.has(timeStr)) {
-      slots.push(timeStr);
-    }
+    if (takenSlots.has(timeStr)) continue;
+    if (pacificWallTimeToInstant(dateStr, timeStr).getTime() <= now) continue;
+    slots.push(timeStr);
   }
   
   return slots;

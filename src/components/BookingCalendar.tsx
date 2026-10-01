@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
@@ -145,6 +146,47 @@ By signing below, Client acknowledges that Client has read this Agreement, under
 
 type Step = 'type' | 'date' | 'time' | 'details' | 'agreement' | 'payment' | 'confirmation';
 
+// Contact details survive the Square redirect in sessionStorage instead of the URL.
+const CHECKOUT_CONTACT_KEY = 'fi_checkout_contact';
+
+const saveCheckoutContact = (contact: { name: string; email: string; phone: string }) => {
+  try {
+    sessionStorage.setItem(CHECKOUT_CONTACT_KEY, JSON.stringify(contact));
+  } catch {
+    // storage unavailable; the confirmation screen just omits the email
+  }
+};
+
+const readCheckoutContact = (): { name: string; email: string; phone: string } | null => {
+  try {
+    const raw = sessionStorage.getItem(CHECKOUT_CONTACT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return {
+      name: typeof parsed?.name === 'string' ? parsed.name : '',
+      email: typeof parsed?.email === 'string' ? parsed.email : '',
+      phone: typeof parsed?.phone === 'string' ? parsed.phone : '',
+    };
+  } catch {
+    return null;
+  }
+};
+
+// Current date (yyyy-MM-dd) and minutes-past-midnight in Pacific time, where slots are defined.
+const getPacificNow = () => {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hourCycle: 'h23',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    minutes: (Number(get('hour')) % 24) * 60 + Number(get('minute')),
+  };
+};
+
 interface BookingCalendarProps {
   defaultBookingType?: BookingType;
 }
@@ -165,17 +207,28 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
   const [skippedTypeChooser, setSkippedTypeChooser] = useState(false);
+  const location = useLocation();
+  const initializedRef = useRef(false);
 
+  // Strip handled query params from the address bar without a router navigation
+  // (a navigation would log an extra page view).
+  const clearQueryParams = () => {
+    window.history.replaceState(window.history.state, '', window.location.pathname + window.location.hash);
+  };
+
+  // Runs on mount and on every in-app navigation (location.key changes even when the
+  // same URL is clicked again), e.g. the mobile "Consult" CTA linking to
+  // ?type=consultation#booking while this page is already open. Reads the real address
+  // bar, since clearQueryParams() bypasses the router.
   useEffect(() => {
+    const isFirstRun = !initializedRef.current;
+    initializedRef.current = true;
     const params = new URLSearchParams(window.location.search);
     const squareStatus = params.get("square_status");
     const returnedBookingId = params.get("booking_id");
     const returnedType = params.get("type") as PaidReturnType | null;
     const returnedDate = params.get("date");
     const returnedTime = params.get("time");
-    const returnedName = params.get("name");
-    const returnedEmail = params.get("email");
-    const returnedPhone = params.get("phone");
 
     if (squareStatus === 'success' && returnedBookingId) {
       if (returnedType && (returnedType === 'consultation' || returnedType === 'crisis-coaching' || returnedType === 'readiness-intensive' || returnedType === 'fri-contract')) {
@@ -187,9 +240,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         if (!isNaN(date.getTime())) setSelectedDate(date);
       }
       if (returnedTime) setSelectedTime(returnedTime);
-      if (returnedName || returnedEmail || returnedPhone) {
-        setCustomerInfo({ name: returnedName || '', email: returnedEmail || '', phone: returnedPhone || '' });
-      }
+      const savedContact = readCheckoutContact();
+      if (savedContact) setCustomerInfo(savedContact);
       setLoading(true);
       const verifyPayment = returnedType === 'fri-contract'
         ? supabase.functions.invoke('contracts', {
@@ -218,8 +270,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         }
         setStep('confirmation');
         toast.success('Payment completed successfully.');
-        const cleanUrl = window.location.pathname + window.location.hash;
-        window.history.replaceState({}, '', cleanUrl);
+        clearQueryParams();
       }).catch((error) => {
         console.error('Failed to verify Square payment:', error);
         toast.error('Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.');
@@ -231,10 +282,21 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
 
     const type = params.get("type") as BookingType | null;
     if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive" || type === "aftercare-planning")) {
-      setBookingType(type);
-      if (type === "consultation") {
-        setSkippedTypeChooser(true);
+      const hasPrefill = ["name", "email", "phone", "date", "time"].some((key) => params.has(key));
+      if (!isFirstRun && type === bookingType && !hasPrefill && step !== 'confirmation') {
+        // Same type while a booking is mid-entry: keep the visitor's progress.
+        clearQueryParams();
+        return;
       }
+      if (!isFirstRun) {
+        setSelectedDate(undefined);
+        setSelectedTime('');
+        setAvailableSlots([]);
+        setBookingId(null);
+        setContractId(null);
+      }
+      setBookingType(type);
+      setSkippedTypeChooser(type === "consultation");
       const name = params.get("name") || "";
       const email = params.get("email") || "";
       const phone = params.get("phone") || "";
@@ -261,27 +323,25 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       } else {
         setStep("date");
       }
-      const cleanUrl = window.location.pathname + window.location.hash;
-      window.history.replaceState({}, "", cleanUrl);
-    } else if (defaultBookingType) {
+      clearQueryParams();
+    } else if (isFirstRun && defaultBookingType) {
       setBookingType(defaultBookingType);
       setStep("date");
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key]);
 
   const offer = bookingType ? OFFERS[bookingType] : null;
   const isPaid = !!offer && offer.priceCents > 0;
 
+  // Slots are Pacific wall-clock times, so compare against "now" in Pacific time,
+  // not the visitor's local clock.
   const filterSameDaySlots = (slots: string[], date: Date) => {
-    const now = new Date();
-    const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
-    if (!isToday) return slots;
-    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+    const pacificNow = getPacificNow();
+    if (format(date, 'yyyy-MM-dd') !== pacificNow.date) return slots;
     return slots.filter(slot => {
       const [hours, minutes] = slot.split(':').map(Number);
-      const slotTime = new Date(date);
-      slotTime.setHours(hours, minutes, 0, 0);
-      return slotTime >= oneHourFromNow;
+      return hours * 60 + minutes >= pacificNow.minutes + 60;
     });
   };
 
@@ -352,58 +412,30 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       await bookFreeConsultation();
     } else {
       try {
-        const { data: cartData } = await supabase
-          .from('abandoned_carts')
-          .insert({
-            customer_name: customerInfo.name,
-            customer_email: customerInfo.email,
-            customer_phone: customerInfo.phone || null,
-            booking_type: bookingType!,
-            booking_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
-            booking_time: selectedTime || null,
-            amount_cents: offer!.priceCents,
-            source_attribution: sourceAttribution,
-          } as never)
-          .select('id')
-          .single();
-        if (cartData?.id) setAbandonedCartId(cartData.id);
+        // Captured server-side (the browser cannot insert into abandoned_carts directly).
+        const { data: cartData, error: cartError } = await supabase.functions.invoke('square-booking', {
+          body: {
+            action: 'capture-abandoned-cart',
+            customerName: customerInfo.name,
+            customerEmail: customerInfo.email,
+            customerPhone: customerInfo.phone || null,
+            bookingType: bookingType!,
+            bookingDate: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null,
+            bookingTime: selectedTime || null,
+            sourceAttribution,
+          }
+        });
+        if (cartError) throw cartError;
+        if (cartData?.cartId) setAbandonedCartId(cartData.cartId);
         trackEvent('booking_lead_captured', {
           booking_type: bookingType,
           amount_cents: offer!.priceCents,
-          cart_id: cartData?.id,
+          cart_id: cartData?.cartId,
         });
       } catch (err) {
         console.warn('Cart capture failed:', err);
       }
       setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'payment');
-    }
-  };
-
-  const sendBookingConfirmation = async (
-    id: string,
-    type: BookingType,
-    date: string,
-    time: string,
-    duration: number
-  ) => {
-    try {
-      const { error } = await supabase.functions.invoke('send-booking-confirmation', {
-        body: {
-          bookingId: id,
-          customerName: customerInfo.name,
-          customerEmail: customerInfo.email,
-          bookingType: type,
-          bookingDate: date,
-          bookingTime: time,
-          durationMinutes: duration,
-        }
-      });
-      if (error) {
-        console.error('Failed to send confirmation:', error);
-        toast.error('Booking saved, but confirmation email failed to send.');
-      }
-    } catch (error) {
-      console.error('Confirmation error:', error);
     }
   };
 
@@ -435,7 +467,10 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         booking_date: bookingDate,
       });
       toast.success('Consultation booked successfully!');
-      await sendBookingConfirmation(data.booking.id, bookingType, bookingDate, selectedTime, offer.durationMinutes);
+      // The confirmation email + Zoom link are sent server-side by create-booking.
+      if (data.confirmationError) {
+        toast.error('Booking saved, but the confirmation email failed to send. We will follow up with your meeting link.');
+      }
     } catch (error: unknown) {
       console.error('Booking error:', error);
       toast.error(getErrorMessage(error, 'Failed to book consultation. Please try again.'));
@@ -492,8 +527,6 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
           reader.readAsDataURL(pdfBlob);
         });
 
-        const pdfPath = `fri/${crypto.randomUUID()}.pdf`;
-
         const contractResponse = await supabase.functions.invoke('contracts', {
           body: {
             action: 'create-contract',
@@ -502,11 +535,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
             clientEmail: customerInfo.email,
             clientPhone: customerInfo.phone || null,
             signerName: friSignerName.trim(),
-            signedAt: agreementSignedAt,
             agreementText: FRI_AGREEMENT_TEXT,
             agreementVersion: FRI_AGREEMENT_VERSION,
             amountCents: offer.priceCents,
-            contractPdfPath: pdfPath,
             contractPdfBase64: pdfBase64,
           metadata: {
             bookingDate,
@@ -537,7 +568,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
             contractId: data.contract.id,
             customerEmail: customerInfo.email,
             customerName: customerInfo.name,
-            redirectPath: `/?square_status=success&contract_status=success&contract_id=${data.contract.id}&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${selectedTime}&name=${encodeURIComponent(customerInfo.name)}&email=${encodeURIComponent(customerInfo.email)}${customerInfo.phone ? `&phone=${encodeURIComponent(customerInfo.phone)}` : ''}#booking`,
+            // No name/email/phone in the URL; contact details are restored from sessionStorage.
+            redirectPath: `/?square_status=success&contract_status=success&contract_id=${data.contract.id}&booking_id=${data.contract.id}&type=fri-contract&date=${bookingDate}&time=${encodeURIComponent(selectedTime)}#booking`,
             note: `Family Readiness Intensive for ${customerInfo.name}`,
           }
         });
@@ -563,17 +595,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       }
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      if (abandonedCartId) {
-        try {
-          await supabase
-            .from('abandoned_carts')
-            .update({ status: 'recovered', recovered_at: new Date().toISOString() })
-            .eq('id', abandonedCartId);
-        } catch (err) {
-          console.warn('Failed to mark cart recovered:', err);
-        }
-      }
+      // Abandoned carts are marked recovered server-side once payment is confirmed.
       if (data?.checkoutUrl) {
+        saveCheckoutContact({ name: customerInfo.name, email: customerInfo.email, phone: customerInfo.phone || '' });
         trackEvent('checkout_started', {
           booking_type: bookingType,
           amount_cents: offer.priceCents,
@@ -723,7 +747,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
               {step === 'date' && (
                 <div>
                   <div className="flex justify-center">
-                    <Calendar mode="single" selected={selectedDate} onSelect={handleDateSelect} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} className="rounded-md border" />
+                    <Calendar mode="single" required selected={selectedDate} onSelect={handleDateSelect} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} className="rounded-md border" />
                   </div>
                   <div className="flex justify-between mt-6">
                     {skippedTypeChooser && bookingType === 'consultation' ? (
@@ -823,7 +847,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
               {step === 'confirmation' && selectedDate && offer && (
                 <div className="max-w-md mx-auto text-center space-y-6">
                   <div className="flex justify-center"><div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle className="w-10 h-10 text-green-600" /></div></div>
-                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">We've sent a confirmation email to {customerInfo.email}</p></div>
+                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">{customerInfo.email ? `We've sent a confirmation email to ${customerInfo.email}` : "We've sent a confirmation email with your meeting details."}</p></div>
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
                     <p><strong>Session:</strong> {offer.shortName}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
@@ -847,7 +871,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                   {bookingType === 'readiness-intensive' ? (
                     <div className="bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left space-y-3"><h4 className="font-semibold text-primary flex items-center gap-2"><Sparkles className="w-5 h-5" />Readiness Intensive reminder</h4><p className="text-sm text-foreground">Your intensive includes the session plus 7 days of follow-up support. Use the assessment to organize the facts that matter most.</p></div>
                   ) : null}
-                  <div className="flex gap-2 justify-center"><Button variant="outline" onClick={resetForm}>Book Another Session</Button>{bookingId && <Button variant="secondary" asChild><a href={`/reschedule?bookingId=${bookingId}&email=${encodeURIComponent(customerInfo.email)}`}>Manage Booking</a></Button>}</div>
+                  <div className="flex gap-2 justify-center"><Button variant="outline" onClick={resetForm}>Book Another Session</Button>{bookingId && <Button variant="secondary" asChild><a href={`/reschedule?bookingId=${encodeURIComponent(bookingId)}`}>Manage Booking</a></Button>}</div>
                   {contractId && bookingType === 'readiness-intensive' ? <p className="text-xs text-muted-foreground">Contract ID: {contractId}</p> : null}
                 </div>
               )}

@@ -52,6 +52,7 @@ CREATE POLICY "Strict admins can delete contracts"
   TO public
   USING (public.is_strict_admin());
 
+DROP TRIGGER IF EXISTS update_contracts_updated_at ON public.contracts;
 CREATE TRIGGER update_contracts_updated_at
   BEFORE UPDATE ON public.contracts
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();

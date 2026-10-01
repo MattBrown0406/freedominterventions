@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-import { enqueueSpineEvent } from "../_shared/spine.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -73,85 +72,62 @@ serve(async (req) => {
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-    const { data: contract } = await supabase
+    const { data: contract, error: contractLookupError } = await supabase
       .from("contracts")
-      .select("id, amount_cents, status, client_email, client_phone, client_name, contract_type")
+      .select("id, amount_cents, status")
       .eq("square_order_id", orderId)
       .maybeSingle();
+    if (contractLookupError) throw contractLookupError;
 
     if (contract && contract.status !== "paid" && contract.amount_cents === amount) {
-      const { error } = await supabase
+      // Conditional flip: only the path that actually marks it paid (this webhook or the
+      // browser's contracts mark-paid) runs fulfillment, exactly once.
+      const { data: flipped, error } = await supabase
         .from("contracts")
         .update({
           status: "paid",
           payment_id: paymentId || null,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", contract.id);
+        .eq("id", contract.id)
+        .neq("status", "paid")
+        .select("id");
       if (error) throw error;
-      await supabase.functions.invoke("send-contract-notification", {
-        body: { contractId: contract.id, event: "paid" },
-      }).catch((error) => console.error("Contract paid notification failed:", error));
-
-      try {
-        await enqueueSpineEvent(
-          "payment",
-          {
-            email: contract.client_email ?? null,
-            phone: contract.client_phone ?? null,
-            name: contract.client_name ?? null,
-            props: { source: "contract", contract_type: contract.contract_type },
-            payment: { processor: "square", amount_cents: amount, kind: "intervention" },
-          },
-          supabase,
-        );
-      } catch (spineError) {
-        console.error("Spine enqueue failed (payment/contract):", spineError);
+      if (flipped && flipped.length > 0) {
+        // Paid notification, Spine payment event, and (for the Readiness Intensive)
+        // the confirmed booking + Zoom confirmation.
+        const { error: fulfillError } = await supabase.functions.invoke("contracts", {
+          body: { action: "fulfill-paid-contract", contractId: contract.id },
+        });
+        if (fulfillError) console.error("Contract fulfillment failed:", contract.id, fulfillError);
       }
     }
 
-    const { data: booking } = await supabase
+    const { data: booking, error: bookingLookupError } = await supabase
       .from("bookings")
-      .select("id, amount_cents, status, customer_name, customer_email, customer_phone, booking_type, booking_date, booking_time, duration_minutes")
+      .select("id, amount_cents, status")
       .eq("square_order_id", orderId)
       .maybeSingle();
+    if (bookingLookupError) throw bookingLookupError;
 
     if (booking && booking.status !== "confirmed" && booking.amount_cents === amount) {
-      const { error } = await supabase
+      const { data: flipped, error } = await supabase
         .from("bookings")
         .update({
           status: "confirmed",
           payment_id: paymentId || null,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", booking.id);
+        .eq("id", booking.id)
+        .neq("status", "confirmed")
+        .select("id");
       if (error) throw error;
-      await supabase.functions.invoke("send-booking-confirmation", {
-        body: {
-          bookingId: booking.id,
-          customerName: booking.customer_name,
-          customerEmail: booking.customer_email,
-          bookingType: booking.booking_type,
-          bookingDate: booking.booking_date,
-          bookingTime: booking.booking_time,
-          durationMinutes: booking.duration_minutes,
-        },
-      }).catch((error) => console.error("Booking confirmation failed:", error));
-
-      try {
-        await enqueueSpineEvent(
-          "payment",
-          {
-            email: booking.customer_email ?? null,
-            phone: booking.customer_phone ?? null,
-            name: booking.customer_name ?? null,
-            props: { source: "booking", booking_type: booking.booking_type },
-            payment: { processor: "square", amount_cents: amount, kind: "intervention" },
-          },
-          supabase,
-        );
-      } catch (spineError) {
-        console.error("Spine enqueue failed (payment/booking):", spineError);
+      if (flipped && flipped.length > 0) {
+        // Zoom confirmation, Spine payment event, abandoned-cart recovery.
+        const { error: fulfillError } = await supabase.functions.invoke("square-booking", {
+          body: { action: "fulfill-paid-booking", bookingId: booking.id },
+        });
+        if (fulfillError) console.error("Booking fulfillment failed:", booking.id, fulfillError);
       }
     }
 

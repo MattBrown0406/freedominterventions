@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { SITE_URL, excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
+import { findWorkerRouteDrift } from "./check-worker-routes.mjs";
 
 const root = process.cwd();
 const distDir = path.join(root, "dist");
@@ -23,7 +24,8 @@ const outputPath = (route) => route === "/"
   : path.join(distDir, route.replace(/^\//, ""), "index.html");
 
 if (urls.length !== new Set(urls).size) issues.push("Sitemap contains duplicate URLs.");
-if (urls.length !== lastmods.length) issues.push(`Sitemap has ${urls.length} URLs but ${lastmods.length} lastmod values.`);
+// lastmod is optional: generate-sitemap omits it when no trustworthy date exists.
+if (lastmods.length > urls.length) issues.push(`Sitemap has ${urls.length} URLs but ${lastmods.length} lastmod values.`);
 if (urls.some((url) => !url.startsWith(`${SITE_URL}/`))) issues.push("Sitemap contains a noncanonical host or protocol.");
 if (lastmods.some((date) => !/^\d{4}-\d{2}-\d{2}$/.test(date))) issues.push("Sitemap contains an invalid lastmod date.");
 const today = new Date().toISOString().slice(0, 10);
@@ -34,6 +36,7 @@ const workerRoutes = new Set([...workerRouteBlock.matchAll(/'([^']+)'/g)].map((m
 for (const route of urls.map((url) => new URL(url).pathname).filter((route) => !route.startsWith("/blog/"))) {
   if (!workerRoutes.has(route)) issues.push(`Cloudflare Worker public-route allowlist is missing ${route}.`);
 }
+issues.push(...findWorkerRouteDrift(root));
 if (workerSource.includes("functions/v1/generate-sitemap")) issues.push("Cloudflare Worker still overrides the versioned static sitemap.");
 
 const titleMap = new Map();

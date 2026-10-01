@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,7 +30,27 @@ const allowedEvents = new Set([
   "checkout_started",
   "booking_payment_completed",
   "contract_signed",
+  // Remaining trackEvent() names sent by src/
+  "assessment_click",
+  "assessment_submitted",
+  "booking_details_validation_failed",
+  "callback_request_submitted",
+  "cta_book_call",
+  "cta_call",
+  "cta_view_testimonials",
+  "nme_bridge_choice",
+  "resource_click",
+  "self_assessment_cta",
+  "self_assessment_lead_captured",
+  "self_assessment_results_viewed",
+  "self_assessment_safety_continue",
+  "self_assessment_safety_interstitial",
+  "self_assessment_section_complete",
+  "sober_helpline_bridge_choice",
+  "whatsapp_click",
 ]);
+
+const MAX_METADATA_BYTES = 4096;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -44,8 +65,10 @@ const cleanText = (value: unknown, maxLength = 500) => {
   return cleaned.slice(0, maxLength);
 };
 
-const cleanMetadata = (value: unknown) => {
+const cleanMetadata = (value: unknown): Record<string, unknown> | null => {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  // Reject oversized blobs rather than storing arbitrary payloads.
+  if (new TextEncoder().encode(JSON.stringify(value)).length > MAX_METADATA_BYTES) return null;
   return value as Record<string, unknown>;
 };
 
@@ -70,11 +93,20 @@ serve(async (req: Request) => {
     }
 
     const metadata = cleanMetadata(body.metadata);
+    if (metadata === null) {
+      return json({ error: "Metadata too large" }, 413);
+    }
     const source = cleanText(metadata.source || metadata.utm_source || body.source, 120);
 
     const supabase = createClient(supabaseUrl, serviceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
+
+    // Generous per-IP cap: real visitors fire a handful of events per page.
+    const allowed = await checkRateLimit(supabase, `track-event:${getClientIp(req)}`, 300, 3600);
+    if (!allowed) {
+      return json({ error: "Too many events" }, 429);
+    }
 
     const { error } = await supabase.from("freedom_funnel_events").insert({
       event_name: eventName,

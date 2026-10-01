@@ -71,7 +71,7 @@ const Interventionist = () => {
                       Call Matt Now
                     </Button>
                   </a>
-                  <Link to="/book-intervention-consultation#booking">
+                  <Link to="/book-intervention-consultation?type=consultation#booking">
                     <Button variant="outline" size="lg" className="w-full">
                       Book a Confidential Consultation
                     </Button>

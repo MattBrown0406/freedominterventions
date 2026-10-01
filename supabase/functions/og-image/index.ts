@@ -41,9 +41,11 @@ Deno.serve(async (req) => {
 
     // Construct absolute image URL
     const siteUrl = "https://freedominterventions.com";
-    const imageUrl = post.image_url?.startsWith("http") 
-      ? post.image_url 
-      : `${siteUrl}${post.image_url}`;
+    const imageUrl = !post.image_url
+      ? `${siteUrl}/og-share.jpg`
+      : post.image_url.startsWith("http")
+        ? post.image_url
+        : `${siteUrl}${post.image_url.startsWith("/") ? "" : "/"}${post.image_url}`;
     const pageUrl = `${siteUrl}/blog/${post.slug}`;
 
     return new Response(

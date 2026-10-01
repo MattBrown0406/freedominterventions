@@ -14,6 +14,21 @@ import SEOHead from "@/components/SEOHead";
 
 type Step = 'lookup' | 'select-date' | 'select-time' | 'confirmation';
 
+// Current date (yyyy-MM-dd) and minutes-past-midnight in Pacific time, where slots are defined.
+const getPacificNow = () => {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hourCycle: 'h23',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    minutes: (Number(get('hour')) % 24) * 60 + Number(get('minute')),
+  };
+};
+
 interface BookingData {
   id: string;
   booking_type: string;
@@ -25,7 +40,14 @@ interface BookingData {
 
 const Reschedule = () => {
   const [step, setStep] = useState<Step>('lookup');
-  const [bookingId, setBookingId] = useState('');
+  // Prefilled from the "Manage Booking" link (?bookingId=...); the email is typed by the user.
+  const [bookingId, setBookingId] = useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).get('bookingId')?.trim() ?? '';
+    } catch {
+      return '';
+    }
+  });
   const [email, setEmail] = useState('');
   const [booking, setBooking] = useState<BookingData | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -33,19 +55,14 @@ const Reschedule = () => {
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Slots are Pacific wall-clock times, so compare against "now" in Pacific time,
+  // not the visitor's local clock.
   const filterSameDaySlots = (slots: string[], date: Date) => {
-    const now = new Date();
-    const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd');
-    
-    if (!isToday) return slots;
-    
-    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
-    
+    const pacificNow = getPacificNow();
+    if (format(date, 'yyyy-MM-dd') !== pacificNow.date) return slots;
     return slots.filter(slot => {
       const [hours, minutes] = slot.split(':').map(Number);
-      const slotTime = new Date(date);
-      slotTime.setHours(hours, minutes, 0, 0);
-      return slotTime >= oneHourFromNow;
+      return hours * 60 + minutes >= pacificNow.minutes + 60;
     });
   };
 
@@ -130,6 +147,9 @@ const Reschedule = () => {
 
       setStep('confirmation');
       toast.success("Booking rescheduled successfully!");
+      if (data?.confirmationError) {
+        toast.error("Your booking was moved, but the updated confirmation email failed to send. We will follow up with your meeting link.");
+      }
     } catch (error: any) {
       console.error('Error rescheduling:', error);
       toast.error("Failed to reschedule booking");
@@ -171,7 +191,7 @@ const Reschedule = () => {
               </CardTitle>
               <CardDescription>
                 {step === 'lookup' && 'Enter your booking details to reschedule'}
-                {step === 'select-date' && `Current: ${formatDate(booking?.booking_date || '')} at ${formatTime(booking?.booking_time || '')}`}
+                {step === 'select-date' && `Current: ${formatDate(booking?.booking_date || '')} at ${formatTime(booking?.booking_time || '')} Pacific Time`}
                 {step === 'select-time' && `New date: ${selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}`}
                 {step === 'confirmation' && 'Your appointment has been rescheduled'}
               </CardDescription>
@@ -224,6 +244,7 @@ const Reschedule = () => {
                 <div className="space-y-4">
                   <Calendar
                     mode="single"
+                    required
                     selected={selectedDate}
                     onSelect={handleDateSelect}
                     disabled={(date) => {
@@ -263,6 +284,7 @@ const Reschedule = () => {
                     </div>
                   ) : (
                     <>
+                      <p className="text-sm text-muted-foreground text-center">All times are Pacific Time (PT)</p>
                       <div className="grid grid-cols-3 gap-2">
                         {availableSlots.map((slot) => (
                           <Button
@@ -309,7 +331,7 @@ const Reschedule = () => {
                     </div>
                     <div className="flex items-center justify-center gap-2 text-lg">
                       <Clock className="h-5 w-5 text-primary" />
-                      <span>{formatTime(selectedTime)}</span>
+                      <span>{formatTime(selectedTime)} Pacific Time</span>
                     </div>
                   </div>
                   <p className="text-muted-foreground">

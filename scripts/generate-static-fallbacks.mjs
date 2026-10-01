@@ -1,10 +1,10 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, copyFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fitSeoDescription, fitSeoTitle, markHelmetManagedTags } from "./helmet-markup.mjs";
 import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
-import { COST_ANSWER_ROUTE, costAnswerMetadata } from "./answer-fallback.mjs";
+import { COST_ANSWER_ROUTE, costAnswerMetadata, answerMetadata } from "./answer-fallback.mjs";
 import { pageFallbackSources, pageFallbackMetadata } from "./page-fallback.mjs";
 import { FULL_GUIDE_ROUTE, renderFullGuide, installFullGuide } from "./full-guide-fallback.mjs";
 import { SERVICE_AREAS_ROUTE, renderServiceAreas, installServiceAreas } from "./service-areas-fallback.mjs";
@@ -20,7 +20,13 @@ const interventionAnswersFile = path.join(
   "data",
   "interventionAnswers.ts",
 );
+const locationsFile = path.join(root, "src", "data", "locations.ts");
 const indexFile = path.join(distDir, "index.html");
+// Pristine Vite index.html (generic title, no canonical). Captured before any
+// generator rewrites dist/index.html with the home page fallback/prerender.
+// Fallback generators use it as their template, and the Cloudflare Worker
+// serves it instead of the home document for URLs with no generated file.
+const spaShellFile = path.join(distDir, "spa-shell.html");
 const BASE_URL = "https://freedominterventions.com";
 
 const staticMetadata = {
@@ -186,59 +192,6 @@ const staticMetadata = {
   },
 };
 
-const usStates = new Set([
-  "alabama",
-  "alaska",
-  "arizona",
-  "arkansas",
-  "california",
-  "colorado",
-  "connecticut",
-  "delaware",
-  "florida",
-  "georgia",
-  "hawaii",
-  "idaho",
-  "illinois",
-  "indiana",
-  "iowa",
-  "kansas",
-  "kentucky",
-  "louisiana",
-  "maine",
-  "maryland",
-  "massachusetts",
-  "michigan",
-  "minnesota",
-  "mississippi",
-  "missouri",
-  "montana",
-  "nebraska",
-  "nevada",
-  "new-hampshire",
-  "new-jersey",
-  "new-mexico",
-  "new-york",
-  "north-carolina",
-  "north-dakota",
-  "ohio",
-  "oklahoma",
-  "oregon",
-  "pennsylvania",
-  "rhode-island",
-  "south-carolina",
-  "south-dakota",
-  "tennessee",
-  "texas",
-  "utah",
-  "vermont",
-  "virginia",
-  "washington",
-  "west-virginia",
-  "wisconsin",
-  "wyoming",
-]);
-
 const titleCase = (slug) =>
   slug
     .split("-")
@@ -270,33 +223,104 @@ const getRoutes = async () => {
     .filter((route) => !route.includes("*"));
 };
 
-const getMetadata = (route) => {
+// Real locations only: states, cities, and provinces from src/data/locations.ts,
+// plus "<place>-<us-state>" routes (e.g. /oahu-hawaii) not listed there.
+// Every other slug is a regular page and must never be treated as a place.
+const getLocations = async () => {
+  const source = await readFile(locationsFile, "utf8");
+  const states = new Map();
+  const places = new Map();
+  for (const [, body] of source.matchAll(/\{([^{}]*\bslug:\s*"[^"]+"[^{}]*)\}/g)) {
+    const field = (name) => body.match(new RegExp(`\\b${name}:\\s*"([^"]+)"`))?.[1];
+    const slug = field("slug");
+    const name = field("name");
+    if (!slug || !name) continue;
+    if (field("region")) states.set(slug, name);
+    places.set(slug, field("state") ? `${name}, ${field("state")}` : name);
+  }
+  if (!states.size || !places.size) {
+    throw new Error("src/data/locations.ts format changed; update getLocations in generate-static-fallbacks.mjs.");
+  }
+  return { states, places };
+};
+
+const locationName = (slug, { states, places }) => {
+  if (places.has(slug)) return places.get(slug);
+  for (const [stateSlug, stateName] of states) {
+    const prefix = slug.endsWith(`-${stateSlug}`) ? slug.slice(0, -stateSlug.length - 1) : "";
+    if (prefix && !prefix.includes("/")) return `${titleCase(prefix)}, ${stateName}`;
+  }
+  return null;
+};
+
+// Route -> page component source file, for reading literal <SEOHead> props.
+const getRouteSourceFiles = (appContent) => {
+  const componentFiles = new Map();
+  for (const [, component, pageFile] of appContent.matchAll(/import\s+([A-Za-z0-9_]+)\s+from\s+["']\.\/pages\/([^"']+)["']/g)) {
+    componentFiles.set(component, `src/pages/${pageFile}.tsx`);
+  }
+  for (const [, component, pageFile] of appContent.matchAll(/const\s+([A-Za-z0-9_]+)\s*=\s*lazy\(\(\)\s*=>\s*import\(["']\.\/pages\/([^"']+)["']\)\)/g)) {
+    componentFiles.set(component, `src/pages/${pageFile}.tsx`);
+  }
+  const routeFiles = new Map();
+  for (const [, route, component] of appContent.matchAll(/<Route\s+path="([^"]+)"[\s\S]{0,180}?element=\{<([A-Za-z0-9_]+)/g)) {
+    if (componentFiles.has(component)) routeFiles.set(route, componentFiles.get(component));
+  }
+  return routeFiles;
+};
+
+const seoHeadMetadata = async (sourceFile) => {
+  const file = sourceFile && path.join(root, sourceFile);
+  if (!file || !existsSync(file)) return null;
+  const head = (await readFile(file, "utf8")).match(/<SEOHead\s([\s\S]*?)\/>/)?.[1];
+  const literal = (name) => head?.match(new RegExp(`\\b${name}="([^"]+)"`))?.[1]?.replace(/\s+/g, " ").trim();
+  const title = literal("title");
+  const description = literal("description");
+  if (!title || !description) return null;
+  return {
+    title: title.includes("Freedom Interventions") ? title : `${title} | Freedom Interventions`,
+    description,
+    heading: title.replace(/\s*\|\s*Freedom Interventions$/, ""),
+    body: description,
+  };
+};
+
+const getMetadata = async (route, context) => {
   if (staticMetadata[route]) return staticMetadata[route];
 
   const slug = route.replace(/^\//, "");
-  const name = titleCase(slug);
 
-  if (usStates.has(slug)) {
+  if (route.startsWith("/intervention-answers/")) {
+    const answer = answerMetadata(context.answerSource, slug.slice("intervention-answers/".length));
+    if (answer) return answer;
+  }
+
+  const location = locationName(slug, context.locations);
+  if (location && context.locations.states.has(slug)) {
     return {
-      title: `Addiction Intervention Services in ${name} | Freedom Interventions`,
-      description: `${name} families dealing with addiction can get professional intervention support, treatment planning, and family guidance from Freedom Interventions.`,
-      heading: `Addiction Intervention Services in ${name}`,
-      body: `Freedom Interventions helps families across ${name} prepare for addiction intervention, treatment planning, and the next right step.`,
+      title: `Addiction Intervention Services in ${location} | Freedom Interventions`,
+      description: `${location} families dealing with addiction can get professional intervention support, treatment planning, and family guidance from Freedom Interventions.`,
+      heading: `Addiction Intervention Services in ${location}`,
+      body: `Freedom Interventions helps families across ${location} prepare for addiction intervention, treatment planning, and the next right step.`,
     };
   }
 
-  if (slug.includes("-")) {
+  if (location) {
     return {
-      title: `Addiction Intervention Services in ${name} | Freedom Interventions`,
-      description: `Professional addiction intervention services for families in ${name}. Get confidential family guidance and treatment planning support.`,
-      heading: `Addiction Intervention Services in ${name}`,
-      body: `Families in ${name} can contact Freedom Interventions for professional addiction intervention guidance, treatment planning, and family support.`,
+      title: `Addiction Intervention Services in ${location} | Freedom Interventions`,
+      description: `Professional addiction intervention services for families in ${location}. Get confidential family guidance and treatment planning support.`,
+      heading: `Addiction Intervention Services in ${location}`,
+      body: `Families in ${location} can contact Freedom Interventions for professional addiction intervention guidance, treatment planning, and family support.`,
     };
   }
 
+  const fromSeoHead = await seoHeadMetadata(context.routeSourceFiles.get(route));
+  if (fromSeoHead) return fromSeoHead;
+
+  const name = titleCase(slug.split("/").pop() || "Home");
   return {
     title: `${name} | Freedom Interventions`,
-    description: `Freedom Interventions provides professional addiction intervention services, family support, and treatment planning guidance.`,
+    description: `${name}: Freedom Interventions provides professional addiction intervention services, family support, and treatment planning guidance.`,
     heading: name,
     body: `Freedom Interventions helps families dealing with addiction find clarity, structure, and a real next step.`,
   };
@@ -326,6 +350,7 @@ const upsertHead = (html, route, metadata) => {
   const canonicalPath = canonicalRouteAliases.get(route) ?? route;
   const canonical = `${BASE_URL}${canonicalPath === "/" ? "" : canonicalPath}`;
   const noindex = excludedSitemapRoutes.has(route) && !canonicalRouteAliases.has(route);
+  // Mirrors SEOHead. Only real locations (see getMetadata) get these titles.
   const preserveMeasuredTitle =
     ["/boise-idaho", "/interventionist", "/minneapolis-minnesota"].includes(route) ||
     /^(Addiction Intervention Services|Professional Interventionist|Drug & Alcohol Interventionist) (in|on) /i.test(metadata.title);
@@ -346,7 +371,7 @@ const upsertHead = (html, route, metadata) => {
   ].join("\n    ");
 
   return html
-    .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
+    .replace(/<title\b[^>]*>[\s\S]*?<\/title>/, `<title>${title}</title>`)
     .replace(/<meta name="description" content=".*?">\n?/g, "")
     .replace(/<meta name="robots" content=".*?">\n?/g, "")
     .replace(/<link rel="canonical" href=".*?">\n?/g, "")
@@ -373,18 +398,27 @@ const main = async () => {
   if (!existsSync(indexFile))
     throw new Error("dist/index.html not found. Run vite build first.");
 
-  const template = await readFile(indexFile, "utf8");
+  // Snapshot the pristine Vite shell once; reruns without a fresh vite build
+  // keep using the original snapshot instead of an already-rewritten index.
+  if (!existsSync(spaShellFile)) await copyFile(indexFile, spaShellFile);
+  const template = await readFile(spaShellFile, "utf8");
   const fullGuide = await renderFullGuide(root);
   const serviceAreas = await renderServiceAreas(root);
   const routes = await getRoutes();
-  staticMetadata[COST_ANSWER_ROUTE] = costAnswerMetadata(await readFile(interventionAnswersFile, "utf8"));
+  const answerSource = await readFile(interventionAnswersFile, "utf8");
+  staticMetadata[COST_ANSWER_ROUTE] = costAnswerMetadata(answerSource);
+  const context = {
+    answerSource,
+    locations: await getLocations(),
+    routeSourceFiles: getRouteSourceFiles(await readFile(appFile, "utf8")),
+  };
 
   for (const [route, sourceFile] of Object.entries(pageFallbackSources)) {
     staticMetadata[route] = pageFallbackMetadata(await readFile(path.join(root, sourceFile), "utf8"), route);
   }
 
   for (const route of routes) {
-    const metadata = getMetadata(route);
+    const metadata = await getMetadata(route, context);
     let html = markHelmetManagedTags(replaceNoscript(
       upsertHead(route === "/next-step"
         ? template.replace(/<link\b[^>]*href="https:\/\/fonts\.(?:googleapis|gstatic)\.com[^>]*>/g, "")

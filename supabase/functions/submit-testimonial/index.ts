@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { escapeHtml } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -131,14 +132,14 @@ serve(async (req) => {
             </div>
             
             <div class="content">
-              <p><strong>Reviewer:</strong> ${reviewerName}</p>
+              <p><strong>Reviewer:</strong> ${escapeHtml(reviewerName)}</p>
               <p><strong>Type:</strong> ${isProfessional ? "Professional" : "Family Member"}</p>
-              <p><strong>Location:</strong> ${locationInfo}</p>
-              ${isProfessional ? `<p><strong>Position:</strong> ${testimonialData.profession} at ${testimonialData.company}</p>` : ""}
+              <p><strong>Location:</strong> ${escapeHtml(locationInfo)}</p>
+              ${isProfessional ? `<p><strong>Position:</strong> ${escapeHtml(testimonialData.profession)} at ${escapeHtml(testimonialData.company)}</p>` : ""}
               <p><strong>Rating:</strong> <span class="stars">${"★".repeat(testimonialData.rating)}${"☆".repeat(5 - testimonialData.rating)}</span></p>
               
               <div class="review-box">
-                <p><em>"${testimonialData.review_text}"</em></p>
+                <p><em>"${escapeHtml(testimonialData.review_text)}"</em></p>
               </div>
               
               <p style="background: #fef3c7; padding: 10px; border-radius: 5px;">

@@ -32,8 +32,8 @@ const NotFound = () => {
               <Home className="mr-2 h-4 w-4" />
               Return to Home
             </Button>
-            <WhatsAppChatButton variant="solid" size="lg" />
           </Link>
+          <WhatsAppChatButton variant="solid" size="lg" />
           <a href="tel:+14582988000">
             <Button variant="outline" size="lg">
               <Phone className="mr-2 h-4 w-4" />
