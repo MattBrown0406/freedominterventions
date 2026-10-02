@@ -946,8 +946,10 @@ export type Database = {
           id: string
           notes: string | null
           payment_id: string | null
+          payment_link_id: string | null
           reminder_sent: boolean
           source_attribution: Json
+          square_order_id: string | null
           status: string
           updated_at: string
         }
@@ -974,8 +976,10 @@ export type Database = {
           id?: string
           notes?: string | null
           payment_id?: string | null
+          payment_link_id?: string | null
           reminder_sent?: boolean
           source_attribution?: Json
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -1002,8 +1006,10 @@ export type Database = {
           id?: string
           notes?: string | null
           payment_id?: string | null
+          payment_link_id?: string | null
           reminder_sent?: boolean
           source_attribution?: Json
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -1204,6 +1210,7 @@ export type Database = {
           signed_at: string
           signer_name: string
           source_attribution: Json
+          square_order_id: string | null
           status: string
           updated_at: string
         }
@@ -1227,6 +1234,7 @@ export type Database = {
           signed_at?: string
           signer_name: string
           source_attribution?: Json
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -1250,6 +1258,7 @@ export type Database = {
           signed_at?: string
           signer_name?: string
           source_attribution?: Json
+          square_order_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -1273,6 +1282,8 @@ export type Database = {
           revenue_path: string | null
           source: string
           source_attribution: Json
+          source_id: string | null
+          tags: string[]
           unsubscribe_token: string
           unsubscribed: boolean
           unsubscribed_at: string | null
@@ -1295,6 +1306,8 @@ export type Database = {
           revenue_path?: string | null
           source?: string
           source_attribution?: Json
+          source_id?: string | null
+          tags?: string[]
           unsubscribe_token?: string
           unsubscribed?: boolean
           unsubscribed_at?: string | null
@@ -1317,6 +1330,8 @@ export type Database = {
           revenue_path?: string | null
           source?: string
           source_attribution?: Json
+          source_id?: string | null
+          tags?: string[]
           unsubscribe_token?: string
           unsubscribed?: boolean
           unsubscribed_at?: string | null
@@ -1434,6 +1449,7 @@ export type Database = {
           id: string
           recipient_count: number
           reply_to: string | null
+          sent_at: string | null
           sent_count: number
           status: string
           subject: string
@@ -1450,6 +1466,7 @@ export type Database = {
           id?: string
           recipient_count?: number
           reply_to?: string | null
+          sent_at?: string | null
           sent_count?: number
           status?: string
           subject: string
@@ -1466,6 +1483,7 @@ export type Database = {
           id?: string
           recipient_count?: number
           reply_to?: string | null
+          sent_at?: string | null
           sent_count?: number
           status?: string
           subject?: string
