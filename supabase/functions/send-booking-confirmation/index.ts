@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
+import { checkRateLimit } from "../_shared/rateLimit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -536,7 +537,10 @@ const handler = async (req: Request): Promise<Response> => {
     // Only when this run actually claimed the booking and the customer never got the link
     // (not on "already sent" / "claimed by another run" skips).
     if (alertContext && !customerEmailSent) {
-      await alertOwnerConfirmationFailed(alertContext, error);
+      // At most one alert per booking per day, however often Square/the browser retries.
+      if (await checkRateLimit(supabase, `confirm-alert:${alertContext.bookingId}`, 1, 86400)) {
+        await alertOwnerConfirmationFailed(alertContext, error);
+      }
     }
     return jsonResponse({ error: "Unable to send booking confirmation. Please try again later." }, 500);
   }

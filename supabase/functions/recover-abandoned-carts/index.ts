@@ -117,7 +117,7 @@ async function sendRecoveryEmail(cart: AbandonedCart): Promise<void> {
   });
 }
 
-async function sendTelegramAlert(cart: AbandonedCart): Promise<void> {
+async function sendTelegramAlert(cart: AbandonedCart, emailed = true): Promise<void> {
   const token = Deno.env.get("TELEGRAM_BOT_TOKEN");
   if (!token) {
     console.log("TELEGRAM_BOT_TOKEN not set, skipping alert");
@@ -140,7 +140,9 @@ async function sendTelegramAlert(cart: AbandonedCart): Promise<void> {
     (cart.booking_date && cart.booking_time
       ? `*Selected:* ${escapeTelegramMarkdown(cart.booking_date)} at ${escapeTelegramMarkdown(cart.booking_time)} PT\n`
       : "") +
-    `\nRecovery email sent. Consider a personal follow-up.`;
+    (emailed
+      ? `\nRecovery email sent. Consider a personal follow-up.`
+      : `\nNot emailed (this address already got a recovery email in the last 7 days). Consider a personal follow-up.`);
 
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
@@ -256,17 +258,19 @@ serve(async (req: Request) => {
       }
       if (recentlyEmailed && recentlyEmailed.length > 0) {
         // Not emailed: retire it as expired (a status the admin view already shows).
-        const { error: skipError } = await supabase
+        const { data: retired, error: skipError } = await supabase
           .from("abandoned_carts")
           .update({ status: "expired" })
           .eq("id", cart.id)
           .eq("status", "pending")
-          .is("recovery_email_sent_at", null);
+          .is("recovery_email_sent_at", null)
+          .select("id");
         if (skipError) console.error(`Failed to retire duplicate cart ${cart.id}:`, skipError);
-        // The customer isn't emailed again, but a high-value cart still alerts the owner.
-        if (!skipError && cart.booking_type === "readiness-intensive") {
+        // The customer isn't emailed again, but a high-value cart still alerts the owner
+        // (only from the run that actually retired it, so overlapping runs alert once).
+        if (!skipError && retired && retired.length > 0 && cart.booking_type === "readiness-intensive") {
           try {
-            await sendTelegramAlert(cart);
+            await sendTelegramAlert(cart, false);
           } catch (e) {
             console.error("Telegram alert failed:", e);
           }
