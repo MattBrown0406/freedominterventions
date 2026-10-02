@@ -311,7 +311,9 @@ function buildTelegramMessage(record: AssessmentRecord, asamLevel: string, notio
     "",
     `🚨 Red Flags: ${redFlags.length ? redFlags.join(", ") : "None noted"}`,
     "",
-    notionCreated ? "Notion record created. Building case file now." : "Notion record failed. Manual review needed.",
+    !NOTION_API_TOKEN
+      ? "Review the full assessment in the admin dashboard."
+      : notionCreated ? "Notion record created. Building case file now." : "Notion record failed. Manual review needed.",
   ].join("\n");
 }
 
@@ -435,14 +437,6 @@ serve(async (req) => {
     return unauthorized(corsHeaders);
   }
 
-  if (!NOTION_API_TOKEN) {
-    console.error("assessment-to-notion: NOTION_API_TOKEN not configured");
-    return new Response(JSON.stringify({ success: false, error: "Notion integration not configured" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-
   let notionPageId: string | null = null;
   let notionSuccess = false;
   let telegramSuccess = false;
@@ -460,7 +454,8 @@ serve(async (req) => {
       email: record.contact_email,
     });
 
-    try {
+    // Notion is optional: without NOTION_API_TOKEN, skip it and still send the Telegram alert.
+    if (NOTION_API_TOKEN) try {
       const notionResult = await createNotionRecord(record);
       notionPageId = notionResult.pageId;
       notionSuccess = Boolean(notionPageId);

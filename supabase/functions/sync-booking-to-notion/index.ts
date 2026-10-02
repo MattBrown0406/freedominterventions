@@ -202,8 +202,11 @@ serve(async (req) => {
   }
 
   try {
+    // Notion is optional: without a token this is a quiet no-op.
     if (!NOTION_API_TOKEN) {
-      throw new Error('NOTION_API_TOKEN not configured');
+      return new Response(JSON.stringify({ success: true, skipped: 'notion_not_configured' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const payload: BookingPayload = await req.json();
