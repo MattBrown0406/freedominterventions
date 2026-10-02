@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { escapeHtml, sendResendEmail } from "../_shared/resend.ts";
+import { escapeHtml, sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
 import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 
 const corsHeaders = {
@@ -16,6 +16,10 @@ interface BookingConfirmationRequest {
 }
 
 const PACIFIC_TZ = "America/Los_Angeles";
+const OWNER_ALERT_EMAIL = "matt@freedominterventions.com";
+// Set by square-booking / contracts when a paid booking landed in a taken or past slot.
+// Kept when the Zoom details are written (a reschedule moves it to a valid slot, so drops it).
+const SLOT_CONFLICT_MARKER = "⚠️ SLOT CONFLICT – needs reschedule";
 
 // Bookings store Pacific wall-clock date ("YYYY-MM-DD") and time ("HH:MM[:SS]").
 function formatPacificDate(date: string): string {
@@ -174,6 +178,45 @@ async function deleteZoomMeeting(accessToken: string, meetingId: string): Promis
   }
 }
 
+type ConfirmationAlertContext = {
+  bookingId: string;
+  customerName: string;
+  customerEmail: string;
+  bookingType: string;
+  bookingDate: string;
+  bookingTime: string;
+  isReschedule: boolean;
+};
+
+// Best-effort owner alert when this run claimed a confirmed booking but the customer never
+// got their Zoom link. Never throws.
+async function alertOwnerConfirmationFailed(ctx: ConfirmationAlertContext, error: unknown): Promise<void> {
+  try {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    await sendSystemEmail({
+      to: OWNER_ALERT_EMAIL,
+      subject: `Booking confirmation failed — send Zoom link manually - ${ctx.customerName.replace(/[\r\n]+/g, " ")}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h1 style="color: #b91c1c;">Booking confirmation failed — send Zoom link manually</h1>
+          <p>The booking is confirmed, but the ${ctx.isReschedule ? "reschedule " : ""}confirmation (Zoom meeting + customer email) could not be sent.${ctx.isReschedule ? " The booking still has the Zoom link for the previous time." : ""}</p>
+          <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>Booking ID:</strong> ${escapeHtml(ctx.bookingId)}</p>
+            <p><strong>Client Name:</strong> ${escapeHtml(ctx.customerName)}</p>
+            <p><strong>Client Email:</strong> ${escapeHtml(ctx.customerEmail)}</p>
+            <p><strong>Type:</strong> ${escapeHtml(ctx.bookingType)}</p>
+            <p><strong>Date:</strong> ${escapeHtml(ctx.bookingDate)}</p>
+            <p><strong>Time:</strong> ${escapeHtml(ctx.bookingTime)} (Pacific Time)</p>
+          </div>
+          <p><strong>Error:</strong> ${escapeHtml(errorMessage)}</p>
+        </div>
+      `,
+    });
+  } catch (alertError) {
+    console.error("Failed to send confirmation-failure alert:", alertError);
+  }
+}
+
 const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
@@ -200,6 +243,7 @@ const handler = async (req: Request): Promise<Response> => {
   let accessToken: string | null = null;
   let newMeetingId: string | null = null;
   let customerEmailSent = false;
+  let alertContext: ConfirmationAlertContext | null = null;
 
   // Release our claim (and remove a meeting we created but never delivered) so a
   // later retry can succeed instead of seeing a permanent "pending" marker.
@@ -310,6 +354,15 @@ const handler = async (req: Request): Promise<Response> => {
       return jsonResponse({ success: true, duplicate: true });
     }
     claimMarker = marker;
+    alertContext = {
+      bookingId,
+      customerName: String(booking.customer_name ?? ""),
+      customerEmail: String(booking.customer_email ?? ""),
+      bookingType: String(booking.booking_type ?? ""),
+      bookingDate: String(booking.booking_date ?? ""),
+      bookingTime: String(booking.booking_time ?? "").slice(0, 5),
+      isReschedule,
+    };
     // Restore a real meeting reference on failure, but never a stale pending marker.
     notesBeforeClaim = pendingClaimAt ? null : booking.notes;
 
@@ -417,7 +470,8 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: zoomUpdateError } = await supabase
       .from("bookings")
       .update({
-        notes: `Zoom Meeting ID: ${meetingId}, Join URL: ${joinUrl}`,
+        notes: `Zoom Meeting ID: ${meetingId}, Join URL: ${joinUrl}` +
+          (!isReschedule && existingNotes.includes(SLOT_CONFLICT_MARKER) ? `\n${SLOT_CONFLICT_MARKER}` : ""),
         updated_at: new Date().toISOString(),
       })
       .eq("id", bookingId);
@@ -479,6 +533,11 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-booking-confirmation:", error);
     await rollback();
+    // Only when this run actually claimed the booking and the customer never got the link
+    // (not on "already sent" / "claimed by another run" skips).
+    if (alertContext && !customerEmailSent) {
+      await alertOwnerConfirmationFailed(alertContext, error);
+    }
     return jsonResponse({ error: "Unable to send booking confirmation. Please try again later." }, 500);
   }
 };

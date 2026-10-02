@@ -33,6 +33,8 @@ export interface CrmContactInput {
   pipeline_status: string;
   next_action?: string | null;
   next_action_due_at?: string | null;
+  /** Urgent engagement (callback request, crisis-level assessment): replace any open next action. */
+  urgent?: boolean;
 }
 
 function stageRank(stage: string | null | undefined): number {
@@ -92,12 +94,12 @@ export async function upsertCrmContact(
     patch.pipeline_status = input.pipeline_status;
     if (input.revenue_path) patch.revenue_path = input.revenue_path;
   }
-  // A fresh engagement with a sooner due date (e.g. a crisis assessment or a
-  // callback request from someone already in the CRM) replaces a stale action.
-  const incomingDue = input.next_action_due_at ? Date.parse(input.next_action_due_at) : NaN;
+  // Keep an open, still-future next action (often set by hand in the admin
+  // pipeline). Replace it only when the stage advances, it is missing or
+  // overdue, or this engagement is urgent (callback request / crisis assessment).
   const existingDue = existing.next_action_due_at ? Date.parse(existing.next_action_due_at) : NaN;
-  const moreUrgent = !Number.isNaN(incomingDue) && (Number.isNaN(existingDue) || incomingDue < existingDue);
-  if (advances || !existing.next_action || moreUrgent) {
+  const stale = !Number.isNaN(existingDue) && existingDue < Date.now();
+  if (advances || !existing.next_action || stale || input.urgent === true) {
     if (input.next_action !== undefined) patch.next_action = input.next_action;
     if (input.next_action_due_at !== undefined) patch.next_action_due_at = input.next_action_due_at;
   }

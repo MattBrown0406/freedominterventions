@@ -263,6 +263,14 @@ serve(async (req: Request) => {
           .eq("status", "pending")
           .is("recovery_email_sent_at", null);
         if (skipError) console.error(`Failed to retire duplicate cart ${cart.id}:`, skipError);
+        // The customer isn't emailed again, but a high-value cart still alerts the owner.
+        if (!skipError && cart.booking_type === "readiness-intensive") {
+          try {
+            await sendTelegramAlert(cart);
+          } catch (e) {
+            console.error("Telegram alert failed:", e);
+          }
+        }
         results.skipped++;
         continue;
       }

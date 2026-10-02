@@ -5,6 +5,7 @@ import { enqueueSpineEvent } from "../_shared/spine.ts";
 import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 import { upsertCrmContact } from "../_shared/crm.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
+import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,6 +28,10 @@ const UNPAID_CONTRACT_STATUSES = ["signed", "signed-awaiting-payment"];
 const CHECKOUT_TRACKING_ERROR = "We could not start checkout. Please try again, or call (458) 298-8000.";
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^\d{2}:\d{2}(:\d{2})?$/;
+const PACIFIC_TZ = "America/Los_Angeles";
+const OWNER_ALERT_EMAIL = "matt@freedominterventions.com";
+// Same marker square-booking uses; send-booking-confirmation keeps it with the Zoom details.
+const SLOT_CONFLICT_MARKER = "⚠️ SLOT CONFLICT – needs reschedule";
 const INTERVENTION_DISCOUNT_CODES: Record<string, number> = {
   SAVE500: 50000,
   SAVE1000: 100000,
@@ -136,6 +141,95 @@ function decodeContractPdf(base64: string): Uint8Array {
   return bytes;
 }
 
+// Minutes Pacific time is offset from UTC at the given instant (e.g. -420 during PDT).
+function pacificOffsetMinutes(at: Date): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: PACIFIC_TZ,
+    hourCycle: "h23",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
+  }).formatToParts(at);
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  const asUtc = Date.UTC(get("year"), get("month") - 1, get("day"), get("hour") % 24, get("minute"), get("second"));
+  return Math.round((asUtc - at.getTime()) / 60000);
+}
+
+// Bookings store Pacific wall-clock date/time; convert to the real instant (DST-aware).
+function pacificWallTimeToInstant(date: string, time: string): Date {
+  const [y, m, d] = date.split("-").map(Number);
+  const [hh, mm] = time.split(":").map(Number);
+  const wallAsUtc = Date.UTC(y, m - 1, d, hh, mm);
+  let offset = pacificOffsetMinutes(new Date(wallAsUtc));
+  let instant = wallAsUtc - offset * 60000;
+  const corrected = pacificOffsetMinutes(new Date(instant));
+  if (corrected !== offset) {
+    offset = corrected;
+    instant = wallAsUtc - offset * 60000;
+  }
+  return new Date(instant);
+}
+
+type ConflictingBooking = {
+  id: string;
+  booking_type: string;
+  booking_time: string;
+  duration_minutes: number | null;
+  customer_name: string | null;
+  customer_email: string | null;
+  contract_metadata: Record<string, unknown> | null;
+};
+
+// Best-effort: a paid Readiness Intensive was booked into a taken or past slot. Never throws.
+async function alertOwnerSlotConflict(
+  contract: PaidContractRow,
+  bookingId: string,
+  bookingDate: string,
+  slotTime: string,
+  inPast: boolean,
+  overlapping: ConflictingBooking[],
+): Promise<void> {
+  try {
+    const describe = (b: { id: string; customer_name: string | null; customer_email: string | null; booking_type: string; booking_time: string; duration_minutes: number | null }) => `
+      <li>
+        <strong>Booking ID:</strong> ${escapeHtml(b.id)}<br>
+        <strong>Name:</strong> ${escapeHtml(b.customer_name)}<br>
+        <strong>Email:</strong> ${escapeHtml(b.customer_email)}<br>
+        <strong>Type:</strong> ${escapeHtml(b.booking_type)}<br>
+        <strong>Date/time (Pacific):</strong> ${escapeHtml(bookingDate)} ${escapeHtml(String(b.booking_time).slice(0, 5))}
+        (${escapeHtml(b.duration_minutes ?? "?")} min)
+      </li>`;
+    const reasons = [
+      inPast ? "<li>The booked time had already passed when payment was confirmed.</li>" : "",
+      overlapping.length > 0 ? "<li>The slot overlaps another confirmed booking (the checkout hold expired before payment).</li>" : "",
+    ].join("");
+    await sendSystemEmail({
+      to: OWNER_ALERT_EMAIL,
+      subject: `Slot conflict: paid booking needs reschedule - ${String(contract.client_name ?? "").replace(/[\r\n]+/g, " ")}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h1 style="color: #b91c1c;">${escapeHtml(SLOT_CONFLICT_MARKER)}</h1>
+          <p>A paid Family Readiness Intensive was booked (payment kept, confirmation sent as usual) but its slot is no longer valid:</p>
+          <ul>${reasons}</ul>
+          <h2>Paid booking</h2>
+          <ul>${describe({
+            id: bookingId,
+            customer_name: contract.client_name,
+            customer_email: contract.client_email,
+            booking_type: "readiness-intensive",
+            booking_time: slotTime,
+            duration_minutes: READINESS_INTENSIVE_DURATION_MINUTES,
+          })}</ul>
+          <p><strong>Contract ID:</strong> ${escapeHtml(contract.id)}</p>
+          ${overlapping.length > 0 ? `<h2>Conflicting confirmed booking(s)</h2><ul>${overlapping.map(describe).join("")}</ul>` : ""}
+          <p>Please contact the client to reschedule.</p>
+        </div>
+      `,
+    });
+  } catch (alertError) {
+    console.error("Failed to send Readiness Intensive slot-conflict alert:", contract.id, alertError);
+  }
+}
+
 type PaidContractRow = {
   id: string;
   contract_type: string;
@@ -174,7 +268,7 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
 
   const findBookings = () => supabase
     .from("bookings")
-    .select("id, created_at")
+    .select("id, status, created_at")
     .eq("booking_type", "readiness-intensive")
     .contains("contract_metadata", { contract_id: contract.id })
     .order("created_at", { ascending: true })
@@ -186,18 +280,39 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
     return false;
   }
 
+  // The booking was since cancelled/completed: nothing left to confirm (a confirmation would
+  // 409 and make the webhook retry forever).
+  if (existing?.[0] && existing[0].status !== "confirmed") {
+    console.log("Readiness Intensive booking is no longer confirmed; skipping confirmation:", contract.id, existing[0].id, existing[0].status);
+    return true;
+  }
+
   let bookingId: string | null = existing?.[0]?.id ?? null;
   if (!bookingId) {
     const slotTime = bookingTime.slice(0, 5);
-    const { data: conflicts } = await supabase
+    // The contract's slot hold expires after 30 minutes, so by payment time the slot may be
+    // taken by another confirmed booking or already in the past.
+    const [slotHour, slotMinute] = slotTime.split(":").map(Number);
+    const slotStart = slotHour * 60 + slotMinute;
+    const slotEnd = slotStart + READINESS_INTENSIVE_DURATION_MINUTES;
+    const inPast = pacificWallTimeToInstant(bookingDate, slotTime).getTime() <= Date.now();
+    const { data: sameDay, error: sameDayError } = await supabase
       .from("bookings")
-      .select("id")
+      .select("id, booking_type, booking_time, duration_minutes, customer_name, customer_email, contract_metadata")
       .eq("booking_date", bookingDate)
-      .eq("booking_time", slotTime)
-      .eq("status", "confirmed")
-      .limit(1);
-    if (conflicts && conflicts.length > 0) {
-      console.warn("Readiness Intensive paid for a slot that is already booked; creating it anyway for admin follow-up:", contract.id);
+      .eq("status", "confirmed");
+    if (sameDayError) console.error("Failed to check Readiness Intensive slot conflicts:", contract.id, sameDayError);
+    const overlapping = ((sameDay || []) as ConflictingBooking[]).filter((b) => {
+      if (b.contract_metadata?.contract_id === contract.id) return false;
+      if (typeof b.booking_time !== "string" || !TIME_RE.test(b.booking_time)) return false;
+      const [h, m] = b.booking_time.split(":").map(Number);
+      const otherStart = h * 60 + m;
+      const otherEnd = otherStart + (typeof b.duration_minutes === "number" && b.duration_minutes > 0 ? b.duration_minutes : 60);
+      return otherStart < slotEnd && slotStart < otherEnd;
+    });
+    const hasConflict = inPast || overlapping.length > 0;
+    if (hasConflict) {
+      console.warn("Readiness Intensive paid for a slot that is taken or past; creating it anyway for admin follow-up:", contract.id);
     }
 
     const { data: inserted, error: insertError } = await supabase
@@ -224,6 +339,7 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
           follow_up_included: metadata.followUpIncluded === true,
         },
         source_attribution: contract.source_attribution ?? {},
+        notes: hasConflict ? SLOT_CONFLICT_MARKER : null,
       })
       .select("id")
       .single();
@@ -239,6 +355,10 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
     bookingId = rows?.[0]?.id ?? inserted?.id ?? null;
     if (inserted?.id && bookingId && inserted.id !== bookingId) {
       await supabase.from("bookings").delete().eq("id", inserted.id);
+    }
+    // Only the path whose row was kept alerts, so racing paths send one email.
+    if (hasConflict && bookingId && inserted?.id === bookingId) {
+      await alertOwnerSlotConflict(contract, bookingId, bookingDate, slotTime, inPast, overlapping);
     }
   }
 
@@ -721,8 +841,8 @@ serve(async (req) => {
             .select(PAID_CONTRACT_COLUMNS)
             .eq("id", contractId)
             .maybeSingle();
-          if (paidContract) await ensureReadinessBooking(supabase, paidContract as PaidContractRow);
-          return new Response(JSON.stringify({ success: true, alreadyPaid: true }), {
+          const fulfilled = paidContract ? await ensureReadinessBooking(supabase, paidContract as PaidContractRow) : true;
+          return new Response(JSON.stringify({ success: true, alreadyPaid: true, confirmationError: !fulfilled }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
@@ -755,8 +875,11 @@ serve(async (req) => {
 
         if (error) throw error;
 
+        // false => the Readiness Intensive booking/Zoom confirmation did not go out; the
+        // caller tells the client we'll follow up (the webhook retry may still finish it).
+        let confirmationError = false;
         if (flipped && flipped.length > 0) {
-          await fulfillPaidContract(supabase, contractId);
+          confirmationError = !(await fulfillPaidContract(supabase, contractId));
         } else {
           // Not flipped here: the webhook marked it paid first (fine), or it was cancelled.
           const { data: latest, error: latestError } = await supabase
@@ -776,7 +899,7 @@ serve(async (req) => {
           }
         }
 
-        return new Response(JSON.stringify({ success: true }), {
+        return new Response(JSON.stringify({ success: true, confirmationError }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

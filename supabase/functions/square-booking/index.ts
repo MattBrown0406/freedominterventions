@@ -5,6 +5,7 @@ import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 import { upsertCrmContact } from "../_shared/crm.ts";
+import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -58,6 +59,10 @@ const ABANDONED_CART_TYPES = ['crisis-coaching', 'readiness-intensive'];
 const CHECKOUT_TRACKING_ERROR = 'We could not start checkout. Please try again, or call (458) 298-8000.';
 // contract_metadata keys only the server may set (contracts ensureReadinessBooking).
 const SERVER_OWNED_CONTRACT_METADATA_KEYS = ['contract_id', 'follow_up_included'];
+// Appended to bookings.notes when a paid booking is confirmed into a taken or past slot
+// (send-booking-confirmation keeps it when it writes the Zoom details).
+const SLOT_CONFLICT_MARKER = '⚠️ SLOT CONFLICT – needs reschedule';
+const OWNER_ALERT_EMAIL = 'matt@freedominterventions.com';
 
 function sanitizeClientContractMetadata(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
@@ -154,6 +159,111 @@ async function markAbandonedCartsRecovered(supabase: any, email: string, booking
   if (error) console.error('Failed to mark abandoned carts recovered:', error);
 }
 
+type SlotBooking = {
+  id: string;
+  booking_type: string;
+  booking_date: string;
+  booking_time: string;
+  duration_minutes: number | null;
+  customer_name: string | null;
+  customer_email: string | null;
+};
+
+// A paid booking can be confirmed after its pending hold expired (the Square link stays
+// payable), so by then the slot may belong to another confirmed booking or be in the past.
+async function findSlotConflicts(supabase: any, booking: SlotBooking): Promise<{ inPast: boolean; overlapping: SlotBooking[] }> {
+  if (typeof booking.booking_date !== 'string' || !DATE_RE.test(booking.booking_date) ||
+      typeof booking.booking_time !== 'string' || !TIME_RE.test(booking.booking_time)) {
+    return { inPast: false, overlapping: [] };
+  }
+  const inPast = pacificWallTimeToInstant(booking.booking_date, normalizeSlotTime(booking.booking_time)).getTime() <= Date.now();
+  const minuteRange = (b: SlotBooking): [number, number] => {
+    const [h, m] = b.booking_time.split(':').map(Number);
+    const start = h * 60 + m;
+    return [start, start + Math.max(resolveBookingDurationMinutes(b.booking_type, b.duration_minutes), 1)];
+  };
+  const { data: others, error } = await supabase
+    .from('bookings')
+    .select('id, booking_type, booking_date, booking_time, duration_minutes, customer_name, customer_email')
+    .eq('booking_date', booking.booking_date)
+    .eq('status', 'confirmed')
+    .neq('id', booking.id);
+  if (error) throw error;
+  const [start, end] = minuteRange(booking);
+  const overlapping = ((others || []) as SlotBooking[]).filter((b) => {
+    if (typeof b.booking_time !== 'string' || !TIME_RE.test(b.booking_time)) return false;
+    const [otherStart, otherEnd] = minuteRange(b);
+    return otherStart < end && start < otherEnd;
+  });
+  return { inPast, overlapping };
+}
+
+// Keeps the paid booking (the customer paid), but marks it for reschedule and tells Matt.
+async function flagSlotConflict(
+  supabase: any,
+  booking: SlotBooking,
+  conflict: { inPast: boolean; overlapping: SlotBooking[] },
+) {
+  // Compare-and-swap on notes so a concurrent Zoom claim/write is never clobbered.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { data: current, error: readError } = await supabase
+      .from('bookings')
+      .select('notes')
+      .eq('id', booking.id)
+      .maybeSingle();
+    if (readError || !current) {
+      console.error('Failed to read booking notes for slot-conflict flag:', booking.id, readError);
+      break;
+    }
+    const notes: string | null = current.notes ?? null;
+    if (notes?.includes(SLOT_CONFLICT_MARKER)) break;
+    let flagQuery = supabase
+      .from('bookings')
+      .update({ notes: notes ? `${notes}\n${SLOT_CONFLICT_MARKER}` : SLOT_CONFLICT_MARKER, updated_at: new Date().toISOString() })
+      .eq('id', booking.id);
+    flagQuery = notes == null ? flagQuery.is('notes', null) : flagQuery.eq('notes', notes);
+    const { data: flagged, error: flagError } = await flagQuery.select('id');
+    if (flagError) {
+      console.error('Failed to flag slot conflict on booking:', booking.id, flagError);
+      break;
+    }
+    if (flagged && flagged.length > 0) break;
+  }
+
+  const describe = (b: SlotBooking) => `
+    <li>
+      <strong>Booking ID:</strong> ${escapeHtml(b.id)}<br>
+      <strong>Name:</strong> ${escapeHtml(b.customer_name)}<br>
+      <strong>Email:</strong> ${escapeHtml(b.customer_email)}<br>
+      <strong>Type:</strong> ${escapeHtml(b.booking_type)}<br>
+      <strong>Date/time (Pacific):</strong> ${escapeHtml(b.booking_date)} ${escapeHtml(normalizeSlotTime(String(b.booking_time)))}
+      (${escapeHtml(resolveBookingDurationMinutes(b.booking_type, b.duration_minutes))} min)
+    </li>`;
+  const reasons = [
+    conflict.inPast ? '<li>The booked time had already passed when payment was confirmed.</li>' : '',
+    conflict.overlapping.length > 0 ? '<li>The slot overlaps another confirmed booking (the pending hold expired before payment).</li>' : '',
+  ].join('');
+  try {
+    await sendSystemEmail({
+      to: OWNER_ALERT_EMAIL,
+      subject: `Slot conflict: paid booking needs reschedule - ${String(booking.customer_name ?? '').replace(/[\r\n]+/g, ' ')}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h1 style="color: #b91c1c;">${escapeHtml(SLOT_CONFLICT_MARKER)}</h1>
+          <p>A paid booking was confirmed (payment kept, confirmation sent as usual) but its slot is no longer valid:</p>
+          <ul>${reasons}</ul>
+          <h2>Paid booking</h2>
+          <ul>${describe(booking)}</ul>
+          ${conflict.overlapping.length > 0 ? `<h2>Conflicting confirmed booking(s)</h2><ul>${conflict.overlapping.map(describe).join('')}</ul>` : ''}
+          <p>Please contact the customer to reschedule.</p>
+        </div>
+      `,
+    });
+  } catch (alertError) {
+    console.error('Failed to send slot-conflict alert:', booking.id, alertError);
+  }
+}
+
 // The full run happens exactly once, by whichever path (browser verify or Square webhook)
 // actually flipped a paid booking from pending to confirmed. `idempotentOnly` re-runs just
 // the retry-safe parts (Zoom confirmation, which claims/skips per booking, and abandoned-cart
@@ -166,7 +276,7 @@ async function fulfillPaidBooking(
 ): Promise<{ confirmationError: string | null }> {
   const { data: booking, error } = await supabase
     .from('bookings')
-    .select('id, booking_type, customer_name, customer_email, customer_phone, amount_cents, status')
+    .select('id, booking_type, booking_date, booking_time, duration_minutes, customer_name, customer_email, customer_phone, amount_cents, status')
     .eq('id', bookingId)
     .maybeSingle();
   if (error || !booking) {
@@ -189,6 +299,21 @@ async function fulfillPaidBooking(
     }
     await markAbandonedCartsRecovered(supabase, booking.customer_email, booking.booking_type);
     return { confirmationError: retryError };
+  }
+
+  // Before the confirmation, so the conflict marker is on the row when the Zoom details are
+  // written. Never blocks fulfillment.
+  try {
+    const conflict = await findSlotConflicts(supabase, booking as SlotBooking);
+    if (conflict.inPast || conflict.overlapping.length > 0) {
+      console.warn('Paid booking confirmed into a taken or past slot; flagging for reschedule:', booking.id, {
+        inPast: conflict.inPast,
+        overlapping: conflict.overlapping.map((b) => b.id),
+      });
+      await flagSlotConflict(supabase, booking as SlotBooking, conflict);
+    }
+  } catch (conflictError) {
+    console.error('Slot conflict check failed:', booking.id, conflictError);
   }
 
   let confirmationError: string | null = null;
@@ -717,47 +842,66 @@ serve(async (req) => {
         successUrl.searchParams.set('date', bookingDate);
         successUrl.searchParams.set('time', normalizeSlotTime(bookingTime));
 
-        const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json',
-            'Square-Version': '2024-01-18',
-          },
-          body: JSON.stringify({
-            idempotency_key: crypto.randomUUID(),
-            quick_pay: {
-              name: sessionLabel,
-              price_money: {
-                amount: resolvedAmount,
-                currency: 'USD',
+        // The pending row already holds the slot: on any checkout failure, release it
+        // (conditional on it still being pending) instead of blocking the slot for 30 minutes.
+        const releasePendingHold = async () => {
+          const { error: releaseError } = await supabase
+            .from('bookings')
+            .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+            .eq('id', booking.id)
+            .eq('status', 'pending');
+          if (releaseError) console.error('Failed to release pending booking:', booking.id, releaseError);
+        };
+
+        let checkoutData: any;
+        try {
+          const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
+              'Content-Type': 'application/json',
+              'Square-Version': '2024-01-18',
+            },
+            body: JSON.stringify({
+              idempotency_key: crypto.randomUUID(),
+              quick_pay: {
+                name: sessionLabel,
+                price_money: {
+                  amount: resolvedAmount,
+                  currency: 'USD',
+                },
+                location_id: SQUARE_LOCATION_ID,
               },
-              location_id: SQUARE_LOCATION_ID,
-            },
-            checkout_options: {
-              redirect_url: successUrl.toString(),
-              ask_for_shipping_address: false,
-            },
-            pre_populated_data: {
-              buyer_email: sanitizedEmail,
-            },
-            description: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
-          }),
-        });
+              checkout_options: {
+                redirect_url: successUrl.toString(),
+                ask_for_shipping_address: false,
+              },
+              pre_populated_data: {
+                buyer_email: sanitizedEmail,
+              },
+              description: `${sessionLabel} for ${sanitizedName} on ${bookingDate} at ${bookingTime}`,
+            }),
+          });
 
-        const checkoutData = await checkoutResponse.json();
-        console.log('Square checkout response status:', checkoutResponse.status);
+          checkoutData = await checkoutResponse.json();
+          console.log('Square checkout response status:', checkoutResponse.status);
+        } catch (squareError) {
+          console.error('Square checkout link request failed:', booking.id, squareError);
+          await releasePendingHold();
+          throw new Error('Failed to create Square Checkout link');
+        }
 
-        if (checkoutData.errors) {
+        if (checkoutData?.errors) {
           console.error('Square checkout link error:', checkoutData.errors);
+          await releasePendingHold();
           throw new Error(checkoutData.errors[0]?.detail || 'Failed to create Square Checkout link');
         }
 
-        const paymentLinkId = checkoutData.payment_link?.id ?? null;
-        const squareOrderId = checkoutData.payment_link?.order_id ?? null;
+        const paymentLinkId = checkoutData?.payment_link?.id ?? null;
+        const squareOrderId = checkoutData?.payment_link?.order_id ?? null;
         // Without a stored order id the payment can never be verified, so never hand out the
         // link; release the pending slot hold instead.
-        const { data: trackedBooking, error: trackError } = squareOrderId && checkoutData.payment_link?.url
+        const { data: trackedBooking, error: trackError } = squareOrderId && checkoutData?.payment_link?.url
           ? await supabase
             .from('bookings')
             .update({
@@ -770,19 +914,14 @@ serve(async (req) => {
           : { data: null, error: null };
         if (trackError || !trackedBooking || trackedBooking.length === 0) {
           console.error('Failed to store Square order id on booking:', booking.id, trackError);
-          const { error: releaseError } = await supabase
-            .from('bookings')
-            .update({ status: 'cancelled', updated_at: new Date().toISOString() })
-            .eq('id', booking.id)
-            .eq('status', 'pending');
-          if (releaseError) console.error('Failed to release untracked pending booking:', booking.id, releaseError);
+          await releasePendingHold();
           throw new Error(CHECKOUT_TRACKING_ERROR);
         }
 
         return new Response(JSON.stringify({
           success: true,
           bookingId: booking.id,
-          checkoutUrl: checkoutData.payment_link?.url,
+          checkoutUrl: checkoutData?.payment_link?.url,
           paymentLinkId,
           squareOrderId,
         }), {
@@ -811,14 +950,18 @@ serve(async (req) => {
           status: b.status,
         });
         if (booking.status === 'confirmed' && booking.payment_id) {
+          let missingConfirmationError = false;
           if (!booking.notes || !String(booking.notes).includes('Join URL:')) {
             console.log('Confirmed paid booking is missing Zoom details; sending confirmation now:', booking.id);
             const { error: emailError } = await supabase.functions.invoke('send-booking-confirmation', {
               body: { bookingId: booking.id }
             });
-            if (emailError) console.error('Failed to send missing booking confirmation:', booking.id, emailError);
+            if (emailError) {
+              missingConfirmationError = true;
+              console.error('Failed to send missing booking confirmation:', booking.id, emailError);
+            }
           }
-          return new Response(JSON.stringify({ success: true, paid: true, booking: publicBooking(booking) }), {
+          return new Response(JSON.stringify({ success: true, paid: true, booking: publicBooking(booking), confirmationError: missingConfirmationError }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }

@@ -240,6 +240,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   const [friAgreementError, setFriAgreementError] = useState<string | null>(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [contractId, setContractId] = useState<string | null>(null);
+  // The booking is saved but the server could not send the Zoom confirmation email.
+  const [confirmationFailed, setConfirmationFailed] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
   const [skippedTypeChooser, setSkippedTypeChooser] = useState(false);
@@ -293,10 +295,12 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
             }
           });
 
-      verifyPayment.then(async ({ error }) => {
+      verifyPayment.then(async ({ data, error }) => {
         if (error) {
           throw new Error(await getFunctionErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.'));
         }
+        const confirmationDidFail = Boolean(data?.confirmationError);
+        setConfirmationFailed(confirmationDidFail);
         trackEvent('booking_payment_completed', {
           booking_id: returnedBookingId,
           booking_type: returnedType,
@@ -308,6 +312,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         }
         setStep('confirmation');
         toast.success('Payment completed successfully.');
+        if (confirmationDidFail) {
+          toast.error('Payment received, but the confirmation email failed to send. We will follow up shortly with your meeting details.');
+        }
         clearQueryParams();
       }).catch((error) => {
         console.error('Failed to verify Square payment:', error);
@@ -334,6 +341,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         setAvailableSlots([]);
         setBookingId(null);
         setContractId(null);
+        setConfirmationFailed(false);
       }
       setBookingType(type);
       setSkippedTypeChooser(type === "consultation");
@@ -501,6 +509,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to book consultation. Please try again.'));
       if (data?.error) throw new Error(data.error);
       setBookingId(data.booking.id);
+      setConfirmationFailed(Boolean(data.confirmationError));
       setStep('confirmation');
       trackEvent('consultation_booked', {
         booking_id: data.booking.id,
@@ -667,6 +676,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
     setFriAgreementError(null);
     setBookingId(null);
     setContractId(null);
+    setConfirmationFailed(false);
     setAbandonedCartId(null);
     setSkippedTypeChooser(false);
   };
@@ -888,7 +898,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
               {step === 'confirmation' && selectedDate && offer && (
                 <div className="max-w-md mx-auto text-center space-y-6">
                   <div className="flex justify-center"><div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle className="w-10 h-10 text-green-600" /></div></div>
-                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">{customerInfo.email ? `We've sent a confirmation email to ${customerInfo.email}` : "We've sent a confirmation email with your meeting details."}</p></div>
+                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">{confirmationFailed ? "Your booking is saved, but we couldn't send your confirmation email. We'll follow up shortly with your meeting details." : customerInfo.email ? `We've sent a confirmation email to ${customerInfo.email}` : "We've sent a confirmation email with your meeting details."}</p></div>
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
                     <p><strong>Session:</strong> {offer.shortName}</p>
                     <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
@@ -901,7 +911,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                       Before your appointment
                     </h4>
                     <div className="space-y-2 text-sm text-muted-foreground">
-                      <p>Watch for the confirmation email with your meeting details.</p>
+                      <p>{confirmationFailed ? "We'll follow up shortly with your meeting details." : 'Watch for the confirmation email with your meeting details.'}</p>
                       <p>If you have time, a short family assessment can help organize the facts before you talk. It is optional.</p>
                       <p>If the situation changes before your appointment, call directly instead of waiting.</p>
                     </div>

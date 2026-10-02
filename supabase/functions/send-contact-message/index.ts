@@ -75,6 +75,7 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest): Promi
       ? "Call back (requested on contact form)"
       : "Reply to contact message or invite to consultation",
     next_action_due_at: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+    urgent: payload.callMeBack === true,
   });
   if (crmError) console.error("Failed to upsert contact-message CRM contact:", crmError);
 

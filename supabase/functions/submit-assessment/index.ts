@@ -64,6 +64,7 @@ async function queueAssessmentFollowups(supabase: any, assessmentId: string, ass
     pipeline_status: "new",
     next_action: leadScore >= 75 ? "Call this assessment lead first" : "Review assessment and invite to consultation",
     next_action_due_at: new Date(Date.now() + (leadScore >= 75 ? 30 : 180) * 60 * 1000).toISOString(),
+    urgent: leadScore >= 75,
   });
   if (crmError) console.error("Failed to upsert assessment CRM contact:", crmError);
 
