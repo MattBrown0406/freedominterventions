@@ -7,12 +7,27 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { ArrowLeft, CheckCircle, CalendarIcon, Clock, Search } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 
 type Step = 'lookup' | 'select-date' | 'select-time' | 'confirmation';
+
+// supabase-js reports any non-2xx Edge Function response as a generic FunctionsHttpError;
+// surface the function's own { error } message (slot taken, past time, ...) instead.
+const getFunctionErrorMessage = async (error: unknown, fallback: string): Promise<string> => {
+  if (error instanceof FunctionsHttpError) {
+    try {
+      const body = await error.context.json();
+      if (body && typeof body.error === 'string' && body.error) return body.error;
+    } catch {
+      // Non-JSON error body
+    }
+  }
+  return fallback;
+};
 
 // Current date (yyyy-MM-dd) and minutes-past-midnight in Pacific time, where slots are defined.
 const getPacificNow = () => {
@@ -82,7 +97,7 @@ const Reschedule = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) throw new Error(await getFunctionErrorMessage(error, "Failed to find booking. Please check your details."));
       
       if (!data.booking) {
         toast.error("No booking found with that ID and email");
@@ -92,9 +107,9 @@ const Reschedule = () => {
       setBooking(data.booking);
       setStep('select-date');
       toast.success("Booking found!");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error looking up booking:', error);
-      toast.error("Failed to find booking. Please check your details.");
+      toast.error(error instanceof Error ? error.message : "Failed to find booking. Please check your details.");
     } finally {
       setLoading(false);
     }
@@ -104,16 +119,16 @@ const Reschedule = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('square-booking', {
-        body: { action: 'get-available-slots', date: format(date, 'yyyy-MM-dd') }
+        body: { action: 'get-available-slots', date: format(date, 'yyyy-MM-dd'), bookingType: booking?.booking_type }
       });
 
-      if (error) throw error;
+      if (error) throw new Error(await getFunctionErrorMessage(error, "Failed to load available times"));
       
       const filteredSlots = filterSameDaySlots(data.slots || [], date);
       setAvailableSlots(filteredSlots);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching slots:', error);
-      toast.error("Failed to load available times");
+      toast.error(error instanceof Error ? error.message : "Failed to load available times");
     } finally {
       setLoading(false);
     }
@@ -143,16 +158,16 @@ const Reschedule = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) throw new Error(await getFunctionErrorMessage(error, "Failed to reschedule booking"));
 
       setStep('confirmation');
       toast.success("Booking rescheduled successfully!");
       if (data?.confirmationError) {
         toast.error("Your booking was moved, but the updated confirmation email failed to send. We will follow up with your meeting link.");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error rescheduling:', error);
-      toast.error("Failed to reschedule booking");
+      toast.error(error instanceof Error ? error.message : "Failed to reschedule booking");
     } finally {
       setLoading(false);
     }

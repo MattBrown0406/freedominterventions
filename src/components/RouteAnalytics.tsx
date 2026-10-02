@@ -31,12 +31,13 @@ const RouteAnalytics = () => {
       observer.disconnect();
       clearTimeout(quietTimer);
       clearTimeout(maxTimer);
+      window.removeEventListener("pagehide", sendPageView);
 
       if (typeof window.gtag === "function") {
         window.gtag("config", GA_MEASUREMENT_ID, {
           page_path: pagePath,
           page_location: pageLocation,
-          page_title: document.title,
+          page_title: lastTitle,
           ...getAnalyticsAttributionParams(),
         });
         return;
@@ -45,7 +46,7 @@ const RouteAnalytics = () => {
       trackEvent("page_view", {
         page_path: pagePath,
         page_location: pageLocation,
-        page_title: document.title,
+        page_title: lastTitle,
       });
     };
 
@@ -58,6 +59,8 @@ const RouteAnalytics = () => {
     });
     observer.observe(document.head, { subtree: true, childList: true, characterData: true });
     const maxTimer = setTimeout(sendPageView, 1500);
+    // Closing the tab / full-page navigation before the title settles still records the view.
+    window.addEventListener("pagehide", sendPageView);
 
     // Navigating away before the title settles: send this view now (exactly once).
     return sendPageView;

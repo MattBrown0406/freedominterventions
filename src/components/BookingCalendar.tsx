@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, CheckCircle, Sparkles, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
@@ -74,6 +75,21 @@ const customerInfoSchema = z.object({
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   return error instanceof Error ? error.message : fallback;
+};
+
+// supabase-js reports any non-2xx Edge Function response as a generic FunctionsHttpError;
+// surface the function's own { error } message (slot taken, past time, ...) instead.
+const getFunctionErrorMessage = async (error: unknown, fallback: string): Promise<string> => {
+  if (error instanceof FunctionsHttpError) {
+    try {
+      const body = await error.context.json();
+      if (body && typeof body.error === 'string' && body.error) return body.error;
+    } catch {
+      // Non-JSON error body
+    }
+    return fallback;
+  }
+  return getErrorMessage(error, fallback);
 };
 
 const FRI_AGREEMENT_VERSION = "fri-v1";
@@ -148,6 +164,26 @@ type Step = 'type' | 'date' | 'time' | 'details' | 'agreement' | 'payment' | 'co
 
 // Contact details survive the Square redirect in sessionStorage instead of the URL.
 const CHECKOUT_CONTACT_KEY = 'fi_checkout_contact';
+// Set by the inline script in index.html, which strips name/email/phone from follow-up
+// links before analytics loads.
+const BOOKING_PREFILL_KEY = 'fi_booking_prefill';
+
+// Reads and clears the prefill the index.html script moved out of the URL.
+const takeBookingPrefill = (): { name: string; email: string; phone: string } | null => {
+  try {
+    const raw = sessionStorage.getItem(BOOKING_PREFILL_KEY);
+    if (!raw) return null;
+    sessionStorage.removeItem(BOOKING_PREFILL_KEY);
+    const parsed = JSON.parse(raw);
+    return {
+      name: typeof parsed?.name === 'string' ? parsed.name : '',
+      email: typeof parsed?.email === 'string' ? parsed.email : '',
+      phone: typeof parsed?.phone === 'string' ? parsed.phone : '',
+    };
+  } catch {
+    return null;
+  }
+};
 
 const saveCheckoutContact = (contact: { name: string; email: string; phone: string }) => {
   try {
@@ -257,8 +293,10 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
             }
           });
 
-      verifyPayment.then(({ error }) => {
-        if (error) throw error;
+      verifyPayment.then(async ({ error }) => {
+        if (error) {
+          throw new Error(await getFunctionErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.'));
+        }
         trackEvent('booking_payment_completed', {
           booking_id: returnedBookingId,
           booking_type: returnedType,
@@ -273,7 +311,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         clearQueryParams();
       }).catch((error) => {
         console.error('Failed to verify Square payment:', error);
-        toast.error('Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.');
+        toast.error(getErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.'));
       }).finally(() => {
         setLoading(false);
       });
@@ -282,7 +320,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
 
     const type = params.get("type") as BookingType | null;
     if (type && (type === "consultation" || type === "crisis-coaching" || type === "readiness-intensive" || type === "aftercare-planning")) {
-      const hasPrefill = ["name", "email", "phone", "date", "time"].some((key) => params.has(key));
+      // name/email/phone normally arrive via sessionStorage (index.html strips them from the URL).
+      const storedPrefill = takeBookingPrefill();
+      const hasPrefill = Boolean(storedPrefill) || ["name", "email", "phone", "date", "time"].some((key) => params.has(key));
       if (!isFirstRun && type === bookingType && !hasPrefill && step !== 'confirmation') {
         // Same type while a booking is mid-entry: keep the visitor's progress.
         clearQueryParams();
@@ -297,9 +337,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       }
       setBookingType(type);
       setSkippedTypeChooser(type === "consultation");
-      const name = params.get("name") || "";
-      const email = params.get("email") || "";
-      const phone = params.get("phone") || "";
+      const name = params.get("name") || storedPrefill?.name || "";
+      const email = params.get("email") || storedPrefill?.email || "";
+      const phone = params.get("phone") || storedPrefill?.phone || "";
       if (name || email || phone) {
         setCustomerInfo({ name, email, phone });
       }
@@ -310,7 +350,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         const date = new Date(y, m - 1, d);
         if (!isNaN(date.getTime())) {
           setSelectedDate(date);
-          fetchAvailableSlots(date);
+          fetchAvailableSlots(date, type);
           if (timeStr) {
             setSelectedTime(timeStr);
             setStep("details");
@@ -345,18 +385,19 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
     });
   };
 
-  const fetchAvailableSlots = async (date: Date) => {
+  // sessionType lets the server hide start times whose full session length would overlap a booking.
+  const fetchAvailableSlots = async (date: Date, sessionType: BookingType | null = bookingType) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('square-booking', {
-        body: { action: 'get-available-slots', date: format(date, 'yyyy-MM-dd') }
+        body: { action: 'get-available-slots', date: format(date, 'yyyy-MM-dd'), bookingType: sessionType ?? undefined }
       });
-      if (error) throw error;
+      if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to load available times'));
       const filteredSlots = filterSameDaySlots(data.slots || [], date);
       setAvailableSlots(filteredSlots);
     } catch (error: unknown) {
       console.error('Error fetching slots:', error);
-      toast.error('Failed to load available times');
+      toast.error(getErrorMessage(error, 'Failed to load available times'));
     } finally {
       setLoading(false);
     }
@@ -457,7 +498,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
           sourceAttribution: getFunnelAttribution(),
         }
       });
-      if (error) throw error;
+      if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to book consultation. Please try again.'));
       if (data?.error) throw new Error(data.error);
       setBookingId(data.booking.id);
       setStep('confirmation');
@@ -551,7 +592,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       });
         error = contractResponse.error;
         data = contractResponse.data;
-        if (error) throw error;
+        if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to start payment. Please try again.'));
         if (!data?.contract?.id) throw new Error('FRI contract record was not created.');
 
         setContractId(data.contract.id);
@@ -593,7 +634,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         error = response.error;
         data = response.data;
       }
-      if (error) throw error;
+      if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to start payment. Please try again.'));
       if (data?.error) throw new Error(data.error);
       // Abandoned carts are marked recovered server-side once payment is confirmed.
       if (data?.checkoutUrl) {

@@ -44,6 +44,30 @@
     <!-- Preload critical assets for LCP -->
     <link rel="preload" href="/favicon.jpeg" as="image" type="image/jpeg">
     
+    <!-- Booking follow-up links carry name/email/phone in the query string. Move them to
+         sessionStorage (read by BookingCalendar) and strip them from the URL before any
+         analytics records the page. Must stay above the gtag and Clarity snippets. -->
+    <script>
+      (function () {
+        try {
+          var url = new URL(window.location.href);
+          var keys = ["name", "email", "phone"];
+          var prefill = {};
+          var found = false;
+          for (var i = 0; i < keys.length; i++) {
+            if (!url.searchParams.has(keys[i])) continue;
+            found = true;
+            var value = url.searchParams.get(keys[i]);
+            if (value) prefill[keys[i]] = value;
+            url.searchParams.delete(keys[i]);
+          }
+          if (!found) return;
+          try { sessionStorage.setItem("fi_booking_prefill", JSON.stringify(prefill)); } catch (e) {}
+          window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Google tag (gtag.js) -->
 
     <script>

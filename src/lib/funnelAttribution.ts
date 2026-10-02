@@ -119,7 +119,11 @@ const resolveSource = (params: URLSearchParams, pathname: string, referrer: stri
   const pathSource = sourceFromKnownPath(pathname);
   if (pathSource) return pathSource;
 
-  const referrerSource = sourceFromReferrer(referrer);
+  // In an SPA document.referrer stays the original external referrer for the
+  // whole visit, so only trust it on the session's landing capture; otherwise it
+  // would overwrite an explicit utm_source captured on landing.
+  const isSessionLanding = !stored || stored.session_id !== getSessionId();
+  const referrerSource = isSessionLanding ? sourceFromReferrer(referrer) : null;
   if (referrerSource) return referrerSource;
 
   return normalizeSource(stored?.source || null) || "direct";

@@ -232,7 +232,7 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Name:</strong> ${escapeHtml(name)}</p>
           <p><strong>Email:</strong> ${escapeHtml(email)}</p>
           <p><strong>Phone:</strong> ${escapeHtml(phone || "Not provided")}</p>
-          <p><strong>Preferred response:</strong> ${callMeBack ? "<strong>Call me back</strong>" : "Reply by email"}</p>
+          <p><strong>Preferred response:</strong> ${callMeBack ? "<strong>Call me back</strong>" : body.callMeBack === false ? "Reply by email" : "Not specified"}</p>
         </div>
         
         <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">

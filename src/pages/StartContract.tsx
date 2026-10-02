@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { ArrowRight, BadgeDollarSign, CheckCircle2, Clock3, FileSignature, Lock, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { FunctionsHttpError } from "@supabase/supabase-js";
 import { getFunnelAttribution } from "@/lib/funnelAttribution";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -33,6 +34,21 @@ import {
 import { generateContractPdf } from "@/utils/generateContractPdf";
 
 const MAX_NOTES_LENGTH = 1200;
+
+// supabase-js reports any non-2xx Edge Function response as a generic FunctionsHttpError;
+// surface the function's own { error } message instead.
+const getFunctionErrorMessage = async (error: unknown, fallback: string): Promise<string> => {
+  if (error instanceof FunctionsHttpError) {
+    try {
+      const body = await error.context.json();
+      if (body && typeof body.error === "string" && body.error) return body.error;
+    } catch {
+      // Non-JSON error body
+    }
+    return fallback;
+  }
+  return error instanceof Error ? error.message : fallback;
+};
 
 const contractSchema = z.object({
   clientName: z.string().trim().min(2, "Client name is required").max(100, "Keep the name under 100 characters"),
@@ -171,15 +187,17 @@ const StartContract = () => {
             action: "mark-paid",
             contractId: returnedContractId,
           },
-        }).then(({ error }) => {
-          if (error) throw error;
+        }).then(async ({ error }) => {
+          if (error) {
+            throw new Error(await getFunctionErrorMessage(error, "Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions."));
+          }
           setPaymentComplete(true);
           window.history.replaceState({}, "", window.location.pathname);
         }).catch((error) => {
           console.error("Failed to verify contract payment:", error);
           toast({
             title: "Payment verification pending",
-            description: "Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.",
+            description: error instanceof Error ? error.message : "Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.",
             variant: "destructive",
           });
         });
@@ -216,7 +234,7 @@ const StartContract = () => {
             clientEmail: data.clientEmail.trim().toLowerCase(),
           },
         });
-        if (quoteError) throw quoteError;
+        if (quoteError) throw new Error(await getFunctionErrorMessage(quoteError, "Please try again. If this keeps happening, copy the browser console error and the exact step where it failed."));
         if (quoteData?.success && quoteData.discountCode === normalizedDiscountCode) {
           resolvedBaseAmountCents = quoteData.baseAmountCents;
           resolvedDiscountCents = quoteData.discountCents;
@@ -301,7 +319,7 @@ const StartContract = () => {
           sourceAttribution: getFunnelAttribution(),
         },
       });
-      if (contractResponse.error) throw contractResponse.error;
+      if (contractResponse.error) throw new Error(await getFunctionErrorMessage(contractResponse.error, "Please try again. If this keeps happening, copy the browser console error and the exact step where it failed."));
 
       const savedContractId = contractResponse.data?.contract?.id;
       if (!savedContractId) throw new Error("Contract record was created without an ID.");
@@ -317,7 +335,7 @@ const StartContract = () => {
         },
       });
 
-      if (checkoutResponse.error) throw checkoutResponse.error;
+      if (checkoutResponse.error) throw new Error(await getFunctionErrorMessage(checkoutResponse.error, "Please try again. If this keeps happening, copy the browser console error and the exact step where it failed."));
       if (!checkoutResponse.data?.checkoutUrl) throw new Error("Hosted payment link was not returned.");
 
       setSubmittedSummary({

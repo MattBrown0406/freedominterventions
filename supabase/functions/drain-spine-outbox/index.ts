@@ -44,7 +44,7 @@ serve(async (req) => {
     .select("id, event_name, payload, status, attempts")
     .or(
       `status.eq.pending,and(status.eq.failed,attempts.lt.${MAX_ATTEMPTS}),` +
-        `and(status.eq.sending,attempts.lt.${MAX_ATTEMPTS},sent_at.lt."${staleBefore}")`,
+        `and(status.eq.sending,sent_at.lt."${staleBefore}")`,
     )
     .order("created_at", { ascending: true })
     .limit(BATCH_SIZE);
@@ -59,6 +59,17 @@ serve(async (req) => {
   const results = { processed: 0, sent: 0, failed: 0 };
 
   for (const row of rows ?? []) {
+    // A run crashed mid-send on the final attempt: retire the row as failed rather
+    // than leaving it in 'sending' forever.
+    if (row.status === "sending" && (row.attempts ?? 0) >= MAX_ATTEMPTS) {
+      await supabase
+        .from("spine_outbox")
+        .update({ status: "failed" })
+        .eq("id", row.id)
+        .eq("status", "sending")
+        .eq("attempts", row.attempts);
+      continue;
+    }
     // Atomically claim the row so overlapping runs never post the same event twice:
     // only the run whose conditional update matches (unchanged status + attempts) proceeds.
     const attempts = (row.attempts ?? 0) + 1;

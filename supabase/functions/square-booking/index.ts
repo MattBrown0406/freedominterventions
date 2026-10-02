@@ -34,6 +34,12 @@ const BOOKING_DURATION_MINUTES: Record<string, number> = {
   'intervention-contract': 60,
 };
 
+// Canonical length for a known session type, else undefined (never trusts other input).
+function knownBookingDurationMinutes(bookingType: unknown): number | undefined {
+  if (typeof bookingType !== 'string' || !Object.prototype.hasOwnProperty.call(BOOKING_DURATION_MINUTES, bookingType)) return undefined;
+  return BOOKING_DURATION_MINUTES[bookingType];
+}
+
 function resolveBookingDurationMinutes(bookingType: string, requested: unknown): number {
   const canonical = BOOKING_DURATION_MINUTES[bookingType];
   if (typeof canonical === 'number') return canonical;
@@ -49,6 +55,16 @@ const PENDING_HOLD_MS = 30 * 60 * 1000;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^\d{2}:\d{2}(:\d{2})?$/;
 const ABANDONED_CART_TYPES = ['crisis-coaching', 'readiness-intensive'];
+const CHECKOUT_TRACKING_ERROR = 'We could not start checkout. Please try again, or call (458) 298-8000.';
+// contract_metadata keys only the server may set (contracts ensureReadinessBooking).
+const SERVER_OWNED_CONTRACT_METADATA_KEYS = ['contract_id', 'follow_up_included'];
+
+function sanitizeClientContractMetadata(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const cleaned: Record<string, unknown> = { ...(value as Record<string, unknown>) };
+  for (const key of SERVER_OWNED_CONTRACT_METADATA_KEYS) delete cleaned[key];
+  return cleaned;
+}
 
 // Only redirect Square checkout back to our own site (or a Lovable preview / local dev).
 function resolveRedirectOrigin(req: Request): string {
@@ -117,7 +133,7 @@ async function assertSlotAvailable(
   supabase: any,
   date: unknown,
   time: unknown,
-  opts: { excludeBookingId?: string; holderEmail?: string } = {},
+  opts: { excludeBookingId?: string; holderEmail?: string; durationMinutes?: number } = {},
 ) {
   if (typeof date !== 'string' || !DATE_RE.test(date) || typeof time !== 'string' || !TIME_RE.test(time)) {
     throw new Error('Invalid booking date or time');
@@ -138,9 +154,16 @@ async function markAbandonedCartsRecovered(supabase: any, email: string, booking
   if (error) console.error('Failed to mark abandoned carts recovered:', error);
 }
 
-// Runs exactly once, by whichever path (browser verify or Square webhook) actually
-// flipped a paid booking from pending to confirmed.
-async function fulfillPaidBooking(supabase: any, bookingId: string): Promise<{ confirmationError: string | null }> {
+// The full run happens exactly once, by whichever path (browser verify or Square webhook)
+// actually flipped a paid booking from pending to confirmed. `idempotentOnly` re-runs just
+// the retry-safe parts (Zoom confirmation, which claims/skips per booking, and abandoned-cart
+// recovery) so a Square webhook retry can finish a fulfillment that failed; the Spine
+// payment event is never repeated.
+async function fulfillPaidBooking(
+  supabase: any,
+  bookingId: string,
+  opts: { idempotentOnly?: boolean } = {},
+): Promise<{ confirmationError: string | null }> {
   const { data: booking, error } = await supabase
     .from('bookings')
     .select('id, booking_type, customer_name, customer_email, customer_phone, amount_cents, status')
@@ -149,6 +172,23 @@ async function fulfillPaidBooking(supabase: any, bookingId: string): Promise<{ c
   if (error || !booking) {
     console.error('fulfillPaidBooking: booking not found', bookingId, error);
     return { confirmationError: 'Booking not found' };
+  }
+  if (booking.status !== 'confirmed') {
+    console.log('fulfillPaidBooking: booking is not confirmed; nothing to fulfill', bookingId, booking.status);
+    return { confirmationError: null };
+  }
+
+  if (opts.idempotentOnly) {
+    let retryError: string | null = null;
+    const { error: retryInvokeError } = await supabase.functions.invoke('send-booking-confirmation', {
+      body: { bookingId: booking.id },
+    });
+    if (retryInvokeError) {
+      retryError = retryInvokeError.message || 'Confirmation failed';
+      console.error('Retry of booking confirmation failed:', booking.id, retryInvokeError);
+    }
+    await markAbandonedCartsRecovered(supabase, booking.customer_email, booking.booking_type);
+    return { confirmationError: retryError };
   }
 
   let confirmationError: string | null = null;
@@ -323,11 +363,14 @@ serve(async (req) => {
 
     switch (action) {
       case 'get-available-slots': {
-        const { date } = params;
+        const { date, bookingType } = params;
         if (!date || typeof date !== 'string' || !DATE_RE.test(date)) {
           throw new Error('Valid date is required');
         }
-        const slots = await generateTimeSlots(date, supabase);
+        // Optional: with a known session type, hide start times whose full length would
+        // run into an already-taken hour.
+        const slotDuration = knownBookingDurationMinutes(bookingType);
+        const slots = await generateTimeSlots(date, supabase, { durationMinutes: slotDuration });
         return new Response(JSON.stringify({ slots }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -382,7 +425,7 @@ serve(async (req) => {
         // First verify the booking exists and email matches
         const { data: existingBooking, error: lookupError } = await supabase
           .from('bookings')
-          .select('id, customer_email, customer_name, booking_type')
+          .select('id, customer_email, customer_name, booking_type, duration_minutes')
           .eq('id', bookingId)
           .eq('customer_email', email.toLowerCase().trim())
           .eq('status', 'confirmed')
@@ -394,7 +437,10 @@ serve(async (req) => {
         }
 
         // Server-side slot check: not in the past, inside availability, not held by someone else.
-        await assertSlotAvailable(supabase, newDate, newTime, { excludeBookingId: existingBooking.id });
+        await assertSlotAvailable(supabase, newDate, newTime, {
+          excludeBookingId: existingBooking.id,
+          durationMinutes: resolveBookingDurationMinutes(existingBooking.booking_type, existingBooking.duration_minutes),
+        });
 
         // Update the booking (conditional on it still being confirmed). A new time needs a new reminder.
         const { data: updatedBooking, error: updateError } = await supabase
@@ -537,6 +583,7 @@ serve(async (req) => {
             .single();
           if (contractError || !contract) throw contractError || new Error('Contract not found');
           if (contract.status === 'paid') throw new Error('Contract has already been paid');
+          if (contract.status === 'cancelled') throw new Error('This agreement is no longer active. Please contact Freedom Interventions.');
           if (contract.client_email !== sanitizedEmail) throw new Error('Customer email does not match this contract');
           if (typeof contract.amount_cents !== 'number' || contract.amount_cents <= 0) throw new Error('Contract amount is invalid');
 
@@ -582,14 +629,24 @@ serve(async (req) => {
 
           const paymentLinkId = checkoutData.payment_link?.id ?? null;
           const squareOrderId = checkoutData.payment_link?.order_id ?? null;
-          await supabase
+          // Without a stored order id the payment can never be verified, so never hand out the link.
+          if (!squareOrderId || !checkoutData.payment_link?.url) {
+            console.error('Square contract checkout link missing order id or url:', contractId);
+            throw new Error(CHECKOUT_TRACKING_ERROR);
+          }
+          const { data: trackedContract, error: trackError } = await supabase
             .from('contracts')
             .update({
               payment_link_id: paymentLinkId,
               square_order_id: squareOrderId,
               updated_at: new Date().toISOString(),
             })
-            .eq('id', contractId);
+            .eq('id', contractId)
+            .select('id');
+          if (trackError || !trackedContract || trackedContract.length === 0) {
+            console.error('Failed to store Square order id on contract:', contractId, trackError);
+            throw new Error(CHECKOUT_TRACKING_ERROR);
+          }
 
           return new Response(JSON.stringify({
             success: true,
@@ -603,7 +660,10 @@ serve(async (req) => {
         }
 
         // Server-side slot check before holding the slot with a pending booking.
-        await assertSlotAvailable(supabase, bookingDate, bookingTime, { holderEmail: sanitizedEmail });
+        await assertSlotAvailable(supabase, bookingDate, bookingTime, {
+          holderEmail: sanitizedEmail,
+          durationMinutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
+        });
 
         const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
 
@@ -625,7 +685,7 @@ serve(async (req) => {
           agreement_version: requiresAgreementStorage && validateString(agreementVersion, 50) ? agreementVersion.trim() : null,
           discount_code: typeof discountCode === 'string' && discountCode.trim().length > 0 ? sanitizeString(discountCode).slice(0, 40) : null,
           discount_cents: typeof discountCents === 'number' && discountCents >= 0 ? discountCents : null,
-          contract_metadata: contractMetadata && typeof contractMetadata === 'object' ? contractMetadata : {},
+          contract_metadata: sanitizeClientContractMetadata(contractMetadata),
           source_attribution: normalizedSourceAttribution,
         };
 
@@ -695,14 +755,29 @@ serve(async (req) => {
 
         const paymentLinkId = checkoutData.payment_link?.id ?? null;
         const squareOrderId = checkoutData.payment_link?.order_id ?? null;
-        await supabase
-          .from('bookings')
-          .update({
-            payment_link_id: paymentLinkId,
-            square_order_id: squareOrderId,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', booking.id);
+        // Without a stored order id the payment can never be verified, so never hand out the
+        // link; release the pending slot hold instead.
+        const { data: trackedBooking, error: trackError } = squareOrderId && checkoutData.payment_link?.url
+          ? await supabase
+            .from('bookings')
+            .update({
+              payment_link_id: paymentLinkId,
+              square_order_id: squareOrderId,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', booking.id)
+            .select('id')
+          : { data: null, error: null };
+        if (trackError || !trackedBooking || trackedBooking.length === 0) {
+          console.error('Failed to store Square order id on booking:', booking.id, trackError);
+          const { error: releaseError } = await supabase
+            .from('bookings')
+            .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+            .eq('id', booking.id)
+            .eq('status', 'pending');
+          if (releaseError) console.error('Failed to release untracked pending booking:', booking.id, releaseError);
+          throw new Error(CHECKOUT_TRACKING_ERROR);
+        }
 
         return new Response(JSON.stringify({
           success: true,
@@ -759,8 +834,9 @@ serve(async (req) => {
         }
 
         const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id ?? verification.order?.tenders?.[0]?.id ?? null;
-        // Conditional flip: only the path that actually moves it to confirmed runs fulfillment
-        // (the Square webhook may be racing us).
+        // Conditional flip, only from the checkout's pending status: a cancelled/completed
+        // booking is never revived, and only the path that actually moves it to confirmed
+        // runs fulfillment (the Square webhook may be racing us).
         const { data: flipped, error: updateError } = await supabase
           .from('bookings')
           .update({
@@ -769,32 +845,54 @@ serve(async (req) => {
             updated_at: new Date().toISOString(),
           })
           .eq('id', booking.id)
-          .neq('status', 'confirmed')
+          .eq('status', 'pending')
           .select('id, booking_type, booking_date, booking_time, status');
         if (updateError) throw updateError;
 
         let confirmationError = false;
-        if (flipped && flipped.length > 0) {
+        let currentBooking = flipped?.[0] ?? null;
+        if (currentBooking) {
           const result = await fulfillPaidBooking(supabase, booking.id);
           confirmationError = Boolean(result.confirmationError);
+        } else {
+          // Not flipped here: either the webhook confirmed it first, or the booking is no
+          // longer active (cancelled/completed).
+          const { data: latest, error: latestError } = await supabase
+            .from('bookings')
+            .select('id, booking_type, booking_date, booking_time, status')
+            .eq('id', booking.id)
+            .maybeSingle();
+          if (latestError) throw latestError;
+          if (!latest || latest.status !== 'confirmed') {
+            return new Response(JSON.stringify({
+              success: false,
+              paid: true,
+              error: 'This booking is no longer active. Please contact Freedom Interventions at (458) 298-8000.',
+            }), {
+              status: 409,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+          currentBooking = latest;
         }
 
         return new Response(JSON.stringify({
           success: true,
           paid: true,
-          booking: publicBooking(flipped?.[0] ?? { ...booking, status: 'confirmed' }),
+          booking: publicBooking(currentBooking),
           confirmationError,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
-      // Service-only: the Square webhook calls this after it flips a booking to confirmed.
+      // Service-only: the Square webhook calls this after it flips a booking to confirmed
+      // (or with idempotentOnly when the booking was already confirmed, to finish a retry).
       case 'fulfill-paid-booking': {
         if (!(await isServiceRoleRequest(req))) return unauthorized(corsHeaders);
-        const { bookingId } = params;
+        const { bookingId, idempotentOnly } = params;
         if (!validateString(bookingId, 100)) throw new Error('Valid booking ID is required');
-        const result = await fulfillPaidBooking(supabase, bookingId);
+        const result = await fulfillPaidBooking(supabase, bookingId, { idempotentOnly: idempotentOnly === true });
         return new Response(JSON.stringify({ success: !result.confirmationError, ...result }), {
           status: result.confirmationError ? 502 : 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -804,11 +902,12 @@ serve(async (req) => {
       // Service-only: lets other functions (contracts) run the same slot check.
       case 'check-slot': {
         if (!(await isServiceRoleRequest(req))) return unauthorized(corsHeaders);
-        const { date, time, holderEmail } = params;
+        const { date, time, holderEmail, bookingType } = params;
         let available = true;
         try {
           await assertSlotAvailable(supabase, date, time, {
             holderEmail: typeof holderEmail === 'string' ? holderEmail.toLowerCase().trim() : undefined,
+            durationMinutes: knownBookingDurationMinutes(bookingType),
           });
         } catch (slotError) {
           available = false;
@@ -837,6 +936,16 @@ serve(async (req) => {
         if (!ABANDONED_CART_TYPES.includes(bookingType)) throw new Error('Valid booking type is required');
         if (bookingDate != null && (typeof bookingDate !== 'string' || !DATE_RE.test(bookingDate))) throw new Error('Invalid booking date');
         if (bookingTime != null && (typeof bookingTime !== 'string' || !TIME_RE.test(bookingTime))) throw new Error('Invalid booking time');
+
+        // This endpoint is anonymous and the recovery cron later emails the address, so also
+        // cap captures per email address (not just per IP).
+        const emailAllowed = await checkRateLimit(supabase, `cart-email:${customerEmail.toLowerCase().trim()}`, 2, 86400);
+        if (!emailAllowed) {
+          return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }), {
+            status: 429,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '86400' },
+          });
+        }
 
         const { data: cart, error: cartError } = await supabase
           .from('abandoned_carts')
@@ -922,7 +1031,10 @@ serve(async (req) => {
         }
 
         // Server-side slot check: reject past, unavailable, or already-held slots.
-        await assertSlotAvailable(supabase, bookingDate, bookingTime, { holderEmail: customerEmail.toLowerCase().trim() });
+        await assertSlotAvailable(supabase, bookingDate, bookingTime, {
+          holderEmail: customerEmail.toLowerCase().trim(),
+          durationMinutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
+        });
 
         const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
 
@@ -944,7 +1056,7 @@ serve(async (req) => {
           agreement_version: requiresAgreementStorage ? agreementVersion.trim() : null,
           discount_code: typeof discountCode === 'string' && discountCode.trim().length > 0 ? sanitizeString(discountCode).slice(0, 40) : null,
           discount_cents: typeof discountCents === 'number' && discountCents >= 0 ? discountCents : null,
-          contract_metadata: contractMetadata && typeof contractMetadata === 'object' ? contractMetadata : {},
+          contract_metadata: sanitizeClientContractMetadata(contractMetadata),
           source_attribution: normalizedSourceAttribution,
         };
 
@@ -1111,7 +1223,7 @@ serve(async (req) => {
 async function generateTimeSlots(
   dateStr: string,
   supabase: any,
-  opts: { excludeBookingId?: string; holderEmail?: string } = {},
+  opts: { excludeBookingId?: string; holderEmail?: string; durationMinutes?: number } = {},
 ): Promise<string[]> {
   const slots: string[] = [];
   if (!DATE_RE.test(dateStr)) return slots;
@@ -1135,7 +1247,7 @@ async function generateTimeSlots(
   const holderEmail = opts.holderEmail?.toLowerCase().trim();
   const { data: existingBookings, error: bookingsError } = await supabase
     .from('bookings')
-    .select('id, booking_time, status, created_at, customer_email')
+    .select('id, booking_type, booking_time, duration_minutes, status, created_at, customer_email')
     .eq('booking_date', dateStr)
     .in('status', ['confirmed', 'pending']);
 
@@ -1144,15 +1256,24 @@ async function generateTimeSlots(
     throw new Error('Unable to check availability. Please try again.');
   }
 
-  const takenSlots = new Set<string>();
-  for (const b of (existingBookings || []) as Array<{ id: string; booking_time: string; status: string; created_at: string; customer_email: string | null }>) {
+  // Every hourly slot a session overlaps is taken (a 90-minute session at 10:00 also
+  // blocks 11:00), not just its start hour.
+  const takenHours = new Set<number>();
+  const markTaken = (time: unknown, durationMinutes: number) => {
+    if (typeof time !== 'string' || !TIME_RE.test(time)) return;
+    // Postgres time might come back as "10:00:00"
+    const [h, m] = time.split(':').map(Number);
+    const startMin = h * 60 + m;
+    const endMin = startMin + Math.max(durationMinutes, 1);
+    for (let hour = Math.floor(startMin / 60); hour * 60 < endMin; hour++) takenHours.add(hour);
+  };
+  for (const b of (existingBookings || []) as Array<{ id: string; booking_type: string; booking_time: string; duration_minutes: number | null; status: string; created_at: string; customer_email: string | null }>) {
     if (opts.excludeBookingId && b.id === opts.excludeBookingId) continue;
     if (b.status === 'pending') {
       if (new Date(b.created_at).getTime() < holdCutoffMs) continue;
       if (holderEmail && b.customer_email?.toLowerCase() === holderEmail) continue;
     }
-    // Postgres time might come back as "10:00:00"
-    takenSlots.add(normalizeSlotTime(b.booking_time));
+    markTaken(b.booking_time, resolveBookingDurationMinutes(b.booking_type, b.duration_minutes));
   }
 
   // Family Readiness Intensive checkouts run through signed contracts (no booking row until
@@ -1169,18 +1290,24 @@ async function generateTimeSlots(
   }
   for (const c of (heldContracts || []) as Array<{ metadata: Record<string, unknown> | null; client_email: string | null }>) {
     if (holderEmail && c.client_email?.toLowerCase() === holderEmail) continue;
-    const heldTime = c.metadata?.bookingTime;
-    if (typeof heldTime === 'string' && TIME_RE.test(heldTime)) takenSlots.add(normalizeSlotTime(heldTime));
+    markTaken(c.metadata?.bookingTime, BOOKING_DURATION_MINUTES['readiness-intensive']);
   }
   
   // 3. Generate hourly slots based on availability settings, skipping past times.
   const startHour = parseInt(availability.start_time.split(':')[0]);
   const endHour = parseInt(availability.end_time.split(':')[0]);
   const now = Date.now();
+  // The requested session must not run into a taken hour either (e.g. a 90-minute
+  // Intensive at 10:00 when 11:00 is booked).
+  const hoursNeeded = Math.max(1, Math.ceil((opts.durationMinutes ?? 60) / 60));
   
   for (let hour = startHour; hour < endHour; hour++) {
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-    if (takenSlots.has(timeStr)) continue;
+    let overlaps = false;
+    for (let i = 0; i < hoursNeeded; i++) {
+      if (takenHours.has(hour + i)) { overlaps = true; break; }
+    }
+    if (overlaps) continue;
     if (pacificWallTimeToInstant(dateStr, timeStr).getTime() <= now) continue;
     slots.push(timeStr);
   }

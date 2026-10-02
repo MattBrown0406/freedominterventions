@@ -10,7 +10,7 @@ REVOKE INSERT ON public.family_reviews FROM anon, authenticated;
 --    created_at), which the hourly recovery cron then emailed from Matt's address.
 --    Cart capture now goes through the square-booking Edge Function (service role).
 DROP POLICY IF EXISTS "Anyone can create abandoned cart records" ON public.abandoned_carts;
-REVOKE INSERT, UPDATE ON public.abandoned_carts FROM anon, authenticated;
+REVOKE INSERT ON public.abandoned_carts FROM anon, authenticated;
 
 -- 3. CRM columns the Edge Functions write but production never received (the
 --    hand-written 20260501120000 migration failed before adding them), causing
@@ -18,6 +18,17 @@ REVOKE INSERT, UPDATE ON public.abandoned_carts FROM anon, authenticated;
 ALTER TABLE public.crm_contacts ADD COLUMN IF NOT EXISTS source_id uuid;
 ALTER TABLE public.crm_contacts ADD COLUMN IF NOT EXISTS tags text[] NOT NULL DEFAULT '{}';
 ALTER TABLE public.email_campaigns ADD COLUMN IF NOT EXISTS sent_at timestamptz;
+
+-- 3b. Square order tracking columns. The hand-written 20260430120000 migration
+--     that adds them never ran in production (verified: PostgREST 42703), so
+--     paid bookings/contracts could not store or verify their Square order and
+--     payments were never confirmed.
+ALTER TABLE public.contracts ADD COLUMN IF NOT EXISTS square_order_id text;
+ALTER TABLE public.bookings
+  ADD COLUMN IF NOT EXISTS payment_link_id text,
+  ADD COLUMN IF NOT EXISTS square_order_id text;
+CREATE INDEX IF NOT EXISTS idx_contracts_square_order_id ON public.contracts (square_order_id);
+CREATE INDEX IF NOT EXISTS idx_bookings_square_order_id ON public.bookings (square_order_id);
 
 -- 4. Admin SELECT policies on bookings/assessments called VOLATILE functions that
 --    INSERT an audit row per evaluated row and raise after 50/100 rows. That

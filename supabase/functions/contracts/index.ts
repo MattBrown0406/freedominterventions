@@ -21,6 +21,10 @@ const READINESS_INTENSIVE_FEE_CENTS = 250000;
 const READINESS_INTENSIVE_DURATION_MINUTES = 90;
 const MAX_CONTRACT_PDF_BYTES = 10 * 1024 * 1024;
 const SITE_URL = "https://freedominterventions.com";
+// Statuses a contract can be paid from (create-contract inserts 'signed-awaiting-payment';
+// 'signed' is the column default). A 'paid' or 'cancelled' contract is never flipped.
+const UNPAID_CONTRACT_STATUSES = ["signed", "signed-awaiting-payment"];
+const CHECKOUT_TRACKING_ERROR = "We could not start checkout. Please try again, or call (458) 298-8000.";
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^\d{2}:\d{2}(:\d{2})?$/;
 const INTERVENTION_DISCOUNT_CODES: Record<string, number> = {
@@ -155,21 +159,23 @@ const PAID_CONTRACT_COLUMNS =
 
 // The Family Readiness Intensive is paid through a contract, so the session itself only
 // exists as contracts.metadata until payment. Create the confirmed booking (idempotent per
-// contract) and send its Zoom confirmation.
-async function ensureReadinessBooking(supabase: any, contract: PaidContractRow): Promise<void> {
-  if (contract.contract_type !== "readiness-intensive" || contract.status !== "paid") return;
+// contract) and send its Zoom confirmation. Returns false on a failure worth retrying.
+async function ensureReadinessBooking(supabase: any, contract: PaidContractRow): Promise<boolean> {
+  if (contract.contract_type !== "readiness-intensive" || contract.status !== "paid") return true;
 
   const metadata = contract.metadata ?? {};
   const bookingDate = metadata.bookingDate;
   const bookingTime = metadata.bookingTime;
   if (typeof bookingDate !== "string" || !DATE_RE.test(bookingDate) || typeof bookingTime !== "string" || !TIME_RE.test(bookingTime)) {
+    // Permanent data problem: retrying cannot fix it, so don't ask for a retry.
     console.error("Paid Readiness Intensive contract has no valid session date/time:", contract.id);
-    return;
+    return true;
   }
 
   const findBookings = () => supabase
     .from("bookings")
     .select("id, created_at")
+    .eq("booking_type", "readiness-intensive")
     .contains("contract_metadata", { contract_id: contract.id })
     .order("created_at", { ascending: true })
     .order("id", { ascending: true });
@@ -177,7 +183,7 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
   const { data: existing, error: existingError } = await findBookings();
   if (existingError) {
     console.error("Failed to look up Readiness Intensive booking:", contract.id, existingError);
-    return;
+    return false;
   }
 
   let bookingId: string | null = existing?.[0]?.id ?? null;
@@ -224,7 +230,7 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
     if (insertError || !inserted) {
       if (insertError?.code !== "23505") {
         console.error("Failed to create Readiness Intensive booking:", contract.id, insertError);
-        return;
+        return false;
       }
     }
 
@@ -236,50 +242,67 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
     }
   }
 
-  if (!bookingId) return;
+  if (!bookingId) return false;
   // Idempotent: send-booking-confirmation skips bookings that already have a Zoom meeting.
   const { error: confirmError } = await supabase.functions.invoke("send-booking-confirmation", {
     body: { bookingId },
   });
-  if (confirmError) console.error("Readiness Intensive booking confirmation failed:", bookingId, confirmError);
+  if (confirmError) {
+    console.error("Readiness Intensive booking confirmation failed:", bookingId, confirmError);
+    return false;
+  }
+  return true;
 }
 
-// Runs exactly once, by whichever path (browser mark-paid or Square webhook) actually
-// flipped the contract to paid.
-async function fulfillPaidContract(supabase: any, contractId: string): Promise<void> {
+// The full run happens exactly once, by whichever path (browser mark-paid or Square webhook)
+// actually flipped the contract to paid. `idempotentOnly` re-runs only the retry-safe parts
+// (abandoned-cart recovery + Readiness Intensive booking/confirmation) so a Square webhook
+// retry can finish a failed fulfillment; the paid notification and Spine payment event are
+// never repeated. Returns false on a failure worth retrying.
+async function fulfillPaidContract(
+  supabase: any,
+  contractId: string,
+  opts: { idempotentOnly?: boolean } = {},
+): Promise<boolean> {
   const { data: contract, error } = await supabase
     .from("contracts")
     .select(PAID_CONTRACT_COLUMNS)
     .eq("id", contractId)
     .maybeSingle();
-  if (error || !contract) {
-    console.error("fulfillPaidContract: contract not found", contractId, error);
-    return;
+  if (error) {
+    console.error("fulfillPaidContract: contract lookup failed", contractId, error);
+    return false;
+  }
+  if (!contract) {
+    console.error("fulfillPaidContract: contract not found", contractId);
+    return true;
   }
   if (contract.status !== "paid") {
     console.error("fulfillPaidContract: contract is not paid", contractId, contract.status);
-    return;
+    return true;
   }
 
-  const { error: notifyError } = await supabase.functions.invoke("send-contract-notification", {
-    body: { contractId, event: "paid" },
-  });
-  if (notifyError) console.error("Failed to send paid contract notification:", contractId, notifyError);
+  if (!opts.idempotentOnly) {
+    const { error: notifyError } = await supabase.functions.invoke("send-contract-notification", {
+      body: { contractId, event: "paid" },
+    });
+    if (notifyError) console.error("Failed to send paid contract notification:", contractId, notifyError);
 
-  try {
-    await enqueueSpineEvent(
-      "payment",
-      {
-        email: contract.client_email ?? null,
-        phone: contract.client_phone ?? null,
-        name: contract.client_name ?? null,
-        props: { source: "contract", contract_type: contract.contract_type },
-        payment: { processor: "square", amount_cents: contract.amount_cents ?? 0, kind: "intervention" },
-      },
-      supabase,
-    );
-  } catch (spineError) {
-    console.error("Spine enqueue failed (payment/contract):", spineError);
+    try {
+      await enqueueSpineEvent(
+        "payment",
+        {
+          email: contract.client_email ?? null,
+          phone: contract.client_phone ?? null,
+          name: contract.client_name ?? null,
+          props: { source: "contract", contract_type: contract.contract_type },
+          payment: { processor: "square", amount_cents: contract.amount_cents ?? 0, kind: "intervention" },
+        },
+        supabase,
+      );
+    } catch (spineError) {
+      console.error("Spine enqueue failed (payment/contract):", spineError);
+    }
   }
 
   if (contract.contract_type === "readiness-intensive") {
@@ -292,7 +315,7 @@ async function fulfillPaidContract(supabase: any, contractId: string): Promise<v
     if (cartError) console.error("Failed to mark abandoned carts recovered:", cartError);
   }
 
-  await ensureReadinessBooking(supabase, contract as PaidContractRow);
+  return await ensureReadinessBooking(supabase, contract as PaidContractRow);
 }
 
 function normalizeDiscountCode(code: unknown): string {
@@ -466,7 +489,7 @@ serve(async (req) => {
             throw new Error("A valid session date and time are required");
           }
           const { data: slotData, error: slotError } = await supabase.functions.invoke("square-booking", {
-            body: { action: "check-slot", date: bookingDate, time: bookingTime, holderEmail: normalizedClientEmail },
+            body: { action: "check-slot", date: bookingDate, time: bookingTime, holderEmail: normalizedClientEmail, bookingType: "readiness-intensive" },
           });
           if (slotError) {
             console.error("Slot check failed:", slotError);
@@ -610,6 +633,7 @@ serve(async (req) => {
           .single();
         if (contractError || !contract) throw contractError || new Error("Contract not found");
         if (contract.status === "paid") throw new Error("Contract has already been paid");
+        if (contract.status === "cancelled") throw new Error("This agreement is no longer active. Please contact Freedom Interventions.");
         if (contract.client_email !== customerEmail.toLowerCase().trim()) throw new Error("Customer email does not match this contract");
         if (typeof contract.amount_cents !== "number" || contract.amount_cents <= 0) throw new Error("Contract amount is invalid");
 
@@ -649,14 +673,24 @@ serve(async (req) => {
 
         const paymentLinkId = checkoutData.payment_link?.id ?? null;
         const squareOrderId = checkoutData.payment_link?.order_id ?? null;
-        await supabase
+        // Without a stored order id the payment can never be verified, so never hand out the link.
+        if (!squareOrderId || !checkoutData.payment_link?.url) {
+          console.error("Square contract checkout link missing order id or url:", contractId);
+          throw new Error(CHECKOUT_TRACKING_ERROR);
+        }
+        const { data: trackedContract, error: trackError } = await supabase
           .from("contracts")
           .update({
             payment_link_id: paymentLinkId,
             square_order_id: squareOrderId,
             updated_at: new Date().toISOString(),
           })
-          .eq("id", contractId);
+          .eq("id", contractId)
+          .select("id");
+        if (trackError || !trackedContract || trackedContract.length === 0) {
+          console.error("Failed to store Square order id on contract:", contractId, trackError);
+          throw new Error(CHECKOUT_TRACKING_ERROR);
+        }
 
         return new Response(JSON.stringify({
           success: true,
@@ -716,13 +750,30 @@ serve(async (req) => {
             updated_at: new Date().toISOString(),
           })
           .eq("id", contractId)
-          .neq("status", "paid")
+          .in("status", UNPAID_CONTRACT_STATUSES)
           .select("id");
 
         if (error) throw error;
 
         if (flipped && flipped.length > 0) {
           await fulfillPaidContract(supabase, contractId);
+        } else {
+          // Not flipped here: the webhook marked it paid first (fine), or it was cancelled.
+          const { data: latest, error: latestError } = await supabase
+            .from("contracts")
+            .select("status")
+            .eq("id", contractId)
+            .maybeSingle();
+          if (latestError) throw latestError;
+          if (latest?.status !== "paid") {
+            return new Response(JSON.stringify({
+              success: false,
+              error: "This agreement is no longer active. Please contact Freedom Interventions at (458) 298-8000.",
+            }), {
+              status: 409,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
         }
 
         return new Response(JSON.stringify({ success: true }), {
@@ -730,13 +781,15 @@ serve(async (req) => {
         });
       }
 
-      // Service-only: the Square webhook calls this after it flips a contract to paid.
+      // Service-only: the Square webhook calls this after it flips a contract to paid (or
+      // with idempotentOnly when it was already paid, to finish a retry). 502 => Square retries.
       case "fulfill-paid-contract": {
         if (!(await isServiceRoleRequest(req))) return unauthorized(corsHeaders);
-        const { contractId } = params;
+        const { contractId, idempotentOnly } = params;
         if (!validateString(contractId, 100)) throw new Error("Valid contract ID is required");
-        await fulfillPaidContract(supabase, contractId);
-        return new Response(JSON.stringify({ success: true }), {
+        const ok = await fulfillPaidContract(supabase, contractId, { idempotentOnly: idempotentOnly === true });
+        return new Response(JSON.stringify({ success: ok }), {
+          status: ok ? 200 : 502,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

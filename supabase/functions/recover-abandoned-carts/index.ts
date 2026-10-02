@@ -190,6 +190,7 @@ serve(async (req: Request) => {
       sent: 0,
       failed: 0,
       expired: 0,
+      skipped: 0,
     };
 
     // Mark very old carts as expired
@@ -237,6 +238,32 @@ serve(async (req: Request) => {
           .update({ status: "recovered", recovered_at: new Date().toISOString() })
           .eq("id", cart.id)
           .eq("status", "pending");
+        continue;
+      }
+
+      // At most one recovery email per address per 7 days (carts are captured anonymously,
+      // so repeated captures must not turn into repeated emails from our domain).
+      const { data: recentlyEmailed, error: recentError } = await supabase
+        .from("abandoned_carts")
+        .select("id")
+        .in("customer_email", Array.from(new Set([cartEmail, cart.customer_email])))
+        .neq("id", cart.id)
+        .gte("recovery_email_sent_at", sevenDaysAgo)
+        .limit(1);
+      if (recentError) {
+        console.error(`Recent-recovery lookup failed for cart ${cart.id}; skipping this run:`, recentError);
+        continue;
+      }
+      if (recentlyEmailed && recentlyEmailed.length > 0) {
+        // Not emailed: retire it as expired (a status the admin view already shows).
+        const { error: skipError } = await supabase
+          .from("abandoned_carts")
+          .update({ status: "expired" })
+          .eq("id", cart.id)
+          .eq("status", "pending")
+          .is("recovery_email_sent_at", null);
+        if (skipError) console.error(`Failed to retire duplicate cart ${cart.id}:`, skipError);
+        results.skipped++;
         continue;
       }
 

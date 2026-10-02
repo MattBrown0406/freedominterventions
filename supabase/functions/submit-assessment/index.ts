@@ -34,7 +34,7 @@ function scoreAssessment(data: Record<string, any>) {
   if (includesYes(data.overdose_history)) score += 20;
   if (includesYes(data.suicide_ideation) || includesYes(data.suicide_attempts_history)) score += 25;
   if (includesYes(data.violence_history)) score += 15;
-  if (hasSafetyConcern(data.immediate_safety_concerns) && includesYes(data.immediate_safety_concerns)) score += 20;
+  if (hasSafetyConcern(data.immediate_safety_concerns)) score += 20;
   if (includesYes(data.family_ready_intervention)) score += 15;
   if (data.contact_phone) score += 5;
   return Math.min(score, 100);
@@ -559,12 +559,17 @@ serve(async (req) => {
 
         const emailSubject = `${isHighUrgency ? "⚠️ URGENT: " : ""}New Assessment: ${assessmentData.loved_one_name} (${assessmentData.severity_level || "Unassessed"})`;
 
-        await sendSystemEmail({
-          to: "matt@freedominterventions.com",
-          replyTo: assessmentData.contact_email,
-          subject: emailSubject,
-          html: emailHtml,
-        });
+        // Owner notification failure must not stop the family's confirmation below.
+        try {
+          await sendSystemEmail({
+            to: "matt@freedominterventions.com",
+            replyTo: assessmentData.contact_email,
+            subject: emailSubject,
+            html: emailHtml,
+          });
+        } catch (ownerEmailError) {
+          console.error("Owner assessment notification failed:", ownerEmailError);
+        }
 
         const firstName = String(assessmentData.contact_name || "there").trim().split(/\s+/)[0] || "there";
         const consultUrl = `${SITE_URL}/?type=consultation&name=${encodeURIComponent(assessmentData.contact_name || "")}&email=${encodeURIComponent(assessmentData.contact_email || "")}${assessmentData.contact_phone ? `&phone=${encodeURIComponent(assessmentData.contact_phone)}` : ""}#booking`;
