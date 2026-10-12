@@ -1,3 +1,4 @@
+import { validateClientNotes } from "../_shared/clientNotes.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
@@ -237,6 +238,7 @@ type PaidContractRow = {
   client_name: string;
   client_email: string;
   client_phone: string | null;
+  client_notes: string | null;
   signer_name: string;
   signed_at: string;
   agreement_text: string;
@@ -249,7 +251,7 @@ type PaidContractRow = {
 };
 
 const PAID_CONTRACT_COLUMNS =
-  "id, contract_type, status, client_name, client_email, client_phone, signer_name, signed_at, agreement_text, agreement_version, amount_cents, payment_id, contract_pdf_path, metadata, source_attribution";
+  "id, contract_type, status, client_name, client_email, client_phone, client_notes, signer_name, signed_at, agreement_text, agreement_version, amount_cents, payment_id, contract_pdf_path, metadata, source_attribution";
 
 // The Family Readiness Intensive is paid through a contract, so the session itself only
 // exists as contracts.metadata until payment. Create the confirmed booking (idempotent per
@@ -322,6 +324,7 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
         customer_name: contract.client_name,
         customer_email: contract.client_email,
         customer_phone: contract.client_phone ? contract.client_phone.slice(0, 25) : null,
+        client_notes: validateClientNotes(contract.client_notes),
         booking_date: bookingDate,
         booking_time: slotTime,
         duration_minutes: READINESS_INTENSIVE_DURATION_MINUTES,
@@ -581,6 +584,7 @@ serve(async (req) => {
           sourceAttribution,
         } = params;
         const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
+        const clientNotes = validateClientNotes(params.clientNotes);
 
         if (!["intervention", "readiness-intensive"].includes(contractType)) {
           throw new Error("Valid contract type is required");
@@ -644,6 +648,7 @@ serve(async (req) => {
             client_name: sanitizeString(clientName),
             client_email: normalizedClientEmail,
             client_phone: clientPhone ? sanitizeString(clientPhone).slice(0, 25) : null,
+            client_notes: clientNotes,
             signer_name: sanitizeString(signerName),
             signed_at: new Date().toISOString(),
             agreement_text: agreementText.trim(),
@@ -656,7 +661,7 @@ serve(async (req) => {
             metadata: contractMetadata,
             source_attribution: normalizedSourceAttribution,
           })
-          .select()
+          .select("id, contract_type, status, amount_cents")
           .single();
 
         if (error) {

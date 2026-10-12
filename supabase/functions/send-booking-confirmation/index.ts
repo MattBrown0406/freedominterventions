@@ -1,3 +1,4 @@
+import { renderOwnerClientNotes } from "../_shared/clientNotes.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
@@ -270,7 +271,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
-      .select("id, customer_name, customer_email, booking_type, booking_date, booking_time, duration_minutes, status, notes")
+      .select("id, customer_name, customer_email, booking_type, booking_date, booking_time, duration_minutes, status, notes, client_notes")
       .eq("id", bookingId)
       .maybeSingle();
 
@@ -505,6 +506,8 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Time:</strong> ${safeTime} (Pacific Time)</p>
           ${adminIntensiveNote}
         </div>
+
+        ${renderOwnerClientNotes(booking.client_notes)}
 
         <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #1e40af; margin-top: 0;">Zoom Meeting</h2>

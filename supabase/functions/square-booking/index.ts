@@ -1,4 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { InvalidClientNotesError, validateClientNotes } from "../_shared/clientNotes.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { enqueueSpineEvent, extractUtm } from "../_shared/spine.ts";
@@ -649,6 +650,7 @@ serve(async (req) => {
           sourceAttribution,
         } = params;
         const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
+        const clientNotes = validateClientNotes(params.clientNotes);
 
         if (!validateEmail(customerEmail)) {
           throw new Error('Invalid email address');
@@ -797,6 +799,7 @@ serve(async (req) => {
           customer_name: sanitizedName,
           customer_email: sanitizedEmail,
           customer_phone: sanitizedPhone,
+          client_notes: clientNotes,
           booking_date: bookingDate,
           booking_time: normalizeSlotTime(bookingTime),
           duration_minutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
@@ -1134,6 +1137,7 @@ serve(async (req) => {
 
         const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion, discountCode, discountCents, contractMetadata, sourceAttribution } = params;
         const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
+        const clientNotes = validateClientNotes(params.clientNotes);
 
         // Validate required fields
         if (!validateString(customerName, 100)) {
@@ -1186,6 +1190,7 @@ serve(async (req) => {
           customer_name: sanitizeString(customerName),
           customer_email: customerEmail.toLowerCase().trim(),
           customer_phone: customerPhone ? sanitizeString(customerPhone).slice(0, 20) : null,
+          client_notes: clientNotes,
           booking_date: bookingDate,
           booking_time: normalizeSlotTime(bookingTime),
           duration_minutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
@@ -1212,7 +1217,7 @@ serve(async (req) => {
         const { data: booking, error: bookingError } = await supabase
           .from('bookings')
           .insert(sanitizedData)
-          .select()
+          .select("id, booking_type, booking_date, booking_time, duration_minutes, status, amount_cents")
           .single();
 
         if (bookingError) {
@@ -1357,7 +1362,7 @@ serve(async (req) => {
       ? errorMessage
       : 'Unable to process booking request. Please try again later.';
     return new Response(JSON.stringify({ error: safeMessage }), {
-      status: 500,
+      status: error instanceof InvalidClientNotesError ? 400 : 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

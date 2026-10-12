@@ -235,6 +235,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<Step>("type");
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
+  const [clientNotes, setClientNotes] = useState("");
   const [friAgreementAccepted, setFriAgreementAccepted] = useState(false);
   const [friSignerName, setFriSignerName] = useState("");
   const [friAgreementError, setFriAgreementError] = useState<string | null>(null);
@@ -496,6 +497,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: {
           action: 'create-booking',
+          clientNotes,
           bookingType,
           customerName: customerInfo.name,
           customerEmail: customerInfo.email,
@@ -580,6 +582,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         const contractResponse = await supabase.functions.invoke('contracts', {
           body: {
             action: 'create-contract',
+            clientNotes,
             contractType: 'readiness-intensive',
             clientName: customerInfo.name,
             clientEmail: customerInfo.email,
@@ -629,6 +632,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         const response = await supabase.functions.invoke('square-booking', {
           body: {
             action: 'create-checkout-link',
+            clientNotes,
             amount: offer.priceCents,
             customerEmail: customerInfo.email,
             customerName: customerInfo.name,
@@ -663,7 +667,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       toast.error(getErrorMessage(error, 'Failed to start payment. Please try again.'));
       setLoading(false);
     }
-  }, [selectedDate, selectedTime, bookingType, offer, customerInfo, friAgreementAccepted, friSignerName, abandonedCartId]);
+  }, [selectedDate, selectedTime, bookingType, offer, customerInfo, clientNotes, friAgreementAccepted, friSignerName, abandonedCartId]);
 
   const resetForm = () => {
     setStep('type');
@@ -671,6 +675,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
     setSelectedDate(undefined);
     setSelectedTime('');
     setCustomerInfo({ name: '', email: '', phone: '' });
+    setClientNotes('');
     setFriAgreementAccepted(false);
     setFriSignerName('');
     setFriAgreementError(null);
@@ -846,6 +851,11 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                   <div className="space-y-2"><Label htmlFor="name" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name *</Label><Input id="name" value={customerInfo.name} onChange={(e) => { setCustomerInfo({ ...customerInfo, name: e.target.value }); if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined }); }} placeholder="John Smith" maxLength={100} required className={validationErrors.name ? 'border-destructive' : ''} />{validationErrors.name && <p className="text-sm text-destructive">{validationErrors.name}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="email" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email *</Label><Input id="email" type="email" value={customerInfo.email} onChange={(e) => { setCustomerInfo({ ...customerInfo, email: e.target.value }); if (validationErrors.email) setValidationErrors({ ...validationErrors, email: undefined }); }} placeholder="john@example.com" maxLength={255} required className={validationErrors.email ? 'border-destructive' : ''} />{validationErrors.email && <p className="text-sm text-destructive">{validationErrors.email}</p>}</div>
                   <div className="space-y-2"><Label htmlFor="phone" className="flex items-center gap-2"><Phone className="w-4 h-4" /> Phone {bookingType === 'consultation' ? '*' : '(optional)'}</Label><Input id="phone" type="tel" value={customerInfo.phone} onChange={(e) => { setCustomerInfo({ ...customerInfo, phone: e.target.value }); if (validationErrors.phone) setValidationErrors({ ...validationErrors, phone: undefined }); }} placeholder="(555) 123-4567" maxLength={20} required={bookingType === 'consultation'} className={validationErrors.phone ? 'border-destructive' : ''} />{validationErrors.phone && <p className="text-sm text-destructive">{validationErrors.phone}</p>}</div>
+                  <div className="space-y-2">
+                    <Label htmlFor="client-notes">What would you like Matt to know? (optional)</Label>
+                    <Textarea id="client-notes" name="client-notes" value={clientNotes} onChange={(e) => setClientNotes(e.target.value)} maxLength={5000} rows={5} aria-describedby="client-notes-help" autoComplete="off" className="ph-no-capture fs-exclude" data-private="true" data-hj-suppress data-clarity-mask="true" />
+                    <p id="client-notes-help" className="text-sm text-muted-foreground">Share any background or questions for your session. These notes are saved with your booking and included in Matt&apos;s notification email. Up to 5,000 characters. Please do not include passwords or payment details.</p>
+                  </div>
                   <div className="flex gap-2 pt-4"><Button type="button" variant="ghost" onClick={() => setStep('time')}>← Back</Button><Button type="submit" disabled={loading} className="flex-1">{loading ? 'Booking...' : !isPaid ? (bookingType === 'aftercare-planning' ? 'Book Planning Call' : 'Book Consultation') : 'Continue to Payment'}</Button></div>
                 </form>
               )}
