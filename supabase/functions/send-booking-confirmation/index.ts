@@ -321,7 +321,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         (typeof body.legacyClientNotified !== 'boolean' || typeof body.legacyOwnerNotified !== 'boolean')) {
       return jsonResponse({ error: 'Legacy recovery requires verified per-recipient delivery history' }, 400);
     }
-    delivery = await claimDelivery(supabase, bookingId, occurrence);
+    delivery = await claimDelivery(supabase, bookingId, occurrence, booking.confirmation_revision ?? 0);
     if (!priorDelivery && alreadyHasMeeting && !isReschedule && body.recoverLegacy) {
       await saveDelivery(supabase, delivery, {
         client_sent: body.legacyClientNotified, owner_sent: body.legacyOwnerNotified,

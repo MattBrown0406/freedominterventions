@@ -526,7 +526,7 @@ export const handler = async (req: Request, clientFactory = createClient) => {
         // First verify the booking exists and email matches
         const { data: existingBooking, error: lookupError } = await supabase
           .from('bookings')
-          .select('id, customer_email, customer_name, booking_type, duration_minutes')
+          .select('id, customer_email, customer_name, booking_type, duration_minutes, confirmation_revision')
           .eq('id', bookingId)
           .eq('customer_email', email.toLowerCase().trim())
           .eq('status', 'confirmed')
@@ -543,7 +543,9 @@ export const handler = async (req: Request, clientFactory = createClient) => {
           durationMinutes: resolveBookingDurationMinutes(existingBooking.booking_type, existingBooking.duration_minutes),
         });
 
-        // Update the booking (conditional on it still being confirmed). A new time needs a new reminder.
+        // One atomic UPDATE: the DB dispatch guard rejects all changes (including
+        // reminder reset) if a worker owns the booking or external IO is ambiguous.
+        // CAS also prevents a stale lookup from overwriting another reschedule.
         const { data: updatedBooking, error: updateError } = await supabase
           .from('bookings')
           .update({
@@ -554,11 +556,22 @@ export const handler = async (req: Request, clientFactory = createClient) => {
           })
           .eq('id', bookingId)
           .eq('status', 'confirmed')
+          .eq('customer_email', email.toLowerCase().trim())
+          .eq('confirmation_revision', existingBooking.confirmation_revision)
           .select('id, booking_type, booking_date, booking_time, status')
           .single();
 
         if (updateError || !updatedBooking) {
           console.error('Error updating booking:', updateError);
+          if (updateError?.code === '55000') {
+            return new Response(JSON.stringify({
+              error: 'Your booking has not been changed. Confirmation delivery is still in progress or needs review. Please try again later or contact us.',
+            }), { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          }
+          if (updateError?.code === 'PGRST116' || (!updateError && !updatedBooking)) {
+            return new Response(JSON.stringify({ error: 'Your booking changed while rescheduling. Please reload your booking and try again.' }),
+              { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          }
           throw new Error('Failed to reschedule booking');
         }
 

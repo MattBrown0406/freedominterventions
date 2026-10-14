@@ -30,9 +30,12 @@ class DB {
   async rpc(name:string,p:any) {
     if (name === 'check_rate_limit') return {data:false,error:null};
     assertEquals(name,'claim_booking_delivery');
+    const booking=this.tables.bookings.find(x=>x.id===p.p_booking_id);
+    if(!booking || booking.status!=='confirmed' || booking.confirmation_revision!==p.p_revision ||
+      this.tables.booking_deliveries.some(x=>x.booking_id===p.p_booking_id && x.lease_until!=null)) return {data:null,error:null};
     let row=this.tables.booking_deliveries.find(x=>x.booking_id===p.p_booking_id && x.occurrence===p.p_occurrence);
     if (!row) {row={booking_id:p.p_booking_id,occurrence:p.p_occurrence,client_sent:false,owner_sent:false,creation_started:false};this.tables.booking_deliveries.push(row);}
-    if(row.lease_until && Date.parse(row.lease_until)>Date.now()) return {data:null,error:null};
+
     Object.assign(row,{lease_token:p.p_token,lease_until:new Date(Date.now()+600000).toISOString()});
     return {data:structuredClone(row),error:null};
   }
@@ -43,11 +46,22 @@ class DB {
       contains(k:string,v:any){filters.push(x=>Object.entries(v).every(([key,val])=>x[k]?.[key]===val));return q},order(){return q},
       eq(k:string,v:any){filters.push(x=>x[k]===v);return q},is(k:string,v:any){filters.push(x=>(x[k]??null)===v);return q},
       in(k:string,v:any[]){filters.push(x=>v.includes(x[k]));return q},neq(k:string,v:any){filters.push(x=>x[k]!==v);return q},
+      gte(k:string,v:any){filters.push(x=>x[k]>=v);return q},
       maybeSingle(){single=true;return q},single(){single=true;return q},
       then(resolve:any,reject:any){return Promise.resolve().then(()=>{
         if(db.fail?.(table,update)) return {data:null,error:new Error('synthetic DB failure')};
         if(insert) { const row={id:table==='bookings'?'readiness-booking':crypto.randomUUID(),confirmation_revision:0,...insert};(db.tables[table]??=[]).push(row);insert=null; }
         const rows=(db.tables[table]??[]).filter(x=>filters.every(f=>f(x)));
+        if(update && table==='bookings') {
+          const fields=['booking_date','booking_time','booking_type','duration_minutes','customer_email','customer_name'];
+          for(const row of rows) {
+            const changed=fields.some(k=>k in update && update[k]!==row[k]);
+            if(changed && db.tables.booking_deliveries.some(x=>x.booking_id===row.id &&
+              (x.lease_until!=null || (x.creation_started&&!x.join_url) || (x.client_attempt_at&&!x.client_sent) || (x.owner_attempt_at&&!x.owner_sent))))
+              return {data:null,error:{code:'55000',message:'BOOKING_DISPATCH_BUSY'}};
+            if(changed) update.confirmation_revision=row.confirmation_revision+1;
+          }
+        }
         if(update) rows.forEach(x=>Object.assign(x,update));
         return {data:structuredClone(single ? rows[0]??null : rows),error:null};
       }).then(resolve,reject)}
@@ -64,12 +78,12 @@ async function signed(payment:any, type='payment.updated') {
 function providers() {
   const io={order:{id:'order',state:'OPEN',location_id:'location',total_money:{amount:15000,currency:'USD'},tenders:[{payment_id:'payment'}]},
     payment:{id:'payment',order_id:'order',status:'COMPLETED',location_id:'location',amount_money:{amount:15000,currency:'USD'},refunded_money:{amount:0}},
-    meetings:0, emails:[] as any[], keys:new Set<string>(), failOwner:false,failClient:false,failAuth:false,failZoom:false, rejectZoom:false, failSquare:false};
+    meetings:0, deleted:[] as string[], emails:[] as any[], keys:new Set<string>(), failOwner:false,failClient:false,failAuth:false,failZoom:false, rejectZoom:false, failSquare:false};
   globalThis.fetch=(async (input:any,init:any={})=>{
     const url=String(input);
     if(url.includes('connect.squareup.com')) return io.failSquare ? Response.json({}, {status:503}) : Response.json(url.includes('/orders/')?{order:io.order}:{payment:io.payment});
     if(url.includes('zoom.us/oauth')) return io.failAuth ? Response.json({}, {status:401}) : Response.json({access_token:'fake-token'});
-    if(url.includes('api.zoom.us') && init.method==='DELETE') return new Response(null,{status:204});
+    if(url.includes('api.zoom.us') && init.method==='DELETE') {io.deleted.push(url);return new Response(null,{status:204});}
     if(url.includes('api.zoom.us')) {if(io.rejectZoom) return Response.json({}, {status:401});io.meetings++; if(io.failZoom) throw new Error('ambiguous Zoom timeout'); return Response.json({id:100+io.meetings,join_url:`https://zoom.test/${io.meetings}`});}
     if(url.includes('api.resend.com')) {
       const email=JSON.parse(init.body);const key=init.headers['Idempotency-Key'];
@@ -216,6 +230,68 @@ Deno.test('legacy owner-only recovery does not resend client confirmation',async
  assertEquals((await runConfirm(db,{bookingId:'booking',recoverLegacy:true})).status,400);
  assertEquals((await runConfirm(db,{bookingId:'booking',recoverLegacy:true,legacyClientNotified:true,legacyOwnerNotified:false})).status,200);
  assertEquals(io.meetings,0);assertEquals(io.emails.length,1);assertEquals(io.emails[0].to[0],'matt@freedominterventions.com');
+});
+const reschedule = (db:DB) => bookingHandler(request({action:'reschedule-booking',bookingId:'booking',email:'client@example.test',newDate:'2099-10-16',newTime:'11:00'}),(()=>db) as any);
+function availability(db:DB) {
+ db.tables.availability_settings=Array.from({length:7},(_,day_of_week)=>({day_of_week,start_time:'09:00',end_time:'17:00',is_available:true}));
+}
+Deno.test('paused old client send blocks real reschedule and new confirmation, even past lease deadline',async()=>{
+ const db=new DB(),io=providers();db.tables.bookings[0].status='confirmed';availability(db);
+ const providerFetch=globalThis.fetch;
+ let resume!:()=>void, entered!:()=>void;
+ const paused=new Promise<void>(r=>entered=r), gate=new Promise<void>(r=>resume=r);
+ globalThis.fetch=(async(input:any,init:any)=>{
+   if(String(input).includes('api.resend.com') && JSON.parse(init.body).to[0]==='client@example.test') {entered();await gate;}
+   return providerFetch(input,init);
+ }) as typeof fetch;
+ const old=runConfirm(db);await paused;
+ const before=structuredClone(db.tables.bookings[0]);
+ try {
+   for(const expired of [false,true]) {
+     if(expired) db.tables.booking_deliveries[0].lease_until='2000-01-01T00:00:00Z';
+     const rejected=await reschedule(db);assertEquals(rejected.status,409);
+     assert((await rejected.json()).error.includes('has not been changed'));
+     assertEquals(db.tables.bookings[0],before);
+     assertEquals((await runConfirm(db)).status,500);
+     assertEquals(io.meetings,1);assertEquals(io.deleted.length,0);assertEquals(io.emails.length,0);
+   }
+ } finally {resume();await old;globalThis.fetch=providerFetch;}
+ assertEquals(io.emails.length,2);
+ assertEquals((await reschedule(db)).status,200);
+ assertEquals(db.tables.bookings[0].confirmation_revision,1);
+ assertEquals(io.meetings,2);assertEquals(io.deleted.length,1);assertEquals(io.emails.length,4);
+ assertEquals(db.tables.bookings[0].client_notes,before.client_notes);
+});
+Deno.test('settled ambiguous email or Zoom IO still blocks reschedule after claim release',async()=>{
+ for(const kind of ['client','zoom','persist']) {
+   const db=new DB(),io=providers();db.tables.bookings[0].status='confirmed';availability(db);
+   if(kind==='client') io.failClient=true;
+   if(kind==='zoom') io.failZoom=true;
+   if(kind==='persist') db.fail=(t,u)=>t==='booking_deliveries'&&u?.client_sent===true;
+   assertEquals((await runConfirm(db)).status,500);
+   assertEquals(db.tables.booking_deliveries[0].lease_until,null);
+   const before=structuredClone(db.tables.bookings[0]);
+   assertEquals((await reschedule(db)).status,409);assertEquals(db.tables.bookings[0],before);
+   assertEquals(io.deleted.length,0);
+ }
+});
+Deno.test('stale reschedule lookup cannot overwrite a concurrent revision',async()=>{
+ const db=new DB(),io=providers();db.tables.bookings[0].status='confirmed';availability(db);
+ db.fail=(table,update)=>{
+   if(table==='bookings' && update?.booking_date) {
+     Object.assign(db.tables.bookings[0],{booking_date:'2099-10-17',confirmation_revision:1});
+   }
+   return false;
+ };
+ const response=await reschedule(db);assertEquals(response.status,409);
+ assertEquals(db.tables.bookings[0].booking_date,'2099-10-17');
+ assertEquals(db.tables.bookings[0].confirmation_revision,1);assertEquals(io.meetings,0);assertEquals(db.invoked.length,0);
+});
+Deno.test('stale revision loaded before claim cannot dispatch after reschedule',async()=>{
+ const db=new DB(),io=providers();db.tables.bookings[0].status='confirmed';
+ const rpc=db.rpc.bind(db);
+ db.rpc=async(name,p)=>{if(name==='claim_booking_delivery') Object.assign(db.tables.bookings[0],{booking_date:'2099-10-16',confirmation_revision:1});return await rpc(name,p);};
+ assertEquals((await runConfirm(db)).status,500);assertEquals(io.meetings,0);assertEquals(io.emails.length,0);
 });
 Deno.test('contract browser accepts OPEN paid order, refuses refund',async()=>{
  const db=new DB(),io=providers();db.tables.contracts=[{id:'contract',square_order_id:'order',amount_cents:15000,status:'cancelled'}];
