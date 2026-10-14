@@ -15,6 +15,13 @@
       "when": 1792001602698,
       "tag": "0001_add_private_client_booking_notes",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792004224064,
+      "tag": "0002_booking_maintenance_control",
+      "breakpoints": true
     }
   ]
 }

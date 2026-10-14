@@ -922,6 +922,21 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_maintenance_control: {
+        Row: {
+          enabled: boolean
+          id: boolean
+        }
+        Insert: {
+          enabled?: boolean
+          id?: boolean
+        }
+        Update: {
+          enabled?: boolean
+          id?: boolean
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           agreement_accepted: boolean

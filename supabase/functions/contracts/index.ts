@@ -1,5 +1,6 @@
 import { validateClientNotes } from "../_shared/clientNotes.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { bookingMaintenanceGate, maintenanceHeaders } from "../_shared/bookingMaintenance.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { enqueueSpineEvent } from "../_shared/spine.ts";
@@ -548,14 +549,18 @@ async function verifySquareOrderPaid(orderId: string, expectedAmountCents: numbe
   };
 }
 
-serve(async (req) => {
+export const handler = async (req: Request, clientFactory = createClient): Promise<Response> => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: { ...corsHeaders, ...maintenanceHeaders } });
   }
+
+  const maintenance = await bookingMaintenanceGate(
+    () => clientFactory(supabaseUrl, supabaseServiceKey), corsHeaders);
+  if (maintenance) return maintenance;
 
   try {
     const { action, ...params } = await req.json();
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = clientFactory(supabaseUrl, supabaseServiceKey);
 
     switch (action) {
       case "create-contract": {
@@ -933,4 +938,6 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-});
+};
+
+if (import.meta.main) serve((req) => handler(req));

@@ -1,3 +1,4 @@
+import { bookingMaintenanceGate, maintenanceHeaders } from "../_shared/bookingMaintenance.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
@@ -31,8 +32,8 @@ function timingSafeEqual(a: string, b: string) {
   return result === 0;
 }
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+export const handler = async (req: Request, clientFactory = createClient): Promise<Response> => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: { ...corsHeaders, ...maintenanceHeaders } });
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
@@ -60,6 +61,10 @@ serve(async (req) => {
     });
   }
 
+  const maintenance = await bookingMaintenanceGate(
+    () => clientFactory(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!), corsHeaders);
+  if (maintenance) return maintenance;
+
   try {
     const event = JSON.parse(rawBody);
     const payment = event?.data?.object?.payment;
@@ -81,7 +86,7 @@ serve(async (req) => {
       });
     }
 
-    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const supabase = clientFactory(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const fulfillmentFailures: string[] = [];
 
     const { data: contract, error: contractLookupError } = await supabase
@@ -182,4 +187,6 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-});
+};
+
+if (import.meta.main) serve((req) => handler(req));
