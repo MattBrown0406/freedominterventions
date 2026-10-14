@@ -12,9 +12,11 @@ try:
     if r.returncode: raise RuntimeError(r.stderr)
     created = True
     for _ in range(60):
-        r=run('docker','exec',NAME,'pg_isready','-U','postgres')
+        r=run('docker','exec',NAME,'pg_isready','-h','127.0.0.1','-U','postgres')
         if r.returncode==0: break
         time.sleep(1)
+    else:
+        raise RuntimeError('PostgreSQL TCP readiness deadline expired')
     def sql(text, ok=True):
         r=run('docker','exec','-i',NAME,'psql','-X','-U','postgres','-d','postgres','-At','-v','ON_ERROR_STOP=1',input=text)
         if ok and r.returncode: raise AssertionError(r.stderr)
