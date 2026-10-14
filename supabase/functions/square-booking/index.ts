@@ -1,3 +1,4 @@
+import { verifySquareOrderPaid } from "../_shared/squarePayment.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { InvalidClientNotesError, validateClientNotes } from "../_shared/clientNotes.ts";
 import { bookingMaintenanceGate, maintenanceHeaders } from "../_shared/bookingMaintenance.ts";
@@ -450,58 +451,8 @@ function resolveBookingAmountCents(bookingType: string): number {
   return BOOKING_FEES_CENTS[bookingType] ?? -1;
 }
 
-async function verifySquareOrderPaid(orderId: string, expectedAmountCents: number) {
-  if (!SQUARE_ACCESS_TOKEN) throw new Error('Square access token is not configured');
-  if (!SQUARE_LOCATION_ID) throw new Error('Square location ID is not configured');
 
-  const orderResponse = await fetch(`${SQUARE_BASE_URL}/orders/${orderId}`, {
-    headers: {
-      'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
-      'Square-Version': '2024-01-18',
-    },
-  });
-  const orderData = await orderResponse.json();
-  if (!orderResponse.ok || orderData.errors) {
-    throw new Error(orderData.errors?.[0]?.detail || 'Could not verify Square order');
-  }
-
-  const order = orderData.order;
-  const orderAmount = order?.total_money?.amount;
-  const locationMatches = !order?.location_id || order.location_id === SQUARE_LOCATION_ID;
-  const amountMatches = typeof orderAmount === 'number' && orderAmount === expectedAmountCents;
-  const isComplete = order?.state === 'COMPLETED';
-
-  if (locationMatches && amountMatches && isComplete) {
-    return { paid: true, order, paymentId: order?.tenders?.[0]?.payment_id ?? order?.tenders?.[0]?.id ?? null };
-  }
-
-  // Payment-link orders can stay OPEN even after the payment COMPLETED.
-  // Fall back to the order's own payments: completed, full amount, not refunded, same location.
-  console.log('Square order not COMPLETED; checking payments', { orderId, state: order?.state, tenders: order?.tenders?.length ?? 0 });
-  if (locationMatches && amountMatches && order?.state !== 'CANCELED') {
-    for (const tender of order?.tenders ?? []) {
-      const paymentId = tender?.payment_id ?? tender?.id;
-      if (!paymentId) continue;
-      const res = await fetch(`${SQUARE_BASE_URL}/payments/${paymentId}`, {
-        headers: { 'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`, 'Square-Version': '2024-01-18' },
-      });
-      const pd = await res.json();
-      const p = pd?.payment;
-      if (
-        res.ok && p && p.status === 'COMPLETED' && p.order_id === orderId &&
-        p.amount_money?.amount === expectedAmountCents &&
-        !(p.refunded_money?.amount > 0) &&
-        (!p.location_id || p.location_id === SQUARE_LOCATION_ID)
-      ) {
-        return { paid: true, order, paymentId: p.id };
-      }
-    }
-  }
-
-  return { paid: false, order, paymentId: null };
-}
-
-export const handler = async (req: Request, clientFactory = createClient): Promise<Response> => {
+export const handler = async (req: Request, clientFactory = createClient) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: { ...corsHeaders, ...maintenanceHeaders } });
   }
@@ -580,7 +531,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         // First verify the booking exists and email matches
         const { data: existingBooking, error: lookupError } = await supabase
           .from('bookings')
-          .select('id, customer_email, customer_name, booking_type, duration_minutes')
+          .select('id, customer_email, customer_name, booking_type, duration_minutes, confirmation_revision')
           .eq('id', bookingId)
           .eq('customer_email', email.toLowerCase().trim())
           .eq('status', 'confirmed')
@@ -597,7 +548,9 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
           durationMinutes: resolveBookingDurationMinutes(existingBooking.booking_type, existingBooking.duration_minutes),
         });
 
-        // Update the booking (conditional on it still being confirmed). A new time needs a new reminder.
+        // One atomic UPDATE: the DB dispatch guard rejects all changes (including
+        // reminder reset) if a worker owns the booking or external IO is ambiguous.
+        // CAS also prevents a stale lookup from overwriting another reschedule.
         const { data: updatedBooking, error: updateError } = await supabase
           .from('bookings')
           .update({
@@ -608,11 +561,22 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
           })
           .eq('id', bookingId)
           .eq('status', 'confirmed')
+          .eq('customer_email', email.toLowerCase().trim())
+          .eq('confirmation_revision', existingBooking.confirmation_revision)
           .select('id, booking_type, booking_date, booking_time, status')
           .single();
 
         if (updateError || !updatedBooking) {
           console.error('Error updating booking:', updateError);
+          if (updateError?.code === '55000') {
+            return new Response(JSON.stringify({
+              error: 'Your booking has not been changed. Confirmation delivery is still in progress or needs review. Please try again later or contact us.',
+            }), { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          }
+          if (updateError?.code === 'PGRST116' || (!updateError && !updatedBooking)) {
+            return new Response(JSON.stringify({ error: 'Your booking changed while rescheduling. Please reload your booking and try again.' }),
+              { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+          }
           throw new Error('Failed to reschedule booking');
         }
 
@@ -981,22 +945,6 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
           booking_time: b.booking_time,
           status: b.status,
         });
-        if (booking.status === 'confirmed' && booking.payment_id) {
-          let missingConfirmationError = false;
-          if (!booking.notes || !String(booking.notes).includes('Join URL:')) {
-            console.log('Confirmed paid booking is missing Zoom details; sending confirmation now:', booking.id);
-            const { error: emailError } = await supabase.functions.invoke('send-booking-confirmation', {
-              body: { bookingId: booking.id }
-            });
-            if (emailError) {
-              missingConfirmationError = true;
-              console.error('Failed to send missing booking confirmation:', booking.id, emailError);
-            }
-          }
-          return new Response(JSON.stringify({ success: true, paid: true, booking: publicBooking(booking), confirmationError: missingConfirmationError }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          });
-        }
         if (!booking.square_order_id) throw new Error('Square order ID is missing for this booking');
         if (typeof booking.amount_cents !== 'number' || booking.amount_cents <= 0) throw new Error('Booking amount is invalid');
 
@@ -1049,6 +997,8 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
             });
           }
           currentBooking = latest;
+          const retry = await fulfillPaidBooking(supabase, booking.id, { idempotentOnly: true });
+          confirmationError = Boolean(retry.confirmationError);
         }
 
         return new Response(JSON.stringify({

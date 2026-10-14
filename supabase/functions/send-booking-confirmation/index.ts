@@ -1,3 +1,4 @@
+import { claimDelivery, saveDelivery } from "../_shared/bookingDelivery.ts";
 import { renderOwnerClientNotes } from "../_shared/clientNotes.ts";
 import { bookingMaintenanceGate, maintenanceHeaders } from "../_shared/bookingMaintenance.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
@@ -16,6 +17,9 @@ const corsHeaders = {
 interface BookingConfirmationRequest {
   bookingId: string;
   isReschedule?: boolean;
+  recoverLegacy?: boolean;
+  legacyClientNotified?: boolean;
+  legacyOwnerNotified?: boolean;
 }
 
 const PACIFIC_TZ = "America/Los_Angeles";
@@ -67,6 +71,7 @@ async function getZoomAccessToken(): Promise<string> {
   
   const response = await fetch(tokenUrl, {
     method: "POST",
+    signal: AbortSignal.timeout(15000),
     headers: {
       Authorization: `Basic ${credentials}`,
       "Content-Type": "application/x-www-form-urlencoded",
@@ -91,6 +96,8 @@ async function getZoomAccessToken(): Promise<string> {
   }
 }
 
+class ZoomRejectedError extends Error {}
+
 async function createZoomMeeting(
   accessToken: string,
   topic: string,
@@ -99,6 +106,7 @@ async function createZoomMeeting(
 ): Promise<{ joinUrl: string; meetingId: string }> {
   const response = await fetch("https://api.zoom.us/v2/users/me/meetings", {
     method: "POST",
+    signal: AbortSignal.timeout(15000),
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -123,13 +131,14 @@ async function createZoomMeeting(
   if (!response.ok) {
     const errorText = await response.text();
     console.error("Zoom meeting creation error:", errorText);
+    if ([401, 403, 429].includes(response.status)) throw new ZoomRejectedError(`Zoom rejected creation: ${response.status}`);
     throw new Error(`Failed to create Zoom meeting: ${response.status}`);
   }
 
   const data = await response.json();
   return {
     joinUrl: data.join_url,
-    meetingId: data.id.toString(),
+    meetingId: data.id?.toString(),
   };
 }
 
@@ -137,16 +146,18 @@ async function sendEmail(
   to: string,
   subject: string,
   html: string,
-  opts: { from?: string; replyTo?: string } = {}
+  opts: { from?: string; replyTo?: string; idempotencyKey?: string } = {}
 ): Promise<void> {
   console.log("Sending booking email via Resend to:", to);
-  await sendResendEmail({
+  const emailId = await sendResendEmail({
     to,
     subject,
     html,
     from: opts.from,
+    idempotencyKey: opts.idempotencyKey,
     replyTo: opts.replyTo || "matt@freedominterventions.com",
   });
+  if (!emailId) throw new Error("Email provider did not return an acceptance ID");
   console.log("Booking email sent successfully via Resend");
 }
 
@@ -202,7 +213,7 @@ async function alertOwnerConfirmationFailed(ctx: ConfirmationAlertContext, error
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #b91c1c;">Booking confirmation failed — send Zoom link manually</h1>
-          <p>The booking is confirmed, but the ${ctx.isReschedule ? "reschedule " : ""}confirmation (Zoom meeting + customer email) could not be sent.${ctx.isReschedule ? " The booking still has the Zoom link for the previous time." : ""}</p>
+          <p>The booking is confirmed, but the ${ctx.isReschedule ? "reschedule " : ""}confirmation (Zoom meeting + customer email) could not be sent.</p>
           <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <p><strong>Booking ID:</strong> ${escapeHtml(ctx.bookingId)}</p>
             <p><strong>Client Name:</strong> ${escapeHtml(ctx.customerName)}</p>
@@ -244,38 +255,25 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
   const supabase = clientFactory(supabaseUrl, supabaseKey);
 
   let bookingId = "";
-  let claimMarker: string | null = null;
-  let notesBeforeClaim: string | null = null;
-  let accessToken: string | null = null;
-  let newMeetingId: string | null = null;
+  let delivery: any = null;
   let customerEmailSent = false;
   let alertContext: ConfirmationAlertContext | null = null;
-
-  // Release our claim (and remove a meeting we created but never delivered) so a
-  // later retry can succeed instead of seeing a permanent "pending" marker.
   const rollback = async () => {
-    if (newMeetingId && accessToken && !customerEmailSent) {
-      await deleteZoomMeeting(accessToken, newMeetingId);
-    }
-    if (claimMarker && bookingId && !customerEmailSent) {
-      const { error: releaseError } = await supabase
-        .from("bookings")
-        .update({ notes: notesBeforeClaim, updated_at: new Date().toISOString() })
-        .eq("id", bookingId)
-        .eq("notes", claimMarker);
-      if (releaseError) console.error("Failed to release Zoom claim:", releaseError);
+    if (delivery) {
+      try { await saveDelivery(supabase, delivery, { lease_until: null, last_error: "Confirmation incomplete; retry or inspect ambiguous provider operation" }); }
+      catch (e) { console.error("Unable to release delivery lease", e); }
     }
   };
 
   try {
     const body: BookingConfirmationRequest = await req.json();
     bookingId = typeof body?.bookingId === "string" ? body.bookingId.trim() : "";
-    const isReschedule = body?.isReschedule === true;
+    let isReschedule = body?.isReschedule === true;
     if (!bookingId) return jsonResponse({ error: "bookingId is required" }, 400);
 
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
-      .select("id, customer_name, customer_email, booking_type, booking_date, booking_time, duration_minutes, status, notes, client_notes")
+      .select("id, customer_name, customer_email, booking_type, booking_date, booking_time, duration_minutes, status, notes, client_notes, confirmation_revision")
       .eq("id", bookingId)
       .maybeSingle();
 
@@ -314,52 +312,34 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
     const alreadyHasMeeting = existingNotes.includes("Join URL:");
     const previousMeetingId = existingNotes.match(/Zoom Meeting ID:\s*(\d+)/)?.[1] ?? null;
 
-    if (alreadyHasMeeting && !isReschedule) {
-      console.log("Booking already has a Zoom meeting; skipping duplicate creation:", bookingId);
-      return jsonResponse({
-        success: true,
-        duplicate: true,
-        zoomJoinUrl: existingNotes.match(/Join URL:\s*(\S+)/)?.[1] ?? null,
-        meetingId: previousMeetingId,
+    const occurrence = `${bookingDate}T${bookingTime}:${effectiveDuration}:r${booking.confirmation_revision ?? 0}`;
+    isReschedule = isReschedule || booking.confirmation_revision > 0;
+    // Legacy rows have no trustworthy per-recipient delivery history. Never mass-resend.
+    const { data: priorDelivery, error: priorError } = await supabase.from('booking_deliveries')
+      .select('booking_id').eq('booking_id', bookingId).eq('occurrence', occurrence).maybeSingle();
+    if (priorError) throw priorError;
+    if (!priorDelivery && alreadyHasMeeting && !isReschedule && !body.recoverLegacy) {
+      return jsonResponse({ success: true, duplicate: true, legacyDeliveryUnknown: true });
+    }
+    if (!priorDelivery && alreadyHasMeeting && !isReschedule && body.recoverLegacy &&
+        (typeof body.legacyClientNotified !== 'boolean' || typeof body.legacyOwnerNotified !== 'boolean')) {
+      return jsonResponse({ error: 'Legacy recovery requires verified per-recipient delivery history' }, 400);
+    }
+    delivery = await claimDelivery(supabase, bookingId, occurrence, booking.confirmation_revision ?? 0);
+    if (!priorDelivery && alreadyHasMeeting && !isReschedule && body.recoverLegacy) {
+      await saveDelivery(supabase, delivery, {
+        client_sent: body.legacyClientNotified, owner_sent: body.legacyOwnerNotified,
       });
     }
-
-    // A concurrent invocation may already be mid-flight. Its marker does not
-    // contain "Join URL:" yet, so it must be detected explicitly. Claims older
-    // than 10 minutes are treated as abandoned and may be retried.
-    const pendingClaimAt = existingNotes.match(/Zoom meeting pending \(claimed ([^)]+)\)/)?.[1] ?? null;
-    const CLAIM_TTL_MS = 10 * 60 * 1000;
-    if (pendingClaimAt) {
-      const claimAge = Date.now() - new Date(pendingClaimAt).getTime();
-      if (Number.isFinite(claimAge) && claimAge < CLAIM_TTL_MS) {
-        console.log("Zoom creation already in flight for booking:", bookingId);
-        return jsonResponse({ success: true, duplicate: true, pending: true });
-      }
-      console.log("Stale Zoom claim detected; retrying booking:", bookingId);
+    if (isReschedule && !delivery.reschedule) {
+      await saveDelivery(supabase, delivery, { reschedule: true, previous_meeting_id: previousMeetingId });
     }
-
-    // Compare-and-swap on the exact notes value we just read: only one
-    // concurrent invocation can win this update. On a reschedule the previous
-    // meeting details are kept in the marker so a rollback can restore them.
-    const marker = `Zoom meeting pending (claimed ${new Date().toISOString()})`;
-    let claimQuery = supabase
-      .from("bookings")
-      .update({ notes: marker, updated_at: new Date().toISOString() })
-      .eq("id", bookingId);
-    claimQuery = booking.notes == null
-      ? claimQuery.is("notes", null)
-      : claimQuery.eq("notes", existingNotes);
-    const { data: claimed, error: claimError } = await claimQuery.select("id");
-
-    if (claimError) {
-      console.error("Failed to claim booking for Zoom creation:", claimError);
-      return jsonResponse({ error: "Unable to send booking confirmation. Please try again later." }, 500);
-    }
-    if (!claimed || claimed.length === 0) {
-      console.log("Another invocation already claimed this booking:", bookingId);
+    isReschedule = delivery.reschedule === true;
+    customerEmailSent = delivery.client_sent;
+    if (delivery.client_sent && delivery.owner_sent) {
+      await saveDelivery(supabase, delivery, { lease_until: null });
       return jsonResponse({ success: true, duplicate: true });
     }
-    claimMarker = marker;
     alertContext = {
       bookingId,
       customerName: String(booking.customer_name ?? ""),
@@ -369,27 +349,59 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
       bookingTime: String(booking.booking_time ?? "").slice(0, 5),
       isReschedule,
     };
-    // Restore a real meeting reference on failure, but never a stale pending marker.
-    notesBeforeClaim = pendingClaimAt ? null : booking.notes;
+    let accessToken: string | null = null;
+    if (!delivery.join_url) {
+      if (alreadyHasMeeting && !isReschedule) {
+        await saveDelivery(supabase, delivery, {
+          join_url: existingNotes.match(/Join URL:\s*(\S+)/)?.[1], meeting_id: previousMeetingId,
+        });
+      } else {
+        // A crash after POST may have created a Zoom meeting. Never blindly create another.
+        if (delivery.creation_started || existingNotes.includes('Zoom meeting pending')) {
+          throw new Error('Ambiguous previous Zoom creation requires operator reconciliation');
+        }
+        accessToken = await getZoomAccessToken(); // auth failure is safe to retry
+        await saveDelivery(supabase, delivery, { creation_started: true });
+        let created;
+        try {
+          created = await createZoomMeeting(accessToken,
+            `Freedom Interventions - ${meta.label} with ${customerName}`,
+            `${bookingDate}T${bookingTime}:00`, effectiveDuration);
+        } catch (error) {
+          // Explicit auth/rate rejection did not create a meeting; a fresh token/retry is safe.
+          if (error instanceof ZoomRejectedError) await saveDelivery(supabase, delivery, { creation_started: false });
+          throw error;
+        }
+        if (!created.joinUrl || !created.meetingId) throw new Error('Zoom returned no meeting details');
+        // Store BEFORE email. Retry reuses this meeting even after an email/DB failure.
+        await saveDelivery(supabase, delivery, { join_url: created.joinUrl, meeting_id: created.meetingId });
+      }
+    }
+    const joinUrl: string = delivery.join_url;
+    const meetingId: string = delivery.meeting_id;
+    if (!joinUrl || !meetingId) throw new Error('Missing Zoom meeting details');
+    // Keep existing free text and client_notes untouched. Remove only obsolete operational lines.
+    const preservedNotes = (isReschedule ? existingNotes.replace(SLOT_CONFLICT_MARKER, '') : existingNotes).replace(/Zoom Meeting ID:\s*\d+, Join URL:\s*\S+/g, '')
+      .replace(/Zoom meeting pending \(claimed [^)]+\)/g, '');
+    const notes = `${preservedNotes}${preservedNotes && !preservedNotes.endsWith('\n') ? '\n' : ''}Zoom Meeting ID: ${meetingId}, Join URL: ${joinUrl}`;
+    let storeQuery = supabase.from('bookings')
+      .update({ notes, updated_at: new Date().toISOString() }).eq('id', bookingId)
+      .eq('status', 'confirmed').eq('booking_date', bookingDate).eq('booking_time', booking.booking_time)
+      .eq('confirmation_revision', booking.confirmation_revision ?? 0);
+    storeQuery = booking.notes == null ? storeQuery.is('notes', null) : storeQuery.eq('notes', booking.notes);
+    const { data: stored, error: storeError } = await storeQuery.select('id');
+    if (storeError || !stored?.length) throw storeError || new Error('Booking changed during confirmation');
 
-    // Zoom wants local wall-clock time (no "Z") plus the timezone field.
-    const zoomStartTime = `${bookingDate}T${bookingTime}:00`;
-
-    // Get Zoom access token and create the NEW meeting first; the old one (on a
-    // reschedule) is only deleted once the new one exists and has been emailed.
-    accessToken = await getZoomAccessToken();
-    console.log("Got Zoom access token");
-
-    const meetingTopic = `Freedom Interventions - ${meta.label} with ${customerName}`;
-
-    const { joinUrl, meetingId } = await createZoomMeeting(
-      accessToken,
-      meetingTopic,
-      zoomStartTime,
-      effectiveDuration
-    );
-    newMeetingId = meetingId;
-    console.log("Created Zoom meeting:", meetingId);
+    // Stable provider keys bridge the send-success/DB-failure gap for 24h. After that,
+    // ambiguous sends require reconciliation rather than risking a duplicate email.
+    const prepareEmail = async (recipient: 'client' | 'owner') => {
+      const field = `${recipient}_attempt_at`;
+      if (delivery[field] && Date.now() - Date.parse(delivery[field]) >= 23 * 60 * 60 * 1000) {
+        throw new Error('Ambiguous email attempt beyond idempotency window; reconcile with Resend');
+      }
+      if (!delivery[field]) await saveDelivery(supabase, delivery, { [field]: new Date().toISOString() });
+      return `booking/${bookingId}/${occurrence}/${recipient}`;
+    };
 
     // Format date/time for email (already Pacific wall-clock values)
     const formattedDate = formatPacificDate(bookingDate);
@@ -464,31 +476,17 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
       </div>
     `;
 
-    // Send confirmation email to customer
-    await sendEmail(
-      customerEmail,
-      emailSubject,
-      emailHtml
-    );
-    customerEmailSent = true;
-
-    // Store the new Zoom meeting on the booking (releases our claim marker).
-    const { error: zoomUpdateError } = await supabase
-      .from("bookings")
-      .update({
-        notes: `Zoom Meeting ID: ${meetingId}, Join URL: ${joinUrl}` +
-          (!isReschedule && existingNotes.includes(SLOT_CONFLICT_MARKER) ? `\n${SLOT_CONFLICT_MARKER}` : ""),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", bookingId);
-
-    if (zoomUpdateError) {
-      console.error("Failed to store Zoom details on booking:", zoomUpdateError);
+    if (!delivery.client_sent) {
+      await sendEmail(customerEmail, emailSubject, emailHtml, { idempotencyKey: await prepareEmail('client') });
+      customerEmailSent = true;
+      await saveDelivery(supabase, delivery, { client_sent: true });
     }
-
-    // On a reschedule, remove the old meeting now that the new one exists.
-    if (isReschedule && previousMeetingId && previousMeetingId !== meetingId) {
-      await deleteZoomMeeting(accessToken, previousMeetingId);
+    // Old meeting cleanup remains best effort, only after the new client email succeeded.
+    if (isReschedule && delivery.previous_meeting_id && delivery.previous_meeting_id !== meetingId) {
+      try {
+        accessToken = accessToken || await getZoomAccessToken();
+        await deleteZoomMeeting(accessToken, delivery.previous_meeting_id);
+      } catch (error) { console.error('Old Zoom cleanup needs review', error); }
     }
 
     // Send notification email to Matt (failure here must not roll back the customer's meeting)
@@ -521,15 +519,13 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
       </div>
     `;
 
-    try {
-      await sendEmail(
-        "matt@freedominterventions.com",
+    if (!delivery.owner_sent) {
+      await sendEmail("matt@freedominterventions.com",
         `New ${meta.emailNoun} Booking - ${customerName.replace(/[\r\n]+/g, " ")}`,
-        adminNotificationHtml
-      );
-    } catch (adminEmailError) {
-      console.error("Failed to send admin booking notification:", adminEmailError);
+        adminNotificationHtml, { idempotencyKey: await prepareEmail('owner') });
+      await saveDelivery(supabase, delivery, { owner_sent: true });
     }
+    await saveDelivery(supabase, delivery, { lease_until: null, last_error: null });
 
     console.log("Email sent successfully");
 

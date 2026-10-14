@@ -1,5 +1,5 @@
 // No request field, header, cache, or client credential can bypass this gate.
-export const BOOKING_GATE_BUILD = "booking-gate-legacy-v1";
+export const BOOKING_GATE_BUILD = "booking-gate-reliability-v1";
 export const maintenanceHeaders = {
   "X-Booking-Gate-Build": BOOKING_GATE_BUILD,
   "Cache-Control": "no-store",

@@ -3,6 +3,7 @@ export interface ResendEmailOptions {
   subject: string;
   html: string;
   text?: string;
+  idempotencyKey?: string;
   from?: string;
   replyTo?: string | string[];
 }
@@ -58,9 +59,11 @@ export async function sendResendEmail(opts: ResendEmailOptions): Promise<string 
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       Accept: "application/json",
+      ...(opts.idempotencyKey ? { "Idempotency-Key": opts.idempotencyKey } : {}),
       "User-Agent": "FreedomInterventionsSupabase/1.0",
     },
     body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(15000),
   });
 
   const responseText = await response.text();
