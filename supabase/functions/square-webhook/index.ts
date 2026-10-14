@@ -1,3 +1,4 @@
+import { verifySquareOrderPaid } from "../_shared/squarePayment.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
@@ -31,7 +32,7 @@ function timingSafeEqual(a: string, b: string) {
   return result === 0;
 }
 
-serve(async (req) => {
+export const handler = async (req: Request, clientFactory = createClient) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
@@ -62,6 +63,9 @@ serve(async (req) => {
 
   try {
     const event = JSON.parse(rawBody);
+    if (!['payment.created', 'payment.updated'].includes(event?.type)) {
+      return new Response(JSON.stringify({ success: true, ignored: true }), { headers: corsHeaders });
+    }
     const payment = event?.data?.object?.payment;
     const orderId = payment?.order_id;
     const paymentId = payment?.id;
@@ -69,7 +73,7 @@ serve(async (req) => {
     const amount = payment?.amount_money?.amount;
     const refundedAmount = payment?.refunded_money?.amount;
 
-    if (!orderId || status !== "COMPLETED" || typeof amount !== "number") {
+    if (!paymentId || !orderId || status !== "COMPLETED" || typeof amount !== "number") {
       return new Response(JSON.stringify({ success: true, ignored: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -81,7 +85,7 @@ serve(async (req) => {
       });
     }
 
-    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const supabase = clientFactory(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const fulfillmentFailures: string[] = [];
 
     const { data: contract, error: contractLookupError } = await supabase
@@ -94,6 +98,7 @@ serve(async (req) => {
     if (
       contract &&
       contract.amount_cents === amount &&
+      (await verifySquareOrderPaid(orderId, contract.amount_cents, paymentId)).paid &&
       (UNPAID_CONTRACT_STATUSES.includes(contract.status) || contract.status === "paid")
     ) {
       // Already paid: only re-run the retry-safe fulfillment (Readiness Intensive booking +
@@ -135,6 +140,7 @@ serve(async (req) => {
     if (
       booking &&
       booking.amount_cents === amount &&
+      (await verifySquareOrderPaid(orderId, booking.amount_cents, paymentId)).paid &&
       (booking.status === "pending" || booking.status === "confirmed")
     ) {
       let idempotentOnly = true;
@@ -182,4 +188,6 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-});
+};
+
+if (import.meta.main) serve((req) => handler(req));

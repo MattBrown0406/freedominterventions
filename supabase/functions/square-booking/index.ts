@@ -1,3 +1,4 @@
+import { verifySquareOrderPaid } from "../_shared/squarePayment.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { InvalidClientNotesError, validateClientNotes } from "../_shared/clientNotes.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -449,58 +450,8 @@ function resolveBookingAmountCents(bookingType: string): number {
   return BOOKING_FEES_CENTS[bookingType] ?? -1;
 }
 
-async function verifySquareOrderPaid(orderId: string, expectedAmountCents: number) {
-  if (!SQUARE_ACCESS_TOKEN) throw new Error('Square access token is not configured');
-  if (!SQUARE_LOCATION_ID) throw new Error('Square location ID is not configured');
 
-  const orderResponse = await fetch(`${SQUARE_BASE_URL}/orders/${orderId}`, {
-    headers: {
-      'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`,
-      'Square-Version': '2024-01-18',
-    },
-  });
-  const orderData = await orderResponse.json();
-  if (!orderResponse.ok || orderData.errors) {
-    throw new Error(orderData.errors?.[0]?.detail || 'Could not verify Square order');
-  }
-
-  const order = orderData.order;
-  const orderAmount = order?.total_money?.amount;
-  const locationMatches = !order?.location_id || order.location_id === SQUARE_LOCATION_ID;
-  const amountMatches = typeof orderAmount === 'number' && orderAmount === expectedAmountCents;
-  const isComplete = order?.state === 'COMPLETED';
-
-  if (locationMatches && amountMatches && isComplete) {
-    return { paid: true, order, paymentId: order?.tenders?.[0]?.payment_id ?? order?.tenders?.[0]?.id ?? null };
-  }
-
-  // Payment-link orders can stay OPEN even after the payment COMPLETED.
-  // Fall back to the order's own payments: completed, full amount, not refunded, same location.
-  console.log('Square order not COMPLETED; checking payments', { orderId, state: order?.state, tenders: order?.tenders?.length ?? 0 });
-  if (locationMatches && amountMatches && order?.state !== 'CANCELED') {
-    for (const tender of order?.tenders ?? []) {
-      const paymentId = tender?.payment_id ?? tender?.id;
-      if (!paymentId) continue;
-      const res = await fetch(`${SQUARE_BASE_URL}/payments/${paymentId}`, {
-        headers: { 'Authorization': `Bearer ${SQUARE_ACCESS_TOKEN}`, 'Square-Version': '2024-01-18' },
-      });
-      const pd = await res.json();
-      const p = pd?.payment;
-      if (
-        res.ok && p && p.status === 'COMPLETED' && p.order_id === orderId &&
-        p.amount_money?.amount === expectedAmountCents &&
-        !(p.refunded_money?.amount > 0) &&
-        (!p.location_id || p.location_id === SQUARE_LOCATION_ID)
-      ) {
-        return { paid: true, order, paymentId: p.id };
-      }
-    }
-  }
-
-  return { paid: false, order, paymentId: null };
-}
-
-serve(async (req) => {
+export const handler = async (req: Request, clientFactory = createClient) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -509,7 +460,7 @@ serve(async (req) => {
     const { action, ...params } = await req.json();
     console.log(`Square booking action: ${action}`, { action, timestamp: new Date().toISOString() });
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = clientFactory(supabaseUrl, supabaseServiceKey);
 
     switch (action) {
       case 'get-available-slots': {
@@ -976,22 +927,6 @@ serve(async (req) => {
           booking_time: b.booking_time,
           status: b.status,
         });
-        if (booking.status === 'confirmed' && booking.payment_id) {
-          let missingConfirmationError = false;
-          if (!booking.notes || !String(booking.notes).includes('Join URL:')) {
-            console.log('Confirmed paid booking is missing Zoom details; sending confirmation now:', booking.id);
-            const { error: emailError } = await supabase.functions.invoke('send-booking-confirmation', {
-              body: { bookingId: booking.id }
-            });
-            if (emailError) {
-              missingConfirmationError = true;
-              console.error('Failed to send missing booking confirmation:', booking.id, emailError);
-            }
-          }
-          return new Response(JSON.stringify({ success: true, paid: true, booking: publicBooking(booking), confirmationError: missingConfirmationError }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          });
-        }
         if (!booking.square_order_id) throw new Error('Square order ID is missing for this booking');
         if (typeof booking.amount_cents !== 'number' || booking.amount_cents <= 0) throw new Error('Booking amount is invalid');
 
@@ -1044,6 +979,8 @@ serve(async (req) => {
             });
           }
           currentBooking = latest;
+          const retry = await fulfillPaidBooking(supabase, booking.id, { idempotentOnly: true });
+          confirmationError = Boolean(retry.confirmationError);
         }
 
         return new Response(JSON.stringify({
@@ -1390,7 +1327,9 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-});
+};
+
+if (import.meta.main) serve((req) => handler(req));
 
 async function generateTimeSlots(
   dateStr: string,

@@ -1,3 +1,4 @@
+import { verifySquareOrderPaid } from "../_shared/squarePayment.ts";
 import { validateClientNotes } from "../_shared/clientNotes.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -353,12 +354,10 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
       }
     }
 
-    // Two fulfillment paths can race (webhook + browser). Keep only the earliest row.
-    const { data: rows } = await findBookings();
-    bookingId = rows?.[0]?.id ?? inserted?.id ?? null;
-    if (inserted?.id && bookingId && inserted.id !== bookingId) {
-      await supabase.from("bookings").delete().eq("id", inserted.id);
-    }
+    // The unique contract mapping prevents duplicate bookings under browser/webhook races.
+    const { data: rows, error: rereadError } = await findBookings();
+    if (rereadError) return false;
+    bookingId = rows?.[0]?.id ?? null;
     // Only the path whose row was kept alerts, so racing paths send one email.
     if (hasConflict && bookingId && inserted?.id === bookingId) {
       await alertOwnerSlotConflict(contract, bookingId, bookingDate, slotTime, inPast, overlapping);
@@ -366,7 +365,7 @@ async function ensureReadinessBooking(supabase: any, contract: PaidContractRow):
   }
 
   if (!bookingId) return false;
-  // Idempotent: send-booking-confirmation skips bookings that already have a Zoom meeting.
+  // Retry each notification independently while reusing the persisted meeting.
   const { error: confirmError } = await supabase.functions.invoke("send-booking-confirmation", {
     body: { bookingId },
   });
@@ -521,41 +520,15 @@ function formatUsdFromCents(cents: number) {
   }).format(cents / 100);
 }
 
-async function verifySquareOrderPaid(orderId: string, expectedAmountCents: number) {
-  if (!SQUARE_ACCESS_TOKEN) throw new Error("Square access token is not configured");
-  if (!SQUARE_LOCATION_ID) throw new Error("Square location ID is not configured");
 
-  const orderResponse = await fetch(`${SQUARE_BASE_URL}/orders/${orderId}`, {
-    headers: {
-      Authorization: `Bearer ${SQUARE_ACCESS_TOKEN}`,
-      "Square-Version": "2024-01-18",
-    },
-  });
-  const orderData = await orderResponse.json();
-  if (!orderResponse.ok || orderData.errors) {
-    throw new Error(orderData.errors?.[0]?.detail || "Could not verify Square order");
-  }
-
-  const order = orderData.order;
-  const orderAmount = order?.total_money?.amount;
-  const locationMatches = !order?.location_id || order.location_id === SQUARE_LOCATION_ID;
-  const amountMatches = typeof orderAmount === "number" && orderAmount === expectedAmountCents;
-  const isComplete = order?.state === "COMPLETED";
-
-  return {
-    paid: Boolean(locationMatches && amountMatches && isComplete),
-    order,
-  };
-}
-
-serve(async (req) => {
+export const handler = async (req: Request, clientFactory = createClient) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const { action, ...params } = await req.json();
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = clientFactory(supabaseUrl, supabaseServiceKey);
 
     switch (action) {
       case "create-contract": {
@@ -838,19 +811,6 @@ serve(async (req) => {
           .eq("id", contractId)
           .single();
         if (contractError || !contract) throw contractError || new Error("Contract not found");
-        if (contract.status === "paid") {
-          // The webhook may have won the flip. Safety net: make sure a paid Readiness
-          // Intensive has its booking (idempotent; no duplicate notifications).
-          const { data: paidContract } = await supabase
-            .from("contracts")
-            .select(PAID_CONTRACT_COLUMNS)
-            .eq("id", contractId)
-            .maybeSingle();
-          const fulfilled = paidContract ? await ensureReadinessBooking(supabase, paidContract as PaidContractRow) : true;
-          return new Response(JSON.stringify({ success: true, alreadyPaid: true, confirmationError: !fulfilled }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
         if (!contract.square_order_id) throw new Error("Square order ID is missing for this contract");
         if (typeof contract.amount_cents !== "number" || contract.amount_cents <= 0) throw new Error("Contract amount is invalid");
 
@@ -862,8 +822,14 @@ serve(async (req) => {
           });
         }
 
+        if (contract.status === "paid") {
+          const fulfilled = await fulfillPaidContract(supabase, contractId, { idempotentOnly: true });
+          return new Response(JSON.stringify({ success: true, alreadyPaid: true, confirmationError: !fulfilled }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
         // Use Square's verified tender id, never a client-supplied payment id.
-        const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id || verification.order?.tenders?.[0]?.id || null;
+        const verifiedPaymentId = verification.paymentId;
 
         // Conditional flip: only the path that actually marks it paid (this or the
         // Square webhook) sends the paid notification + Spine event, exactly once.
@@ -902,6 +868,7 @@ serve(async (req) => {
               headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
           }
+          confirmationError = !(await fulfillPaidContract(supabase, contractId, { idempotentOnly: true }));
         }
 
         return new Response(JSON.stringify({ success: true, confirmationError }), {
@@ -933,4 +900,6 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
-});
+};
+
+if (import.meta.main) serve((req) => handler(req));
