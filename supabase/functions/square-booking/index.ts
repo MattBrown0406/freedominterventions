@@ -1003,7 +1003,7 @@ serve(async (req) => {
           });
         }
 
-        const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id ?? verification.order?.tenders?.[0]?.id ?? null;
+        const verifiedPaymentId = verification.paymentId;
         // Conditional flip, only from the checkout's pending status: a cancelled/completed
         // booking is never revived, and only the path that actually moves it to confirmed
         // runs fulfillment (the Square webhook may be racing us).
