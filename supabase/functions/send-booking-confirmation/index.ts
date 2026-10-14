@@ -1,4 +1,5 @@
 import { renderOwnerClientNotes } from "../_shared/clientNotes.ts";
+import { bookingMaintenanceGate, maintenanceHeaders } from "../_shared/bookingMaintenance.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { escapeHtml, sendResendEmail, sendSystemEmail } from "../_shared/resend.ts";
@@ -225,9 +226,9 @@ const jsonResponse = (body: unknown, status = 200) =>
     headers: { "Content-Type": "application/json", ...corsHeaders },
   });
 
-const handler = async (req: Request): Promise<Response> => {
+export const handler = async (req: Request, clientFactory = createClient): Promise<Response> => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: { ...corsHeaders, ...maintenanceHeaders } });
   }
 
   // Only our own Edge Functions (service-role bearer) may trigger confirmations.
@@ -237,7 +238,10 @@ const handler = async (req: Request): Promise<Response> => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const maintenance = await bookingMaintenanceGate(
+    () => clientFactory(supabaseUrl, supabaseKey), corsHeaders);
+  if (maintenance) return maintenance;
+  const supabase = clientFactory(supabaseUrl, supabaseKey);
 
   let bookingId = "";
   let claimMarker: string | null = null;
@@ -549,4 +553,4 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-serve(handler);
+if (import.meta.main) serve((req) => handler(req));
