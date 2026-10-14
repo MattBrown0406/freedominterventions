@@ -933,7 +933,6 @@ export type Database = {
           booking_date: string
           booking_time: string
           booking_type: string
-          client_notes: string | null
           contract_metadata: Json | null
           contract_pdf_path: string | null
           contract_pdf_url: string | null
@@ -964,7 +963,6 @@ export type Database = {
           booking_date: string
           booking_time: string
           booking_type: string
-          client_notes?: string | null
           contract_metadata?: Json | null
           contract_pdf_path?: string | null
           contract_pdf_url?: string | null
@@ -995,7 +993,6 @@ export type Database = {
           booking_date?: string
           booking_time?: string
           booking_type?: string
-          client_notes?: string | null
           contract_metadata?: Json | null
           contract_pdf_path?: string | null
           contract_pdf_url?: string | null
@@ -1199,7 +1196,6 @@ export type Database = {
           amount_cents: number | null
           client_email: string
           client_name: string
-          client_notes: string | null
           client_phone: string | null
           contract_pdf_path: string | null
           contract_pdf_url: string | null
@@ -1224,7 +1220,6 @@ export type Database = {
           amount_cents?: number | null
           client_email: string
           client_name: string
-          client_notes?: string | null
           client_phone?: string | null
           contract_pdf_path?: string | null
           contract_pdf_url?: string | null
@@ -1249,7 +1244,6 @@ export type Database = {
           amount_cents?: number | null
           client_email?: string
           client_name?: string
-          client_notes?: string | null
           client_phone?: string | null
           contract_pdf_path?: string | null
           contract_pdf_url?: string | null
