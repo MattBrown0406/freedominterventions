@@ -202,7 +202,12 @@ const FortWorthTexas = lazy(() => import("./pages/FortWorthTexas"));
 const ElPasoTexas = lazy(() => import("./pages/ElPasoTexas"));
 const PlanoTexas = lazy(() => import("./pages/PlanoTexas"));
 
-const queryClient = new QueryClient();
+// Cache reads for 5 minutes to avoid re-querying the database on every navigation/focus.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 5 * 60 * 1000, refetchOnWindowFocus: false },
+  },
+});
 
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
