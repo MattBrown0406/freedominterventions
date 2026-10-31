@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Phone, AlertTriangle, Shield, CheckCircle2, ArrowRight, ChevronDown, Siren, Users, ClipboardList } from "lucide-react";
+import { Phone, AlertTriangle, Shield, CheckCircle2, ArrowRight, ChevronDown, Siren, Users, ClipboardList, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import crisisBanner from "@/assets/crisis-support-banner.jpg";
@@ -9,6 +9,7 @@ import SEOHead from "@/components/SEOHead";
 import { OrganizationSchema, BreadcrumbSchema, ServiceSchema, FAQSchema, WebPageSchema } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
 import WhatsAppChatButton from "@/components/WhatsAppChatButton";
+import ResponsePromise from "@/components/ResponsePromise";
 
 const faqs = [
   {
@@ -130,19 +131,36 @@ const CrisisSupport = () => {
       <FAQSchema faqs={faqs} />
       <Navbar />
 
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
-        <OptimizedImage
-          src={crisisBanner}
-          alt="Crisis support for families facing overdose risk, psychiatric instability, or an escalating addiction emergency"
-          className="w-full h-full"
-          width={1920}
-          height={800}
-          priority={true}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
-      </div>
+      {/* Safety first: on a phone this is the first thing a family in an emergency sees. */}
+      <section aria-labelledby="emergency-heading" className="mt-16 md:mt-28 bg-destructive/5 border-b border-destructive/20">
+        <div className="container mx-auto px-4 py-5 md:py-6">
+          <div className="max-w-4xl mx-auto">
+            <h2 id="emergency-heading" className="flex items-center gap-2 text-lg md:text-xl font-semibold text-destructive">
+              <AlertTriangle className="w-5 h-5 shrink-0" aria-hidden="true" />
+              Is someone in danger right now?
+            </h2>
+            <p className="mt-1 text-sm md:text-base text-foreground">
+              Freedom Interventions is not emergency medical care. Get emergency help first, then call Matt.
+            </p>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <a href="tel:911" className="flex items-center justify-center gap-2 rounded-lg bg-destructive px-4 py-3 text-base font-semibold text-destructive-foreground hover:bg-destructive/90 transition-colors">
+                <Phone className="w-5 h-5" aria-hidden="true" />
+                <span>Call 911 <span className="font-normal">· overdose or danger</span></span>
+              </a>
+              <a href="tel:988" className="flex items-center justify-center gap-2 rounded-lg border-2 border-destructive bg-background px-4 py-3 text-base font-semibold text-destructive hover:bg-destructive/5 transition-colors">
+                <Phone className="w-5 h-5" aria-hidden="true" />
+                <span>Call 988 <span className="font-normal">· suicide &amp; crisis</span></span>
+              </a>
+              <a href="sms:988" className="flex items-center justify-center gap-2 rounded-lg border-2 border-destructive bg-background px-4 py-3 text-base font-semibold text-destructive hover:bg-destructive/5 transition-colors">
+                <MessageSquare className="w-5 h-5" aria-hidden="true" />
+                <span>Text 988</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
+      <section className="py-10 md:py-14 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <span className="text-accent font-medium text-sm uppercase tracking-wider">Crisis Support</span>
@@ -151,9 +169,6 @@ const CrisisSupport = () => {
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               This service is for families dealing with immediate danger: overdose risk, self-harm threats, acute mental health breaks, repeated hospital visits, jail, or a situation that is getting worse fast. Matt works directly with families to slow the chaos down, assess what is real, and move the situation toward stabilization and treatment.
-            </p>
-            <p className="mt-4 font-semibold text-destructive">
-              If someone is in immediate danger or may be overdosing, call 911 now. For a suicidal crisis, call or text 988. Freedom Interventions is not emergency medical care.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <a href="tel:+14582988000">
@@ -169,9 +184,21 @@ const CrisisSupport = () => {
               </Link>
               <WhatsAppChatButton variant="solid" size="lg" />
             </div>
+            <ResponsePromise className="mt-6 max-w-xl mx-auto" />
           </div>
         </div>
       </section>
+
+      <div className="relative w-full h-[180px] md:h-[280px] overflow-hidden">
+        <OptimizedImage
+          src={crisisBanner}
+          alt="Crisis support for families facing overdose risk, psychiatric instability, or an escalating addiction emergency"
+          className="w-full h-full"
+          width={1920}
+          height={800}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+      </div>
 
       <section className="border-y border-border/60 bg-muted/20">
         <div className="container mx-auto px-6 py-4">

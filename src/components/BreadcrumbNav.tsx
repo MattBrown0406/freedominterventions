@@ -37,7 +37,7 @@ const BreadcrumbNav = ({ items }: BreadcrumbNavProps) => {
               ) : (
                 <Link 
                   to={item.href} 
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors"
                 >
                   {item.name}
                 </Link>

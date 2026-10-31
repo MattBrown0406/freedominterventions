@@ -63,7 +63,7 @@ const FloatingContactForm = () => {
         source: "floating_contact_form",
         page_path: window.location.pathname,
       });
-      toast({ title: "Message Sent", description: "We'll get back to you soon." });
+      toast({ title: "Message Sent", description: "Matt will get back to you personally, usually within 4 hours." });
       form.reset();
       setIsOpen(false);
     } catch {
@@ -89,7 +89,7 @@ const FloatingContactForm = () => {
         <div className="fixed bottom-24 right-6 z-50 w-[340px] max-h-[70vh] overflow-y-auto bg-card border border-border rounded-2xl shadow-2xl animate-fade-up">
           <div className="p-5">
             <h3 className="font-serif text-lg font-bold text-foreground mb-1">Get in Touch</h3>
-            <p className="text-sm text-muted-foreground mb-4">All communications are confidential.</p>
+            <p className="text-sm text-muted-foreground mb-4">All communications are confidential. Matt replies personally, usually within 4 hours. <span lang="es">Se habla español.</span></p>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">

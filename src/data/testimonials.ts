@@ -84,3 +84,6 @@ export const testimonials: Testimonial[] = [
     rating: 5,
   },
 ];
+
+// Short quotes from families, shown next to booking and contact forms.
+export const FAMILY_TESTIMONIAL_AUTHORS = ["The Johnson Family", "Maria S.", "Elizabeth"];

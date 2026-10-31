@@ -1,3 +1,6 @@
+import { FAMILY_TESTIMONIAL_AUTHORS } from "@/data/testimonials";
+import BookingNextSteps from "@/components/BookingNextSteps";
+import ResponsePromise from "@/components/ResponsePromise";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -52,9 +55,11 @@ const BookACall = () => {
         keywords="book intervention call, free addiction consultation, crisis coaching session, family readiness intensive"
       />
       <Navbar />
-      <BreadcrumbNav items={breadcrumbItems} />
-      <main className="pt-20 md:pt-24">
-        <section className="border-b border-border/50 bg-primary/5 py-14 md:py-20">
+      {/* Offset exactly the fixed navbar (h-16; md: h-20 + support bar) so the
+          breadcrumb is visible and there's no empty band above the page. */}
+      <main className="pt-16 md:pt-28">
+        <BreadcrumbNav items={breadcrumbItems} />
+        <section className="border-b border-border/50 bg-primary/5 py-10 md:py-20">
           <div className="container px-6">
             <div className="mx-auto max-w-4xl text-center">
               <Badge className="mb-5 bg-primary text-primary-foreground hover:bg-primary">
@@ -97,6 +102,7 @@ const BookACall = () => {
                   </div>
                 ))}
               </div>
+              <ResponsePromise variant="card" className="mx-auto mt-5 max-w-2xl" />
             </div>
           </div>
         </section>
@@ -135,9 +141,12 @@ const BookACall = () => {
           </div>
         </section>
 
+        <BookingNextSteps />
+
+        <TestimonialStrip heading="What families say about working with Matt" authors={FAMILY_TESTIMONIAL_AUTHORS} />
+
         <BookingCalendar />
       </main>
-      <TestimonialStrip className="bg-muted/20 border-t border-border/50" />
       <Footer />
     </div>
   );

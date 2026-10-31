@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { RESPONSE_PROMISE } from "@/components/ResponsePromise";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
@@ -74,21 +76,87 @@ const REQUIRED_FIELDS: Record<number, { field: string; label: string; email?: bo
   12: [{ field: "familySignature", label: "Electronic Signature" }],
 };
 
+// In-progress answers are saved on this device so a refresh, a locked phone, or
+// a closed tab doesn't lose a long intake. Kept for 7 days, cleared on submit or
+// by "Clear saved answers".
+const DRAFT_KEY = "fi_assessment_draft_v1";
+const DRAFT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+type AssessmentDraft = {
+  savedAt: number;
+  currentSection?: number;
+  formData?: Record<string, unknown>;
+  treatmentHistory?: TreatmentEntry[];
+  substancesUsed?: SubstanceEntry[];
+  familyMembers?: FamilyMemberEntry[];
+  familyAddictionHistory?: FamilyHistoryEntry[];
+  familyMentalHealthHistory?: FamilyHistoryEntry[];
+};
+
+const readDraft = (): AssessmentDraft | null => {
+  try {
+    const raw = window.localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const draft = JSON.parse(raw) as AssessmentDraft;
+    if (!draft || typeof draft !== "object" || typeof draft.savedAt !== "number" || Date.now() - draft.savedAt > DRAFT_TTL_MS) {
+      window.localStorage.removeItem(DRAFT_KEY);
+      return null;
+    }
+    return draft;
+  } catch {
+    return null;
+  }
+};
+
+const clearDraft = () => {
+  try {
+    window.localStorage.removeItem(DRAFT_KEY);
+  } catch {
+    /* storage unavailable */
+  }
+};
+
+const draftArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : []);
+
+/** Defaults plus any saved values for known fields (nested objects merged one level). */
+const restoreFormData = <T extends Record<string, unknown>>(defaults: T, saved?: Record<string, unknown>): T => {
+  if (!saved || typeof saved !== "object") return defaults;
+  const result: Record<string, unknown> = { ...defaults };
+  for (const key of Object.keys(defaults)) {
+    if (!(key in saved)) continue;
+    const base = defaults[key];
+    const value = saved[key];
+    if (base && typeof base === "object" && !Array.isArray(base)) {
+      if (value && typeof value === "object" && !Array.isArray(value)) result[key] = { ...base, ...value };
+    } else if (Array.isArray(base)) {
+      if (Array.isArray(value)) result[key] = value;
+    } else if (typeof value === typeof base) {
+      result[key] = value;
+    }
+  }
+  return result as T;
+};
+
 const Assessment = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [currentSection, setCurrentSection] = useState(1);
   const totalSections = 12;
+  const [initialDraft] = useState(readDraft);
+  const [restoredFromDraft, setRestoredFromDraft] = useState(Boolean(initialDraft));
+  const [currentSection, setCurrentSection] = useState(() => {
+    const saved = Number(initialDraft?.currentSection);
+    return Number.isInteger(saved) && saved >= 1 && saved <= totalSections ? saved : 1;
+  });
 
   // Complex state arrays
-  const [treatmentHistory, setTreatmentHistory] = useState<TreatmentEntry[]>([]);
-  const [substancesUsed, setSubstancesUsed] = useState<SubstanceEntry[]>([]);
-  const [familyMembers, setFamilyMembers] = useState<FamilyMemberEntry[]>([]);
-  const [familyAddictionHistory, setFamilyAddictionHistory] = useState<FamilyHistoryEntry[]>([]);
-  const [familyMentalHealthHistory, setFamilyMentalHealthHistory] = useState<FamilyHistoryEntry[]>([]);
+  const [treatmentHistory, setTreatmentHistory] = useState<TreatmentEntry[]>(() => draftArray(initialDraft?.treatmentHistory));
+  const [substancesUsed, setSubstancesUsed] = useState<SubstanceEntry[]>(() => draftArray(initialDraft?.substancesUsed));
+  const [familyMembers, setFamilyMembers] = useState<FamilyMemberEntry[]>(() => draftArray(initialDraft?.familyMembers));
+  const [familyAddictionHistory, setFamilyAddictionHistory] = useState<FamilyHistoryEntry[]>(() => draftArray(initialDraft?.familyAddictionHistory));
+  const [familyMentalHealthHistory, setFamilyMentalHealthHistory] = useState<FamilyHistoryEntry[]>(() => draftArray(initialDraft?.familyMentalHealthHistory));
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => restoreFormData({
     // Section 1: Contact Information
     contactName: "",
     contactEmail: "",
@@ -255,7 +323,7 @@ const Assessment = () => {
     immediateSafetyConcerns: "",
     additionalInformation: "",
     familySignature: "",
-  });
+  }, initialDraft?.formData));
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -342,6 +410,42 @@ const Assessment = () => {
       if (email && !EMAIL_RE.test(value)) return `Please enter a valid email address in Section ${section}: ${sectionTitles[section - 1]}.`;
     }
     return null;
+  };
+
+  // Autosave (debounced) once the family has changed something.
+  const hasEditedRef = useRef(false);
+  const discardingRef = useRef(false);
+  useEffect(() => {
+    if (!hasEditedRef.current) {
+      hasEditedRef.current = true;
+      return;
+    }
+    if (isSubmitted || discardingRef.current) return;
+    const timer = window.setTimeout(() => {
+      try {
+        const draft: AssessmentDraft = {
+          savedAt: Date.now(),
+          currentSection,
+          formData,
+          treatmentHistory,
+          substancesUsed,
+          familyMembers,
+          familyAddictionHistory,
+          familyMentalHealthHistory,
+        };
+        window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      } catch {
+        /* storage full or unavailable: the form still works, it just won't resume */
+      }
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [isSubmitted, currentSection, formData, treatmentHistory, substancesUsed, familyMembers, familyAddictionHistory, familyMentalHealthHistory]);
+
+  const startOver = () => {
+    if (!window.confirm("Clear the answers saved on this device and start a blank intake?")) return;
+    discardingRef.current = true;
+    clearDraft();
+    window.location.reload();
   };
 
   const showSectionError = (message: string) => {
@@ -540,10 +644,12 @@ const Assessment = () => {
       });
 
       setIsSubmitted(true);
+      clearDraft();
+      setRestoredFromDraft(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
         title: "Assessment Submitted Successfully",
-        description: "Thank you. We will review your comprehensive assessment and contact you within 24 hours.",
+        description: "Thank you. Matt will review your intake and contact you, usually within 4 hours.",
       });
     } catch (error) {
       toast({
@@ -618,7 +724,7 @@ const Assessment = () => {
                   <CheckCircle className="h-12 w-12 text-primary mx-auto" />
                   <h2 className="text-2xl font-bold text-foreground">Thank you — your assessment was received</h2>
                   <p className="text-muted-foreground">
-                    We will review your information confidentially and contact you within 24 hours. If this is an emergency, call 911.
+                    Matt will review your information confidentially and contact you. {RESPONSE_PROMISE} If this is an emergency, call 911.
                   </p>
                 </CardContent>
               </Card>
@@ -647,8 +753,30 @@ const Assessment = () => {
                 <p className="text-muted-foreground text-sm">
                   This intake gathers background information for intervention preparation and treatment-planning conversations. It is not a diagnosis, clinical evaluation, or substitute for assessment by a licensed healthcare professional. All information is handled confidentially.
                 </p>
+                <p className="text-muted-foreground text-sm mt-3">
+                  <strong className="text-foreground">This is the detailed intake (12 sections).</strong> Your answers are saved on this device as you go, so you can stop and come back to finish within 7 days. Answer what you can; only a few fields are required. Not ready for all of this?{" "}
+                  <Link to="/self-assessment" className="font-medium text-primary underline underline-offset-2">Take the 20-question self-check first</Link>{" "}
+                  or simply <Link to="/book" className="font-medium text-primary underline underline-offset-2">book a call</Link>.
+                </p>
+                <p className="text-muted-foreground text-sm mt-3">
+                  On a shared or public computer,{" "}
+                  <button type="button" onClick={startOver} className="font-medium text-primary underline underline-offset-2">clear saved answers</button>{" "}
+                  when you're done.
+                </p>
               </CardContent>
             </Card>
+
+            {restoredFromDraft && (
+              <div role="status" className="mb-6 flex flex-col gap-3 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-foreground">
+                  <strong>Welcome back.</strong> We restored the answers you saved on this device, so you can pick up where you left off.
+                </p>
+                <div className="flex shrink-0 gap-2">
+                  <Button type="button" size="sm" variant="outline" onClick={() => setRestoredFromDraft(false)}>Continue</Button>
+                  <Button type="button" size="sm" variant="ghost" onClick={startOver}>Start over</Button>
+                </div>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               

@@ -1,3 +1,6 @@
+import { FAMILY_TESTIMONIAL_AUTHORS } from "@/data/testimonials";
+import TestimonialStrip from "@/components/TestimonialStrip";
+import FamilySupportResources from "@/components/FamilySupportResources";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import EmpathySection from "@/components/EmpathySection";
@@ -156,11 +159,13 @@ const Index = () => {
         <ProcessOverview />
         <UrgencyStats />
         <ResourceBanner />
+        <FamilySupportResources className="bg-muted/20 border-y border-border/50" />
         <ToolkitBanner />
         <About />
         <WorkWithMatt />
         <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
         <ClosePathProof source="homepage" />
+        <TestimonialStrip heading="What families say about working with Matt" authors={FAMILY_TESTIMONIAL_AUTHORS} />
         <BookingCalendar />
         <section className="py-16 md:py-24 bg-muted/20">
           <div className="container px-6">

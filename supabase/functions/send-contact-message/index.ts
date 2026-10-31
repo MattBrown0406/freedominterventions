@@ -95,6 +95,8 @@ async function storeLeadAndQueueFollowups(payload: ContactMessageRequest): Promi
       body_html: `
         <p>Hi ${escapeHtml(firstName(payload.name))},</p>
         <p>I received your message through Freedom Interventions. When families reach out, it usually means things have already been heavy for a while, so I do not want you sitting in uncertainty.</p>
+        <p>I personally reply within 4 hours. If I am with a family during an intervention, it may take a little longer.</p>
+        <p>Si prefiere hablar en español, con gusto le atiendo en español.</p>
         <p>If you need a clear first step, you can book a free consultation here:</p>
         <p><a href="${consultUrl}">Book a free consultation</a></p>
         <p>If this is moving fast, call me directly at <a href="tel:+14582988000">458-298-8000</a>.</p>

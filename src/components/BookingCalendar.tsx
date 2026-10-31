@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { PrepChecklist } from "@/components/BookingNextSteps";
+import { RESPONSE_PROMISE } from "@/components/ResponsePromise";
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { Clock, DollarSign, Calendar as CalendarIcon, User, Mail, Lock, Phone, CheckCircle, Sparkles, ExternalLink } from "lucide-react";
@@ -946,9 +948,11 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                       Before your appointment
                     </h4>
                     <div className="space-y-2 text-sm text-muted-foreground">
-                      <p>{confirmationFailed ? "We'll follow up shortly with your meeting details." : 'Watch for the confirmation email with your meeting details.'}</p>
-                      <p>If you have time, a short family assessment can help organize the facts before you talk. It is optional.</p>
-                      <p>If the situation changes before your appointment, call directly instead of waiting.</p>
+                      <p>{confirmationFailed ? "We'll follow up shortly with your meeting details." : 'Watch for the confirmation email with your date, time, and Zoom link. A phone call works too if video is hard.'}</p>
+                      <p className="font-medium text-foreground">Helpful to have nearby (all optional):</p>
+                      <PrepChecklist />
+                      <p>If you have time, the confidential family intake organizes the facts before you talk. It is optional, and your answers are saved on your device as you go.</p>
+                      <p>If the situation changes before your appointment, call directly instead of waiting: <a href="tel:+14582988000" className="font-medium text-primary hover:underline">(458) 298-8000</a>. {RESPONSE_PROMISE}</p>
                     </div>
                     <Button asChild className="w-full" variant={bookingType === 'readiness-intensive' ? 'outline' : 'default'}>
                       <a href="/assessment">Optional: Complete Assessment</a>

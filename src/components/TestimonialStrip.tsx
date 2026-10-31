@@ -6,6 +6,8 @@ type TestimonialStripProps = {
   maxQuoteLength?: number;
   className?: string;
   heading?: string;
+  /** Show these testimonials (by author, in this order) instead of the first matches. */
+  authors?: string[];
 };
 
 /**
@@ -18,21 +20,26 @@ export default function TestimonialStrip({
   maxQuoteLength = 320,
   className = "",
   heading = "What families say",
+  authors,
 }: TestimonialStripProps) {
-  const picks = testimonials
-    .filter((t) => t.quote.length <= maxQuoteLength && t.rating === 5)
-    .slice(0, count);
+  const picks = authors
+    ? authors
+        .map((author) => testimonials.find((t) => t.author === author))
+        .filter((t): t is (typeof testimonials)[number] => Boolean(t))
+    : testimonials
+        .filter((t) => t.quote.length <= maxQuoteLength && t.rating === 5)
+        .slice(0, count);
 
   if (picks.length === 0) return null;
 
   return (
     <section className={`py-12 ${className}`}>
       <div className="container px-6">
-        <div className="mx-auto max-w-4xl">
+        <div className={`mx-auto ${picks.length > 2 ? "max-w-5xl" : "max-w-4xl"}`}>
           <p className="mb-6 text-center text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             {heading}
           </p>
-          <div className={`grid gap-4 ${picks.length > 1 ? "md:grid-cols-2" : ""}`}>
+          <div className={`grid gap-4 ${picks.length > 2 ? "md:grid-cols-3" : picks.length > 1 ? "md:grid-cols-2" : ""}`}>
             {picks.map((t) => (
               <figure
                 key={t.author}

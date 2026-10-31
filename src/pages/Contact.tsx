@@ -1,3 +1,7 @@
+import { FAMILY_TESTIMONIAL_AUTHORS } from "@/data/testimonials";
+import TestimonialStrip from "@/components/TestimonialStrip";
+import FamilySupportResources from "@/components/FamilySupportResources";
+import ResponsePromise from "@/components/ResponsePromise";
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -89,8 +93,8 @@ const Contact = () => {
       toast({
         title: "Message Sent",
         description: callMeBack
-          ? "Thank you for reaching out. Matt will use the number you provided to call you back."
-          : "Thank you for reaching out. We'll reply by email.",
+          ? "Thank you for reaching out. Matt will call you back at the number you provided, usually within 4 hours."
+          : "Thank you for reaching out. Matt will reply by email, usually within 4 hours.",
       });
       trackEvent("contact_message_sent", {
         source: "contact_page",
@@ -133,6 +137,7 @@ const Contact = () => {
             <p className="text-lg text-muted-foreground">
               We're here to help. Reach out to us with any questions or to schedule a free consultation.
             </p>
+            <ResponsePromise variant="card" className="mt-6 max-w-xl mx-auto" />
           </div>
         </div>
       </section>
@@ -200,6 +205,8 @@ const Contact = () => {
               </p>
             </div>
 
+            <TestimonialStrip heading="What families say about working with Matt" authors={FAMILY_TESTIMONIAL_AUTHORS} />
+
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Info */}
             <div className="space-y-8">
@@ -224,7 +231,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Phone</h3>
                     <p className="text-primary hover:underline">(458) 298-8000</p>
-                    <p className="text-sm text-muted-foreground mt-1">Call if you would rather talk now</p>
+                    <p className="text-sm text-muted-foreground mt-1">Call if you would rather talk now. If you reach voicemail, leave a message and Matt will call back, usually within 4 hours.</p>
                   </div>
                 </TrackedPhoneLink>
                 
@@ -238,7 +245,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Email</h3>
                     <p className="text-primary hover:underline">matt@freedominterventions.com</p>
-                    <p className="text-sm text-muted-foreground mt-1">We'll respond as soon as possible</p>
+                    <p className="text-sm text-muted-foreground mt-1">Matt replies personally, usually within 4 hours</p>
                   </div>
                 </a>
                 
@@ -377,6 +384,8 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      <FamilySupportResources className="bg-muted/20 border-t border-border/50" />
 
       <Footer />
     </div>

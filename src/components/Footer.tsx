@@ -52,6 +52,13 @@ const Footer = () => {
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">matt@freedominterventions.com</span>
               </a>
+              <p className="text-sm text-muted-foreground">
+                Matt replies personally within 4 hours, a little longer if he is with a family during an intervention.
+              </p>
+              <p className="text-sm text-muted-foreground" lang="es">
+                <strong className="font-semibold text-foreground">Se habla español.</strong>{" "}
+                <span lang="en">Help is available in Spanish.</span>
+              </p>
             </div>
             <div className="pt-4">
               <p className="text-xs text-muted-foreground mb-2">Member of</p>
