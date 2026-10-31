@@ -234,10 +234,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Validate inputs
     if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 100) {
-      throw new Error("Invalid name");
+      return new Response(JSON.stringify({ error: "Invalid name" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
     }
     if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || email.length > 255) {
-      throw new Error("Invalid email");
+      return new Response(JSON.stringify({ error: "Invalid email" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
     }
 
     const cleanName = name.trim();

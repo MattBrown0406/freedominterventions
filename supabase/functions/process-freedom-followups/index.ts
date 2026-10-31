@@ -69,16 +69,18 @@ async function shouldSkipBecauseConverted(supabase: any, row: FollowupRow) {
   }
 
   if (row.followup_reason === "consultation_assessment_prompt") {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("assessments")
       .select("id")
       .eq("contact_email", row.contact_email)
       .gte("created_at", row.created_at)
       .limit(1);
+    // Fail closed: a failed lookup must not be read as "not converted".
+    if (error) throw new Error(`Conversion check failed: ${error.message}`);
     return Boolean(data?.length);
   }
 
-  const [{ data: bookings }, { data: contracts }] = await Promise.all([
+  const [{ data: bookings, error: bookingsError }, { data: contracts, error: contractsError }] = await Promise.all([
     supabase
       .from("bookings")
       .select("id")
@@ -92,6 +94,9 @@ async function shouldSkipBecauseConverted(supabase: any, row: FollowupRow) {
       .gte("created_at", row.created_at)
       .limit(1),
   ]);
+  if (bookingsError || contractsError) {
+    throw new Error(`Conversion check failed: ${(bookingsError || contractsError).message}`);
+  }
 
   return Boolean(bookings?.length || contracts?.length);
 }

@@ -381,12 +381,16 @@ async function upsertBookingCrm(
   const nameParts = payload.customerName.trim().split(/\s+/);
   const firstName = nameParts[0] || null;
   const lastName = nameParts.slice(1).join(' ') || null;
+  // Free bookings (consultation, aftercare planning) must not be filed as paid sessions.
+  const isFreeBooking = payload.bookingType === 'consultation' || payload.bookingType === 'aftercare-planning';
   const revenuePath = payload.bookingType === 'consultation'
     ? 'free_consultation'
+    : payload.bookingType === 'aftercare-planning'
+    ? 'aftercare_planning'
     : payload.bookingType === 'readiness-intensive'
     ? 'family_readiness_intensive'
     : 'crisis_coaching';
-  const leadScore = payload.bookingType === 'consultation' ? 50 : payload.bookingType === 'readiness-intensive' ? 95 : 70;
+  const leadScore = payload.bookingType === 'consultation' ? 50 : payload.bookingType === 'aftercare-planning' ? 60 : payload.bookingType === 'readiness-intensive' ? 95 : 70;
 
   try {
     const { error } = await upsertCrmContact(supabase, {
@@ -399,9 +403,11 @@ async function upsertBookingCrm(
       source_attribution: payload.sourceAttribution,
       lead_score: leadScore,
       revenue_path: revenuePath,
-      pipeline_status: payload.bookingType === 'consultation' ? 'consultation_booked' : 'paid_booking_started',
+      pipeline_status: isFreeBooking ? 'consultation_booked' : 'paid_booking_started',
       next_action: payload.bookingType === 'consultation'
         ? 'Review source, assessment status, and prepare for consultation'
+        : payload.bookingType === 'aftercare-planning'
+        ? 'Review treatment history and prepare aftercare planning session'
         : 'Confirm payment and prepare paid session',
       next_action_due_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
     });
@@ -434,7 +440,7 @@ async function queueConsultationPrep(
     sequence_step: 1,
     subject: `${firstName}, one thing before our consultation`,
     body_html: `
-      <p>Hi ${firstName},</p>
+      <p>Hi ${escapeHtml(firstName)},</p>
       <p>Before our consultation, please complete the family assessment if you have not already. It gives me the clearest picture of urgency, safety, treatment history, leverage, and family alignment before we talk.</p>
       <p><a href="${assessmentUrl}">Complete the family assessment</a></p>
       <p>If things escalate before our call, you can call me directly at <a href="tel:+14582988000">458-298-8000</a>.</p>
@@ -702,6 +708,11 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         const normalizedBookingType = isContractPaymentLink ? 'intervention-contract' : paymentBookingType === 'coaching' ? 'crisis-coaching' : paymentBookingType;
         if (!isContractPaymentLink && normalizedBookingType === 'intervention-contract') {
           throw new Error('Intervention contract payments must be created from a signed contract');
+        }
+        // The Readiness Intensive is paid through the signed-agreement contract flow
+        // (contracts create-payment-link); never sell it here without a signed agreement.
+        if (!isContractPaymentLink && normalizedBookingType === 'readiness-intensive') {
+          throw new Error('Readiness Intensive payments must be created from a signed agreement');
         }
         if (!isContractPaymentLink && (typeof amount !== 'number' || amount <= 0 || amount > 500000)) {
           throw new Error('Invalid payment amount');
@@ -1164,7 +1175,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
           });
         }
 
-        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, paymentId, amountCents, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion, discountCode, discountCents, contractMetadata, sourceAttribution } = params;
+        const { bookingType, customerName, customerEmail, customerPhone, bookingDate, bookingTime, durationMinutes, agreementAccepted, agreementSignerName, agreementSignedAt, agreementText, agreementVersion, discountCode, discountCents, contractMetadata, sourceAttribution } = params;
         const normalizedSourceAttribution = normalizeAttribution(sourceAttribution);
         const clientNotes = validateClientNotes(params.clientNotes);
 
@@ -1224,8 +1235,9 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
           booking_time: normalizeSlotTime(bookingTime),
           duration_minutes: resolveBookingDurationMinutes(normalizedBookingType, durationMinutes),
           status: 'confirmed',
-          payment_id: paymentId || null,
-          amount_cents: typeof amountCents === 'number' ? amountCents : null,
+          // create-booking only accepts free booking types; never trust client-sent payment data.
+          payment_id: null,
+          amount_cents: null,
           agreement_accepted: requiresAgreementStorage ? agreementAccepted === true : false,
           agreement_signer_name: requiresAgreementStorage ? sanitizeString(agreementSignerName) : null,
           agreement_signed_at: requiresAgreementStorage ? (typeof agreementSignedAt === 'string' ? agreementSignedAt : new Date().toISOString()) : null,
@@ -1480,7 +1492,8 @@ async function generateTimeSlots(
   // Intensive at 10:00 when 11:00 is booked).
   const hoursNeeded = Math.max(1, Math.ceil((opts.durationMinutes ?? 60) / 60));
   
-  for (let hour = startHour; hour < endHour; hour++) {
+  // The whole session must fit before the end of the available window.
+  for (let hour = startHour; hour + hoursNeeded <= endHour; hour++) {
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
     let overlaps = false;
     for (let i = 0; i < hoursNeeded; i++) {

@@ -86,3 +86,18 @@ verify_jwt = false
 
 [functions.log-followup-reply]
 verify_jwt = false
+
+# These authenticate the caller themselves (service-role / admin check). With
+# verify_jwt on, the gateway rejects non-JWT sb_secret_ keys (e.g. the Vault copy
+# pg_cron sends) before the function's own check can run.
+[functions.drain-spine-outbox]
+verify_jwt = false
+
+[functions.check-followups]
+verify_jwt = false
+
+[functions.sync-booking-to-notion]
+verify_jwt = false
+
+[functions.send-contract-notification]
+verify_jwt = false

@@ -385,10 +385,18 @@ serve(async (req) => {
 
     // Notion CRM + Telegram alert (previously a DB trigger). Best-effort: never fails the submission.
     try {
-      const { error: notionInvokeError } = await supabase.functions.invoke("assessment-to-notion", {
+      const { data: notionResult, error: notionInvokeError } = await supabase.functions.invoke("assessment-to-notion", {
         body: { record: data },
       });
       if (notionInvokeError) console.error("assessment-to-notion invoke failed:", notionInvokeError);
+      // assessment-to-notion always answers 200; surface a failed Telegram/Notion
+      // step (e.g. an expired bot token) instead of losing crisis alerts silently.
+      if (notionResult?.telegram && notionResult.telegram.success === false) {
+        console.error(`ALERT: assessment ${data.id} Telegram notification failed:`, notionResult.telegram.error);
+      }
+      if (notionResult?.notion && notionResult.notion.success === false) {
+        console.error(`assessment ${data.id} Notion sync failed:`, notionResult.notion.error);
+      }
     } catch (notionError) {
       console.error("assessment-to-notion invoke threw:", notionError);
     }

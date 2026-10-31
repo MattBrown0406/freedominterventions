@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isServiceOrAdmin } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,24 +13,6 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-async function isAdminRequest(req: Request, supabase: any) {
-  const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
-  if (!token) return false;
-
-  const { data: userData, error: userError } = await supabase.auth.getUser(token);
-  const userId = userData?.user?.id;
-  if (userError || !userId) return false;
-
-  const { data: role } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
-
-  return Boolean(role);
-}
-
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -41,9 +24,7 @@ serve(async (req: Request) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const expectedSecret = Deno.env.get("FOLLOWUP_AUTOMATION_SECRET");
-    const hasSecret = Boolean(expectedSecret) && req.headers.get("x-automation-secret") === expectedSecret;
-    if (!hasSecret && !(await isAdminRequest(req, supabase))) {
+    if (!(await isServiceOrAdmin(req, "FOLLOWUP_AUTOMATION_SECRET"))) {
       return json({ error: "Unauthorized" }, 401);
     }
 
@@ -72,7 +53,9 @@ serve(async (req: Request) => {
       const { data: latest, error: findError } = await supabase
         .from("freedom_followup_queue")
         .select("id")
-        .ilike("contact_email", email!)
+        // Case-insensitive exact match: escape LIKE wildcards (`_`, `%`) so
+        // a_b@x.com cannot match axb@x.com.
+        .ilike("contact_email", email!.replace(/[\\%_]/g, "\\$&"))
         .not("sent_at", "is", null)
         .order("sent_at", { ascending: false })
         .limit(1);

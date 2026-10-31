@@ -66,6 +66,8 @@ Deno.serve(async (req) => {
     const pageUrl = `${siteUrl}/blog/${post.slug}`;
     const escapedTitle = escapeHtml(post.title);
     const escapedExcerpt = escapeHtml(post.excerpt || "");
+    const escapedPageUrl = escapeHtml(pageUrl);
+    const escapedImageUrl = escapeHtml(imageUrl);
 
     // Detect social media / search crawlers.
     // IMPORTANT:
@@ -112,18 +114,18 @@ Deno.serve(async (req) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapedTitle} | Freedom Interventions</title>
   <meta name="description" content="${escapedExcerpt}">
-  <link rel="canonical" href="${pageUrl}">
+  <link rel="canonical" href="${escapedPageUrl}">
   
   <!-- Open Graph / Facebook Meta Tags -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="${pageUrl}">
+  <meta property="og:url" content="${escapedPageUrl}">
   <meta property="og:title" content="${escapedTitle}">
   <meta property="og:description" content="${escapedExcerpt}">
   <meta property="og:site_name" content="Freedom Interventions">
   <meta property="og:locale" content="en_US">
   ${imageUrl ? `
-  <meta property="og:image" content="${imageUrl}">
-  <meta property="og:image:secure_url" content="${imageUrl}">
+  <meta property="og:image" content="${escapedImageUrl}">
+  <meta property="og:image:secure_url" content="${escapedImageUrl}">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -133,10 +135,10 @@ Deno.serve(async (req) => {
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:domain" content="freedominterventions.com">
-  <meta name="twitter:url" content="${pageUrl}">
+  <meta name="twitter:url" content="${escapedPageUrl}">
   <meta name="twitter:title" content="${escapedTitle}">
   <meta name="twitter:description" content="${escapedExcerpt}">
-  ${imageUrl ? `<meta name="twitter:image" content="${imageUrl}">` : ""}
+  ${imageUrl ? `<meta name="twitter:image" content="${escapedImageUrl}">` : ""}
   
   <!-- LinkedIn specific -->
   <meta property="article:published_time" content="${new Date().toISOString()}">
@@ -166,8 +168,8 @@ Deno.serve(async (req) => {
 </head>
 <body>
   <div class="container">
-    <p>Redirecting to <a href="${pageUrl}">${escapedTitle}</a>...</p>
-    <p><small>If you are not redirected, <a href="${pageUrl}">click here</a>.</small></p>
+    <p>Redirecting to <a href="${escapedPageUrl}">${escapedTitle}</a>...</p>
+    <p><small>If you are not redirected, <a href="${escapedPageUrl}">click here</a>.</small></p>
   </div>
 </body>
 </html>`;

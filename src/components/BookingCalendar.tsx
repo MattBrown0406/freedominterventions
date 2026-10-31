@@ -233,6 +233,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const slotRequestRef = useRef(0);
   const [step, setStep] = useState<Step>("type");
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
   const [clientNotes, setClientNotes] = useState("");
@@ -282,7 +283,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       const savedContact = readCheckoutContact();
       if (savedContact) setCustomerInfo(savedContact);
       setLoading(true);
-      const verifyPayment = returnedType === 'fri-contract'
+      const invokeVerify = () => returnedType === 'fri-contract'
         ? supabase.functions.invoke('contracts', {
             body: {
               action: 'mark-paid',
@@ -295,10 +296,23 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
               bookingId: returnedBookingId,
             }
           });
+      // Square can take a few seconds to confirm a just-completed checkout (the
+      // server answers 402 until then). Both actions are idempotent, so retry with
+      // backoff instead of dropping a customer who already paid back on the picker.
+      const verifyPayment = (async () => {
+        const delaysMs = [2000, 4000, 6000];
+        let result = await invokeVerify();
+        for (const delay of delaysMs) {
+          if (!result.error) break;
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          result = await invokeVerify();
+        }
+        return result;
+      })();
 
       verifyPayment.then(async ({ data, error }) => {
         if (error) {
-          throw new Error(await getFunctionErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.'));
+          throw new Error(await getFunctionErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please do not pay again; contact Freedom Interventions and we will confirm it.'));
         }
         const confirmationDidFail = Boolean(data?.confirmationError);
         setConfirmationFailed(confirmationDidFail);
@@ -319,7 +333,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         clearQueryParams();
       }).catch((error) => {
         console.error('Failed to verify Square payment:', error);
-        toast.error(getErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please contact Freedom Interventions.'));
+        toast.error(getErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please do not pay again; contact Freedom Interventions and we will confirm it.'));
       }).finally(() => {
         setLoading(false);
       });
@@ -396,19 +410,25 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
 
   // sessionType lets the server hide start times whose full session length would overlap a booking.
   const fetchAvailableSlots = async (date: Date, sessionType: BookingType | null = bookingType) => {
+    // Ignore responses from an earlier date request that resolve after a newer one,
+    // so slots for date A are never shown under date B.
+    const requestId = ++slotRequestRef.current;
+    setAvailableSlots([]);
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('square-booking', {
         body: { action: 'get-available-slots', date: format(date, 'yyyy-MM-dd'), bookingType: sessionType ?? undefined }
       });
+      if (requestId !== slotRequestRef.current) return;
       if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to load available times'));
       const filteredSlots = filterSameDaySlots(data.slots || [], date);
       setAvailableSlots(filteredSlots);
     } catch (error: unknown) {
+      if (requestId !== slotRequestRef.current) return;
       console.error('Error fetching slots:', error);
       toast.error(getErrorMessage(error, 'Failed to load available times'));
     } finally {
-      setLoading(false);
+      if (requestId === slotRequestRef.current) setLoading(false);
     }
   };
 
@@ -461,6 +481,9 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
     if (!isPaid) {
       await bookFreeConsultation();
     } else {
+      // Disable "Continue to Payment" while capturing so double clicks don't burn
+      // the server's per-email cart-capture limit.
+      setLoading(true);
       try {
         // Captured server-side (the browser cannot insert into abandoned_carts directly).
         const { data: cartData, error: cartError } = await supabase.functions.invoke('square-booking', {
@@ -484,6 +507,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         });
       } catch (err) {
         console.warn('Cart capture failed:', err);
+      } finally {
+        setLoading(false);
       }
       setStep(bookingType === 'readiness-intensive' ? 'agreement' : 'payment');
     }

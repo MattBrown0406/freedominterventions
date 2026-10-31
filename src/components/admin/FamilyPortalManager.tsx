@@ -105,13 +105,38 @@ const emptyForm: CaseForm = {
     "This is where we will keep the current case status, next steps, and private updates for your family.",
 };
 
+// <input type="datetime-local"> works in the admin's local time without a
+// zone; the column is timestamptz. Convert both ways so the saved instant is
+// the one the admin picked (a bare "2026-11-05T00:00" would be stored as UTC).
+const toDatetimeLocal = (value: string | null | undefined) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
+const fromDatetimeLocal = (value: string) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+};
+
+const toCasePayload = (form: CaseForm) => ({
+  ...form,
+  next_step_due_at: fromDatetimeLocal(form.next_step_due_at),
+});
+
 export default function FamilyPortalManager() {
   const { toast } = useToast();
   const [cases, setCases] = useState<PortalCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Separate state for the edit card (selected case) and the create card, so a
+  // new family's case never starts pre-filled with another family's data.
   const [form, setForm] = useState<CaseForm>(emptyForm);
+  const [createForm, setCreateForm] = useState<CaseForm>(emptyForm);
   const [updateTitle, setUpdateTitle] = useState("");
   const [updateBody, setUpdateBody] = useState("");
 
@@ -145,9 +170,7 @@ export default function FamilyPortalManager() {
       status: selectedCase.status ?? "",
       phase: selectedCase.phase ?? "",
       next_step: selectedCase.next_step ?? "",
-      next_step_due_at: selectedCase.next_step_due_at
-        ? selectedCase.next_step_due_at.slice(0, 16)
-        : "",
+      next_step_due_at: toDatetimeLocal(selectedCase.next_step_due_at),
       summary: selectedCase.summary ?? "",
       risk_level: selectedCase.risk_level ?? "standard",
       initial_update_title: "",
@@ -188,7 +211,7 @@ export default function FamilyPortalManager() {
     try {
       const data = await invokePortal({
         action: "admin-create-case",
-        case: form,
+        case: toCasePayload(createForm),
         sendInvite: true,
       });
       const invite = data.invite as
@@ -200,7 +223,7 @@ export default function FamilyPortalManager() {
           ? "Invitation email sent to the family contact."
           : invite?.inviteError || "Case created. Invitation status unknown.",
       });
-      setForm(emptyForm);
+      setCreateForm(emptyForm);
       await loadCases();
     } catch (error) {
       toast({
@@ -221,7 +244,7 @@ export default function FamilyPortalManager() {
       await invokePortal({
         action: "admin-update-case",
         caseId: selectedCase.id,
-        case: form,
+        case: toCasePayload(form),
       });
       toast({
         title: "Case updated",
@@ -289,6 +312,8 @@ export default function FamilyPortalManager() {
 
   const updateField = (key: keyof CaseForm, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
+  const updateCreateField = (key: keyof CaseForm, value: string) =>
+    setCreateForm((prev) => ({ ...prev, [key]: value }));
 
   return (
     <div className="space-y-6">
@@ -341,57 +366,57 @@ export default function FamilyPortalManager() {
             <form onSubmit={createCase} className="space-y-3">
               <Field
                 label="Family name"
-                value={form.family_name}
-                onChange={(value) => updateField("family_name", value)}
+                value={createForm.family_name}
+                onChange={(value) => updateCreateField("family_name", value)}
                 required
               />
               <Field
                 label="Primary contact name"
-                value={form.primary_contact_name}
-                onChange={(value) => updateField("primary_contact_name", value)}
+                value={createForm.primary_contact_name}
+                onChange={(value) => updateCreateField("primary_contact_name", value)}
                 required
               />
               <Field
                 label="Primary contact email"
                 type="email"
-                value={form.primary_contact_email}
+                value={createForm.primary_contact_email}
                 onChange={(value) =>
-                  updateField("primary_contact_email", value)
+                  updateCreateField("primary_contact_email", value)
                 }
                 required
               />
               <Field
                 label="Primary contact phone"
-                value={form.primary_contact_phone}
+                value={createForm.primary_contact_phone}
                 onChange={(value) =>
-                  updateField("primary_contact_phone", value)
+                  updateCreateField("primary_contact_phone", value)
                 }
               />
               <Field
                 label="Loved one name"
-                value={form.loved_one_name}
-                onChange={(value) => updateField("loved_one_name", value)}
+                value={createForm.loved_one_name}
+                onChange={(value) => updateCreateField("loved_one_name", value)}
               />
               <Field
                 label="Phase"
-                value={form.phase}
-                onChange={(value) => updateField("phase", value)}
+                value={createForm.phase}
+                onChange={(value) => updateCreateField("phase", value)}
               />
               <Field
                 label="Status"
-                value={form.status}
-                onChange={(value) => updateField("status", value)}
+                value={createForm.status}
+                onChange={(value) => updateCreateField("status", value)}
               />
               <Field
                 label="Next step"
-                value={form.next_step}
-                onChange={(value) => updateField("next_step", value)}
+                value={createForm.next_step}
+                onChange={(value) => updateCreateField("next_step", value)}
               />
               <div className="space-y-2">
                 <Label>Case summary</Label>
                 <Textarea
-                  value={form.summary}
-                  onChange={(e) => updateField("summary", e.target.value)}
+                  value={createForm.summary}
+                  onChange={(e) => updateCreateField("summary", e.target.value)}
                   rows={4}
                 />
               </div>

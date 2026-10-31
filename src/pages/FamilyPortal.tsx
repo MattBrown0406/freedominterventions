@@ -312,6 +312,12 @@ export default function FamilyPortal() {
     setCases([]);
     setUpdates([]);
     setMessages([]);
+    // Don't leave the previous family's case, draft message or password for the
+    // next person on a shared device.
+    setMemberships([]);
+    setActiveCaseId(null);
+    setMessage("");
+    setPassword("");
   };
 
   const submitMessage = async (event: React.FormEvent) => {

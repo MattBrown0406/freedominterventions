@@ -2,19 +2,31 @@ import jsPDF from "jspdf";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 
+// jsPDF needs the real image format; uploads may be JPEG, PNG or WebP.
+const imageFormatFromDataUrl = (dataUrl: string): string => {
+  const mime = dataUrl.slice(5, dataUrl.indexOf(";")).toLowerCase();
+  if (mime === "image/png") return "PNG";
+  if (mime === "image/webp") return "WEBP";
+  return "JPEG";
+};
+
 // Helper to fetch image and convert to base64
 const fetchImageAsBase64 = async (url: string): Promise<string | null> => {
   try {
-    // Extract the file path from the full URL
-    const urlObj = new URL(url);
-    const pathMatch = urlObj.pathname.match(/\/storage\/v1\/object\/(?:public|sign)\/insurance-cards\/(.+)/);
-    
-    if (!pathMatch) {
-      console.error("Could not parse storage path from URL:", url);
-      return null;
+    // The assessment form stores a bare storage path (e.g. "uploads/<uuid>-front.jpg");
+    // older rows may hold a full storage URL. Accept both.
+    let filePath: string;
+    if (/^https?:\/\//i.test(url)) {
+      const urlObj = new URL(url);
+      const pathMatch = urlObj.pathname.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/insurance-cards\/(.+)/);
+      if (!pathMatch) {
+        console.error("Could not parse storage path from URL:", url);
+        return null;
+      }
+      filePath = decodeURIComponent(pathMatch[1]);
+    } else {
+      filePath = url.replace(/^\/+/, "").replace(/^insurance-cards\//, "");
     }
-    
-    const filePath = decodeURIComponent(pathMatch[1]);
     
     // Download the file from Supabase storage
     const { data, error } = await supabase.storage
@@ -26,6 +38,12 @@ const fetchImageAsBase64 = async (url: string): Promise<string | null> => {
       return null;
     }
     
+    // PDFs (an allowed upload type) can't be embedded as an image.
+    if (data.type === "application/pdf" || /\.pdf$/i.test(filePath)) {
+      console.warn("Insurance card is a PDF; it cannot be embedded as an image:", filePath);
+      return null;
+    }
+
     // Convert blob to base64
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -1027,7 +1045,7 @@ export const generateAssessmentPdf = async (assessment: Assessment): Promise<voi
           // Scale to fit page width while maintaining aspect ratio
           const imgWidth = contentWidth;
           const imgHeight = imgWidth * 0.63; // Approximate aspect ratio of insurance card
-          doc.addImage(frontBase64, 'JPEG', margin, yPos, imgWidth, imgHeight);
+          doc.addImage(frontBase64, imageFormatFromDataUrl(frontBase64), margin, yPos, imgWidth, imgHeight);
           yPos += imgHeight + 10;
         } catch (imgError) {
           console.error("Error adding front card image:", imgError);
@@ -1068,7 +1086,7 @@ export const generateAssessmentPdf = async (assessment: Assessment): Promise<voi
         try {
           const imgWidth = contentWidth;
           const imgHeight = imgWidth * 0.63;
-          doc.addImage(backBase64, 'JPEG', margin, yPos, imgWidth, imgHeight);
+          doc.addImage(backBase64, imageFormatFromDataUrl(backBase64), margin, yPos, imgWidth, imgHeight);
           yPos += imgHeight + 10;
         } catch (imgError) {
           console.error("Error adding back card image:", imgError);

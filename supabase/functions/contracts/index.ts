@@ -543,10 +543,34 @@ async function verifySquareOrderPaid(orderId: string, expectedAmountCents: numbe
   const amountMatches = typeof orderAmount === "number" && orderAmount === expectedAmountCents;
   const isComplete = order?.state === "COMPLETED";
 
-  return {
-    paid: Boolean(locationMatches && amountMatches && isComplete),
-    order,
-  };
+  if (locationMatches && amountMatches && isComplete) {
+    return { paid: true, order, paymentId: order?.tenders?.[0]?.payment_id ?? order?.tenders?.[0]?.id ?? null };
+  }
+
+  // Payment-link orders can stay OPEN even after the payment COMPLETED (same
+  // fallback as square-booking). Check the order's own payments: completed,
+  // full amount, not refunded, same location.
+  if (locationMatches && amountMatches && order?.state !== "CANCELED") {
+    for (const tender of order?.tenders ?? []) {
+      const paymentId = tender?.payment_id ?? tender?.id;
+      if (!paymentId) continue;
+      const res = await fetch(`${SQUARE_BASE_URL}/payments/${paymentId}`, {
+        headers: { Authorization: `Bearer ${SQUARE_ACCESS_TOKEN}`, "Square-Version": "2024-01-18" },
+      });
+      const pd = await res.json();
+      const p = pd?.payment;
+      if (
+        res.ok && p && p.status === "COMPLETED" && p.order_id === orderId &&
+        p.amount_money?.amount === expectedAmountCents &&
+        !(p.refunded_money?.amount > 0) &&
+        (!p.location_id || p.location_id === SQUARE_LOCATION_ID)
+      ) {
+        return { paid: true, order, paymentId: p.id as string };
+      }
+    }
+  }
+
+  return { paid: false, order, paymentId: null };
 }
 
 export const handler = async (req: Request, clientFactory = createClient): Promise<Response> => {
@@ -868,7 +892,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         }
 
         // Use Square's verified tender id, never a client-supplied payment id.
-        const verifiedPaymentId = verification.order?.tenders?.[0]?.payment_id || verification.order?.tenders?.[0]?.id || null;
+        const verifiedPaymentId = verification.paymentId;
 
         // Conditional flip: only the path that actually marks it paid (this or the
         // Square webhook) sends the paid notification + Spine event, exactly once.

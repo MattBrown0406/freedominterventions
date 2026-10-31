@@ -59,6 +59,9 @@ const InsuranceCardUpload = ({ frontUrl, backUrl, onUpload }: InsuranceCardUploa
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, side: 'front' | 'back') => {
     const file = e.target.files?.[0];
+    // Clear the input so choosing the same file again (after removing it or a
+    // failed upload) still fires onChange.
+    e.target.value = '';
     if (!file) return;
 
     // Validate file type

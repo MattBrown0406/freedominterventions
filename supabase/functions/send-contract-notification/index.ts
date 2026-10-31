@@ -119,12 +119,20 @@ serve(async (req) => {
       ${contractPdfSignedUrl ? `<p><a href="${escapeHtml(contractPdfSignedUrl)}">Open signed PDF</a></p>` : ""}
     `;
 
-    await sendEmail({
-      personalizations: [{ to: [{ email: ADMIN_EMAIL }] }],
-      from: { email: FROM_EMAIL, name: FROM_NAME },
-      subject: adminSubject,
-      content: [{ type: "text/html", value: adminHtml }],
-    });
+    // An admin-email failure must not stop the customer's receipt/PDF below;
+    // it is re-thrown after the customer email has been attempted.
+    let adminSendError: unknown = null;
+    try {
+      await sendEmail({
+        personalizations: [{ to: [{ email: ADMIN_EMAIL }] }],
+        from: { email: FROM_EMAIL, name: FROM_NAME },
+        subject: adminSubject,
+        content: [{ type: "text/html", value: adminHtml }],
+      });
+    } catch (err) {
+      adminSendError = err;
+      console.error("send-contract-notification: admin email failed:", err instanceof Error ? err.message : err);
+    }
 
     if (event === "paid") {
       let pdfAttachment: { content: string; filename: string; type: string; disposition: string } | undefined;
@@ -167,6 +175,8 @@ serve(async (req) => {
         attachments: pdfAttachment ? [pdfAttachment] : undefined,
       });
     }
+
+    if (adminSendError) throw adminSendError;
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

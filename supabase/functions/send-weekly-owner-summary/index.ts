@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isServiceOrAdmin } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -202,30 +203,10 @@ const sourceNextAction = (contact: ContactRow) => {
   return contact.next_action || "Call or text with a direct next step";
 };
 
-async function isAdminRequest(req: Request, supabase: SupabaseClient) {
-  const authHeader = req.headers.get("authorization") || "";
-  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
-  if (!token) return false;
-
-  const { data: userData, error: userError } = await supabase.auth.getUser(token);
-  const userId = userData?.user?.id;
-  if (userError || !userId) return false;
-
-  const { data: role } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
-
-  return Boolean(role);
-}
-
-async function requireAuthorized(req: Request, supabase: SupabaseClient) {
-  const expectedSecret = Deno.env.get("FOLLOWUP_AUTOMATION_SECRET");
-  const providedSecret = req.headers.get("x-automation-secret");
-  if (expectedSecret && providedSecret === expectedSecret) return true;
-  return isAdminRequest(req, supabase);
+// Service role, the automation secret (timing-safe), or a strict admin — the
+// same gate the other admin-only functions use.
+async function requireAuthorized(req: Request, _supabase: SupabaseClient) {
+  return isServiceOrAdmin(req, "FOLLOWUP_AUTOMATION_SECRET");
 }
 
 async function queryRows<T>(

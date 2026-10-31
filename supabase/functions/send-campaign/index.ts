@@ -128,21 +128,42 @@ Deno.serve(async (req) => {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testEmail)) return json({ error: "Test email is invalid" }, 400);
       recipients = [{ id: "test", email: testEmail, first_name: null, last_name: null, unsubscribe_token: "preview-token" }];
     } else {
-      let query = admin
-        .from("crm_contacts")
-        .select("id, email, first_name, last_name, unsubscribe_token, source, created_at")
-        .eq("unsubscribed", false);
-      if (source !== "all") query = query.eq("source", source);
-      if (sinceDays > 0) query = query.gte("created_at", new Date(Date.now() - sinceDays * 86400000).toISOString());
-      const { data, error } = await query;
-      if (error) return json({ error: "Failed to load recipients", detail: error.message }, 500);
-      recipients = (data || []) as typeof recipients;
+      // Build a fresh query per page (PostgREST builders mutate in place).
+      const buildQuery = () => {
+        let query = admin
+          .from("crm_contacts")
+          .select("id, email, first_name, last_name, unsubscribe_token, source, created_at")
+          .eq("unsubscribed", false);
+        if (source !== "all") query = query.eq("source", source);
+        if (sinceDays > 0) query = query.gte("created_at", new Date(Date.now() - sinceDays * 86400000).toISOString());
+        return query;
+      };
+      // PostgREST caps a response at 1000 rows: page through so large audiences aren't silently truncated.
+      const PAGE = 1000;
+      for (let from = 0; ; from += PAGE) {
+        const { data, error } = await buildQuery().order("id", { ascending: true }).range(from, from + PAGE - 1);
+        if (error) return json({ error: "Failed to load recipients", detail: error.message }, 500);
+        recipients.push(...((data || []) as typeof recipients));
+        if (!data || data.length < PAGE) break;
+      }
     }
 
     if (recipients.length === 0) return json({ error: "No recipients matched" }, 400);
 
     let campaignId: string | null = null;
     if (!testEmail) {
+      // A retry after a timeout must not re-send to everyone while the first run is still going.
+      const { data: inFlight, error: inFlightError } = await admin
+        .from("email_campaigns")
+        .select("id")
+        .eq("status", "sending")
+        .gte("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString())
+        .limit(1);
+      if (inFlightError) return json({ error: "Failed to check for in-progress campaigns", detail: inFlightError.message }, 500);
+      if (inFlight?.length) {
+        return json({ error: "Another campaign is still sending. Check Campaign History before sending again." }, 409);
+      }
+
       const { data, error } = await admin
         .from("email_campaigns")
         .insert({
@@ -166,7 +187,7 @@ Deno.serve(async (req) => {
     let failed = 0;
     const errors: string[] = [];
 
-    for (const recipient of recipients) {
+    const sendOne = async (recipient: (typeof recipients)[number]) => {
       const unsubscribeUrl = recipient.id === "test"
         ? `${SITE}/unsubscribe?token=preview-token`
         : `${SITE}/unsubscribe?token=${encodeURIComponent(recipient.unsubscribe_token)}`;
@@ -235,7 +256,12 @@ Deno.serve(async (req) => {
           if (sendLogError) console.error("Failed to log campaign failure:", sendLogError.message);
         }
       }
-      await new Promise((resolve) => setTimeout(resolve, 50));
+    };
+
+    // Small parallel batches keep large audiences inside the edge-function time limit.
+    const CONCURRENCY = 5;
+    for (let i = 0; i < recipients.length; i += CONCURRENCY) {
+      await Promise.all(recipients.slice(i, i + CONCURRENCY).map(sendOne));
     }
 
     if (campaignId) {

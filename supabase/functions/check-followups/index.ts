@@ -21,18 +21,21 @@ interface OverdueContact {
   status?: string;
 }
 
+// Follow-up dates are business (Pacific) calendar dates; compute "today" there,
+// not in UTC, so evening runs don't report tomorrow's follow-ups as due.
+function pacificToday(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles' }).format(new Date());
+}
+
 function calculateDaysOverdue(followUpDateStr: string): number {
-  const followUpDate = new Date(followUpDateStr);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  followUpDate.setHours(0, 0, 0, 0);
-  
-  const diffTime = today.getTime() - followUpDate.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // Compare calendar dates only (YYYY-MM-DD), both anchored at UTC midnight.
+  const followUpDay = Date.parse(`${followUpDateStr.slice(0, 10)}T00:00:00Z`);
+  const today = Date.parse(`${pacificToday()}T00:00:00Z`);
+  return Math.round((today - followUpDay) / (1000 * 60 * 60 * 24));
 }
 
 async function checkOverdueFollowUps(): Promise<OverdueContact[]> {
-  const today = new Date().toISOString().split('T')[0];
+  const today = pacificToday();
   
   const response = await fetch(`https://api.notion.com/v1/databases/${CRM_DB_ID}/query`, {
     method: 'POST',

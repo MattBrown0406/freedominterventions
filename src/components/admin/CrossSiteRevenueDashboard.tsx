@@ -37,6 +37,7 @@ interface BookingRow {
   status: string;
   amount_cents: number | null;
   source_attribution: Json;
+  contract_metadata?: Json | null;
   created_at: string;
 }
 
@@ -410,7 +411,7 @@ const CrossSiteRevenueDashboard = () => {
     const [contactsResult, assessmentsResult, bookingsResult, contractsResult, callsResult] = await Promise.all([
       supabase.from("crm_contacts").select("id,source,source_attribution,lead_score,revenue_path,pipeline_status,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
       supabase.from("assessments").select("id,source_attribution,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
-      supabase.from("bookings").select("id,booking_type,status,amount_cents,source_attribution,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
+      supabase.from("bookings").select("id,booking_type,status,amount_cents,source_attribution,contract_metadata,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
       supabase.from("contracts").select("id,status,amount_cents,source_attribution,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
       supabase.from("call_analytics").select("id,source_attribution,phone_number,page_path,created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(1000),
     ]);
@@ -534,9 +535,13 @@ const CrossSiteRevenueDashboard = () => {
 
     bookings.forEach((booking) => {
       const stats = get(sourceKey(booking.source_attribution, "booking"));
+      // A booking created from a paid contract (Readiness Intensive) is already
+      // counted via that contract below; free bookings are not paid conversions.
+      const meta = booking.contract_metadata;
+      const fromContract = Boolean(meta && typeof meta === "object" && !Array.isArray(meta) && (meta as Record<string, Json>).contract_id);
       if (booking.booking_type === "consultation") {
         stats.consultations += 1;
-      } else if (booking.status === "confirmed") {
+      } else if (booking.status === "confirmed" && !fromContract && (booking.amount_cents || 0) > 0) {
         stats.paidConversions += 1;
         stats.revenueCents += booking.amount_cents || 0;
       }

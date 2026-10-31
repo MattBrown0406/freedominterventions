@@ -213,6 +213,8 @@ serve(async (req) => {
             ? "Call this self-assessment lead today"
             : "Review self-assessment and invite to consultation or coaching",
         next_action_due_at: new Date(Date.now() + (leadScore >= 70 ? 30 : 240) * 60 * 1000).toISOString(),
+        // Lets a safety flag override an existing contact's hand-set next action.
+        urgent: safetyFlag || resultCategory === "urgent",
       });
       if (crmError) console.error("CRM upsert failed (self_assessment):", crmError);
     } catch (crmError) {
