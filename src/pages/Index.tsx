@@ -9,7 +9,6 @@ import Services from "@/components/Services";
 import SignsSection from "@/components/SignsSection";
 import TestimonialHighlight from "@/components/TestimonialHighlight";
 import ProcessOverview from "@/components/ProcessOverview";
-import UrgencyStats from "@/components/UrgencyStats";
 import SocialProof from "@/components/SocialProof";
 import ResourceBanner from "@/components/ResourceBanner";
 import ToolkitBanner from "@/components/ToolkitBanner";
@@ -18,12 +17,10 @@ import WorkWithMatt from "@/components/WorkWithMatt";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-import ClosePathProof from "@/components/ClosePathProof";
 import RevenuePathTriage from "@/components/RevenuePathTriage";
 import SEOHead from "@/components/SEOHead";
 import { FAQSchema, OrganizationSchema, SpeakableSchema } from "@/components/StructuredData";
 import LeadMagnetPopup from "@/components/LeadMagnetPopup";
-import LeadMagnetBanner from "@/components/LeadMagnetBanner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Award, Globe, HeartHandshake, ShieldCheck, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -89,16 +86,8 @@ const Index = () => {
       <Navbar dark />
       <main>
         <Hero />
-        <section className="py-12 md:py-16 bg-card border-y border-border/50">
-          <div className="container px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">Matt's Philosophy</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Addiction is a medical illness with a spiritual solution. It requires clinical treatment and meaningful change in purpose, connection, and how a person lives. Families do best when they stop waiting for the perfect moment and start dealing with the truth in front of them.
-              </p>
-            </div>
-          </div>
-        </section>
+        <EmpathySection />
+        <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
         <section className="py-16 md:py-24 bg-muted/30 border-y border-border/50">
           <div className="container px-6">
             <div className="max-w-6xl mx-auto space-y-10">
@@ -150,23 +139,29 @@ const Index = () => {
             </div>
           </div>
         </section>
-        <EmpathySection />
-        <VideoSection />
-        <Services />
-        <SignsSection />
-        <SocialProof />
-        <LeadMagnetBanner />
         <ProcessOverview />
-        <UrgencyStats />
-        <ResourceBanner />
-        <FamilySupportResources className="bg-muted/20 border-y border-border/50" />
-        <ToolkitBanner />
-        <About />
-        <WorkWithMatt />
-        <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
-        <ClosePathProof source="homepage" />
+        <Services />
+        {/* Booking sits early in the page: most families who are ready shouldn't have to scroll past 18 sections. */}
         <TestimonialStrip heading="What families say about working with Matt" authors={FAMILY_TESTIMONIAL_AUTHORS} />
         <BookingCalendar />
+        <SignsSection />
+        <SocialProof />
+        <VideoSection />
+        <section className="py-12 md:py-16 bg-card border-y border-border/50">
+          <div className="container px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">Matt's Philosophy</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Addiction is a medical illness with a spiritual solution. It requires clinical treatment and meaningful change in purpose, connection, and how a person lives. Families do best when they stop waiting for the perfect moment and start dealing with the truth in front of them.
+              </p>
+            </div>
+          </div>
+        </section>
+        <About />
+        <WorkWithMatt />
+        <FamilySupportResources className="bg-muted/20 border-y border-border/50" />
+        <ResourceBanner />
+        <ToolkitBanner />
         <section className="py-16 md:py-24 bg-muted/20">
           <div className="container px-6">
             <div className="max-w-4xl mx-auto">
