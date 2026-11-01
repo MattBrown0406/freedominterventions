@@ -55,10 +55,8 @@ const BookInterventionConsultation = () => {
         keywords="book intervention consultation, addiction intervention consultation, talk to interventionist, family intervention help"
       />
       <Navbar />
-      {/* Offset exactly the fixed navbar (h-16; md: h-20 + support bar) so the
-          breadcrumb is visible and there's no empty band above the page. */}
-      <main className="pt-16 md:pt-28">
-        <BreadcrumbNav items={breadcrumbItems} />
+      <BreadcrumbNav items={breadcrumbItems} />
+      <main>
         <section className="border-b border-border/50 bg-primary/5 py-16 md:py-24">
           <div className="container px-6">
             <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">

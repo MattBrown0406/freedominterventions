@@ -39,7 +39,7 @@ const SeattleWashington = () => {
       ]} />
       
       {/* Hero Banner */}
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
         <img 
           src={seattleBanner} 
           alt="Seattle skyline with Space Needle and Puget Sound at sunrise" 

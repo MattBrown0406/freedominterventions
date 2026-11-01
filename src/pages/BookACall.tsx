@@ -55,10 +55,8 @@ const BookACall = () => {
         keywords="book intervention call, free addiction consultation, crisis coaching session, family readiness intensive"
       />
       <Navbar />
-      {/* Offset exactly the fixed navbar (h-16; md: h-20 + support bar) so the
-          breadcrumb is visible and there's no empty band above the page. */}
-      <main className="pt-16 md:pt-28">
-        <BreadcrumbNav items={breadcrumbItems} />
+      <BreadcrumbNav items={breadcrumbItems} />
+      <main>
         <section className="border-b border-border/50 bg-primary/5 py-10 md:py-20">
           <div className="container px-6">
             <div className="mx-auto max-w-4xl text-center">

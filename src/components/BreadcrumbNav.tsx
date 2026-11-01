@@ -12,11 +12,14 @@ interface BreadcrumbNavProps {
 
 const BreadcrumbNav = ({ items }: BreadcrumbNavProps) => {
   return (
+    // The site navbar is fixed (h-16 on mobile; h-20 plus the 33px support bar
+    // from md up), so the breadcrumb clears it itself. Pages place their first
+    // section directly after this bar without their own navbar offset.
     <nav 
       aria-label="Breadcrumb" 
-      className="bg-muted/50 border-b border-border"
+      className="mt-16 md:mt-[113px] bg-muted/50 border-b border-border"
     >
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-1">
         <ol className="flex items-center flex-wrap gap-1 text-sm">
           <li className="flex items-center">
             <Link 

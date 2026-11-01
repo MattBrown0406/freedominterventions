@@ -39,7 +39,7 @@ const LosAngelesCalifornia = () => {
       ]} />
       
       {/* Hero Banner */}
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
         <img 
           src={losAngelesBanner} 
           alt="Los Angeles skyline with palm trees silhouetted against golden sunset" 

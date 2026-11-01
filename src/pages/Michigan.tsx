@@ -34,7 +34,7 @@ const Michigan = () => {
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
       
-      <section className="pt-28 md:pt-32 py-16 bg-gradient-to-b from-primary/10 to-background">
+      <section className="pt-10 md:pt-12 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <span className="inline-block px-4 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium mb-4">

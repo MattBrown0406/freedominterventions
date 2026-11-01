@@ -100,7 +100,7 @@ const NewMexico = () => {
         ]}
       />
 
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[50vh] py-16 flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${newMexicoBanner})` }}

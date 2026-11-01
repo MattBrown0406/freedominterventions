@@ -122,7 +122,7 @@ const Hawaii = () => {
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
 
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background pt-20 md:pt-24 pb-16">
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background pt-10 md:pt-12 pb-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_55%)]" />
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">

@@ -104,7 +104,7 @@ const PrinceEdwardIsland = () => {
         ]}
       />
 
-      <section className="pt-20 pb-16 bg-gradient-to-b from-primary/10 to-background">
+      <section className="pt-10 pb-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-primary uppercase tracking-[0.2em] text-sm md:text-base mb-4">

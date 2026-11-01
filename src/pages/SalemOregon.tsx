@@ -34,7 +34,7 @@ const SalemOregon = () => {
       <BreadcrumbNav items={breadcrumbItems} />
 
       {/* Hero Banner */}
-      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden mt-28 md:mt-32">
+      <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
         <img
           src={cityBanner}
           alt="Salem Oregon state capitol and Willamette Valley landscape"

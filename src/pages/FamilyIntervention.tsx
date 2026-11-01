@@ -290,7 +290,7 @@ const FamilyIntervention = () => {
       <BreadcrumbNav items={breadcrumbItems} />
 
       {/* Hero Banner */}
-      <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden mt-28 md:mt-32">
+      <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden">
         <img
           src={oregonCrisisBanner}
           alt="Family seeking addiction intervention help — Freedom Interventions"

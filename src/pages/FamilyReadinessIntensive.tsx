@@ -44,7 +44,7 @@ const FamilyReadinessIntensive = () => {
       <BreadcrumbNav items={breadcrumbItems} />
 
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-20">
+      <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 pt-10 pb-20">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-6">
             Premium Offering

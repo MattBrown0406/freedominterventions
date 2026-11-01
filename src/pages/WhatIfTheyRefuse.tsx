@@ -46,7 +46,7 @@ const WhatIfTheyRefuse = () => {
       />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
-      <main className="pt-20 md:pt-24">
+      <main className="">
         <section className="py-16 md:py-24 bg-primary/5 border-b border-border/50">
           <div className="container px-6 max-w-4xl mx-auto text-center">
             <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">What If They Refuse Treatment?</h1>
