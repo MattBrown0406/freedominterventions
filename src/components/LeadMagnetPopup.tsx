@@ -67,7 +67,6 @@ const LeadMagnetPopup = () => {
       document.removeEventListener("keydown", onKeyDown);
       previouslyFocused?.focus?.();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible, isMobile]);
 
   const handleClose = () => {
