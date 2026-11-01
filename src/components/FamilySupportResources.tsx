@@ -13,6 +13,13 @@ type Resource = {
 // to call anyone yet, this builds trust and gives them somewhere to start.
 const resources: Resource[] = [
   {
+    name: "The Family Squares (free, weekly)",
+    description: "Matt's free Zoom support meeting for families, Mondays at 7:00 PM Pacific. No need to speak; many families just listen with cameras off.",
+    href: "https://soberhelpline.com/monday-zoom-registration",
+    linkLabel: "Register for Monday's meeting",
+    external: true,
+  },
+  {
     name: "Al-Anon Family Groups",
     description: "Free peer support meetings, in person and online, for families and friends of someone who drinks.",
     href: "https://al-anon.org",
