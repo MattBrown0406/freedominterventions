@@ -109,6 +109,7 @@ const PUBLIC_STATIC_PATHS = new Set([
   '/columbus-ohio',
   '/connecticut',
   '/contact',
+  '/es',
   '/corvallis-oregon',
   '/crisis-support',
   '/dallas-texas',

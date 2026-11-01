@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Clock, Languages } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,10 @@ const ResponsePromise = ({ variant = "inline", showSpanish = true, className }: 
           <Languages className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
           <span>
             <strong className="font-semibold text-foreground">Se habla español.</strong>{" "}
-            <span lang="en">Matt speaks fluent Spanish and can work with your family in Spanish.</span>
+            <span lang="en">Matt speaks fluent Spanish and can work with your family in Spanish.</span>{" "}
+            <Link to="/es" hrefLang="es" className="font-medium text-primary underline underline-offset-2">
+              Información en español
+            </Link>
           </span>
         </p>
       )}

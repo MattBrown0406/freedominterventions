@@ -57,7 +57,7 @@ const Footer = () => {
               </p>
               <p className="text-sm text-muted-foreground" lang="es">
                 <strong className="font-semibold text-foreground">Se habla español.</strong>{" "}
-                <span lang="en">Help is available in Spanish.</span>
+                <Link to="/es" hrefLang="es" className="text-primary hover:underline">Información en español</Link>
               </p>
             </div>
             <div className="pt-4">

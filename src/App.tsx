@@ -59,6 +59,7 @@ const AfterConsultation = lazy(() => import("./pages/AfterConsultation"));
 const InterventionAnswers = lazy(() => import("./pages/InterventionAnswers"));
 const InterventionAnswerDetail = lazy(() => import("./pages/InterventionAnswerDetail"));
 const WhichHelpDoWeNeed = lazy(() => import("./pages/WhichHelpDoWeNeed"));
+const SpanishPage = lazy(() => import("./pages/Spanish"));
 const Alabama = lazy(() => import("./pages/Alabama"));
 const Alaska = lazy(() => import("./pages/Alaska"));
 const Arizona = lazy(() => import("./pages/Arizona"));
@@ -297,6 +298,7 @@ const routeElements = (
     />
     <Route path="/testimonials" element={<Testimonials />} />
     <Route path="/contact" element={<Contact />} />
+    <Route path="/es" element={<SpanishPage />} />
     <Route
       path="/from-sober-helpline"
       element={<FromSoberHelpline />}

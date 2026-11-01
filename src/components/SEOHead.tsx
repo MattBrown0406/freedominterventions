@@ -20,6 +20,8 @@ interface SEOHeadProps {
   twitterCreator?: string;
   section?: string;
   aiDescription?: string;
+  /** Page language; drives <html lang> and og:locale. Defaults to English. */
+  lang?: "en" | "es";
 }
 
 const BASE_URL = "https://freedominterventions.com";
@@ -55,6 +57,7 @@ const SEOHead = ({
   twitterCreator = "@freedominterventions",
   section,
   aiDescription,
+  lang = "en",
 }: SEOHeadProps) => {
   const location = useLocation();
   
@@ -81,7 +84,7 @@ const SEOHead = ({
   const ogImageAlt = imageAlt || `${title} - Freedom Interventions addiction intervention services`;
 
   return (
-    <Helmet>
+    <Helmet htmlAttributes={{ lang }}>
       <title>{fullTitle}</title>
       <meta name="title" content={fullTitle} />
       <meta name="description" content={truncatedDescription} />
@@ -105,7 +108,11 @@ const SEOHead = ({
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:url" content={resolvedCanonical} />
       <meta property="og:site_name" content="Freedom Interventions" />
-      <meta property="og:locale" content="en_US" />
+      <meta property="og:locale" content={lang === "es" ? "es_US" : "en_US"} />
+      {/* English home page and Spanish page are alternates of each other. */}
+      {(normalizedPath === "" || normalizedPath === "/es") && <link rel="alternate" hrefLang="en" href={`${BASE_URL}/`} />}
+      {(normalizedPath === "" || normalizedPath === "/es") && <link rel="alternate" hrefLang="es" href={`${BASE_URL}/es`} />}
+      {(normalizedPath === "" || normalizedPath === "/es") && <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}/`} />}
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       {section && <meta property="article:section" content={section} />}

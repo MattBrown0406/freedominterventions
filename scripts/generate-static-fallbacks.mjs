@@ -154,6 +154,13 @@ const staticMetadata = {
     heading: "Contact Freedom Interventions",
     body: "Talk directly with Matt Brown about what is happening in your family and what next step makes sense.",
   },
+  "/es": {
+    title: "Intervención familiar para adicciones, en español | Freedom Interventions",
+    description:
+      "Matt Brown habla español con fluidez y ayuda a familias a enfrentar la adicción de un ser querido con un plan claro. Llame al (458) 298-8011.",
+    heading: "Si la adicción está afectando a su familia, no tiene que enfrentarlo solo",
+    body: "Matt Brown es intervencionista profesional con más de 20 años de experiencia y habla español con fluidez. Línea en español: (458) 298-8011.",
+  },
   "/interventionist": {
     title: "Oregon Interventionist Matt Brown | Freedom Interventions",
     description:
@@ -425,6 +432,7 @@ const main = async () => {
         : template, route, metadata),
       metadata,
     ));
+    if (route === "/es") html = html.replace('<html lang="en">', '<html lang="es">');
     if (route === FULL_GUIDE_ROUTE) html = installFullGuide(html, fullGuide);
     if (route === SERVICE_AREAS_ROUTE) html = installServiceAreas(html, serviceAreas);
     const destinations = outputPaths(route);

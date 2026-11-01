@@ -87,7 +87,7 @@ const Hero = () => {
 
           <div className="fi-hero-microcopy">
             <ShieldCheck aria-hidden="true" />
-            <span>Private, judgment-free guidance · Matt replies within 4 hours · <span lang="es">Se habla español</span> · Nationwide and international support</span>
+            <span>Private, judgment-free guidance · Matt replies within 4 hours · <a href="/es" lang="es" hrefLang="es" className="underline underline-offset-2">Se habla español</a> · Nationwide and international support</span>
           </div>
         </div>
 
