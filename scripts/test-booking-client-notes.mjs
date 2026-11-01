@@ -22,6 +22,7 @@ function harness() {
   const tables = { booking_maintenance_control: [{ id: true, enabled: false }], bookings: [], contracts: [], availability_settings: Array.from({ length: 7 }, (_, day_of_week) => ({ day_of_week, start_time: '08:00', end_time: '18:00', is_available: true })) };
   const emails = [], outbound = [], analytics = [], logs = [], handlers = {}, modules = new Map();
   let sequence = 0, failClientEmail = false;
+  const alertKeys = new Set();
   const value = (row, key) => key.includes('->>') ? row[key.split('->>')[0]]?.[key.split('->>')[1]] : row[key];
   class Query {
     constructor(table) { this.table = table; this.filters = []; this.columns = '*'; this.mode = 'read'; }
@@ -67,6 +68,7 @@ function harness() {
     if (String(url).includes('/payment-links')) return Response.json({ payment_link: { id: 'fixture-link', order_id: 'fixture-order', url: 'https://square.invalid/checkout' } });
     if (String(url).includes('/orders/')) return Response.json({ order: { location_id: 'fixture-only', state: 'COMPLETED', total_money: { amount: 15000, currency: 'USD' }, tenders: [{ payment_id: 'fixture-payment' }] } });
     if (String(url).includes('/functions/v1/')) return Response.json({ success: true });
+    if (String(url).includes('api.telegram.org')) return Response.json({ ok: true });
     throw new Error(`Unexpected network attempt blocked: ${url}`);
   }
   function load(path) {
@@ -77,7 +79,8 @@ function harness() {
       if (spec.includes('supabase-js')) return { createClient: () => supabase };
       if (spec.startsWith('https:')) return {};
       if (spec.endsWith('/auth.ts')) return { isServiceRoleRequest: async () => true, unauthorized: () => new Response(null, { status: 401 }) };
-      if (spec.endsWith('/rateLimit.ts')) return { checkRateLimit: async () => true, getClientIp: () => 'fixture' };
+      // Owner alerts dedupe through the rate limiter: allow each owner-alert key once.
+      if (spec.endsWith('/rateLimit.ts')) return { checkRateLimit: async (_client, key) => !String(key).startsWith('owner-alert:') || (alertKeys.has(key) ? false : (alertKeys.add(key), true)), getClientIp: () => 'fixture' };
       if (spec.endsWith('/spine.ts')) return { enqueueSpineEvent: async (...args) => analytics.push(args.slice(0, 2)), extractUtm: () => ({}) };
       if (spec.endsWith('/crm.ts')) return { upsertCrmContact: async (...args) => { analytics.push(args[1]); return { data: { id: 'crm' }, error: null }; } };
       const target = resolve(root, dirname(path), spec).slice(root.length + 1);
@@ -229,5 +232,34 @@ for (const type of ['crisis-coaching', 'readiness-intensive']) await test(`${typ
   assert.equal(h.emails.length, count);
   assert.equal(h.tables.bookings.length, 1);
   assert.equal(h.tables.bookings[0].client_notes, sample);
+});
+const ownerAlerts = h => h.emails.filter(e => String(e.subject).startsWith('[Action needed]'));
+const webhookEvent = (orderId, amount) => ({ data: { object: { payment: { id: `pay-${orderId}`, order_id: orderId, status: 'COMPLETED', amount_money: { amount } } } } });
+await test('owner alert: unmatched website-price payment alerts once (Telegram + email), retries deduped', async () => {
+  const h = harness();
+  const first = await h.call('square-webhook', webhookEvent('orphan-order', 15000));
+  assert.equal(first.status, 200, JSON.stringify(first.body));
+  assert.equal(ownerAlerts(h).length, 1);
+  assert.match(ownerAlerts(h)[0].subject, /isn't linked to any website booking/);
+  assert.equal(ownerAlerts(h)[0].to, 'matt@freedominterventions.com');
+  assert.ok(h.outbound.some(o => o.url.includes('api.telegram.org') && o.body.includes('orphan-order')));
+  await h.call('square-webhook', webhookEvent('orphan-order', 15000));
+  assert.equal(ownerAlerts(h).length, 1, 'Square retry must not repeat the alert: ' + ownerAlerts(h).map(e => e.subject).join(' / '));
+});
+await test('owner alert: unmatched non-website amounts (invoices, in-person) do not alert', async () => {
+  const h = harness();
+  const result = await h.call('square-webhook', webhookEvent('invoice-order', 123456));
+  assert.equal(result.status, 200);
+  assert.equal(ownerAlerts(h).length, 0);
+});
+await test('owner alert: paid booking with matched order but wrong amount alerts', async () => {
+  const h = harness();
+  await h.call('square-booking', input('create-checkout-link', sample, 'crisis-coaching'));
+  const result = await h.call('square-webhook', webhookEvent('fixture-order', 999));
+  assert.equal(result.status, 200);
+  assert.equal(h.tables.bookings[0].status, 'pending', 'wrong amount must not confirm the booking');
+  assert.equal(ownerAlerts(h).length, 1);
+  assert.match(ownerAlerts(h)[0].subject, /didn't match its booking/);
+  assert.ok(!JSON.stringify(ownerAlerts(h)[0]).includes('Private background'), 'alerts never include client notes');
 });
 console.log(`${passed} booking client-notes handler tests passed (synthetic IO; no live services).`);

@@ -8,6 +8,7 @@ import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 import { upsertCrmContact } from "../_shared/crm.ts";
 import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
+import { sendOwnerAlert } from "../_shared/ownerAlert.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -834,6 +835,20 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
 
         const requiresAgreementStorage = normalizedBookingType === 'readiness-intensive' || normalizedBookingType === 'intervention-contract';
 
+        // A family who just tried to pay saw an error: tell Matt so he can reach them.
+        const alertCheckoutFailure = (reason: string) => sendOwnerAlert(supabase, {
+          key: `checkout-fail:${sanitizedEmail}:${normalizedBookingType}`,
+          subject: "A family tried to pay online but checkout failed",
+          details: {
+            Session: normalizedBookingType,
+            Name: sanitizedName,
+            Email: sanitizedEmail,
+            Phone: sanitizedPhone,
+            "Requested time": `${bookingDate} ${bookingTime} (Pacific)`,
+            Reason: reason,
+          },
+          action: "They saw an error at checkout. Call or email them to help them book.",
+        });
         const bookingPayload = {
           booking_type: normalizedBookingType,
           customer_name: sanitizedName,
@@ -931,12 +946,14 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         } catch (squareError) {
           console.error('Square checkout link request failed:', booking.id, squareError);
           await releasePendingHold();
+          await alertCheckoutFailure('Square payment-link request failed');
           throw new Error('Failed to create Square Checkout link');
         }
 
         if (checkoutData?.errors) {
           console.error('Square checkout link error:', checkoutData.errors);
           await releasePendingHold();
+          await alertCheckoutFailure(`Square error: ${checkoutData.errors[0]?.detail ?? 'unknown'}`);
           throw new Error(checkoutData.errors[0]?.detail || 'Failed to create Square Checkout link');
         }
 
@@ -958,6 +975,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         if (trackError || !trackedBooking || trackedBooking.length === 0) {
           console.error('Failed to store Square order id on booking:', booking.id, trackError);
           await releasePendingHold();
+          await alertCheckoutFailure('Payment link created but could not be saved on the booking');
           throw new Error(CHECKOUT_TRACKING_ERROR);
         }
 

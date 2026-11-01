@@ -8,6 +8,7 @@ import { isServiceRoleRequest, unauthorized } from "../_shared/auth.ts";
 import { upsertCrmContact } from "../_shared/crm.ts";
 import { checkRateLimit, getClientIp } from "../_shared/rateLimit.ts";
 import { escapeHtml, sendSystemEmail } from "../_shared/resend.ts";
+import { sendOwnerAlert } from "../_shared/ownerAlert.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -410,7 +411,21 @@ async function fulfillPaidContract(
     const { error: notifyError } = await supabase.functions.invoke("send-contract-notification", {
       body: { contractId, event: "paid" },
     });
-    if (notifyError) console.error("Failed to send paid contract notification:", contractId, notifyError);
+    if (notifyError) {
+      console.error("Failed to send paid contract notification:", contractId, notifyError);
+      await sendOwnerAlert(supabase, {
+        key: `contract-paid-notice:${contractId}`,
+        subject: "Paid contract: receipt / signed PDF email may not have gone out",
+        details: {
+          Contract: contractId,
+          Type: contract.contract_type,
+          Client: contract.client_name,
+          Email: contract.client_email,
+          Phone: contract.client_phone,
+        },
+        action: "Check that the family received their receipt and signed agreement; resend from the admin dashboard or email it directly.",
+      });
+    }
 
     try {
       await enqueueSpineEvent(
@@ -439,7 +454,21 @@ async function fulfillPaidContract(
     if (cartError) console.error("Failed to mark abandoned carts recovered:", cartError);
   }
 
-  return await ensureReadinessBooking(supabase, contract as PaidContractRow);
+  const scheduled = await ensureReadinessBooking(supabase, contract as PaidContractRow);
+  if (!scheduled) {
+    await sendOwnerAlert(supabase, {
+      key: `readiness-booking:${contractId}`,
+      subject: "Paid Readiness Intensive couldn't be scheduled or confirmed",
+      details: {
+        Contract: contractId,
+        Client: contract.client_name,
+        Email: contract.client_email,
+        Phone: contract.client_phone,
+      },
+      action: "The family has paid. Call them to confirm the session time and send the Zoom link manually.",
+    });
+  }
+  return scheduled;
 }
 
 function normalizeDiscountCode(code: unknown): string {
@@ -782,7 +811,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
 
         const { data: contract, error: contractError } = await supabase
           .from("contracts")
-          .select("id, contract_type, amount_cents, client_email, client_name, status")
+          .select("id, contract_type, amount_cents, client_email, client_name, client_phone, status")
           .eq("id", contractId)
           .single();
         if (contractError || !contract) throw contractError || new Error("Contract not found");
@@ -793,6 +822,19 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
 
         const origin = resolveRedirectOrigin(req);
         const successUrl = new URL(safeRedirectPath(redirectPath, "/start-contract?contract_status=success"), origin);
+        const alertContractCheckoutFailure = (reason: string) => sendOwnerAlert(supabase, {
+          key: `contract-checkout-fail:${contractId}`,
+          subject: "A family signed but couldn't start payment",
+          details: {
+            Contract: contractId,
+            Type: contract.contract_type,
+            Name: contract.client_name,
+            Email: contract.client_email,
+            Phone: contract.client_phone,
+            Reason: reason,
+          },
+          action: "They signed the agreement but saw an error at checkout. Contact them to complete payment.",
+        });
         successUrl.searchParams.set("contract_id", contractId);
 
         const checkoutResponse = await fetch(`${SQUARE_BASE_URL}/online-checkout/payment-links`, {
@@ -822,6 +864,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
 
         const checkoutData = await checkoutResponse.json();
         if (checkoutData.errors) {
+          await alertContractCheckoutFailure(`Square error: ${checkoutData.errors[0]?.detail ?? "unknown"}`);
           throw new Error(checkoutData.errors[0]?.detail || "Failed to create contract payment link");
         }
 
@@ -830,6 +873,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
         // Without a stored order id the payment can never be verified, so never hand out the link.
         if (!squareOrderId || !checkoutData.payment_link?.url) {
           console.error("Square contract checkout link missing order id or url:", contractId);
+          await alertContractCheckoutFailure("Square returned no order id or link");
           throw new Error(CHECKOUT_TRACKING_ERROR);
         }
         const { data: trackedContract, error: trackError } = await supabase
@@ -843,6 +887,7 @@ export const handler = async (req: Request, clientFactory = createClient): Promi
           .select("id");
         if (trackError || !trackedContract || trackedContract.length === 0) {
           console.error("Failed to store Square order id on contract:", contractId, trackError);
+          await alertContractCheckoutFailure("Payment link created but could not be saved on the contract");
           throw new Error(CHECKOUT_TRACKING_ERROR);
         }
 
