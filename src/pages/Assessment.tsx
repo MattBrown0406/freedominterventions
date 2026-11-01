@@ -18,7 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FunctionsHttpError } from "@supabase/supabase-js";
-import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle } from "lucide-react";
+import { Plus, Trash2, ChevronLeft, ChevronRight, AlertTriangle, CheckCircle, ShieldCheck } from "lucide-react";
 import { DSM_CRITERIA, MENTAL_HEALTH_SYMPTOMS, RELAPSE_TRIGGERS, ENABLING_BEHAVIORS, SUBSTANCES_LIST, ROUTES_OF_ADMINISTRATION, PHYSICAL_WITHDRAWAL_SYMPTOMS, PSYCHOLOGICAL_WITHDRAWAL_SYMPTOMS } from "@/components/assessment/types";
 import InsuranceCardUpload from "@/components/assessment/InsuranceCardUpload";
 import { trackEvent } from "@/lib/analytics";
@@ -179,6 +179,11 @@ const Assessment = () => {
     primaryLanguage: "",
     insuranceCardFrontUrl: "",
     insuranceCardBackUrl: "",
+    // Optional typed insurance details (saved together in insurance_information).
+    insuranceProvider: "",
+    insurancePolicyNumber: "",
+    insuranceGroupNumber: "",
+    insurancePhone: "",
     stateMedicaid: "",
 
     // Section 3: Substance History
@@ -612,7 +617,13 @@ const Assessment = () => {
         what_motivates_individual: formData.whatMotivatesIndividual || null,
         treatment_preferences: formData.treatmentPreferences || null,
         geographic_preferences: formData.geographicPreferences || null,
-        insurance_information: formData.insuranceInformation || null,
+        insurance_information: [
+          formData.insuranceInformation.trim(),
+          formData.insuranceProvider.trim() && `Provider: ${formData.insuranceProvider.trim()}`,
+          formData.insurancePolicyNumber.trim() && `Policy/Member ID: ${formData.insurancePolicyNumber.trim()}`,
+          formData.insuranceGroupNumber.trim() && `Group #: ${formData.insuranceGroupNumber.trim()}`,
+          formData.insurancePhone.trim() && `Insurance phone: ${formData.insurancePhone.trim()}`,
+        ].filter(Boolean).join("; ") || null,
         insurance_card_front_url: formData.insuranceCardFrontUrl || null,
         insurance_card_back_url: formData.insuranceCardBackUrl || null,
         budget_for_treatment: formData.budgetForTreatment || null,
@@ -960,11 +971,77 @@ const Assessment = () => {
 
                     {/* Insurance Card Upload */}
                     <Separator className="my-6" />
+                    <div role="note" className="mb-4 flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
+                      <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                      <p>
+                        <strong className="text-foreground">Why we ask:</strong> Your insurance card and details are used only to help
+                        find quality treatment programs that accept your loved one's insurance, so their benefits can help offset the
+                        cost of treatment. They aren't used for any other purpose. Everything here is optional.
+                      </p>
+                    </div>
                     <InsuranceCardUpload
                       frontUrl={formData.insuranceCardFrontUrl}
                       backUrl={formData.insuranceCardBackUrl}
                       onUpload={handleInputChange}
                     />
+
+                    {/* Optional typed insurance details */}
+                    <div className="mt-4 space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        No card handy, or prefer to type it in? Add what you can from the card. All optional.
+                      </p>
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div>
+                          <Label htmlFor="insuranceProvider">Insurance provider</Label>
+                          <Input
+                            id="insuranceProvider"
+                            value={formData.insuranceProvider}
+                            onChange={(e) => handleInputChange("insuranceProvider", e.target.value)}
+                            maxLength={100}
+                            autoComplete="off"
+                            placeholder="e.g. Blue Cross, Aetna, Kaiser"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="insurancePolicyNumber">Policy / Member ID number</Label>
+                          <Input
+                            id="insurancePolicyNumber"
+                            value={formData.insurancePolicyNumber}
+                            onChange={(e) => handleInputChange("insurancePolicyNumber", e.target.value)}
+                            maxLength={50}
+                            autoComplete="off"
+                            spellCheck={false}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="insuranceGroupNumber">Group number</Label>
+                          <Input
+                            id="insuranceGroupNumber"
+                            value={formData.insuranceGroupNumber}
+                            onChange={(e) => handleInputChange("insuranceGroupNumber", e.target.value)}
+                            maxLength={50}
+                            autoComplete="off"
+                            spellCheck={false}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="insurancePhone">Insurance phone number</Label>
+                          <Input
+                            id="insurancePhone"
+                            type="tel"
+                            inputMode="tel"
+                            value={formData.insurancePhone}
+                            onChange={(e) => handleInputChange("insurancePhone", e.target.value)}
+                            maxLength={30}
+                            autoComplete="off"
+                            aria-describedby="insurancePhoneHelp"
+                          />
+                          <p id="insurancePhoneHelp" className="mt-1 text-xs text-muted-foreground">
+                            Usually on the back of the card (member services or behavioral health).
+                          </p>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* State Medicaid Checkbox */}
                     <div className="flex items-center space-x-2 mt-4">

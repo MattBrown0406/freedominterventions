@@ -348,7 +348,9 @@ serve(async (req) => {
       what_motivates_individual: body.what_motivates_individual || null,
       treatment_preferences: body.treatment_preferences || null,
       geographic_preferences: body.geographic_preferences || null,
-      insurance_information: body.insurance_information || null,
+      insurance_information: typeof body.insurance_information === "string" && body.insurance_information.trim()
+        ? body.insurance_information.trim().slice(0, 1000)
+        : null,
       budget_for_treatment: body.budget_for_treatment || null,
       urgency_level: body.urgency_level || null,
       immediate_safety_concerns: body.immediate_safety_concerns || null,

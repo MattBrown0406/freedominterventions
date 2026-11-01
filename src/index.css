@@ -160,7 +160,9 @@
   }
 
   @media (max-width: 768px) {
-    button, a, [role="button"] {
+    /* Radios, checkboxes and switches are <button>s but must keep their shape;
+       their tap target is the label next to them. */
+    button:not([role="radio"]):not([role="checkbox"]):not([role="switch"]), a, [role="button"] {
       min-height: 44px;
     }
   }
