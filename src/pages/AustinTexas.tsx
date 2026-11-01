@@ -37,6 +37,7 @@ const AustinTexas = () => {
         { name: "Texas", href: "/texas" },
         { name: "Austin", href: "/austin-texas" },
       ]} />
+      <main id="main-content">
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -258,6 +259,7 @@ const AustinTexas = () => {
 
       <LocationLinks currentLocation="Austin" locationType="city" parentState="Texas" />
 
+      </main>
       <Footer />
     </div>
   );

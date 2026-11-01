@@ -32,6 +32,7 @@ const BeavertonOregon = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -252,6 +253,7 @@ const BeavertonOregon = () => {
 
 
       <LocationLinks currentLocation="Beaverton" locationType="city" parentState="Oregon" />
+      </main>
       <Footer />
     </div>
   );

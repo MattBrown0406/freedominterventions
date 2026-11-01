@@ -37,6 +37,7 @@ const ColumbusOhio = () => {
         { name: "Ohio", href: "/ohio" },
         { name: "Columbus", href: "/columbus-ohio" },
       ]} />
+      <main id="main-content">
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -258,6 +259,7 @@ const ColumbusOhio = () => {
 
       <LocationLinks currentLocation="Columbus" locationType="city" parentState="Ohio" />
 
+      </main>
       <Footer />
     </div>
   );

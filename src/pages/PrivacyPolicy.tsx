@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
       />
       <Navbar />
       
-      <main className="pt-24 md:pt-32">
+      <main id="main-content" className="pt-24 md:pt-32">
         <div className="container mx-auto px-6 py-12">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground mb-8">

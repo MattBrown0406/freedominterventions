@@ -93,7 +93,7 @@ export default function InterventionAnswers() {
         ]}
       />
       <Navbar />
-      <main>
+      <main id="main-content">
         <section className="border-b border-border bg-card pt-32 pb-16 md:pt-40 md:pb-24">
           <div className="container px-6">
             <div className="mx-auto max-w-4xl text-center">

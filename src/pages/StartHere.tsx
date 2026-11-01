@@ -115,7 +115,7 @@ const StartHere = () => {
         url="https://freedominterventions.com/start-here"
       />
       <Navbar />
-      <main>
+      <main id="main-content">
         <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-card border-b border-border">
           <div className="container px-6">
             <div className="max-w-4xl mx-auto text-center space-y-6">

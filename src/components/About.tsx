@@ -28,7 +28,7 @@ const About = () => {
 
           {/* Content */}
           <div className="order-1 lg:order-2 space-y-6">
-            <span className="text-accent font-medium text-sm uppercase tracking-wider">
+            <span className="text-accent-strong font-medium text-sm uppercase tracking-wider">
               About Freedom Interventions
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">

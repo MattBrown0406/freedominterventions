@@ -66,7 +66,7 @@ const DemographicsSection = ({ formData, onInputChange }: DemographicsSectionPro
                 value={formData.gender}
                 onValueChange={(v) => onInputChange("gender", v)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger aria-label="Select gender" className="mt-2">
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
@@ -94,7 +94,7 @@ const DemographicsSection = ({ formData, onInputChange }: DemographicsSectionPro
                 value={formData.maritalStatus}
                 onValueChange={(v) => onInputChange("maritalStatus", v)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger aria-label="Select status" className="mt-2">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -114,7 +114,7 @@ const DemographicsSection = ({ formData, onInputChange }: DemographicsSectionPro
                 value={formData.employmentStatus}
                 onValueChange={(v) => onInputChange("employmentStatus", v)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger aria-label="Select status" className="mt-2">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +148,7 @@ const DemographicsSection = ({ formData, onInputChange }: DemographicsSectionPro
                 value={formData.educationLevel}
                 onValueChange={(v) => onInputChange("educationLevel", v)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger aria-label="Select level" className="mt-2">
                   <SelectValue placeholder="Select level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -177,7 +177,7 @@ const DemographicsSection = ({ formData, onInputChange }: DemographicsSectionPro
               value={formData.livingSituation}
               onValueChange={(v) => onInputChange("livingSituation", v)}
             >
-              <SelectTrigger className="mt-2">
+              <SelectTrigger aria-label="Select living situation" className="mt-2">
                 <SelectValue placeholder="Select living situation" />
               </SelectTrigger>
               <SelectContent>

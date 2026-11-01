@@ -100,6 +100,7 @@ const Manitoba = () => {
           { name: "Manitoba", href: "/manitoba" },
         ]}
       />
+      <main id="main-content">
 
       <section className="pt-10 pb-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-6">
@@ -339,6 +340,7 @@ const Manitoba = () => {
 
       <LocationLinks currentLocation="Manitoba" locationType="province" />
 
+      </main>
       <Footer />
     </div>
   );

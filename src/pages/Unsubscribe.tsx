@@ -61,7 +61,7 @@ export default function Unsubscribe() {
         noindex
       />
       <Navbar />
-      <main className="container mx-auto max-w-xl px-6 py-32">
+      <main id="main-content" className="container mx-auto max-w-xl px-6 py-32">
         <Card>
           <CardHeader>
             <CardTitle>Email Preferences</CardTitle>

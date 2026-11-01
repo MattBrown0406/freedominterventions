@@ -49,7 +49,7 @@ const CTA = () => {
             </Button>
           </div>
 
-          <p className="text-sm text-primary-foreground/60">
+          <p className="text-sm text-primary-foreground/85">
             All calls are confidential. Insurance may cover treatment costs.
           </p>
         </div>

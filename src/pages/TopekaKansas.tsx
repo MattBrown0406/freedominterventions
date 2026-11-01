@@ -32,6 +32,7 @@ const TopekaKansas = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -317,6 +318,7 @@ const TopekaKansas = () => {
 
 
       <LocationLinks currentLocation="Topeka" locationType="city" />
+      </main>
       <Footer />
     </div>
   );

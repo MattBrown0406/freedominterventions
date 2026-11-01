@@ -40,7 +40,7 @@ const Services = () => {
     <section id="services" className="py-20 md:py-32 bg-card">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-accent font-medium text-sm uppercase tracking-wider">
+          <span className="text-accent-strong font-medium text-sm uppercase tracking-wider">
             How We Help
           </span>
           <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground">

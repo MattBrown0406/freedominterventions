@@ -44,11 +44,11 @@ const WhatsAppChatButton = ({
 
   const variantStyles = {
     solid:
-      "bg-[#25D366] text-white hover:bg-[#128C7E] focus-visible:ring-[#25D366] shadow-md hover:shadow-lg",
+      "bg-[#15803d] text-white hover:bg-[#166534] focus-visible:ring-[#15803d] shadow-md hover:shadow-lg",
     outline:
-      "border-2 border-[#25D366] bg-transparent text-[#25D366] hover:bg-[#25D366] hover:text-white focus-visible:ring-[#25D366]",
+      "border-2 border-[#15803d] bg-transparent text-[#15803d] hover:bg-[#15803d] hover:text-white focus-visible:ring-[#15803d]",
     dark:
-      "border-2 border-white/30 bg-white/10 text-white hover:bg-[#25D366] hover:border-[#25D366] hover:text-white focus-visible:ring-white",
+      "border-2 border-white/30 bg-white/10 text-white hover:bg-[#15803d] hover:border-[#15803d] hover:text-white focus-visible:ring-white",
   };
 
   const sizeStyles = {

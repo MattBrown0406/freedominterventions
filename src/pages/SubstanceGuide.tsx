@@ -18,6 +18,7 @@ const SubstanceGuide = () => {
       />
       <OrganizationSchema />
       <Navbar />
+      <main id="main-content">
       
       {/* Hero Section */}
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
@@ -507,6 +508,7 @@ const SubstanceGuide = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

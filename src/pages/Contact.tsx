@@ -126,6 +126,7 @@ const Contact = () => {
       <LocalBusinessSchema location="Portland" state="OR" />
       
       <Navbar />
+      <main id="main-content">
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 bg-card">
@@ -387,6 +388,7 @@ const Contact = () => {
 
       <FamilySupportResources className="bg-muted/20 border-t border-border/50" />
 
+      </main>
       <Footer />
     </div>
   );

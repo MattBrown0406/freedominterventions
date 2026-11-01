@@ -37,6 +37,7 @@ const SaltLakeCityUtah = () => {
         { name: "Utah", href: "/utah" },
         { name: "Salt Lake City", href: "/salt-lake-city-utah" },
       ]} />
+      <main id="main-content">
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -258,6 +259,7 @@ const SaltLakeCityUtah = () => {
 
       <LocationLinks currentLocation="Salt Lake City" locationType="city" parentState="Utah" />
 
+      </main>
       <Footer />
     </div>
   );

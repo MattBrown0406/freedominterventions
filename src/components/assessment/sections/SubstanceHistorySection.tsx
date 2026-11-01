@@ -107,7 +107,7 @@ const SubstanceHistorySection = ({
                           value={entry.substance}
                           onValueChange={(v) => updateSubstance(index, "substance", v)}
                         >
-                          <SelectTrigger className="w-[150px]">
+                          <SelectTrigger aria-label={`Substance ${index + 1}`} className="w-[150px]">
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                           <SelectContent>
@@ -131,7 +131,7 @@ const SubstanceHistorySection = ({
                           value={entry.routeOfAdministration}
                           onValueChange={(v) => updateSubstance(index, "routeOfAdministration", v)}
                         >
-                          <SelectTrigger className="w-[120px]">
+                          <SelectTrigger aria-label="Route" className="w-[120px]">
                             <SelectValue placeholder="Route" />
                           </SelectTrigger>
                           <SelectContent>
@@ -146,7 +146,7 @@ const SubstanceHistorySection = ({
                           value={entry.frequency}
                           onValueChange={(v) => updateSubstance(index, "frequency", v)}
                         >
-                          <SelectTrigger className="w-[100px]">
+                          <SelectTrigger aria-label="Frequency" className="w-[100px]">
                             <SelectValue placeholder="Freq" />
                           </SelectTrigger>
                           <SelectContent>
@@ -408,7 +408,7 @@ const SubstanceHistorySection = ({
                 value={formData.durationOfUse}
                 onValueChange={(v) => onInputChange("durationOfUse", v)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger aria-label="Select duration" className="mt-2">
                   <SelectValue placeholder="Select duration" />
                 </SelectTrigger>
                 <SelectContent>
@@ -428,7 +428,7 @@ const SubstanceHistorySection = ({
                 value={formData.longestSobrietyPeriod}
                 onValueChange={(v) => onInputChange("longestSobrietyPeriod", v)}
               >
-                <SelectTrigger className="mt-2">
+                <SelectTrigger aria-label="Select period" className="mt-2">
                   <SelectValue placeholder="Select period" />
                 </SelectTrigger>
                 <SelectContent>

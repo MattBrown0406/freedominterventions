@@ -240,7 +240,7 @@ const SelfAssessment = () => {
 
       <Navbar />
 
-      <main className="flex-grow pt-24">
+      <main id="main-content" className="flex-grow pt-24">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary/10 via-background to-accent/10 py-12">
           <div className="container mx-auto px-4 text-center max-w-4xl">
@@ -267,7 +267,7 @@ const SelfAssessment = () => {
                   <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-950">
                     <AlertTriangle className="h-7 w-7 text-red-600" />
                   </div>
-                  <CardTitle className="text-2xl font-serif">
+                  <CardTitle as="h2" className="text-2xl font-serif">
                     Before You Go Further
                   </CardTitle>
                 </CardHeader>
@@ -327,7 +327,7 @@ const SelfAssessment = () => {
                     {Math.min(Math.round(quizProgress), 100)}%
                   </span>
                 </div>
-                <Progress value={Math.min(quizProgress, 100)} className="h-2" />
+                <Progress value={Math.min(quizProgress, 100)} className="h-2" aria-label="Self-check progress" />
               </div>
 
               {currentSection === 0 && (
@@ -342,7 +342,7 @@ const SelfAssessment = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl font-serif">{section.title}</CardTitle>
+                  <CardTitle as="h2" className="text-xl font-serif">{section.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {section.questions.map((question, questionIndex) => (
@@ -406,7 +406,7 @@ const SelfAssessment = () => {
                   <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
                     <CheckCircle2 className="h-7 w-7 text-primary" />
                   </div>
-                  <CardTitle className="text-2xl font-serif">
+                  <CardTitle as="h2" className="text-2xl font-serif">
                     Your Results Are Ready
                   </CardTitle>
                 </CardHeader>
@@ -491,7 +491,7 @@ const SelfAssessment = () => {
             <div className="container mx-auto px-4 max-w-4xl">
               <Card className="mb-8 border-2 border-primary/20">
                 <CardHeader className="text-center">
-                  <CardTitle className="text-2xl md:text-3xl font-serif">Your Assessment Results</CardTitle>
+                  <CardTitle as="h2" className="text-2xl md:text-3xl font-serif">Your Assessment Results</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Safety-first block always leads when flagged */}

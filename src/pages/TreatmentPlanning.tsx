@@ -131,7 +131,7 @@ const TreatmentPlanning = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>
 
-      <main>
+      <main id="main-content">
         <section className="py-12 md:py-16 bg-card">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">

@@ -100,6 +100,7 @@ const BritishColumbia = () => {
           { name: "British Columbia", href: "/british-columbia" },
         ]}
       />
+      <main id="main-content">
 
       <section className="pt-10 pb-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-6">
@@ -344,6 +345,7 @@ const BritishColumbia = () => {
         locationType="province"
       />
 
+      </main>
       <Footer />
     </div>
   );

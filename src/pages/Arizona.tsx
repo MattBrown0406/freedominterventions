@@ -96,6 +96,7 @@ const Arizona = () => {
           { name: "Arizona", href: "/arizona" },
         ]}
       />
+      <main id="main-content">
 
       <section className="relative min-h-[50vh] py-16 flex items-center justify-center overflow-hidden">
         <div
@@ -348,6 +349,7 @@ const Arizona = () => {
 
       <LocationLinks currentLocation="Arizona" locationType="state" />
 
+      </main>
       <Footer />
     </div>
   );

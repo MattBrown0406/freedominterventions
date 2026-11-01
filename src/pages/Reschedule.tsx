@@ -194,7 +194,7 @@ const Reschedule = () => {
         description="Reschedule your consultation appointment with Freedom Interventions. Enter your booking ID and email to select a new date and time."
         noindex={true}
       />
-      <main className="flex-1 py-16 px-4">
+      <main id="main-content" className="flex-1 py-16 px-4">
         <div className="container mx-auto max-w-lg">
           <Card className="border-primary/20 shadow-xl">
             <CardHeader className="text-center">

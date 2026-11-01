@@ -82,6 +82,7 @@ const Utah = () => {
           { name: "Utah", href: "/utah" },
         ]}
       />
+      <main id="main-content">
 
       <section className="relative min-h-[50vh] py-16 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${utahBanner})` }}>
@@ -266,6 +267,7 @@ const Utah = () => {
 
       <LocationLinks currentLocation="Utah" locationType="state" />
 
+      </main>
       <Footer />
     </div>
   );

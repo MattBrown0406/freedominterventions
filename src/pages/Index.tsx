@@ -84,7 +84,7 @@ const Index = () => {
         speakableSelectors={["h1", "main section:first-of-type p", "h2"]}
       />
       <Navbar dark />
-      <main>
+      <main id="main-content">
         <Hero />
         <EmpathySection />
         <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />

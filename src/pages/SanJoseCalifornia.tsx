@@ -32,6 +32,7 @@ const SanJoseCalifornia = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -252,6 +253,7 @@ const SanJoseCalifornia = () => {
 
 
       <LocationLinks currentLocation="San Jose" locationType="city" parentState="California" />
+      </main>
       <Footer />
     </div>
   );

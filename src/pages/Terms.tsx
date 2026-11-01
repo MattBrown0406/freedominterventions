@@ -21,7 +21,7 @@ const Terms = () => {
       />
       <Navbar />
 
-      <main className="pt-24 md:pt-32">
+      <main id="main-content" className="pt-24 md:pt-32">
         <div className="container mx-auto px-6 py-12">
           <div className="max-w-4xl mx-auto">
             <p className="text-sm uppercase tracking-[0.2em] text-primary font-semibold mb-4">

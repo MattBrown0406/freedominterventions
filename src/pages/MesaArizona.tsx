@@ -32,6 +32,7 @@ const MesaArizona = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -255,6 +256,7 @@ const MesaArizona = () => {
 
 
       <LocationLinks currentLocation="Mesa" locationType="city" />
+      </main>
       <Footer />
     </div>
   );

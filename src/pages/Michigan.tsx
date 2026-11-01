@@ -33,6 +33,7 @@ const Michigan = () => {
       />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
       
       <section className="pt-10 md:pt-12 py-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
@@ -166,6 +167,7 @@ const Michigan = () => {
       </section>
 
 
+      </main>
       <Footer />
     </div>
   );

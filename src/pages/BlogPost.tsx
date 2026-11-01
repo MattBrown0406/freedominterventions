@@ -206,7 +206,7 @@ const BlogPost = () => {
           noindex={true}
         />
         <Navbar />
-        <main className="pt-36 pb-24">
+        <main id="main-content" className="pt-36 pb-24">
           <div className="container px-6">
             <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-8 text-center">
               <h1 className="font-serif text-3xl font-bold text-foreground mb-4">

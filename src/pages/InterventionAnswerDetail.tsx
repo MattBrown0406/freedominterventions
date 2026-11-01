@@ -43,7 +43,7 @@ export default function InterventionAnswerDetail() {
           noindex={true}
         />
         <Navbar />
-        <main className="container px-6 py-32 text-center">
+        <main id="main-content" className="container px-6 py-32 text-center">
           <h1 className="font-serif text-4xl font-bold text-foreground">Answer not found</h1>
           <Button asChild className="mt-6" variant="outline">
             <Link to="/intervention-answers">
@@ -133,7 +133,7 @@ export default function InterventionAnswerDetail() {
       />
       <Navbar />
 
-      <main>
+      <main id="main-content">
         <section className="border-b border-border bg-card pt-32 pb-14 md:pt-40 md:pb-20">
           <div className="container px-6">
             <div className="mx-auto max-w-5xl">

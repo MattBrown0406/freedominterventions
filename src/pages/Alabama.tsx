@@ -9,6 +9,7 @@ const Alabama = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      <main id="main-content">
       
       {/* Hero Section */}
       <section className="pt-20 py-16 bg-gradient-to-b from-primary/10 to-background">
@@ -178,6 +179,7 @@ const Alabama = () => {
       </section>
 
 
+      </main>
       <Footer />
     </div>
   );

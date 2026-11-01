@@ -53,7 +53,7 @@ const HowInterventionWorks = () => {
       />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
-      <main className="">
+      <main id="main-content" className="">
         <section className="py-16 md:py-24 bg-primary/5 border-b border-border/50">
           <div className="container px-6">
             <div className="max-w-4xl mx-auto text-center">

@@ -412,7 +412,7 @@ const AdminDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main id="main-content" className="container mx-auto px-4 py-8">
         <Tabs defaultValue="assessments" className="space-y-6">
           <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 rounded-lg p-1.5">
             <TabsTrigger value="assessments" className="gap-2">

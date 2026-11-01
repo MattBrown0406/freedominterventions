@@ -45,7 +45,7 @@ const InterventionReadiness = () => {
       />
       <Navbar />
 
-      <main>
+      <main id="main-content">
         <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-primary text-primary-foreground">
           <div className="container px-6">
             <div className="max-w-5xl mx-auto grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">

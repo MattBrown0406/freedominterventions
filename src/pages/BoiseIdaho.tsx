@@ -38,6 +38,7 @@ const BoiseIdaho = () => {
         { name: "Idaho", href: "/idaho" },
         { name: "Boise", href: "/boise-idaho" },
       ]} />
+      <main id="main-content">
       
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -262,6 +263,7 @@ const BoiseIdaho = () => {
 
       <LocationLinks currentLocation="Boise" locationType="city" parentState="Idaho" />
 
+      </main>
       <Footer />
     </div>
   );

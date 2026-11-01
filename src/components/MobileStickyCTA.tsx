@@ -10,7 +10,7 @@ const MobileStickyCTA = () => {
   // On the Spanish page, call the Spanish-language line (AyudaSobria.com) and use Spanish labels.
   const isSpanish = /^\/es\/?$/i.test(useLocation().pathname);
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 px-3 py-2 shadow-2xl backdrop-blur md:hidden">
+    <nav aria-label={isSpanish ? "Contacto rápido" : "Quick contact"} className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 px-3 py-2 shadow-2xl backdrop-blur md:hidden">
       <div className="grid grid-cols-3 gap-2">
         <TrackedPhoneLink
           phoneNumber={isSpanish ? SPANISH_LINE_E164 : "+14582988000"}
@@ -26,7 +26,7 @@ const MobileStickyCTA = () => {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackEvent("whatsapp_click", { location: "mobile_sticky_cta" })}
-          className="flex h-12 items-center justify-center gap-1 rounded-md bg-[#25D366] text-xs font-semibold text-white"
+          className="flex h-12 items-center justify-center gap-1 rounded-md bg-[#15803d] text-xs font-semibold text-white"
           aria-label={isSpanish ? "Escríbanos por WhatsApp" : "Chat with us on WhatsApp"}
         >
           <MessageCircle className="h-4 w-4" />
@@ -41,7 +41,7 @@ const MobileStickyCTA = () => {
           {isSpanish ? "Consulta" : "Consult"}
         </Link>
       </div>
-    </div>
+    </nav>
   );
 };
 

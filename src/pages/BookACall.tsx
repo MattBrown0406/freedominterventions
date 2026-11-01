@@ -56,7 +56,7 @@ const BookACall = () => {
       />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
-      <main>
+      <main id="main-content">
         <section className="border-b border-border/50 bg-primary/5 py-10 md:py-20">
           <div className="container px-6">
             <div className="mx-auto max-w-4xl text-center">

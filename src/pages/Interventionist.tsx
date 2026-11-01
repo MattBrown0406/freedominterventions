@@ -41,7 +41,7 @@ const Interventionist = () => {
         ]}
       />
       <Navbar />
-      <main className="pt-20 md:pt-24">
+      <main id="main-content" className="pt-20 md:pt-24">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-12 items-start">

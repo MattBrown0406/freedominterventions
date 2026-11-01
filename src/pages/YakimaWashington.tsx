@@ -32,6 +32,7 @@ const YakimaWashington = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -252,6 +253,7 @@ const YakimaWashington = () => {
 
 
       <LocationLinks currentLocation="Yakima" locationType="city" parentState="Washington" />
+      </main>
       <Footer />
     </div>
   );

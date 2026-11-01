@@ -54,7 +54,7 @@ export default function TestimonialStrip({
                     {t.author}
                     <span className="ml-2 font-normal text-muted-foreground">{t.location}</span>
                   </span>
-                  <span className="flex" aria-label={`${t.rating} out of 5 stars`}>
+                  <span className="flex" role="img" aria-label={`${t.rating} out of 5 stars`}>
                     {Array.from({ length: t.rating }).map((_, i) => (
                       <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                     ))}

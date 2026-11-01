@@ -53,7 +53,7 @@ const InterventionFAQPage = () => {
       <FAQSchema faqs={faqItems} />
       <Navbar />
       
-      <main>
+      <main id="main-content">
         {/* Family Intervention Internal Link Card */}
         <section className="py-8 bg-primary/5 border-b border-primary/10">
           <div className="container mx-auto px-4">

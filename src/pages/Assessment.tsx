@@ -704,7 +704,7 @@ const Assessment = () => {
 
       <Navbar />
 
-      <main className="flex-grow pt-24">
+      <main id="main-content" className="flex-grow pt-24">
         <section className="bg-primary/10 py-12">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -784,7 +784,7 @@ const Assessment = () => {
               {currentSection === 1 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 1: Your Contact Information</CardTitle>
+                    <CardTitle as="h2">Section 1: Your Contact Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -795,7 +795,7 @@ const Assessment = () => {
                       <div>
                         <Label>Relationship to Individual *</Label>
                         <Select value={formData.contactRelationship} onValueChange={(v) => handleInputChange("contactRelationship", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Relationship to Individual"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="parent">Parent</SelectItem>
                             <SelectItem value="spouse">Spouse/Partner</SelectItem>
@@ -822,7 +822,7 @@ const Assessment = () => {
                       <div>
                         <Label>Best Day to Contact</Label>
                         <Select value={formData.bestDayToContact} onValueChange={(v) => handleInputChange("bestDayToContact", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Best Day to Contact"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="today">Today - URGENT</SelectItem>
                             <SelectItem value="any">Any Day</SelectItem>
@@ -834,7 +834,7 @@ const Assessment = () => {
                       <div>
                         <Label>Best Time to Contact</Label>
                         <Select value={formData.bestTimeToContact} onValueChange={(v) => handleInputChange("bestTimeToContact", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Best Time to Contact"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="morning">Morning (9 AM - 12 PM)</SelectItem>
                             <SelectItem value="afternoon">Afternoon (12 PM - 5 PM)</SelectItem>
@@ -852,7 +852,7 @@ const Assessment = () => {
               {currentSection === 2 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 2: Individual Demographics & Background</CardTitle>
+                    <CardTitle as="h2">Section 2: Individual Demographics & Background</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -873,7 +873,7 @@ const Assessment = () => {
                       <div>
                         <Label>Gender</Label>
                         <Select value={formData.gender} onValueChange={(v) => handleInputChange("gender", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Gender"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="male">Male</SelectItem>
                             <SelectItem value="female">Female</SelectItem>
@@ -887,7 +887,7 @@ const Assessment = () => {
                       <div>
                         <Label>Marital Status</Label>
                         <Select value={formData.maritalStatus} onValueChange={(v) => handleInputChange("maritalStatus", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Marital Status"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="single">Single</SelectItem>
                             <SelectItem value="married">Married</SelectItem>
@@ -901,7 +901,7 @@ const Assessment = () => {
                       <div>
                         <Label>Employment Status</Label>
                         <Select value={formData.employmentStatus} onValueChange={(v) => handleInputChange("employmentStatus", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Employment Status"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="employed-full">Employed Full-time</SelectItem>
                             <SelectItem value="employed-part">Employed Part-time</SelectItem>
@@ -922,7 +922,7 @@ const Assessment = () => {
                       <div>
                         <Label>Education Level</Label>
                         <Select value={formData.educationLevel} onValueChange={(v) => handleInputChange("educationLevel", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Education Level"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="less-than-hs">Less than High School</SelectItem>
                             <SelectItem value="hs-diploma">High School/GED</SelectItem>
@@ -937,7 +937,7 @@ const Assessment = () => {
                       <div>
                         <Label>Living Situation</Label>
                         <Select value={formData.livingSituation} onValueChange={(v) => handleInputChange("livingSituation", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Living Situation"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="own-home">Owns Home</SelectItem>
                             <SelectItem value="renting">Renting</SelectItem>
@@ -990,7 +990,7 @@ const Assessment = () => {
                         </p>
                       </div>
                       <Select value={formData.budgetForTreatment} onValueChange={(v) => handleInputChange("budgetForTreatment", v)}>
-                        <SelectTrigger className="w-full md:w-[300px]">
+                        <SelectTrigger aria-label="Select budget range" className="w-full md:w-[300px]">
                           <SelectValue placeholder="Select budget range" />
                         </SelectTrigger>
                         <SelectContent>
@@ -1012,7 +1012,7 @@ const Assessment = () => {
               {currentSection === 3 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 3: Comprehensive Substance Use History</CardTitle>
+                    <CardTitle as="h2">Section 3: Comprehensive Substance Use History</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
@@ -1044,20 +1044,20 @@ const Assessment = () => {
                                 <TableRow key={i}>
                                   <TableCell>
                                     <Select value={entry.substance} onValueChange={(v) => updateSubstance(i, "substance", v)}>
-                                      <SelectTrigger className="w-[140px]"><SelectValue placeholder="Select" /></SelectTrigger>
+                                      <SelectTrigger aria-label={`Substance ${i + 1}`} className="w-[140px]"><SelectValue placeholder="Select" /></SelectTrigger>
                                       <SelectContent>{SUBSTANCES_LIST.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                                     </Select>
                                   </TableCell>
                                   <TableCell><Input type="number" className="w-16" value={entry.ageFirstUsed} onChange={(e) => updateSubstance(i, "ageFirstUsed", e.target.value)} /></TableCell>
                                   <TableCell>
                                     <Select value={entry.routeOfAdministration} onValueChange={(v) => updateSubstance(i, "routeOfAdministration", v)}>
-                                      <SelectTrigger className="w-[100px]"><SelectValue placeholder="Route" /></SelectTrigger>
+                                      <SelectTrigger aria-label="Route" className="w-[100px]"><SelectValue placeholder="Route" /></SelectTrigger>
                                       <SelectContent>{ROUTES_OF_ADMINISTRATION.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
                                     </Select>
                                   </TableCell>
                                   <TableCell>
                                     <Select value={entry.frequency} onValueChange={(v) => updateSubstance(i, "frequency", v)}>
-                                      <SelectTrigger className="w-[100px]"><SelectValue placeholder="Freq" /></SelectTrigger>
+                                      <SelectTrigger aria-label="Frequency" className="w-[100px]"><SelectValue placeholder="Freq" /></SelectTrigger>
                                       <SelectContent>
                                         <SelectItem value="daily-multiple">Multiple/day</SelectItem>
                                         <SelectItem value="daily">Daily</SelectItem>
@@ -1126,7 +1126,7 @@ const Assessment = () => {
                       <div>
                         <Label>Duration of Problematic Use</Label>
                         <Select value={formData.durationOfUse} onValueChange={(v) => handleInputChange("durationOfUse", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Duration of Problematic Use"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="less-6-months">Less than 6 months</SelectItem>
                             <SelectItem value="6-12-months">6-12 months</SelectItem>
@@ -1140,7 +1140,7 @@ const Assessment = () => {
                       <div>
                         <Label>Longest Sobriety Period</Label>
                         <Select value={formData.longestSobrietyPeriod} onValueChange={(v) => handleInputChange("longestSobrietyPeriod", v)}>
-                          <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          <SelectTrigger aria-label="Longest Sobriety Period"><SelectValue placeholder="Select" /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="never">Never sober</SelectItem>
                             <SelectItem value="days">Days</SelectItem>
@@ -1165,7 +1165,7 @@ const Assessment = () => {
               {currentSection === 4 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 4: DSM-V Substance Use Disorder Criteria</CardTitle>
+                    <CardTitle as="h2">Section 4: DSM-V Substance Use Disorder Criteria</CardTitle>
                     <p className="text-sm text-muted-foreground">Based on observations over the past 12 months. Check all that apply.</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1201,7 +1201,7 @@ const Assessment = () => {
               {currentSection === 5 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 5: Medical & Withdrawal Risk Assessment</CardTitle>
+                    <CardTitle as="h2">Section 5: Medical & Withdrawal Risk Assessment</CardTitle>
                     <p className="text-sm text-muted-foreground">ASAM Dimensions 1 & 2: Acute Intoxication/Withdrawal & Biomedical Conditions</p>
                   </CardHeader>
                   <CardContent className="space-y-6">
@@ -1334,7 +1334,7 @@ const Assessment = () => {
               {currentSection === 6 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 6: Mental Health Assessment</CardTitle>
+                    <CardTitle as="h2">Section 6: Mental Health Assessment</CardTitle>
                     <p className="text-sm text-muted-foreground">ASAM Dimension 3: Emotional, Behavioral, and Cognitive Conditions</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1442,14 +1442,14 @@ const Assessment = () => {
               {currentSection === 7 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 7: Readiness to Change</CardTitle>
+                    <CardTitle as="h2">Section 7: Readiness to Change</CardTitle>
                     <p className="text-sm text-muted-foreground">ASAM Dimension 4: Motivation and Treatment Acceptance</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
                       <Label>Stage of Change (Prochaska & DiClemente Model)</Label>
                       <Select value={formData.stageOfChange} onValueChange={(v) => handleInputChange("stageOfChange", v)}>
-                        <SelectTrigger className="mt-2"><SelectValue placeholder="Select stage" /></SelectTrigger>
+                        <SelectTrigger aria-label="Stage of Change (Prochaska & DiClemente Model)" className="mt-2"><SelectValue placeholder="Select stage" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="precontemplation">Precontemplation - Denies problem, no intention to change</SelectItem>
                           <SelectItem value="contemplation">Contemplation - Aware of problem, considering change</SelectItem>
@@ -1472,7 +1472,7 @@ const Assessment = () => {
                     <div>
                       <Label>Willingness to accept help (1-10 scale)</Label>
                       <Select value={formData.willingnessToChange} onValueChange={(v) => handleInputChange("willingnessToChange", v)}>
-                        <SelectTrigger className="mt-2"><SelectValue placeholder="Select rating" /></SelectTrigger>
+                        <SelectTrigger aria-label="Willingness to accept help (1-10 scale)" className="mt-2"><SelectValue placeholder="Select rating" /></SelectTrigger>
                         <SelectContent>
                           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                             <SelectItem key={n} value={n.toString()}>{n} {n <= 3 ? "(Very resistant)" : n <= 6 ? "(Ambivalent)" : "(Willing)"}</SelectItem>
@@ -1503,7 +1503,7 @@ const Assessment = () => {
               {currentSection === 8 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 8: Relapse Potential & Treatment History</CardTitle>
+                    <CardTitle as="h2">Section 8: Relapse Potential & Treatment History</CardTitle>
                     <p className="text-sm text-muted-foreground">ASAM Dimension 5: Relapse, Continued Use, or Continued Problem Potential</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1562,7 +1562,7 @@ const Assessment = () => {
                                     <TableCell><Input placeholder="Program name" value={entry.programName} onChange={(e) => updateTreatment(i, "programName", e.target.value)} /></TableCell>
                                     <TableCell>
                                       <Select value={entry.programType} onValueChange={(v) => updateTreatment(i, "programType", v)}>
-                                        <SelectTrigger className="w-[120px]"><SelectValue placeholder="Type" /></SelectTrigger>
+                                        <SelectTrigger aria-label="Type" className="w-[120px]"><SelectValue placeholder="Type" /></SelectTrigger>
                                         <SelectContent>
                                           <SelectItem value="detox">Detox</SelectItem>
                                           <SelectItem value="residential">Residential</SelectItem>
@@ -1607,7 +1607,7 @@ const Assessment = () => {
               {currentSection === 9 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 9: Recovery Environment</CardTitle>
+                    <CardTitle as="h2">Section 9: Recovery Environment</CardTitle>
                     <p className="text-sm text-muted-foreground">ASAM Dimension 6: Recovery/Living Environment</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1678,7 +1678,7 @@ const Assessment = () => {
               {currentSection === 10 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 10: Family System Dynamics</CardTitle>
+                    <CardTitle as="h2">Section 10: Family System Dynamics</CardTitle>
                     <p className="text-sm text-muted-foreground">Understanding family dynamics is critical for intervention planning</p>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1720,7 +1720,7 @@ const Assessment = () => {
                     <div>
                       <Label>Family Unity Level</Label>
                       <Select value={formData.familyUnityLevel} onValueChange={(v) => handleInputChange("familyUnityLevel", v)}>
-                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                        <SelectTrigger aria-label="Family Unity Level"><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="unified">Unified - All on same page</SelectItem>
                           <SelectItem value="mostly-unified">Mostly unified with minor disagreements</SelectItem>
@@ -1782,7 +1782,7 @@ const Assessment = () => {
               {currentSection === 11 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 11: Family Addiction & Mental Health History</CardTitle>
+                    <CardTitle as="h2">Section 11: Family Addiction & Mental Health History</CardTitle>
                     <p className="text-sm text-muted-foreground">Generational patterns inform treatment approach</p>
                   </CardHeader>
                   <CardContent className="space-y-6">
@@ -1881,7 +1881,7 @@ const Assessment = () => {
               {currentSection === 12 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Section 12: Consequences & Intervention Planning</CardTitle>
+                    <CardTitle as="h2">Section 12: Consequences & Intervention Planning</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1932,7 +1932,7 @@ const Assessment = () => {
                     <div>
                       <Label>Urgency Level</Label>
                       <Select value={formData.urgencyLevel} onValueChange={(v) => handleInputChange("urgencyLevel", v)}>
-                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                        <SelectTrigger aria-label="Urgency Level"><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="crisis">Crisis - Immediate danger</SelectItem>
                           <SelectItem value="urgent">Urgent - Within days</SelectItem>

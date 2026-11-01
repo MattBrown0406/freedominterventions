@@ -103,6 +103,7 @@ const Blog = () => {
       />
 
       <Navbar />
+      <main id="main-content">
 
       <section className="relative pt-32 pb-6 bg-card">
         <div className="container px-6">
@@ -292,6 +293,7 @@ const Blog = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

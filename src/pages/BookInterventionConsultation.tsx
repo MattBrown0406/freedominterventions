@@ -56,7 +56,7 @@ const BookInterventionConsultation = () => {
       />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
-      <main>
+      <main id="main-content">
         <section className="border-b border-border/50 bg-primary/5 py-16 md:py-24">
           <div className="container px-6">
             <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">

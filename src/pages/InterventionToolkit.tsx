@@ -32,7 +32,7 @@ const InterventionToolkit = () => {
       <OrganizationSchema />
       <Navbar />
       
-      <main>
+      <main id="main-content">
 
         {/* Hero Section */}
         <section className="relative py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10">
@@ -63,9 +63,9 @@ const InterventionToolkit = () => {
               </p>
               
               <div className="bg-card border border-border rounded-xl p-6 my-8">
-                <h3 className="text-xl font-serif font-semibold text-foreground mb-4">
+                <h2 className="text-xl font-serif font-semibold text-foreground mb-4">
                   This toolkit is designed to help families:
-                </h3>
+                </h2>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
@@ -296,7 +296,7 @@ const InterventionToolkit = () => {
                 </div>
 
                 <div className="bg-card border border-border rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4 text-green-600">
+                  <h3 className="text-lg font-semibold mb-4 text-green-700">
                     Support focuses on:
                   </h3>
                   <ul className="space-y-3 text-muted-foreground">

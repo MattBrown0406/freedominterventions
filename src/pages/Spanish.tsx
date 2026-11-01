@@ -91,7 +91,7 @@ const SpanishPage = () => (
     <Navbar />
     <BreadcrumbNav items={[{ name: "Español", href: "/es" }]} />
 
-    <main>
+    <main id="main-content">
       {/* Hero */}
       <section className="bg-gradient-to-b from-primary/10 to-background py-10 md:py-16">
         <div className="container px-6">
@@ -117,7 +117,7 @@ const SpanishPage = () => (
                 rel="noopener noreferrer"
                 onClick={() => trackEvent("whatsapp_click", { location: "es_page_hero" })}
               >
-                <Button size="xl" className="w-full bg-[#25D366] text-white hover:bg-[#1fb855] sm:w-auto">
+                <Button size="xl" className="w-full bg-[#15803d] text-white hover:bg-[#166534] sm:w-auto">
                   <MessageCircle className="h-5 w-5" aria-hidden="true" />
                   Escribir por WhatsApp
                 </Button>

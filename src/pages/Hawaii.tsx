@@ -121,6 +121,7 @@ const Hawaii = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background pt-10 md:pt-12 pb-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_55%)]" />
@@ -398,6 +399,7 @@ const Hawaii = () => {
 
       <LocationLinks currentLocation="Hawaii" locationType="state" />
 
+      </main>
       <Footer />
     </div>
   );

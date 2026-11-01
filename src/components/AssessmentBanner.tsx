@@ -9,7 +9,7 @@ const AssessmentBanner = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-lg">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
-              <ClipboardCheck className="w-7 h-7 text-accent" />
+              <ClipboardCheck className="w-7 h-7 text-accent-strong" />
             </div>
             <div>
               <h3 className="text-xl md:text-2xl font-serif font-semibold text-foreground">

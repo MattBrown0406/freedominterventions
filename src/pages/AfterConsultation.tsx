@@ -71,7 +71,7 @@ const AfterConsultation = () => {
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
 
-      <main className="">
+      <main id="main-content" className="">
         <section className="border-b border-border bg-card py-16 md:py-24">
           <div className="container mx-auto max-w-5xl px-6">
             <div className="max-w-3xl space-y-6">

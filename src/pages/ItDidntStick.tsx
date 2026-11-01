@@ -78,12 +78,12 @@ const ItDidntStick = () => {
       />
       <Navbar />
 
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="pt-32 md:pt-40 pb-14 md:pb-20 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
-              <span className="text-accent font-medium text-sm uppercase tracking-wider">
+              <span className="text-accent-strong font-medium text-sm uppercase tracking-wider">
                 After treatment
               </span>
               <h1 className="mt-4 font-serif text-3xl md:text-5xl font-semibold text-foreground leading-tight">
@@ -135,7 +135,7 @@ const ItDidntStick = () => {
               <ul className="mt-8 space-y-4">
                 {donts.map((item) => (
                   <li key={item} className="flex gap-3 rounded-xl border border-border bg-card p-5">
-                    <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+                    <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-accent-strong" aria-hidden="true" />
                     <span className="text-muted-foreground leading-relaxed">{item}</span>
                   </li>
                 ))}

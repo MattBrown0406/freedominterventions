@@ -103,6 +103,7 @@ const NewfoundlandLabrador = () => {
           { name: "Newfoundland and Labrador", href: "/newfoundland-labrador" },
         ]}
       />
+      <main id="main-content">
 
       <section className="pt-10 pb-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-6">
@@ -347,6 +348,7 @@ const NewfoundlandLabrador = () => {
         locationType="province"
       />
 
+      </main>
       <Footer />
     </div>
   );

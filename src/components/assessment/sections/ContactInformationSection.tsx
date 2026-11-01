@@ -35,7 +35,7 @@ const ContactInformationSection = ({ formData, onInputChange }: ContactInformati
               value={formData.contactRelationship}
               onValueChange={(v) => onInputChange("contactRelationship", v)}
             >
-              <SelectTrigger>
+              <SelectTrigger aria-label="Select relationship">
                 <SelectValue placeholder="Select relationship" />
               </SelectTrigger>
               <SelectContent>
@@ -84,7 +84,7 @@ const ContactInformationSection = ({ formData, onInputChange }: ContactInformati
               value={formData.bestDayToContact}
               onValueChange={(v) => onInputChange("bestDayToContact", v)}
             >
-              <SelectTrigger className="mt-2">
+              <SelectTrigger aria-label="Select a day" className="mt-2">
                 <SelectValue placeholder="Select a day" />
               </SelectTrigger>
               <SelectContent>
@@ -108,7 +108,7 @@ const ContactInformationSection = ({ formData, onInputChange }: ContactInformati
               value={formData.bestTimeToContact}
               onValueChange={(v) => onInputChange("bestTimeToContact", v)}
             >
-              <SelectTrigger className="mt-2">
+              <SelectTrigger aria-label="Select a time" className="mt-2">
                 <SelectValue placeholder="Select a time" />
               </SelectTrigger>
               <SelectContent>

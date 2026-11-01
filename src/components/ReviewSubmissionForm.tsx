@@ -202,7 +202,7 @@ export const ReviewSubmissionForm = () => {
   return (
     <Card className="border-border">
       <CardHeader>
-        <CardTitle className="text-2xl">Share Your Experience</CardTitle>
+        <CardTitle as="h2" className="text-2xl">Share Your Experience</CardTitle>
         <CardDescription>
           Your story can help other families find hope. Reviews are published after approval.
         </CardDescription>

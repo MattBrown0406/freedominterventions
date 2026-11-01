@@ -356,7 +356,7 @@ export default function FamilyPortal() {
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
         <Navbar />
-        <main className="container mx-auto max-w-5xl px-4 py-16">
+        <main id="main-content" className="container mx-auto max-w-5xl px-4 py-16">
           <div className="grid gap-8 lg:grid-cols-[1fr_420px] lg:items-center">
             <div>
               <Badge variant="outline" className="mb-4">
@@ -461,7 +461,7 @@ export default function FamilyPortal() {
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
         <Navbar />
-        <main className="container mx-auto max-w-md px-4 py-16">
+        <main id="main-content" className="container mx-auto max-w-md px-4 py-16">
           <Card>
             <CardHeader>
               <CardTitle>
@@ -547,7 +547,7 @@ export default function FamilyPortal() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main id="main-content" className="container mx-auto px-4 py-8">
         {loading ? (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">

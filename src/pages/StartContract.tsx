@@ -382,7 +382,7 @@ const StartContract = () => {
       />
       <Navbar />
 
-      <main>
+      <main id="main-content">
         <section className="relative bg-card pb-20 pt-32">
           <div className="container px-6">
             <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">

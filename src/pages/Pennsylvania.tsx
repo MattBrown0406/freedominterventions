@@ -98,6 +98,7 @@ const Pennsylvania = () => {
           { name: "Pennsylvania", href: "/pennsylvania" },
         ]}
       />
+      <main id="main-content">
 
       <section className="pt-8 pb-16 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-6">
@@ -338,6 +339,7 @@ const Pennsylvania = () => {
       </section>
 
       <LocationLinks currentLocation="Pennsylvania" locationType="state" />
+      </main>
       <Footer />
     </div>
   );

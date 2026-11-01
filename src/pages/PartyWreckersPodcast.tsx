@@ -74,6 +74,7 @@ const PartyWreckersPodcast = () => {
       <OrganizationSchema />
       
       <Navbar />
+      <main id="main-content">
       
       {/* Hero Section */}
       <section className="relative pt-24 pb-8 bg-card">
@@ -233,6 +234,7 @@ const PartyWreckersPodcast = () => {
       </section>
 
 
+      </main>
       <Footer />
     </div>
   );

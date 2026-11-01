@@ -110,7 +110,7 @@ export default function WhichHelpDoWeNeed() {
       />
       <Navbar />
 
-      <main>
+      <main id="main-content">
         <section className="border-b border-border bg-card pt-32 pb-16 md:pt-40 md:pb-24">
           <div className="container px-6">
             <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">

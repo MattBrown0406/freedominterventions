@@ -104,11 +104,11 @@ const AftercareGuidance = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </div>
 
-      <main>
+      <main id="main-content">
         <section className="py-12 md:py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="text-accent font-medium text-sm uppercase tracking-wider">Aftercare Guidance</span>
+              <span className="text-accent-strong font-medium text-sm uppercase tracking-wider">Aftercare Guidance</span>
               <h1 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-serif font-semibold text-foreground leading-tight">
                 Treatment Is the Beginning. What Happens After Discharge Matters Just as Much.
               </h1>

@@ -88,7 +88,7 @@ const Footer = () => {
 
           {/* Links */}
           <div>
-            <h4 className="font-serif font-semibold text-foreground mb-4">Services</h4>
+            <h2 className="font-serif font-semibold text-base text-foreground mb-4">Services</h2>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
                 <li key={link.name}>
@@ -113,7 +113,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-serif font-semibold text-foreground mb-4">Company</h4>
+            <h2 className="font-serif font-semibold text-base text-foreground mb-4">Company</h2>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -138,7 +138,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-serif font-semibold text-foreground mb-4">Legal</h4>
+            <h2 className="font-serif font-semibold text-base text-foreground mb-4">Legal</h2>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>

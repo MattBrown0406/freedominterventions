@@ -628,10 +628,12 @@ const App = () => (
         <RouteAnalytics />
         <ScrollToTop />
         <DefaultSEO />
-        <PublicConversionChrome />
         <Suspense fallback={<PageLoader />}>
           <Routes>{routeElements}</Routes>
         </Suspense>
+        {/* After the page in DOM order so keyboard users reach the skip link and
+            page content first; these bars are position:fixed, so nothing moves. */}
+        <PublicConversionChrome />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

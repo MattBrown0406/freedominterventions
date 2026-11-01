@@ -130,6 +130,7 @@ const CrisisSupport = () => {
       />
       <FAQSchema faqs={faqs} />
       <Navbar />
+      <main id="main-content">
 
       {/* Safety first: on a phone this is the first thing a family in an emergency sees. */}
       <section aria-labelledby="emergency-heading" className="mt-16 md:mt-28 bg-destructive/5 border-b border-destructive/20">
@@ -163,7 +164,7 @@ const CrisisSupport = () => {
       <section className="py-10 md:py-14 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="text-accent font-medium text-sm uppercase tracking-wider">Crisis Support</span>
+            <span className="text-accent-strong font-medium text-sm uppercase tracking-wider">Crisis Support</span>
             <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-foreground leading-tight">
               When Your Family Is in Active Crisis, You Need a Clear Plan, Not More Panic
             </h1>
@@ -327,6 +328,7 @@ const CrisisSupport = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

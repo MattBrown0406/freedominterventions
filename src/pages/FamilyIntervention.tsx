@@ -288,6 +288,7 @@ const FamilyIntervention = () => {
 
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero Banner */}
       <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden">
@@ -478,7 +479,7 @@ const FamilyIntervention = () => {
                   className="bg-background rounded-2xl border border-border p-7 flex flex-col gap-4"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-4xl font-bold text-primary/20 font-mono leading-none">
+                    <div className="text-4xl font-bold text-primary font-mono leading-none">
                       {step.number}
                     </div>
                     <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
@@ -702,6 +703,7 @@ const FamilyIntervention = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

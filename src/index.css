@@ -24,13 +24,14 @@
 
     /* Light Blue-Gray Muted */
     --muted: 210 25% 92%;
-    --muted-foreground: 220 15% 45%;
+    --muted-foreground: 220 15% 40%; /* was 45%: passes 4.5:1 on tinted panels */
 
     /* Gold Accent */
     --accent: 42 45% 50%;
     --accent-foreground: 0 0% 100%;
+    --accent-strong: 42 60% 30%; /* gold for small text on light backgrounds (4.5:1+) */
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 42%; /* was 0 84% 60%: red text/buttons now meet 4.5:1 */
     --destructive-foreground: 210 40% 98%;
 
     --border: 210 20% 88%;
@@ -86,6 +87,7 @@
 
     --accent: 42 50% 55%;
     --accent-foreground: 220 25% 10%;
+    --accent-strong: 42 60% 65%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;

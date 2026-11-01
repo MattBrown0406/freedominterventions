@@ -99,6 +99,7 @@ const Washington = () => {
           { name: "Washington", href: "/washington" },
         ]}
       />
+      <main id="main-content">
 
       <section className="relative min-h-[50vh] py-16 flex items-center justify-center overflow-hidden">
         <div
@@ -347,6 +348,7 @@ const Washington = () => {
 
       <LocationLinks currentLocation="Washington" locationType="state" />
 
+      </main>
       <Footer />
     </div>
   );

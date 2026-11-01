@@ -42,6 +42,7 @@ const FamilyReadinessIntensive = () => {
       <BreadcrumbSchema items={breadcrumbItems} />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
+      <main id="main-content">
 
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 pt-10 pb-20">
@@ -159,6 +160,7 @@ const FamilyReadinessIntensive = () => {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

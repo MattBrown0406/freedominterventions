@@ -79,10 +79,25 @@ const Navbar = ({ dark = false }: { dark?: boolean }) => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${dark ? "bg-[#071c3e]/95 border-b border-white/10" : "bg-background/90"}`}>
+      {/* Keyboard / screen-reader users can jump past the navigation. Every page has exactly one <main>. */}
+      <a
+        href="#main-content"
+        onClick={(event) => {
+          const main = document.querySelector("main");
+          if (!main) return;
+          event.preventDefault();
+          main.setAttribute("tabindex", "-1");
+          main.focus();
+          main.scrollIntoView();
+        }}
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary focus:shadow-lg focus:outline focus:outline-2 focus:outline-primary"
+      >
+        {typeof window !== "undefined" && /^\/es\/?$/.test(window.location.pathname) ? "Saltar al contenido principal" : "Skip to main content"}
+      </a>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           <a href="/" className="flex items-center gap-2 min-w-0">
-            <img src={logo} alt="Freedom Interventions" className={`h-10 md:h-12 w-auto border rounded-lg flex-shrink-0 ${dark ? "border-[#d5ad55]/80" : "mix-blend-multiply border-foreground"}`} width={266} height={295} />
+            <img src={logo} alt="" className={`h-10 md:h-12 w-auto border rounded-lg flex-shrink-0 ${dark ? "border-[#d5ad55]/80" : "mix-blend-multiply border-foreground"}`} width={266} height={295} />
             <span className={`font-serif text-base sm:text-xl md:text-2xl font-semibold truncate ${dark ? "text-white" : "text-primary"}`}>Freedom Interventions</span>
           </a>
 

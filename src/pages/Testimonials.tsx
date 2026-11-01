@@ -139,7 +139,7 @@ const Testimonials = () => {
         <script type="application/ld+json">{JSON.stringify(reviewSchema)}</script>
       </Helmet>
       <Navbar />
-      <main className="pt-20 md:pt-24">
+      <main id="main-content" className="pt-20 md:pt-24">
         {/* Hero Banner */}
         <section className="relative h-[30vh] md:h-[35vh] overflow-hidden">
           <OptimizedImage

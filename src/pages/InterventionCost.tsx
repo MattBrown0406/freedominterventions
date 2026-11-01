@@ -54,7 +54,7 @@ const InterventionCost = () => {
       />
       <Navbar />
       <BreadcrumbNav items={breadcrumbItems} />
-      <main className="">
+      <main id="main-content" className="">
         <section className="py-16 md:py-24 bg-primary/5 border-b border-border/50">
           <div className="container px-6 max-w-4xl mx-auto text-center">
             <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">What Does an Intervention Cost?</h1>
