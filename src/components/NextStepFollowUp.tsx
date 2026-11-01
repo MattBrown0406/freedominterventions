@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import "./NextStepFollowUp.css";
 
-const API = "https://followup.187.77.196.68.sslip.io";
+// Follow-up service (services/next-step-followup). Set VITE_NEXT_STEP_FOLLOWUP_URL
+// to move it without a code change; the default is the current host.
+const API = (import.meta.env.VITE_NEXT_STEP_FOLLOWUP_URL || "https://followup.187.77.196.68.sslip.io").replace(/\/+$/, "");
 
 export default function NextStepFollowUp({ guideSummary }: { guideSummary: string }) {
   const [open, setOpen] = useState(false);

@@ -1,8 +1,9 @@
 // Production-preview regression: raw HTML, isolated initial fallback, hydration, SPA ownership.
 // Run after npm run build. External requests are blocked; no forms or call links are activated.
 import assert from 'node:assert/strict';
-import { readFile, writeFile, mkdir, mkdtemp, cp, rm } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, mkdtemp, cp, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { spawn, execFileSync } from 'node:child_process';
 import { chromium } from 'playwright';
@@ -68,9 +69,12 @@ try {
   await parserContext.route('**/*', route => route.abort());
   const parser = await parserContext.newPage();
   // An isolated real generator run checks pre-hydration output even after prerender rewrites dist.
-  for (const f of ['scripts/generate-static-fallbacks.mjs', 'scripts/helmet-markup.mjs', 'scripts/seo-routes.mjs', 'scripts/answer-fallback.mjs', 'scripts/page-fallback.mjs', 'src/App.tsx', 'src/data/interventionAnswers.ts', ...Object.values(pageFallbackSources)]) {
-    await mkdir(path.dirname(path.join(fixture, f)), { recursive: true }); await cp(f, path.join(fixture, f));
+  // The generator server-renders the full guide and service-areas pages with Vite,
+  // so the fixture needs the whole source tree, build config and dependencies.
+  for (const f of ['package.json', 'scripts', 'src', 'index.html', 'vite.config.ts', 'tsconfig.json', 'tsconfig.app.json', 'tsconfig.node.json', 'tailwind.config.ts', 'postcss.config.js', 'components.json', '.env']) {
+    if (existsSync(f)) await cp(f, path.join(fixture, f), { recursive: true });
   }
+  await symlink(path.resolve('node_modules'), path.join(fixture, 'node_modules'), 'dir');
   await mkdir(path.join(fixture, 'dist')); await cp('index.html', path.join(fixture, 'dist/index.html'));
   if (process.env.SEO_TEST_BASELINE) {
     await writeFile(path.join(fixture, 'scripts/generate-static-fallbacks.mjs'), execFileSync('git', ['show', `${process.env.SEO_TEST_BASELINE}:scripts/generate-static-fallbacks.mjs`]));

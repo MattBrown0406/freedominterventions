@@ -99,6 +99,8 @@ async function requireStrictAdmin(req: Request) {
   };
 }
 
+const CONTRACT_SIGNER_STAGES = ["contract_signed", "paid"];
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
@@ -134,7 +136,10 @@ Deno.serve(async (req) => {
           .from("crm_contacts")
           .select("id, email, first_name, last_name, unsubscribe_token, source, created_at")
           .eq("unsubscribed", false);
-        if (source !== "all") query = query.eq("source", source);
+        // "contract" = everyone who signed (by funnel stage), not just contacts
+        // whose first touch happened to be a contract.
+        if (source === "contract") query = query.in("pipeline_status", CONTRACT_SIGNER_STAGES);
+        else if (source !== "all") query = query.eq("source", source);
         if (sinceDays > 0) query = query.gte("created_at", new Date(Date.now() - sinceDays * 86400000).toISOString());
         return query;
       };

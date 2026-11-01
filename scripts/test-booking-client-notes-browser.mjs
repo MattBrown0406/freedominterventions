@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 import { writeFileSync, unlinkSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 const entry = fileURLToPath(new URL('../.booking-notes-browser-entry.tsx', import.meta.url));
+// Launch first so a launch failure can't leave the temporary entry file behind.
+const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
 writeFileSync(entry, `import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
@@ -13,7 +15,6 @@ import './src/index.css';
 createRoot(document.getElementById('root')!).render(<BrowserRouter><BookingCalendar defaultBookingType={window.__bookingType} /></BrowserRouter>);
 `, { flag: 'wx' });
 const base = process.argv[2] || 'http://127.0.0.1:4319';
-const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
 const notes = 'Private browser fixture Ω 👪\n<script>not executable</script> & question';
 let tests = 0;
 try {

@@ -74,7 +74,9 @@ export default function EmailOutreachSection() {
       .from("crm_contacts")
       .select("id", { count: "exact", head: true })
       .eq("unsubscribed", false);
-    if (campaignSource !== "all") query = query.eq("source", campaignSource);
+    // Keep in sync with send-campaign: contract signers are selected by funnel stage.
+    if (campaignSource === "contract") query = query.in("pipeline_status", ["contract_signed", "paid"]);
+    else if (campaignSource !== "all") query = query.eq("source", campaignSource);
     const days = Number.parseInt(campaignSinceDays, 10);
     if (days > 0) query = query.gte("created_at", new Date(Date.now() - days * 86400000).toISOString());
     const { count, error } = await query;

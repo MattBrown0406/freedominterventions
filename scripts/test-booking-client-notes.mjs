@@ -18,7 +18,8 @@ const read = (path) => baseline && /functions\/(square-booking|contracts|send-bo
   : readFileSync(resolve(root, path), 'utf8');
 
 function harness() {
-  const tables = { bookings: [], contracts: [], availability_settings: Array.from({ length: 7 }, (_, day_of_week) => ({ day_of_week, start_time: '08:00', end_time: '18:00', is_available: true })) };
+  // booking_maintenance_control: the gate (AGENTS.md) only admits work on an explicit enabled=false row.
+  const tables = { booking_maintenance_control: [{ id: true, enabled: false }], bookings: [], contracts: [], availability_settings: Array.from({ length: 7 }, (_, day_of_week) => ({ day_of_week, start_time: '08:00', end_time: '18:00', is_available: true })) };
   const emails = [], outbound = [], analytics = [], logs = [], handlers = {}, modules = new Map();
   let sequence = 0, failClientEmail = false;
   const value = (row, key) => key.includes('->>') ? row[key.split('->>')[0]]?.[key.split('->>')[1]] : row[key];
@@ -33,6 +34,7 @@ function harness() {
     contains(k, v) { this.filters.push(r => Object.entries(v).every(([key, val]) => r[k]?.[key] === val)); return this; }
     order() { return this; }
     limit() { return this; }
+    abortSignal() { return this; }
     insert(data) { this.mode = 'insert'; this.payload = data; return this; }
     update(data) { this.mode = 'update'; this.payload = data; return this; }
     delete() { this.mode = 'delete'; return this; }
@@ -86,8 +88,9 @@ function harness() {
       }, sendSystemEmail: async payload => { emails.push(payload); } };
       return result;
     };
-    const code = ts.transpileModule(read(path), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-    vm.runInNewContext(code, { exports, require, Request, Response, URL, URLSearchParams, TextEncoder, Uint8Array, crypto: webcrypto, btoa, atob, fetch: fakeFetch, Deno: { env: { get: () => 'fixture-only' } }, console: Object.fromEntries(['log', 'warn', 'error'].map(k => [k, (...args) => logs.push(args)])) }, { filename: path });
+    // Edge entrypoints call serve() only under `import.meta.main`; run them as the entry here.
+    const code = ts.transpileModule(read(path).replace(/\bimport\.meta\.main\b/g, 'true'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+    vm.runInNewContext(code, { exports, require, Request, Response, Headers, URL, URLSearchParams, TextEncoder, AbortController, setTimeout, clearTimeout, Uint8Array, crypto: webcrypto, btoa, atob, fetch: fakeFetch, Deno: { env: { get: () => 'fixture-only' } }, console: Object.fromEntries(['log', 'warn', 'error'].map(k => [k, (...args) => logs.push(args)])) }, { filename: path });
     return exports;
   }
   const notes = load('supabase/functions/_shared/clientNotes.ts');
