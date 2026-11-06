@@ -3,6 +3,7 @@ import TestimonialStrip from "@/components/TestimonialStrip";
 import FamilySupportResources from "@/components/FamilySupportResources";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import HolidayCoachingBanner from "@/components/HolidayCoachingBanner";
 import EmpathySection from "@/components/EmpathySection";
 import VideoSection from "@/components/VideoSection";
 import Services from "@/components/Services";
@@ -86,6 +87,7 @@ const Index = () => {
       <Navbar dark />
       <main id="main-content">
         <Hero />
+        <HolidayCoachingBanner />
         <EmpathySection />
         <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
         <section className="py-16 md:py-24 bg-muted/30 border-y border-border/50">
