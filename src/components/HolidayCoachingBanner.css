@@ -1,36 +1,55 @@
 .fi-holiday {
-  background: #f5f0e5;
-  color: #1b2941;
-  border-bottom: 1px solid #ddd3bc;
-  padding: 24px;
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(110deg, #123b32, #0d2d28);
+  color: #fff8e9;
+  border-top: 1px solid #b99a59;
+  border-bottom: 1px solid #b99a59;
+  padding: 30px 24px;
+}
+.fi-holiday-lights {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: max(24px, calc((100% - 1200px) / 2));
+  width: 220px;
+  height: 39px;
+  color: #b99a59;
+  opacity: .65;
+  pointer-events: none;
 }
 .fi-holiday-inner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
 }
 .fi-holiday-copy { flex: 1; min-width: 0; }
 .fi-holiday-eyebrow {
-  margin: 0 0 6px;
-  color: #72551c;
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  color: #e2c98e;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
+.fi-holiday-eyebrow svg { width: 30px; height: 20px; flex: 0 0 auto; }
 .fi-holiday h2 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-family: Georgia, serif;
-  font-size: clamp(22px, 2.3vw, 28px);
+  font-size: clamp(24px, 2.3vw, 30px);
   line-height: 1.2;
   font-weight: 700;
+  text-wrap: balance;
 }
 .fi-holiday-description {
   margin: 0;
   max-width: 690px;
-  color: #47536a;
+  color: #e3e7dc;
   font-size: 15px;
   line-height: 1.6;
 }
@@ -41,23 +60,25 @@
   flex: 0 0 auto;
   max-width: 100%;
   min-height: 48px;
-  padding: 12px 20px;
-  border: 1px solid #1d4fa3;
+  padding: 13px 20px;
+  border: 1px solid #ead6a4;
   border-radius: 8px;
-  background: #1d4fa3;
-  color: white;
+  background: #ead6a4;
+  color: #123b32;
+  box-shadow: 0 3px 12px #071f2433;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.5;
   text-align: center;
   text-decoration: none;
 }
-.fi-holiday-cta:hover { background: #173d7e; }
-.fi-holiday-cta:focus-visible { outline: 3px solid #72551c; outline-offset: 4px; }
+.fi-holiday-cta:hover { background: #fff4d6; border-color: #fff4d6; }
+.fi-holiday-cta:focus-visible { outline: 3px solid #fff8e9; outline-offset: 4px; }
 @media (max-width: 899px) {
-  .fi-holiday-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .fi-holiday-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .fi-holiday-lights { width: 150px; height: 27px; right: 20px; }
 }
 @media (max-width: 479px) {
-  .fi-holiday { padding: 22px 20px; }
+  .fi-holiday { padding: 30px 20px 26px; }
   .fi-holiday-cta { width: 100%; }
 }

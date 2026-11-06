@@ -5,9 +5,24 @@ import "./HolidayCoachingBanner.css";
 // Deliberately not clock-gated: prerendered and hydrated content stay consistent.
 const HolidayCoachingBanner = () => (
   <section className="fi-holiday" aria-labelledby="holiday-coaching-title">
+    <svg className="fi-holiday-lights" viewBox="0 0 240 42" fill="none" aria-hidden="true" focusable="false">
+      <path d="M1 2C65 38 174 38 239 2" stroke="currentColor" strokeWidth="1" />
+      <g fill="#fff4d6">
+        <ellipse cx="32" cy="19" rx="2" ry="3" />
+        <ellipse cx="75" cy="29" rx="2" ry="3" />
+        <ellipse cx="120" cy="33" rx="2" ry="3" />
+        <ellipse cx="165" cy="29" rx="2" ry="3" />
+        <ellipse cx="208" cy="19" rx="2" ry="3" />
+      </g>
+    </svg>
     <div className="fi-holiday-inner">
       <div className="fi-holiday-copy">
-        <p className="fi-holiday-eyebrow">Holiday family planning</p>
+        <p className="fi-holiday-eyebrow">
+          <svg viewBox="0 0 40 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="M3 21 36 3M9 18 8 8M9 18 21 19M17 13 17 3M17 13 29 14M25 9 26 2M25 9 36 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          Holiday family planning
+        </p>
         <h2 id="holiday-coaching-title">Make a plan before the holiday gathering.</h2>
         <p className="fi-holiday-description">
           Focused coaching with Matt to talk through invitations, boundaries, money,
