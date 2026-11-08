@@ -17,6 +17,9 @@ export const excludedSitemapRoutes = new Set([
   "/divorced-parents",
   "/relapse-after-treatment",
   "/schedule",
+  // Moved to referralfit.com (2026-11-08); kept so old links redirect.
+  "/referralfit/privacy",
+  "/referralfit/terms",
 ]);
 
 export const canonicalRouteAliases = new Map([

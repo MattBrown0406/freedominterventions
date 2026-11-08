@@ -8,7 +8,7 @@ import { excludedSitemapRoutes, canonicalRouteAliases } from "./seo-routes.mjs";
 
 // Allowlisted on purpose even though they are not indexable: crawlers must be
 // able to fetch them to read their robots noindex tag.
-const intentionallyAllowlistedNoindexRoutes = new Set(["/next-step"]);
+const intentionallyAllowlistedNoindexRoutes = new Set(["/next-step", "/referralfit/privacy", "/referralfit/terms"]);
 
 export const findWorkerRouteDrift = (root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")) => {
   const appSource = fs.readFileSync(path.join(root, "src/App.tsx"), "utf8");
