@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { z } from "zod";
 import { trackEvent } from "@/lib/analytics";
 import { getFunnelAttribution } from "@/lib/funnelAttribution";
+import { bookingDateTime } from "@/lib/bookingTime";
 
 // Square credentials
 const SQUARE_APPLICATION_ID = 'sq0idp-34je5bVBSLY-rwjmh47qrw';
@@ -236,6 +237,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const slotRequestRef = useRef(0);
+  const [availabilityError, setAvailabilityError] = useState(false);
   const [step, setStep] = useState<Step>("type");
   const [customerInfo, setCustomerInfo] = useState({ name: "", email: "", phone: "" });
   const [clientNotes, setClientNotes] = useState("");
@@ -246,16 +248,61 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   const [contractId, setContractId] = useState<string | null>(null);
   // The booking is saved but the server could not send the Zoom confirmation email.
   const [confirmationFailed, setConfirmationFailed] = useState(false);
+  const [paymentIssue, setPaymentIssue] = useState<'reschedule' | 'review' | null>(null);
   const [validationErrors, setValidationErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [abandonedCartId, setAbandonedCartId] = useState<string | null>(null);
   const [skippedTypeChooser, setSkippedTypeChooser] = useState(false);
   const location = useLocation();
   const initializedRef = useRef(false);
+  const bookingSectionRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const requestedType = new URLSearchParams(location.search).get('type');
+    if (location.hash !== '#booking' && !(requestedType && Object.prototype.hasOwnProperty.call(OFFERS, requestedType))) return;
+    // This instance owns readiness; a global hash handler may still see the
+    // previous route's calendar while a lazy destination is mounting.
+    let active = true;
+    let frame = 0;
+    let focused = false;
+    const reveal = () => {
+      if (!active) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const section = bookingSectionRef.current;
+        if (!active || !section?.isConnected) return;
+        section.scrollIntoView({ behavior: 'instant', block: 'start' });
+        if (!focused) {
+          section.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+          focused = true;
+        }
+      });
+    };
+    // Prerender hydration and images above the calendar can change its offset
+    // after mount. Re-anchor briefly as layout settles, but never fight a user.
+    const observer = new ResizeObserver(reveal);
+    observer.observe(document.body);
+    const stop = () => {
+      active = false;
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+    const events = ['pointerdown', 'wheel', 'touchstart', 'keydown'] as const;
+    events.forEach(event => window.addEventListener(event, stop, { once: true, passive: true }));
+    const timeout = window.setTimeout(stop, 2000);
+    void document.fonts.ready.then(reveal);
+    reveal();
+    return () => {
+      stop();
+      clearTimeout(timeout);
+      events.forEach(event => window.removeEventListener(event, stop));
+    };
+  }, [location.key, location.hash, location.search]);
 
   // Strip handled query params from the address bar without a router navigation
   // (a navigation would log an extra page view).
   const clearQueryParams = () => {
-    window.history.replaceState(window.history.state, '', window.location.pathname + window.location.hash);
+    const url = new URL(window.location.href);
+    ['type', 'date', 'time', 'name', 'email', 'phone', 'square_status', 'booking_id', 'contract_status', 'contract_id'].forEach(key => url.searchParams.delete(key));
+    window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
   };
 
   // Runs on mount and on every in-app navigation (location.key changes even when the
@@ -316,6 +363,12 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         if (error) {
           throw new Error(await getFunctionErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please do not pay again; contact Freedom Interventions and we will confirm it.'));
         }
+        if (data?.success !== true) throw new Error('Payment status could not be confirmed. Do not pay again; contact us.');
+        // Legacy contract success responses omit booking/fulfillment projections.
+        // Missing optional fields are not evidence that a valid booking failed.
+        const paymentIssue = data?.booking?.fulfillmentState === 'paid_needs_reschedule'
+          ? 'reschedule' : data?.error || (data?.booking?.status && data.booking.status !== 'confirmed') ? 'review' : null;
+        setPaymentIssue(paymentIssue);
         const confirmationDidFail = Boolean(data?.confirmationError);
         setConfirmationFailed(confirmationDidFail);
         trackEvent('booking_payment_completed', {
@@ -324,16 +377,19 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         });
         if (returnedType === 'fri-contract') {
           setContractId(returnedBookingId);
+          if (data?.booking?.id) setBookingId(data.booking.id);
         } else {
           setBookingId(returnedBookingId);
         }
         setStep('confirmation');
-        toast.success('Payment completed successfully.');
-        if (confirmationDidFail) {
+        if (!paymentIssue) toast.success('Payment completed successfully.');
+        if (confirmationDidFail && data?.booking?.fulfillmentState !== 'paid_needs_reschedule') {
           toast.error('Payment received, but the confirmation email failed to send. We will follow up shortly with your meeting details.');
         }
-        clearQueryParams();
+        if (!paymentIssue) clearQueryParams();
       }).catch((error) => {
+        setPaymentIssue('review');
+        setStep('confirmation');
         console.error('Failed to verify Square payment:', error);
         toast.error(getErrorMessage(error, 'Square did not confirm the payment yet. If you completed checkout, please do not pay again; contact Freedom Interventions and we will confirm it.'));
       }).finally(() => {
@@ -359,6 +415,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         setBookingId(null);
         setContractId(null);
         setConfirmationFailed(false);
+        setPaymentIssue(null);
       }
       setBookingType(type);
       setSkippedTypeChooser(type === "consultation");
@@ -369,19 +426,15 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         setCustomerInfo({ name, email, phone });
       }
       const dateStr = params.get("date");
-      const timeStr = params.get("time");
+
       if (dateStr) {
         const [y, m, d] = dateStr.split("-").map(Number);
         const date = new Date(y, m - 1, d);
         if (!isNaN(date.getTime())) {
           setSelectedDate(date);
           fetchAvailableSlots(date, type);
-          if (timeStr) {
-            setSelectedTime(timeStr);
-            setStep("details");
-          } else {
-            setStep("time");
-          }
+          // Recovery links must recheck availability before a time is selected.
+          setStep("time");
         } else {
           setStep("date");
         }
@@ -416,6 +469,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
     // so slots for date A are never shown under date B.
     const requestId = ++slotRequestRef.current;
     setAvailableSlots([]);
+    setAvailabilityError(false);
+    setSelectedTime('');
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('square-booking', {
@@ -423,11 +478,13 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       });
       if (requestId !== slotRequestRef.current) return;
       if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to load available times'));
-      const filteredSlots = filterSameDaySlots(data.slots || [], date);
+      if (data?.error || !Array.isArray(data?.slots) || !data.slots.every((slot: unknown) => typeof slot === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(slot))) throw new Error('Invalid availability response');
+      const filteredSlots = filterSameDaySlots(data.slots, date);
       setAvailableSlots(filteredSlots);
     } catch (error: unknown) {
       if (requestId !== slotRequestRef.current) return;
       console.error('Error fetching slots:', error);
+      setAvailabilityError(true);
       toast.error(getErrorMessage(error, 'Failed to load available times'));
     } finally {
       if (requestId === slotRequestRef.current) setLoading(false);
@@ -453,6 +510,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   };
 
   const handleTimeSelect = (time: string) => {
+    if (loading || availabilityError || !availableSlots.includes(time)) return;
     setSelectedTime(time);
     setStep('details');
   };
@@ -590,8 +648,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
           bookingTypeLabel: 'Family Readiness Intensive',
           amountLabel: offer.priceLabel,
           metadata: {
-            'Session Date': format(selectedDate, 'MMMM d, yyyy'),
-            'Session Time': `${formatTimeInUserTz(selectedTime, selectedDate)}${!isUserInPacific ? ` (${formatTime(selectedTime)} Pacific)` : ''}`,
+            'Your Appointment': formatTimeInUserTz(selectedTime, selectedDate),
+            'Provider Appointment': bookingDateTime(format(selectedDate, 'yyyy-MM-dd'), selectedTime, 'America/Los_Angeles'),
           },
           agreementText: FRI_AGREEMENT_TEXT,
         });
@@ -631,7 +689,13 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       });
         error = contractResponse.error;
         data = contractResponse.data;
-        if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to start payment. Please try again.'));
+        if (error) {
+        if (error.context instanceof Response && error.context.status === 409) {
+          setPaymentIssue('review');
+          setStep('confirmation');
+        }
+        throw new Error(await getFunctionErrorMessage(error, 'Failed to start payment. Please try again.'));
+      }
         if (!data?.contract?.id) throw new Error('FRI contract record was not created.');
 
         setContractId(data.contract.id);
@@ -674,7 +738,13 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
         error = response.error;
         data = response.data;
       }
-      if (error) throw new Error(await getFunctionErrorMessage(error, 'Failed to start payment. Please try again.'));
+      if (error) {
+        if (error.context instanceof Response && error.context.status === 409) {
+          setPaymentIssue('review');
+          setStep('confirmation');
+        }
+        throw new Error(await getFunctionErrorMessage(error, 'Failed to start payment. Please try again.'));
+      }
       if (data?.error) throw new Error(data.error);
       // Abandoned carts are marked recovered server-side once payment is confirmed.
       if (data?.checkoutUrl) {
@@ -697,6 +767,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   }, [selectedDate, selectedTime, bookingType, offer, customerInfo, clientNotes, friAgreementAccepted, friSignerName, abandonedCartId]);
 
   const resetForm = () => {
+    setPaymentIssue(null);
     setStep('type');
     setBookingType(null);
     setSelectedDate(undefined);
@@ -714,31 +785,19 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   };
 
   const formatTime = (time: string) => {
-    const [hours] = time.split(':');
+    const [hours, minutes = '00'] = time.split(':');
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-    return `${displayHour}:00 ${ampm}`;
+    return `${displayHour}:${minutes} ${ampm}`;
   };
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const userTzShort = (() => {
-    try {
-      const parts = new Intl.DateTimeFormat('en-US', { timeZone: userTimeZone, timeZoneName: 'short' }).formatToParts(new Date());
-      return parts.find((p) => p.type === 'timeZoneName')?.value || userTimeZone;
-    } catch { return userTimeZone; }
-  })();
+
 
   const formatTimeInUserTz = (time: string, date?: Date) => {
     if (!date) return '';
-    const [h, m] = time.split(':').map(Number);
-    const ymd = format(date, 'yyyy-MM-dd');
-    const probe = new Date(`${ymd}T12:00:00Z`);
-    const laParts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour12: false, hour: '2-digit', minute: '2-digit' }).formatToParts(probe);
-    const laHour = parseInt(laParts.find((p) => p.type === 'hour')?.value || '0');
-    const offsetHours = 12 - laHour;
-    const utc = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), h + offsetHours, m));
-    return new Intl.DateTimeFormat('en-US', { timeZone: userTimeZone, hour: 'numeric', minute: '2-digit', hour12: true, timeZoneName: 'short' }).format(utc);
+    return bookingDateTime(format(date, 'yyyy-MM-dd'), time, userTimeZone);
   };
 
   const isUserInPacific = userTimeZone === 'America/Los_Angeles';
@@ -751,15 +810,15 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
       case 'details': return 'Your Information';
       case 'agreement': return 'Review and Sign Agreement';
       case 'payment': return 'Secure Payment';
-      case 'confirmation': return 'Booking Confirmed!';
+      case 'confirmation': return paymentIssue === 'reschedule' ? 'Payment received — choose a new time' : paymentIssue === 'review' ? 'Payment needs review' : confirmationFailed ? 'Booking saved — details pending' : 'Booking Confirmed!';
     }
   };
 
   const getStepDescription = () => {
     switch (step) {
       case 'type': return 'Select the type of session you\'d like to book';
-      case 'date': return offer ? `Pick a date for your ${offer.label}` : '';
-      case 'time': return selectedDate ? `Available times for ${format(selectedDate, 'MMMM d, yyyy')}` : '';
+      case 'date': return offer ? `Pick a Pacific-time date for your ${offer.label}. Your local date and time appear with each available slot.` : '';
+      case 'time': return selectedDate ? `Provider date: ${format(selectedDate, 'MMMM d, yyyy')} (Pacific). Local dates appear with each time.` : '';
       case 'details': return 'Enter your contact details';
       case 'agreement': return 'Review the Family Readiness Intensive agreement before payment';
       case 'payment': return 'You will complete payment securely on Square-hosted checkout';
@@ -768,10 +827,10 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
   };
 
   return (
-    <section id="booking" className="py-20 bg-muted/30">
+    <section ref={bookingSectionRef} id="booking" className="py-20 bg-muted/30 scroll-mt-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 tabIndex={-1} className="text-3xl md:text-4xl font-bold text-foreground mb-4 focus-visible:outline focus-visible:outline-primary">
             Schedule an Appointment
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -801,6 +860,11 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                 {getStepTitle()}
               </CardTitle>
               <CardDescription>{getStepDescription()}</CardDescription>
+              {offer && step !== 'type' && <div className="rounded-lg bg-primary/5 p-3 text-sm" data-testid="selected-offer">
+                <p className="font-semibold">{offer.label} · {offer.durationMinutes} minutes · {offer.priceLabel}</p>
+                {bookingType === 'readiness-intensive' && <p>Includes 7 days of follow-up support.</p>}
+                {(step === 'date' || step === 'time') && <Button type="button" variant="link" className="px-0" onClick={() => setStep('type')}>Change session / free consultation</Button>}
+              </div>}
             </CardHeader>
             <CardContent>
               {step === 'type' && (
@@ -830,7 +894,7 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
               {step === 'date' && (
                 <div>
                   <div className="flex justify-center">
-                    <Calendar mode="single" required selected={selectedDate} onSelect={handleDateSelect} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} className="rounded-md border" />
+                    <Calendar mode="single" required selected={selectedDate} onSelect={handleDateSelect} disabled={(date) => format(date, 'yyyy-MM-dd') < getPacificNow().date} className="rounded-md border" />
                   </div>
                   <div className="flex justify-between mt-6">
                     {skippedTypeChooser && bookingType === 'consultation' ? (
@@ -851,17 +915,19 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
               {step === 'time' && selectedDate && (
                 <div className="space-y-6">
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Times shown in your timezone ({userTzShort})</p>
+                    <p className="text-sm text-muted-foreground">Times shown in your timezone ({userTimeZone})</p>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {availableSlots.map((slot) => (
-                      <Button key={slot} variant="outline" onClick={() => handleTimeSelect(slot)} className="h-auto py-4 flex flex-col gap-1">
+                      <Button key={slot} variant="outline" onClick={() => handleTimeSelect(slot)} className="h-auto py-4 flex flex-col gap-1 whitespace-normal text-center">
                         <span className="font-semibold">{formatTimeInUserTz(slot, selectedDate)}</span>
                         {!isUserInPacific && <span className="text-xs text-muted-foreground">{formatTime(slot)} Pacific</span>}
                       </Button>
                     ))}
                   </div>
-                  {availableSlots.length === 0 && !loading && <p className="text-center text-muted-foreground">No available times for this date.</p>}
+                  {loading && <p role="status">Loading available times…</p>}
+                  {availabilityError && <div role="alert" className="space-y-3"><p>We couldn't check availability. Your date is still selected. Please retry before choosing a time.</p><Button onClick={() => fetchAvailableSlots(selectedDate)}>Retry availability</Button><a className="ml-3 underline" href="/contact">Contact us</a></div>}
+                  {availableSlots.length === 0 && !loading && !availabilityError && <p role="status" className="text-center text-muted-foreground">No available times for this date. Please choose another date.</p>}
                   <div className="flex justify-between"><Button variant="ghost" onClick={() => setStep('date')}>← Back</Button></div>
                 </div>
               )}
@@ -871,8 +937,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
                     <p><strong>Session:</strong> {offer.shortName}</p>
-                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
+                    <p><strong>Your appointment:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}</p>
+                    {!isUserInPacific && <p className="text-sm text-muted-foreground">Provider time: {bookingDateTime(format(selectedDate, 'yyyy-MM-dd'), selectedTime, 'America/Los_Angeles')} (Pacific)</p>}
                     <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
                   </div>
                   <div className="space-y-2"><Label htmlFor="name" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name *</Label><Input id="name" value={customerInfo.name} onChange={(e) => { setCustomerInfo({ ...customerInfo, name: e.target.value }); if (validationErrors.name) setValidationErrors({ ...validationErrors, name: undefined }); }} placeholder="John Smith" maxLength={100} required className={validationErrors.name ? 'border-destructive' : ''} />{validationErrors.name && <p className="text-sm text-destructive">{validationErrors.name}</p>}</div>
@@ -892,8 +958,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
                     <p><strong>Session:</strong> {offer.shortName}</p>
-                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
+                    <p><strong>Your appointment:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}</p>
+                    {!isUserInPacific && <p className="text-sm text-muted-foreground">Provider time: {bookingDateTime(format(selectedDate, 'yyyy-MM-dd'), selectedTime, 'America/Los_Angeles')} (Pacific)</p>}
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
                     <div className="border-t pt-2 mt-2"><p className="text-lg font-bold">Total: {offer.priceLabel}</p></div>
@@ -914,8 +980,8 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                   <div className="bg-muted p-4 rounded-lg space-y-2">
                     <h4 className="font-semibold">Booking Summary</h4>
                     <p><strong>Session:</strong> {offer.shortName}</p>
-                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
+                    <p><strong>Your appointment:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}</p>
+                    {!isUserInPacific && <p className="text-sm text-muted-foreground">Provider time: {bookingDateTime(format(selectedDate, 'yyyy-MM-dd'), selectedTime, 'America/Los_Angeles')} (Pacific)</p>}
                     <p><strong>Name:</strong> {customerInfo.name}</p>
                     <p><strong>Email:</strong> {customerInfo.email}</p>
                     {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-1">✓ Includes 7 days of follow-up support by Zoom, phone, text, or email</p>}
@@ -932,14 +998,22 @@ export const BookingCalendar = ({ defaultBookingType }: BookingCalendarProps) =>
                 </div>
               )}
 
-              {step === 'confirmation' && selectedDate && offer && (
+              {step === 'confirmation' && paymentIssue && (
+                <div className="max-w-md mx-auto space-y-4" role="status">
+                  <p>{paymentIssue === 'reschedule' ? 'Your payment was received, but your requested appointment is not confirmed. That time is no longer available.' : 'We could not safely complete payment verification. Your appointment is not confirmed yet.'}</p>
+                  <p>Do not pay again. Contact us to resolve your booking.</p>
+                  <a href="/contact" className="underline">Contact Freedom Interventions</a>
+                  {paymentIssue === 'reschedule' && bookingId && <Button asChild><a href={`/reschedule?bookingId=${encodeURIComponent(bookingId)}`}>Choose a new time</a></Button>}
+                </div>
+              )}
+              {step === 'confirmation' && !paymentIssue && selectedDate && offer && (
                 <div className="max-w-md mx-auto text-center space-y-6">
                   <div className="flex justify-center"><div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle className="w-10 h-10 text-green-600" /></div></div>
-                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">{confirmationFailed ? "Your booking is saved, but we couldn't send your confirmation email. We'll follow up shortly with your meeting details." : customerInfo.email ? `We've sent a confirmation email to ${customerInfo.email}` : "We've sent a confirmation email with your meeting details."}</p></div>
+                  <div><h3 className="text-xl font-semibold mb-2">{!isPaid ? 'Consultation Booked!' : 'Payment Successful!'}</h3><p className="text-muted-foreground">{confirmationFailed ? "Your booking is saved, but meeting details and confirmation delivery are still pending. Contact us if you need help; do not pay again." : customerInfo.email ? `We've sent a confirmation email to ${customerInfo.email}` : "We've sent a confirmation email with your meeting details."}</p></div>
                   <div className="bg-muted p-4 rounded-lg space-y-2 text-left">
                     <p><strong>Session:</strong> {offer.shortName}</p>
-                    <p><strong>Date:</strong> {format(selectedDate, 'MMMM d, yyyy')}</p>
-                    <p><strong>Time:</strong> {formatTimeInUserTz(selectedTime, selectedDate)} {!isUserInPacific && <span className="text-muted-foreground">({formatTime(selectedTime)} Pacific)</span>}</p>
+                    <p><strong>Your appointment:</strong> {formatTimeInUserTz(selectedTime, selectedDate)}</p>
+                    {!isUserInPacific && <p className="text-sm text-muted-foreground">Provider time: {bookingDateTime(format(selectedDate, 'yyyy-MM-dd'), selectedTime, 'America/Los_Angeles')} (Pacific)</p>}
                     {bookingType === 'readiness-intensive' && <p className="text-sm text-primary pt-2">Your booking includes 7 days of follow-up support by Zoom, phone, text, or email.</p>}
                   </div>
                   <div className="rounded-lg border border-primary/20 bg-primary/5 p-5 text-left space-y-3">

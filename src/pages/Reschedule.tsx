@@ -69,6 +69,7 @@ const Reschedule = () => {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [confirmationFailed, setConfirmationFailed] = useState(false);
 
   // Slots are Pacific wall-clock times, so compare against "now" in Pacific time,
   // not the visitor's local clock.
@@ -160,6 +161,8 @@ const Reschedule = () => {
 
       if (error) throw new Error(await getFunctionErrorMessage(error, "Failed to reschedule booking"));
 
+      if (data?.success !== true) throw new Error(data?.error || 'The booking could not be moved. Please retry.');
+      setConfirmationFailed(Boolean(data.confirmationError));
       setStep('confirmation');
       toast.success("Booking rescheduled successfully!");
       if (data?.confirmationError) {
@@ -350,7 +353,7 @@ const Reschedule = () => {
                     </div>
                   </div>
                   <p className="text-muted-foreground">
-                    A confirmation email has been sent with your updated appointment details.
+                    {confirmationFailed ? "Your appointment was moved, but meeting details and confirmation delivery are still pending. Contact us if you need help." : "A confirmation email has been sent with your updated appointment details."}
                   </p>
                   <Button 
                     onClick={() => window.location.href = '/'}

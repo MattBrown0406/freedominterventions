@@ -1,0 +1,13 @@
+import ts from 'typescript';
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+const source=process.env.AUDIT_BASELINE_REF?execFileSync('git',['show',`${process.env.AUDIT_BASELINE_REF}:src/components/BookingCalendar.tsx`],{encoding:'utf8'}):fs.readFileSync(new URL('../src/components/BookingCalendar.tsx',import.meta.url),'utf8');
+const tree=ts.createSourceFile('BookingCalendar.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
+function visit(n){if(ts.isVariableDeclaration(n)&&n.name.getText(tree)==='handleHostedCheckout')handler=n.initializer.arguments[0].getText(tree);ts.forEachChild(n,visit);}visit(tree);assert(handler);
+const code=ts.transpileModule('const action='+handler+';return action;', {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const changes=[];let calls=0;
+const context={selectedDate:new Date(2099,0,1),selectedTime:'10:00',bookingType:'crisis-coaching',offer:{priceCents:15000,durationMinutes:60},customerInfo:{name:'Synthetic',email:'test@example.invalid',phone:''},clientNotes:'',getFunnelAttribution:()=>({}),format:()=> '2099-01-01',setLoading:()=>{},setStep:x=>changes.push(x),setPaymentIssue:x=>changes.push(x),supabase:{functions:{invoke:async()=>{calls++;return {data:null,error:{context:new Response(JSON.stringify({error:'Already processing. Do not pay again.'}),{status:409})}}}}},getFunctionErrorMessage:async e=>(await e.context.json()).error,getErrorMessage:(e,f)=>e.message||f,toast:{error(){}},console:{error(){}}};
+await new Function(...Object.keys(context),code)(...Object.values(context))();
+assert.equal(calls,1);assert.deepEqual(changes,['review','confirmation']);
+console.log('PASS actual hosted checkout 409 enters non-payable review state');
