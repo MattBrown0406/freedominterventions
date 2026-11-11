@@ -29,17 +29,18 @@ const ServiceAreas = () => {
     );
   };
 
+  const normalizedQuery = searchQuery.trim().toLowerCase();
   const filteredStates = usStates.filter(state =>
-    state.name.toLowerCase().includes(searchQuery.toLowerCase())
+    state.name.toLowerCase().includes(normalizedQuery)
   );
 
   const filteredCities = usCities.filter(city =>
-    city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    city.state.toLowerCase().includes(searchQuery.toLowerCase())
+    city.name.toLowerCase().includes(normalizedQuery) ||
+    city.state.toLowerCase().includes(normalizedQuery)
   );
 
   const filteredProvinces = canadianProvinces.filter(province =>
-    province.name.toLowerCase().includes(searchQuery.toLowerCase())
+    province.name.toLowerCase().includes(normalizedQuery)
   );
 
   const hasResults = filteredStates.length > 0 || filteredCities.length > 0 || filteredProvinces.length > 0;
@@ -125,9 +126,14 @@ const ServiceAreas = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
+                aria-label="Search service areas by state, city, or province"
                 placeholder="Search by state, city, or province..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  // A matching city must not stay hidden in a collapsed region.
+                  if (e.target.value.trim()) setExpandedRegions(Object.keys(usRegions));
+                }}
                 className="pl-12 py-6 text-lg"
               />
             </div>
@@ -161,9 +167,10 @@ const ServiceAreas = () => {
 
                 {/* Regions */}
                 <div className="space-y-6">
-                  {Object.entries(usRegions).map(([region, stateNames]) => {
+                  {Object.keys(usRegions).map((region) => {
                     const regionStates = getStatesByRegion(region).filter(state =>
-                      searchQuery ? filteredStates.some(fs => fs.slug === state.slug) : true
+                      filteredStates.some(fs => fs.slug === state.slug) ||
+                      filteredCities.some(city => city.state === state.name)
                     );
 
                     if (regionStates.length === 0) return null;
@@ -174,6 +181,8 @@ const ServiceAreas = () => {
                       <div key={region} className="border border-border rounded-xl overflow-hidden">
                         <button
                           onClick={() => toggleRegion(region)}
+                          aria-expanded={isExpanded}
+                          aria-controls={`service-region-${region.toLowerCase().replace(/\s+/g, "-")}`}
                           className="w-full flex items-center justify-between p-6 bg-card hover:bg-accent/50 transition-colors"
                         >
                           <div className="flex items-center gap-3">
@@ -191,7 +200,7 @@ const ServiceAreas = () => {
                         </button>
 
                         {isExpanded && (
-                          <div className="p-6 bg-background border-t border-border">
+                          <div id={`service-region-${region.toLowerCase().replace(/\s+/g, "-")}`} className="p-6 bg-background border-t border-border">
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                               {regionStates.map(state => {
                                 const stateCities = getCitiesByState(state.name).filter(city =>
