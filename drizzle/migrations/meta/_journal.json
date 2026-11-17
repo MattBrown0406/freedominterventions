@@ -22,6 +22,13 @@
       "when": 1792004224064,
       "tag": "0002_booking_maintenance_control",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794883934477,
+      "tag": "0003_restrict_availability_and_insurance_uploads",
+      "breakpoints": true
     }
   ]
 }

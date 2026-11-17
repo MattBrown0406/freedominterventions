@@ -25,15 +25,17 @@ const InsuranceCardUpload = ({ frontUrl, backUrl, onUpload }: InsuranceCardUploa
     try {
       const fileExt = (file.name.split('.').pop() || '').toLowerCase();
       const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
-      const safeExt = allowedExts.includes(fileExt) ? fileExt : 'bin';
-      const fileName = `${crypto.randomUUID()}-${side}.${safeExt}`;
-      const filePath = `uploads/${fileName}`;
+      if (!allowedExts.includes(fileExt)) throw new Error('Please upload a JPG, PNG, WebP, or PDF file.');
+
+      const { data: signed, error: signError } = await supabase.functions.invoke('insurance-card-upload-url', {
+        body: { side, ext: fileExt },
+      });
+      if (signError || !signed?.path || !signed?.token) throw new Error('Could not prepare upload. Please try again.');
+      const filePath: string = signed.path;
 
       const { error: uploadError } = await supabase.storage
         .from('insurance-cards')
-        .upload(filePath, file);
-
-
+        .uploadToSignedUrl(filePath, signed.token, file);
 
       if (uploadError) throw uploadError;
 
