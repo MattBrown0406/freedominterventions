@@ -1,3 +1,4 @@
+import familyBridgeLogo from "@/assets/familybridge-logo.png.asset.json";
 import "./FamilyBridgeBanner.css";
 
 const FAMILYBRIDGE_APP_STORE_URL =
@@ -21,35 +22,14 @@ const FamilyBridgeBanner = () => (
       </g>
     </svg>
     <div className="fi-familybridge-inner">
-      <div className="fi-familybridge-icon" aria-hidden="true">
-        <svg viewBox="0 0 72 72" fill="none" focusable="false">
-          <g stroke="#e8913d" strokeWidth="3.5" strokeLinecap="round">
-            <path d="M36 30 36 12" />
-            <path d="M36 30 20 16" />
-            <path d="M36 30 52 16" />
-            <path d="M36 30 10 26" />
-            <path d="M36 30 62 26" />
-          </g>
-          <path
-            d="M14 44c0-12 10-22 22-22s22 10 22 22"
-            stroke="#f4f7f5"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-          <circle cx="29" cy="38" r="4" fill="#e8913d" />
-          <circle cx="43" cy="38" r="4" fill="#e8913d" />
-          <path
-            d="M24 44c0-4 3-7 7-7M41 44c0-4 3-7 7-7"
-            stroke="#e8913d"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-          />
-          <g stroke="#7fb8b2" strokeWidth="3" strokeLinecap="round">
-            <path d="M14 54c6-4 12 4 18 0s12 4 18 0" />
-            <path d="M20 62c5-3 10 3 15 0s10 3 15 0" />
-          </g>
-        </svg>
-      </div>
+      <img
+        className="fi-familybridge-icon"
+        src={familyBridgeLogo.url}
+        alt="FamilyBridge app icon"
+        width={96}
+        height={96}
+        loading="lazy"
+      />
       <div className="fi-familybridge-copy">
         <p className="fi-familybridge-eyebrow">FamilyBridge</p>
         <h2 id="familybridge-title">One plan. One voice.</h2>

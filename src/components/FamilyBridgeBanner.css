@@ -30,13 +30,9 @@
   width: 96px;
   height: 96px;
   border-radius: 22px;
-  background: #0d3a40;
   box-shadow: 0 6px 18px #06202366;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
-.fi-familybridge-icon svg { width: 72px; height: 72px; }
 .fi-familybridge-copy { flex: 1; min-width: 0; }
 .fi-familybridge-eyebrow {
   margin: 0 0 6px;
@@ -104,6 +100,5 @@
 @media (max-width: 479px) {
   .fi-familybridge { padding: 30px 20px 26px; }
   .fi-familybridge-icon { width: 80px; height: 80px; border-radius: 18px; }
-  .fi-familybridge-icon svg { width: 60px; height: 60px; }
   .fi-familybridge-cta { width: 100%; }
 }
