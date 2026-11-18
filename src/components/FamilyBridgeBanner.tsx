@@ -1,9 +1,7 @@
 import "./FamilyBridgeBanner.css";
 
-// FamilyBridge app promo. Swap FAMILYBRIDGE_APP_STORE_URL for the real App
-// Store link once Matt provides it.
 const FAMILYBRIDGE_APP_STORE_URL =
-  "https://www.apple.com/app-store/";
+  "https://apps.apple.com/us/app/family-bridge-recovery/id6757375159";
 
 const FamilyBridgeBanner = () => (
   <section className="fi-familybridge" aria-labelledby="familybridge-title">
