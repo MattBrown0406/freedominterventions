@@ -4,6 +4,7 @@ import FamilySupportResources from "@/components/FamilySupportResources";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import HolidayCoachingBanner from "@/components/HolidayCoachingBanner";
+import FamilyBridgeBanner from "@/components/FamilyBridgeBanner";
 import EmpathySection from "@/components/EmpathySection";
 import VideoSection from "@/components/VideoSection";
 import Services from "@/components/Services";
@@ -88,6 +89,7 @@ const Index = () => {
       <main id="main-content">
         <Hero />
         <HolidayCoachingBanner />
+        <FamilyBridgeBanner />
         <EmpathySection />
         <RevenuePathTriage source="homepage" className="bg-muted/20 border-y border-border" />
         <section className="py-16 md:py-24 bg-muted/30 border-y border-border/50">

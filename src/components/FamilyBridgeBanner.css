@@ -1,0 +1,109 @@
+.fi-familybridge {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(110deg, #11454b, #0b3237);
+  color: #f4f7f5;
+  border-bottom: 1px solid #d98e3a;
+  padding: 30px 24px;
+}
+.fi-familybridge-rays {
+  position: absolute;
+  z-index: -1;
+  top: -40px;
+  right: -60px;
+  width: 420px;
+  height: 320px;
+  color: #d98e3a;
+  opacity: .14;
+  pointer-events: none;
+}
+.fi-familybridge-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.fi-familybridge-icon {
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  border-radius: 22px;
+  background: #0d3a40;
+  box-shadow: 0 6px 18px #06202366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fi-familybridge-icon svg { width: 72px; height: 72px; }
+.fi-familybridge-copy { flex: 1; min-width: 0; }
+.fi-familybridge-eyebrow {
+  margin: 0 0 6px;
+  color: #e8a252;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.fi-familybridge h2 {
+  margin: 0 0 8px;
+  font-size: clamp(26px, 2.6vw, 34px);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.fi-familybridge-description {
+  margin: 0 0 6px;
+  max-width: 560px;
+  color: #cfe0dc;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.fi-familybridge-credit {
+  margin: 0;
+  color: #9fb8b3;
+  font-size: 13px;
+}
+.fi-familybridge-cta-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.fi-familybridge-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 52px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: #e8913d;
+  color: #12262b;
+  box-shadow: 0 4px 14px #06202355;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+}
+.fi-familybridge-cta:hover { background: #f2a355; }
+.fi-familybridge-cta:focus-visible { outline: 3px solid #f4f7f5; outline-offset: 4px; }
+.fi-familybridge-store {
+  color: #cfe0dc;
+  font-size: 13px;
+}
+@media (max-width: 899px) {
+  .fi-familybridge-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .fi-familybridge-cta-wrap { align-items: flex-start; }
+  .fi-familybridge-rays { width: 260px; height: 200px; }
+}
+@media (max-width: 479px) {
+  .fi-familybridge { padding: 30px 20px 26px; }
+  .fi-familybridge-icon { width: 80px; height: 80px; border-radius: 18px; }
+  .fi-familybridge-icon svg { width: 60px; height: 60px; }
+  .fi-familybridge-cta { width: 100%; }
+}
